@@ -15,6 +15,16 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo P2: clareza dos formulários — 21/10/2026 — Codex (modelo não identificado)
+Partida: genki-prototype 7eae1f8 (Git limpo); este repositório f32aa25, branch main, cópia obtida do remoto nesta sessão.
+Realizado e arquivos alterados: no genki-prototype, exemplos como ajuda persistente no cadastro/edição/correção por toque e respostas digitadas da voz; valores 18px semibold nas revisões/Detalhes; nomes completos dos dias nos resumos, lista e correções da voz. Ajuste localizado na associação de ajuda/erro, preservando as regras de validação e dados internos. `docs/HANDOFF.md` atualizado. Neste repositório: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: modo só Codex; implementar P2 (itens 2, 3 e 4 do handoff), sem alteração de requisitos oficiais ou dados/regras.
+Sugestões pendentes: itens 5, 6 e 9 do handoff; decisões de UX pendentes já registradas.
+Verificado: `pnpm.cmd check:local` (typecheck e build); regressão completa do handoff §7 (9/9) com Playwright MCP no Vite; cadastro manual com revisão/retorno/salvamento, dias específicos, edição inválida/descartar, associação ajuda/erro e tipografia computada; formulário e revisão de voz vistos em screenshots. Recarga final e abertura do formulário sem erros capturados no console/runtime.
+| Não verificado: respostas digitadas dentro da voz (componente compilado; estado de falha não alcançado no percurso atual da simulação); revisão independente do Claude Code; Android/aparelho. | Limitações: protótipo web; modo só Codex — aguardando revisão.
+Próxima tarefa e bloqueios: Claude Code revisa P2 quando voltar; autor escolhe próximo pacote. M0 Android e confirmação da referência final de UX seguem pendentes.
+Links/commits: https://github.com/aryfacanha/genki-prototype (pacote P2 e `docs/HANDOFF.md`); este commit.
+
 ENTREGA — Protótipo final (Genki(22)) versionado, ambiente local e regressão com Playwright — 21/10/2026 — Claude Code (Opus 5.5)
 Partida: commit b3d98a4; export Genki(22) do Figma Make (`D:\TCC\Prototipo\figma-versions\`).
 Realizado e arquivos alterados: repositório separado github.com/aryfacanha/genki-prototype (`src/` idêntico ao export Genki(22),
