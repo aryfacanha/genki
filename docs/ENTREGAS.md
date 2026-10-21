@@ -15,6 +15,20 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo final (Genki(22)) versionado, ambiente local e regressão com Playwright — 21/10/2026 — Claude Code (Opus 5.5)
+Partida: commit b3d98a4; export Genki(22) do Figma Make (`D:\TCC\Prototipo\figma-versions\`).
+Realizado e arquivos alterados: repositório separado github.com/aryfacanha/genki-prototype (`src/` idêntico ao export Genki(22),
+`AGENTS.md`, `docs/HANDOFF.md`, `vite.local.config.ts`, scripts `*:local`); Playwright MCP (Edge, @playwright/mcp 0.0.83) registrado no Claude Code;
+`.gitignore` ignora `.playwright-mcp/`. Neste repositório: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: repositório separado para o protótipo (21/10).
+Sugestões pendentes: 9 pendências de UX S1/S2 (`docs/HANDOFF.md` §5 do genki-prototype); lista Hoje sem "Adiado para 12:20" após avançar o alerta adiado (S3).
+Verificado: `pnpm check:local` (typecheck + build) no Windows; regressão completa (9 testes rápidos do HANDOFF §7) no `pnpm dev:local` com Playwright MCP:
+Home derivada dos medicamentos, excluir, desligar lembretes + Desfazer, "Visto às 12:00" sem implicar ingestão, voz até salvar, correção por toque,
+câmera → voz (OCR só nome e concentração), validação na edição e proteção de alterações, adiamento e alerta sem resposta.
+| Não verificado: Codex e Playwright MCP no Codex; `scripts/import-make-export.ps1` (nunca executado). | Limitações: protótipo web, não é o app Android.
+Próxima tarefa e bloqueios: autor confirmar o Genki(22) como referência de UX; M0 (projeto Android).
+Links/commits: genki-prototype 6f99287; este commit.
+
 ENTREGA — Planilha de requisitos atualizada; protótipo em revisão registrado — 21/10/2026 — Claude (Opus 5.5)
 Partida: commit 14cf308; planilha "Requisitos" (última alteração anterior: 04/09/2026).
 Realizado e arquivos alterados: planilha — RF03 (texto), RF08 (observação), RF24 (texto), nova linha RNF11, conforme DEC-002 a 005.

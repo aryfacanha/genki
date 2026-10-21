@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-Atualizado em 21/10/2026, 15h, por Claude (Opus 5.5).
+Atualizado em 21/10/2026, por Claude Code (Opus 5.5).
 
 ## Situação
 
@@ -8,7 +8,7 @@ Atualizado em 21/10/2026, 15h, por Claude (Opus 5.5).
 | --- | --- | --- |
 | Proposta | Aprovada; marco acadêmico | Drive (DEC-020) |
 | Requisitos | RF01–RF25, RNF01–RNF11 na planilha; DEC-002 a 005 aplicadas em 21/10 | Drive |
-| Protótipo | **Em revisão** pelo autor com o GPT no Figma Make (usabilidade). v1 deixa de ser referência final (DEC-022) | Exportação nova ainda não está no Drive |
+| Protótipo | **Export final do Figma Make (Genki(22)) versionado e rodando localmente**; regressão de fluxos aprovada no navegador (Playwright). Confirmar como referência final de UX (substitui a v1, DEC-022) ainda depende do autor | github.com/aryfacanha/genki-prototype (commit 6f99287; tag `prototype-figma-final`; `docs/HANDOFF.md`); ZIPs em `D:\TCC\Prototipo\figma-versions\` |
 | Arquitetura | **Definida** — especificação v2.0 aceita (DEC-008 a 017, 021) | `docs/ESPEC_ARQUITETURA.md` |
 | Metodologia de avaliação | **Definida** (DEC-018); pontos dependentes do orientador em aberto | Drive, Avaliação/ |
 | Código Android | Nenhum | Este repositório (só documentação) |
@@ -36,7 +36,8 @@ Atualizado em 21/10/2026, 15h, por Claude (Opus 5.5).
 | Pendência | Responsável | Bloqueia |
 | --- | --- | --- |
 | Modelo e versão Android do celular de teste (ainda não definido) | Autor | Verificação no aparelho a partir do M1; o M0 pode usar emulador |
-| Exportar o protótipo revisado para o Drive e listar mudanças que afetem dados ou regras | Autor / GPT | Telas do M1 em diante |
+| Confirmar o Genki(22) como referência final de UX; listar mudanças em relação à v1 que afetem dados ou regras; decidir se o export vai também para o Drive | Autor | Telas do M1 em diante |
+| Pendências de UX S1/S2 do protótipo (9 sugestões, nenhuma aceita; `docs/HANDOFF.md` §5 do genki-prototype) | Autor decide; Claude Code implementa | Nada urgente para o M0 |
 | E-mail e reunião com o orientador (ainda não enviado): procedimento ético, cenário A/B/C, participantes, prescrições | Autor | Objetivo i; MET-2. Quanto mais tarde, menor a chance do cenário A |
 | Padrão de autoria dos commits | Autor | Nada urgente |
 | Subir monografia (ou modelo IFRS) e artigos ao Drive | Autor | Redação |
