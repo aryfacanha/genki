@@ -15,6 +15,16 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo P3: rolagem, acessibilidade e retorno — 21/10/2026 — Codex (modelo não identificado)
+Partida: genki-prototype 72e38fa (Git limpo); este repositório 4375e23, main, cópia obtida do remoto nesta sessão.
+Realizado e arquivos alterados: no genki-prototype, itens 5, 6 e 9 do handoff: degradê compartilhado que aparece quando há conteúdo abaixo; cartões com botão dentro do item de lista e nome acessível completo; rótulos associados, horários com IDs distintos, grupos de escolha única e navegação por setas/Home/End; retorno para Hoje após cadastro iniciado nessa tela (manual e voz/câmera). Dados, parser e validação preservados. `docs/HANDOFF.md` atualizado. Aqui: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: avançar para P3 em continuidade ao modo só Codex; sem mudança de requisitos oficiais ou regras de negócio.
+Sugestões pendentes: revisão independente de P2/P3; decisões de UX anteriores continuam pendentes.
+Verificado: `pnpm.cmd check:local` (typecheck/build); regressão §7 9/9 no Vite/Playwright MCP; rolagem início/fim e screenshot; nome/semântica/Enter dos cartões, rótulos e múltiplos horários, datas manuais, seleção por teclado em tratamento e Ajustes, formulário vazio e edição inválida/continuar/descartar; cadastro iniciado em Hoje retorna a Hoje, iniciado na lista retorna à lista; voz e câmera → voz salvos com retorno a Hoje. Console: somente 404 conhecido do favicon; sem erro de runtime capturado.
+Não verificado: leitor de tela real, Android/aparelho, datas dos estados alternativos da voz e respostas digitadas de P2. Limitações: protótipo web; modo só Codex — aguardando revisão.
+Próxima tarefa e bloqueios: Claude Code revisa P2/P3 quando voltar; confirmação final de UX e M0 Android continuam pendentes.
+Links/commits: https://github.com/aryfacanha/genki-prototype (pacote P3 e `docs/HANDOFF.md`); este commit.
+
 ENTREGA — Protótipo P2: clareza dos formulários — 21/10/2026 — Codex (modelo não identificado)
 Partida: genki-prototype 7eae1f8 (Git limpo); este repositório f32aa25, branch main, cópia obtida do remoto nesta sessão.
 Realizado e arquivos alterados: no genki-prototype, exemplos como ajuda persistente no cadastro/edição/correção por toque e respostas digitadas da voz; valores 18px semibold nas revisões/Detalhes; nomes completos dos dias nos resumos, lista e correções da voz. Ajuste localizado na associação de ajuda/erro, preservando as regras de validação e dados internos. `docs/HANDOFF.md` atualizado. Neste repositório: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
