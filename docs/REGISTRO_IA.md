@@ -14,3 +14,4 @@ Uma linha por sessão relevante.
 | 19/10/2026 | Claude Opus 5.5 | Especificação de arquitetura v1.0; rascunho de avaliação v0.1 | Projeto do Claude | Recomendações aceitas em 21/10 | Documentação técnica e metodologia |
 | 20/10/2026 | Claude Opus 5.5 | Diagnóstico de acesso a Drive/GitHub; prompts para o GPT | Conversa; README | Lido pelo autor | Organização do trabalho |
 | 21/10/2026 | Claude Opus 5.5 | Especificação v2.0 simplificada, decisões, estado, metodologia mínima e pauta com o orientador | `docs/*`, `AGENTS.md`, Drive/Avaliação | Decisões aceitas em 21/10; textos pendentes de revisão | Documentação técnica e metodologia; não integrado à monografia |
+| 21/10/2026 | Claude Opus 5.5 | Aplicação de DEC-002 a 005 na planilha de requisitos; registro do protótipo em revisão | Planilha (Drive); `docs/*` | Autorizado pelo autor em 21/10 | Requisitos oficiais |

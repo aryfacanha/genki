@@ -15,6 +15,16 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Planilha de requisitos atualizada; protótipo em revisão registrado — 21/10/2026 — Claude (Opus 5.5)
+Partida: commit 14cf308; planilha "Requisitos" (última alteração anterior: 04/09/2026).
+Realizado e arquivos alterados: planilha — RF03 (texto), RF08 (observação), RF24 (texto), nova linha RNF11, conforme DEC-002 a 005.
+`docs/REQUISITOS_MAPA.md`, `docs/DECISOES.md` (DEC-022), `docs/ESTADO.md`, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: autorização para aplicar DEC-002 a 005; DEC-022 (protótipo reaberto, informado pelo autor).
+Sugestões pendentes: nenhuma nova.
+Verificado: releitura das células alteradas na planilha após a escrita. | Não verificado: protótipo revisado (não acessível ao Claude).
+Próxima tarefa e bloqueios: M0; exportação do protótipo revisado; celular de teste; e-mail ao orientador.
+Links/commits: este commit.
+
 ENTREGA — Decisões de arquitetura e metodologia; base compartilhada — 21/10/2026 — Claude (Opus 5.5)
 Partida: commit 91a4c0a; Projeto do Claude (`03` v1.1, `claude/10_ESPEC_ARQUITETURA_MVP.md` v1.0, `claude/10_AVALIACAO_ETICA.md` v0.1); Drive (proposta, planilha).
 Realizado e arquivos alterados: `AGENTS.md`, `CLAUDE.md`, `docs/00_INDICE.md`, `docs/ESTADO.md`, `docs/DECISOES.md`,

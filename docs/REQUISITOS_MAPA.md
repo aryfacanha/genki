@@ -3,16 +3,10 @@
 O **texto oficial** dos requisitos está somente na planilha do Drive (ver `docs/00_INDICE.md`).
 Este arquivo guarda (1) alterações aceitas ainda não aplicadas na planilha e (2) em que marco cada requisito é atendido.
 
-## 1. Alterações aceitas pendentes na planilha (conferido em 21/10/2026)
+## 1. Alterações aceitas pendentes na planilha
 
-| ID | Alteração | DEC |
-| --- | --- | --- |
-| RF03 | Texto: "O cadastro deve permitir informar nome, concentração (opcional), dose/quantidade por uso e programação de uso do medicamento." | DEC-002 |
-| RF08 | Observações: "Duração informada (ex.: 'por 7 dias') é convertida em data final e apresentada ao usuário na confirmação." | DEC-003 |
-| RF24 | Acrescentar ao texto: "O reconhecimento do lembrete não deve ser registrado nem apresentado como confirmação da ingestão." | DEC-004 |
-| RNF11 | Nova linha: "O MVP não deve exigir conta/autenticação, servidor de aplicação ou sincronização em nuvem, nem exibir anúncios." — RNF, Alta, Definido | DEC-005 |
-
-Quando forem aplicadas, apague esta seção e registre em `docs/ENTREGAS.md`.
+Nenhuma. DEC-002 a DEC-005 (RF03, RF08, RF24, RNF11) foram aplicadas na planilha em 21/10/2026 por Claude, com autorização do autor.
+A planilha agora tem RF01–RF25 e RNF01–RNF11.
 
 ## 2. Requisito → marco → verificação
 
