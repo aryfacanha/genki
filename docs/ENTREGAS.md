@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: RV-P4d-01 + P4e "adiado na lista Hoje" + revisões do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `a46c0dc`; principal `4f1b31a`.
+Realizado e arquivos alterados: RV-P4d-01 (`b9d14cb`, `shared.tsx`, `MedicamentosScreen.tsx`) — aviso de exclusão em faixa própria entre a lista e "Adicionar medicamento", sem cobrir cartões. P4e (`5de2ead`, `GenkiHome.tsx`, `GenkiFocused.css`) — quando o alerta adiado volta, a linha da lista Hoje mostra "Adiado para HH:MM" além de "Agora". Revisões do Codex (`codex exec`, Playwright local/Edge headless): `docs/REVISAO_RV_P4D_01_CODEX.md` e `docs/REVISAO_P4E_CODEX.md` (`0e549fd`). `docs/HANDOFF.md` no protótipo; aqui, os três registros.
+Decisões aceitas pelo autor nesta sessão: aviso de exclusão em faixa própria; P4e como próximo pacote; próximo: "Desfazer" na exclusão.
+Verificado: `pnpm.cmd check:local`; Playwright (Claude e Codex) 360×800: faixa do aviso com 4 e 6 medicamentos, overlays de Hoje/Detalhes iguais, adiar 10/20/30 min, avançar, sem resposta, Entendi + Desfazer; Home 615/615. Codex: sem regressão; S3 preexistente "exclusão sem Desfazer"; S4 linha alta na lista Hoje (sem ação).
+Não verificado: Android, leitor de tela real, texto ampliado; §7 completa não repetida (voz, câmera e edição não alteradas).
+Próxima tarefa e bloqueios: "Desfazer" na exclusão (Claude Code implementa, Codex revisa); Editar e voz com 2+ medicamentos ainda rolam.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `b9d14cb`, `5de2ead`, `0e549fd`.
+
 ENTREGA — Protótipo: P4d "Medicamentos e Detalhes sem rolar" + revisão do Codex — 21/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `6dc3514`; principal `efd99b1`.
 Realizado e arquivos alterados: P4d (`352293e`, `MedicamentosScreen.tsx`, `DetalhesMedicamento.tsx`, `index.css`) — espaçamento menor e cartões sem ícone decorativo na lista; Detalhes com a lista em duas colunas da revisão ("Duração"). Revisão do Codex (`codex exec`, navegador via Playwright local): `docs/REVISAO_P4D_CODEX.md`. `docs/HANDOFF.md` no protótipo; aqui, os três registros.
