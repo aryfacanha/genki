@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: P4c "Hoje: Agenda clara" + revisão do Codex — 21/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `679c96e`; principal `ee84bb9`.
+Realizado e arquivos alterados: P4c (`741fbf1`, `GenkiHome.tsx`, `GenkiFocused.css`) — lista Hoje recolhida atrás de "Ver todos os horários de hoje (N)", cartão Agora/Próximo e linha "Depois" mantidos. Revisão do Codex (`codex exec`, navegador via Playwright local): um S3, `aria-controls` sem alvo com a lista recolhida → corrigido pelo Claude Code (`1d10d75`, seção montada com `hidden`). `docs/HANDOFF.md` no protótipo; aqui, os três registros.
+Decisões aceitas pelo autor nesta sessão: Agenda clara sem estado "Aguardando resposta" e sem contagem de lembretes anteriores; linguagem do produto mantida.
+Verificado: `pnpm.cmd check:local`; Home 615/615 sem pílula; expandir/recolher, `aria-expanded`, Losartana 08:00 e 20:00, Entendi/Desfazer, adiar → "Sem resposta… 12:40", desligar/Desfazer (Codex no navegador); após a correção, recolher/expandir e horários no Playwright MCP; console sem erros.
+Não verificado: Android, leitor de tela real, texto ampliado; itens de voz/câmera/edição da §7 não repetidos (arquivos não alterados).
+Próxima tarefa e bloqueios: telas que ainda rolam (Medicamentos, Detalhes, Editar, revisão da voz com 2+ medicamentos) — decisão do autor.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `741fbf1`, `1d10d75`.
+
 ENTREGA — Protótipo: revisão independente P4b no navegador — 21/10/2026 — Codex
 Partida: genki-prototype `cf506ab` (produto `36e8fe5`); principal `9f46df4`.
 Realizado e arquivos alterados: revisão do diff P4b-1/2/3 e verificação independente com Playwright MCP diretamente na sessão interativa, concluindo a pendência das tentativas de CLI que falharam. Sem achados novos e sem alteração em `src/`. Relatório `docs/REVISAO_P4B_CODEX.md` e atualização do HANDOFF no protótipo; aqui, os três registros de documentação.
