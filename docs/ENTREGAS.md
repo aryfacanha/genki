@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: P4d "Medicamentos e Detalhes sem rolar" + revisão do Codex — 21/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `6dc3514`; principal `efd99b1`.
+Realizado e arquivos alterados: P4d (`352293e`, `MedicamentosScreen.tsx`, `DetalhesMedicamento.tsx`, `index.css`) — espaçamento menor e cartões sem ícone decorativo na lista; Detalhes com a lista em duas colunas da revisão ("Duração"). Revisão do Codex (`codex exec`, navegador via Playwright local): `docs/REVISAO_P4D_CODEX.md`. `docs/HANDOFF.md` no protótipo; aqui, os três registros.
+Decisões aceitas pelo autor nesta sessão: tirar o ícone dos cartões da lista; Detalhes no mesmo formato de duas colunas da revisão.
+Verificado: `pnpm.cmd check:local`; Medicamentos 575/575 e Detalhes 720/720 (inclusive período, "Ainda não sei" e lembretes desligados), lista com 6 rola com a pílula; §7 no Playwright (Claude e Codex); console sem erros.
+Não verificado: Android, leitor de tela real, texto ampliado.
+Próxima tarefa e bloqueios: decisão do autor sobre RV-P4d-01 (S3, aviso de exclusão cobre cartão em lista longa, preexistente); Editar e voz com 2+ medicamentos ainda rolam.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `352293e`.
+
 ENTREGA — Protótipo: P4c "Hoje: Agenda clara" + revisão do Codex — 21/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `679c96e`; principal `ee84bb9`.
 Realizado e arquivos alterados: P4c (`741fbf1`, `GenkiHome.tsx`, `GenkiFocused.css`) — lista Hoje recolhida atrás de "Ver todos os horários de hoje (N)", cartão Agora/Próximo e linha "Depois" mantidos. Revisão do Codex (`codex exec`, navegador via Playwright local): um S3, `aria-controls` sem alvo com a lista recolhida → corrigido pelo Claude Code (`1d10d75`, seção montada com `hidden`). `docs/HANDOFF.md` no protótipo; aqui, os três registros.
