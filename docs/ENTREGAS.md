@@ -15,6 +15,16 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: revisão de P2/P3, P4a e P4b (telas sem rolar) — 21/10/2026 — Claude Code (Opus 5.5)
+Partida: genki-prototype `195dc15` (P3) + correções VC não commitadas do Codex; este repositório `a8a6d6b`.
+Realizado e arquivos alterados: no genki-prototype — revisão independente de P2/P3/VC (achado RV-01 corrigido, `360535c`); P4a opções de dias empilhadas e TTS só em voz portuguesa (`6a3fdcc`); P4b-1 pílula "Mais abaixo" (`79658c2`); P4b-2 cadastro manual em 3 etapas com "Alterar" por seção na revisão (`a10ce5f`); P4b-3 revisão final em cartões de duas colunas, manual cabendo sem rolar (`36e8fe5`); `docs/HANDOFF.md`. Aqui: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: P4a/P4b pedidos pelo autor; cadastro manual em etapas autorizado (muda fluxo aprovado do Digitar); pílula cobrindo conteúdo aceita; edição e voz mantidas em tela única.
+Sugestões pendentes: Hoje com "Ver todos" e compactar Medicamentos/Detalhes (decisão do autor); Período com "(antes: …)" fica longo (4 linhas) na revisão da voz (S4).
+Verificado: `pnpm.cmd check:local` em cada pacote; regressão §7 9/9 no Vite/Playwright MCP em 21/10 (incluindo "Desfazer" do Entendi); linha "Período" da revisão da voz vista e salva (Detalhes "De 09/09/2026 até 15/10/2026"); revisões do Codex (só código) com achados tratados. Console: só o 404 do favicon.
+Não verificado: leitor de tela real, Android/aparelho, leitura com voz pt-BR instalada, respostas digitadas da voz. Limitações: protótipo web.
+Próxima tarefa e bloqueios: autor decide próximos passos de P4b e confirma referência de UX; M0 Android segue pendente.
+Links/commits: https://github.com/aryfacanha/genki-prototype (`360535c`..`36e8fe5`); este commit.
+
 ENTREGA — Protótipo P3: rolagem, acessibilidade e retorno — 21/10/2026 — Codex (modelo não identificado)
 Partida: genki-prototype 72e38fa (Git limpo); este repositório 4375e23, main, cópia obtida do remoto nesta sessão.
 Realizado e arquivos alterados: no genki-prototype, itens 5, 6 e 9 do handoff: degradê compartilhado que aparece quando há conteúdo abaixo; cartões com botão dentro do item de lista e nome acessível completo; rótulos associados, horários com IDs distintos, grupos de escolha única e navegação por setas/Home/End; retorno para Hoje após cadastro iniciado nessa tela (manual e voz/câmera). Dados, parser e validação preservados. `docs/HANDOFF.md` atualizado. Aqui: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
