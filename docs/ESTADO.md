@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-Atualizado em 21/10/2026, por Claude Code (Opus 5.5).
+Atualizado em 21/10/2026, por Codex (revisão independente do P4b).
 
 ## Situação
 
@@ -17,6 +17,8 @@ Atualizado em 21/10/2026, por Claude Code (Opus 5.5).
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
 ## Prazos
+
+Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão independente de P4b-1/2/3 no navegador concluída, sem achados novos; `pnpm.cmd check:local` e regressão §7 9/9 passaram. Conferidos cadastro em etapas, revisão/retornos, indicador de rolagem e Período da voz com correção e salvamento. Relatório: `docs/REVISAO_P4B_CODEX.md` no genki-prototype. Nenhuma alteração no produto; Android/leitor de tela/voz pt-BR real continuam não verificados.
 
 | Data | Marco |
 | --- | --- |

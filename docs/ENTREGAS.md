@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: revisão independente P4b no navegador — 21/10/2026 — Codex
+Partida: genki-prototype `cf506ab` (produto `36e8fe5`); principal `9f46df4`.
+Realizado e arquivos alterados: revisão do diff P4b-1/2/3 e verificação independente com Playwright MCP diretamente na sessão interativa, concluindo a pendência das tentativas de CLI que falharam. Sem achados novos e sem alteração em `src/`. Relatório `docs/REVISAO_P4B_CODEX.md` e atualização do HANDOFF no protótipo; aqui, os três registros de documentação.
+Decisões aceitas pelo autor nesta sessão: executar a verificação sugerida pelo Claude; nenhuma nova decisão de produto.
+Verificado: `pnpm.cmd check:local`; §7 9/9; etapas com validação/foco/preservação, Alterar/retorno/descartar/salvar, pílula até fim e oculta com diálogos, Período da voz corrigido com valores anteriores e salvo em Detalhes; screenshots inspecionadas. Etapas 639/639 e revisão manual 573/573 no frame 360×800. Console final sem erros retornados.
+Não verificado: Android, leitor de tela real, voz pt-BR real, fallback digitado inacessível e participantes. Limitações: protótipo web; sem repetir todos os cenários históricos de texto ampliado/muitos horários.
+Próxima tarefa e bloqueios: decisões do autor sobre UX/MyTherapy e início do Android; revisão no navegador do P4b já concluída. Registros enviados pelo Claude Code com autorização do autor.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `docs/REVISAO_P4B_CODEX.md`.
+
 ENTREGA — Protótipo: revisão de P2/P3, P4a e P4b (telas sem rolar) — 21/10/2026 — Claude Code (Opus 5.5)
 Partida: genki-prototype `195dc15` (P3) + correções VC não commitadas do Codex; este repositório `a8a6d6b`.
 Realizado e arquivos alterados: no genki-prototype — revisão independente de P2/P3/VC (achado RV-01 corrigido, `360535c`); P4a opções de dias empilhadas e TTS só em voz portuguesa (`6a3fdcc`); P4b-1 pílula "Mais abaixo" (`79658c2`); P4b-2 cadastro manual em 3 etapas com "Alterar" por seção na revisão (`a10ce5f`); P4b-3 revisão final em cartões de duas colunas, manual cabendo sem rolar (`36e8fe5`); `docs/HANDOFF.md`. Aqui: `docs/ESTADO.md`, `docs/ENTREGAS.md`, `docs/REGISTRO_IA.md`.
