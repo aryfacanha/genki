@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: revisão geral, P5 "telas estreitas" e P6 "fala não entendida" + revisões do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `5722918`; principal `62ba3a9`.
+Realizado e arquivos alterados: revisão geral conjunta (`docs/REVISAO_GERAL_CODEX.md`, `docs/REVISAO_GERAL_CLAUDE.md`) e HANDOFF enxuto (histórico em `docs/HANDOFF_HISTORICO.md`). P5 (`a2b3607`, `index.css`, `DigitarMedicamento.tsx`): "Remover" do horário desce para baixo do campo quando não cabe; lista de revisão/Detalhes empilhada em telas ≤ 340 px; nome acessível da concentração igual ao rótulo visível. P6 (`d5da449`…`092cb0d`, `App.tsx`, `UsarVozMedicamento.tsx`): botão do painel de demonstração "Simular: próxima fala de correção não entendida" leva à tela "Não consegui entender" (Tentar novamente / Digitar resposta); a resposta digitada só aceita a frase sugerida pela ajuda ("o amlodipino é às 9 da manhã"); o interpretador das falas simuladas ficou igual ao anterior. Revisões: `docs/REVISAO_P5_CODEX.md`, `docs/REVISAO_P6_CODEX.md`.
+Decisões aceitas pelo autor nesta sessão: fazer a revisão geral; P5 com os achados de telas estreitas; P6 com o controle de demonstração; push e registro.
+Sugestões pendentes: nenhuma da revisão geral.
+Verificado: `pnpm.cmd check:local`; §7 10/10 (Codex, várias vezes); 360×800 sem mudança, 320×640 e 277×615 sem corte; tela de erro da voz e resposta digitada no navegador; P6 com 69 testes unitários, 1.248 sondagens e 213 verificações no navegador pelo Codex. | Não verificado: Android, leitor de tela real, voz pt-BR real, câmera/OCR reais, usuários idosos. | Limitações: o interpretador da simulação é por palavras-chave e só serve às falas fixas da demonstração.
+Próxima tarefa e bloqueios: Editar ainda rola (edição por seção exige decisão do autor); seção 9 do HANDOFF (confirmar cartão Agora × Próximo e painel de demonstração como DEC).
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `ef815f6`, `a2b3607`, `092cb0d`, `e865456`.
+
 ENTREGA — Protótipo: P4g "revisão da voz mais curta" + revisão do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `21c1662`; principal `8422b2a`.
 Realizado e arquivos alterados: P4g (`0dca849`, `UsarVozMedicamento.tsx`, `GenkiFocused.css`) — na revisão final da voz a Duração mostra "Uso contínuo" sem "(sem data para parar)" (texto completo mantido nas perguntas, lista, Detalhes e revisão manual; dados iguais) e sai o título repetido "Resumo para conferência". Juntar Dias e Horários foi medido e descartado (ganho de 15 px). Revisão do Codex: `docs/REVISAO_P4G_CODEX.md`.
