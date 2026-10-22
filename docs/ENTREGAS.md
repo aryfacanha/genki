@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: P4g "revisão da voz mais curta" + revisão do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `21c1662`; principal `8422b2a`.
+Realizado e arquivos alterados: P4g (`0dca849`, `UsarVozMedicamento.tsx`, `GenkiFocused.css`) — na revisão final da voz a Duração mostra "Uso contínuo" sem "(sem data para parar)" (texto completo mantido nas perguntas, lista, Detalhes e revisão manual; dados iguais) e sai o título repetido "Resumo para conferência". Juntar Dias e Horários foi medido e descartado (ganho de 15 px). Revisão do Codex: `docs/REVISAO_P4G_CODEX.md`.
+Decisões aceitas pelo autor nesta sessão: Duração curta e sem título na revisão da voz; parar antes de Editar por seção.
+Verificado: `pnpm.cmd check:local`; Playwright (Claude e Codex) 360×800: revisão com 2 medicamentos 767 → 618/594 com o aviso de voz ausente e 573/573 sem ele; Corrigir tocando com "(antes: …)", Período, salvar, câmera → voz; Codex sem achados S1–S4.
+Não verificado: voz pt real, Android, leitor de tela real, texto ampliado.
+Próxima tarefa e bloqueios: Editar ainda rola (edição por seção exige decisão do autor); seção 9 do HANDOFF.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `0dca849`.
+
 ENTREGA — Protótipo: P4f "Desfazer na exclusão" + revisão do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `0e549fd`; principal `11285ef`.
 Realizado e arquivos alterados: P4f (`b347ad7`, `App.tsx`, `MedicamentosScreen.tsx`) — diálogo de confirmação mantido; o aviso "Medicamento excluído" ganha "Desfazer", que restaura o medicamento na mesma posição e as respostas de lembrete, com aviso "Medicamento restaurado" e foco no cartão; respostas de lembrete do excluído saem do estado (cadastro novo com id reutilizado não as herda). Revisão do Codex: `docs/REVISAO_P4F_CODEX.md`.
