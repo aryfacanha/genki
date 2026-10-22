@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Protótipo: P4f "Desfazer na exclusão" + revisão do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
+Partida: genki-prototype `0e549fd`; principal `11285ef`.
+Realizado e arquivos alterados: P4f (`b347ad7`, `App.tsx`, `MedicamentosScreen.tsx`) — diálogo de confirmação mantido; o aviso "Medicamento excluído" ganha "Desfazer", que restaura o medicamento na mesma posição e as respostas de lembrete, com aviso "Medicamento restaurado" e foco no cartão; respostas de lembrete do excluído saem do estado (cadastro novo com id reutilizado não as herda). Revisão do Codex: `docs/REVISAO_P4F_CODEX.md`.
+Decisões aceitas pelo autor nesta sessão: diálogo + Desfazer na exclusão; próximo: revisão da voz mais curta.
+Verificado: `pnpm.cmd check:local`; Playwright (Claude e Codex) 360×800: desfazer (posição, foco, "Visto às 12:00"), expirar, cancelar, id reutilizado, Desfazer ausente em outros avisos, teclado; Codex sem achados S1–S4.
+Não verificado: Android, leitor de tela real, texto ampliado; §7 completa não repetida.
+Próxima tarefa e bloqueios: revisão da voz com 2+ medicamentos mais curta (Claude Code implementa, Codex revisa); Editar ainda rola.
+Links/commits: https://github.com/aryfacanha/genki-prototype ; `b347ad7`.
+
 ENTREGA — Protótipo: RV-P4d-01 + P4e "adiado na lista Hoje" + revisões do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `a46c0dc`; principal `4f1b31a`.
 Realizado e arquivos alterados: RV-P4d-01 (`b9d14cb`, `shared.tsx`, `MedicamentosScreen.tsx`) — aviso de exclusão em faixa própria entre a lista e "Adicionar medicamento", sem cobrir cartões. P4e (`5de2ead`, `GenkiHome.tsx`, `GenkiFocused.css`) — quando o alerta adiado volta, a linha da lista Hoje mostra "Adiado para HH:MM" além de "Agora". Revisões do Codex (`codex exec`, Playwright local/Edge headless): `docs/REVISAO_RV_P4D_01_CODEX.md` e `docs/REVISAO_P4E_CODEX.md` (`0e549fd`). `docs/HANDOFF.md` no protótipo; aqui, os três registros.
