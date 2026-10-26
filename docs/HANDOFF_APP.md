@@ -1,6 +1,6 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
-Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — M1 (CRUD manual); antes: criação deste arquivo (DEC-026).
+Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — M2 (lembretes); antes: M1 (CRUD manual); antes: criação deste arquivo (DEC-026).
 Quem assumir: leia `AGENTS.md`, `docs/ESTADO.md` e este arquivo, confira o estado real (`git log`, build) e não confie só
 neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se mudaram) e acrescente uma linha no Diário**.
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
@@ -17,7 +17,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 | --- | --- | --- |
 | M0 Base | Implementado, compilado e aberto no emulador (Pixel_6_2, API 35) em 26/10: regressão da seção 7 passa. Tema e barra inferior alinhados ao protótipo `295212e`. Aceite manual do autor no aparelho (ESPEC §9) pendente | `c1f2b7e`, `cec21ab`, `53fe97a`, correção do rótulo (ver Diário) |
 | M1 CRUD | Implementado, compilado e conferido no emulador em 26/10 (cadastro em 3 etapas + revisão, lista, detalhes, edição, exclusão; dados persistem ao reabrir). Decisões #2, #7, #12 aplicadas (DEC-027). Aceite manual do autor no aparelho pendente | `f2ff130` |
-| M2 Lembretes | Não iniciado. Antes: decisões #13, #14, #16 | — |
+| M2 Lembretes | Implementado, compilado e conferido no emulador em 26/10 (alarme no horário, 3 repetições, Adiar, Entendi, próxima ocorrência, Hoje com dados reais, Ajustes com permissões). Decisões #13, #14, #16 aplicadas (DEC-028). Aceite no aparelho pendente | `f111670` |
 | M3 Voz | Não iniciado | — |
 | M4 Câmera | Não iniciado | — |
 
@@ -25,9 +25,11 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Item | Situação |
 | --- | --- |
-| `.\gradlew.bat assembleDebug test` | Passa em `f2ff130` (Claude Code, 26/10) |
-| Testes unitários | 27: `GenkiEvalTest` (2), `DraftValidatorTest` (15), `MedicationTextTest` (6), `MappersTest` (4). `FormViewModel` (etapas, voltar, "Alterar" da revisão) sem teste automatizado |
+| `.\gradlew.bat assembleDebug test` | Passa em `f111670` (Claude Code, 26/10) |
+| Testes unitários | 37: `GenkiEvalTest` (2), `DraftValidatorTest` (15), `OccurrenceCalculatorTest` (9), `MedicationTextTest` (7), `MappersTest` (4). `FormViewModel` (etapas, voltar, "Alterar" da revisão) sem teste automatizado |
 | M1 no emulador (Pixel_6_2, API 35, 26/10) | Erros por etapa com as frases do protótipo; dias específicos; horário repetido → "Este horário já foi adicionado."; relógio 24 h; data de início = hoje; término vazio e anterior ao início; revisão com "Alterar" e "Concluir alteração"; salvar → aviso "Medicamento adicionado"; fechar e reabrir mantém os dados (RNF06); detalhes; desativar lembretes (preservado ao editar); edição com "Descartar alterações?"; exclusão com confirmação; fonte 1,5× no formulário. Capturas em `build/m1_*.png` (não versionadas) |
+| M2 no emulador (Pixel_6_2, API 35, 26/10) | Hoje: data por extenso, "Próximo lembrete 19:30", lista do dia, "Os lembretes de hoje já passaram."; Ajustes: repetição, intervalo 10/20/30 sempre visível, estado das permissões; pedido explicado de notificação ao salvar; botão abre "Alarms & reminders" do sistema e, ao permitir, os alarmes viram exatos (`dumpsys alarm`: `window=0`). Lembrete às 19:30:00 com "Lembrete das 19:30 / Losartana 50 mg · 1 comprimido", "Entendi" e "Adiar 10 min"; repetições às 19:40 e 19:50 (3ª agendada); "Adiar" tira a notificação, cancela a repetição e agenda `FIRE_SNOOZED` em +10 min; aviso adiado às 20:03 com "(adiado)" e repetição; "Entendi" tira a notificação e cancela a repetição; "Desativar lembretes" cancela o alarme e "Ativar" reagenda; próxima ocorrência do dia seguinte agendada |
+| Limitações do M2 | Repetições e adiamentos pendentes não voltam depois de reiniciar o aparelho (S2); ocorrência perdida com o aparelho desligado não é emitida depois; sem permissão de alarme exato o aviso pode atrasar; a Hoje não mostra se um lembrete foi visto ou adiado (DEC-028); reinício do aparelho (`BOOT_COMPLETED`) não testado; a repetição de um aviso adiado volta ao título sem "(adiado)" (menor) |
 | Limitações do M1 | "Adicionar medicamento" abre direto o formulário manual (a escolha Voz/Digitar/Câmera entra no M3, com `RegistrationSession`); calendário e relógio seguem o idioma do sistema (emulador em inglês); ligar/desligar lembretes só grava a escolha (alarmes no M2); textos das telas em Kotlin, não em `strings.xml` (app só em português); na edição, trocar para "Tem data para terminar" mostra como início a data do cadastro (divergência #5) |
 | App aberto em emulador/aparelho | Emulador Pixel_6_2 (API 35), 26/10, Claude Code. Aparelho físico: não |
 | Abas, cores, barra inferior | Verificados no emulador (capturas): abre em Hoje, três abas trocam, indicador verde-claro e negrito na ativa, sem roxo |
@@ -93,7 +95,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
   verde-claro atrás do ícone e o rótulo em negrito; nenhum texto roxo/lilás do Material padrão; build debug registra
   `GenkiEval` no Logcat (`adb logcat -d -s GenkiEval`).
 - **M1:** Medicamentos vazia mostra "Nenhum medicamento cadastrado."; "Adicionar medicamento" → etapas 1–3 bloqueiam com erro em campo vazio; dois horários iguais → "Este horário já foi adicionado."; "Tem data para terminar" exige término não anterior ao início; revisão mostra tudo e "Alterar" volta só àquela etapa; "Confirmar e salvar" → cartão na lista e aviso acima do botão; fechar e reabrir o app mantém o cartão; detalhes → Editar (sair com mudança pergunta "Descartar alterações?"), Desativar lembretes (cartão mostra "Lembretes desligados"), Excluir pede confirmação. Logcat: `cadastro_iniciado`, `medicamento_salvo`, `medicamento_editado`, `medicamento_excluido`.
-- M2 em diante: acrescentar ao entregar cada marco.
+- **M2:** Hoje mostra a data por extenso, o próximo lembrete e a lista do dia (sem "Visto"/"Adiado"); Ajustes mostra repetição, intervalo e permissões; ao salvar o 1º medicamento sem permissão, aparece "Permitir notificações?"; com um horário 2–3 min à frente, a notificação chega no horário com "Entendi" e "Adiar N min"; sem resposta repete a cada N min até 3 vezes; "Adiar" volta em N min com "(adiado)"; "Entendi" (ou deslizar) some e cancela as repetições; "Desativar lembretes" cancela os alarmes (`adb shell dumpsys alarm | grep genki`). Logcat: `lembrete_emitido`, `lembrete_adiado`, `lembrete_reconhecido`.
+- M3 em diante: acrescentar ao entregar cada marco.
 
 ## 8. Divisão de trabalho (DEC-026)
 
@@ -108,6 +111,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-26 — Claude Code — M2 (`f111670`): `OccurrenceCalculator`, `Settings` (SharedPreferences), `reminders/` (`ReminderScheduler`, `ReminderReceiver` FIRE/REPEAT/ACK/SNOOZE/FIRE_SNOOZED, `BootReceiver`, `Notifications`), repositório reagenda a cada mutação e cancela pelos ids antigos, telas Hoje e Ajustes, pedido de notificação ao salvar; DEC-028 (#13, #14, #16). **Config:** manifest com `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`, `RECEIVE_BOOT_COMPLETED` e dois receivers; `res/drawable/ic_notification.xml` — 37 testes passam; lembrete real conferido no emulador — pendente: revisão do Codex; aparelho físico; reinício do aparelho; TalkBack.
 - 2026-10-26 — Claude Code — M1 (`f2ff130`): `domain/` (modelo, rascunho, `DraftValidator` com `DUPLICATE_TIME`), `data/` (Room, DAO, repositório só com `Valid`), telas de lista, detalhes, formulário em etapas + revisão e edição; navegação com rotas `DetailRoute`, `AddMedicationRoute`, `EditMedicationRoute`, barra inferior só nas abas e aviso (snackbar) no `Scaffold`; DEC-027 (#2, #7, #12) — 27 testes passam; fluxo completo conferido no emulador — pendente: revisão do Codex; aceite do autor no aparelho; TalkBack.
 - 2026-10-26 — Claude Code — `/testar-emulador` no Pixel_6_2 (API 35): regressão M0 passa; com fonte 1,3× "Medicamentos" era cortado na barra inferior → rótulo com `autoSize` (16 sp → mín. 12 sp) em `GenkiApp.kt`, a pedido do autor — build, testes e emulador em 1,0×/1,3×/1,5× OK — pendente: corte persiste a partir de 1,8×; TalkBack não testado.
 - 2026-10-26 — Claude Code — cria este arquivo, a seção "Implementação e revisão" no `AGENTS.md` e `docs/revisoes/`; skills `/revisar` e `/testar-emulador` passam a apontar para as seções 5 e 6 (DEC-026) — só documentação — pendente: primeira revisão pelo Codex.

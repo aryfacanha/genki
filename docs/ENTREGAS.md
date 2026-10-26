@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: M2 Lembretes — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `6d34c89`; genki-prototype `295212e` (`GenkiHome.tsx`, `AjustesScreen.tsx`, `reminders.ts`).
+Realizado e arquivos alterados: `domain/OccurrenceCalculator`; `data/Settings` (repetição e intervalo em SharedPreferences), consultas novas no `MedicationDao`, `MedicationRepository` reagenda a cada mutação; `reminders/` (`ReminderScheduler`, `ReminderReceiver`, `BootReceiver`, `Notifications`); `GenkiApplication` (canal e `syncAll` na abertura); `ui/home` (próximo lembrete + lista do dia), `ui/settings` (repetição, intervalo, permissões, Sobre); pedido de notificação ao salvar em `GenkiApp`; manifest e `ic_notification`. Testes: `OccurrenceCalculatorTest`, `longDate`. Docs: DEC-028 em `DECISOES`, `DIVERGENCIAS_PROTOTIPO`, `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-028 (#13 Hoje sem estado de resposta; #14 "Adiar N min" único; #16 intervalo sempre visível), 26/10.
+Sugestões pendentes: nenhuma nova.
+Verificado: `.\gradlew.bat assembleDebug test` (37 testes); no emulador Pixel_6_2 API 35: lembrete no horário exato, repetições a cada 10 min, Adiar, aviso adiado, Entendi, próxima ocorrência agendada, Hoje e Ajustes, pedido de permissão, troca para alarme exato. | Não verificado: aparelho físico, reinício do aparelho, troca de fuso, Doze/economia de bateria, TalkBack. | Limitações: S2 (repetição/adiamento pendentes não sobrevivem a reinício).
+Próxima tarefa e bloqueios: revisão do Codex (M1 e M2); conferência do autor no aparelho; M3 (voz).
+Links/commits: `f111670`; este commit.
+
 ENTREGA — App Android: M1 CRUD manual — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `cbed4c9`; genki-prototype `295212e` (telas de lista, detalhes, cadastro manual em etapas, revisão, edição).
 Realizado e arquivos alterados: `domain/` (`Medication`, `MedicationDraft`, `DraftValidator` com `DUPLICATE_TIME`), `data/` (entidades, conversores, `MedicationDao`, `GenkiDatabase`, `MedicationRepository` que só aceita `Valid`), `AppContainer`; `ui/medications` (lista), `ui/details` (detalhes, lembretes liga/desliga, exclusão com confirmação), `ui/form` (3 etapas + revisão; edição em página única; "Descartar alterações?"), `ui/components`, `ui/MedicationText`; navegação e aviso (snackbar) em `GenkiApp`. Testes: `DraftValidatorTest`, `MedicationTextTest`, `MappersTest`. Docs: DEC-027 em `DECISOES`, `DIVERGENCIAS_PROTOTIPO`, `ESPEC_ARQUITETURA` §3–§4, `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.
