@@ -15,6 +15,24 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — M0 no emulador, rótulo com fonte ampliada e merge com o chat do Projeto — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `21a995b` (local, à frente do remoto); remoto em `3dbaca6`.
+Realizado e arquivos alterados: `/testar-emulador` no Pixel_6_2 (API 35); `ui/navigation/GenkiApp.kt` (rótulo da barra com `autoSize`, 16 → mín. 12 sp) (`d74a75b`); decisão do handoff renumerada de DEC-025 para DEC-026, porque o chat do Projeto já usou DEC-025 (referências em `AGENTS.md` e docs; as mensagens dos commits `21a995b` e `d74a75b` ainda dizem DEC-025); merge com o remoto mantendo os dois lados em `DECISOES`, `ENTREGAS`, `ESTADO`, `REGISTRO_IA`; pendência "Confirmar o Genki(22) como referência" retirada (resolvida pela DEC-025). `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: correção do rótulo e renumeração para DEC-026 (26/10, pedido explícito).
+Sugestões pendentes: rótulo "Medicamentos" ainda corta com fonte ≥ 1,8× (mudar texto ou aceitar).
+Verificado: `.\gradlew.bat assembleDebug test`; emulador: abre em Hoje, abas trocam, cores, `GenkiEval`, sem erros do app; rótulo inteiro em 1,0×/1,3×/1,5×. | Não verificado: aparelho físico, TalkBack, voz, câmera, alarmes. | Limitações: corte a partir de 1,8×.
+Próxima tarefa e bloqueios: aceite manual do M0 pelo autor; decisões #2, #7, #12 antes do M1.
+Links/commits: `d74a75b`; commit de renumeração; este merge.
+
+ENTREGA — Justificativa formal, conciliação com a revisão do GPT e e-mail à Coordenação TADS — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
+Partida: genki `5e0f668`; Drive: justificativa formal, revisão do GPT (26/10), plano de 26/10.
+Realizado e arquivos alterados: justificativa formal criada e depois ajustada com as recomendações do GPT (dispensa a confirmar; 27/11 = primeira análise, não aprovação; adequação a formalizar, não substituição; executor e registro por método; intenção de submeter sem afirmar submissão; objetivo i não realizado ou parcial; sem tempos/taxas/SUS reais; título de Wharton et al. 1994). Nota de conciliação e espelho das DEC-023/024/025 no plano do Drive (o GPT não acessa o GitHub). E-mail final à coordenação entregue no chat. Aqui: `ESTADO`, `DECISOES`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-025; contatar só a coordenação do curso, não o CEP diretamente.
+Sugestões pendentes: resposta factual à pergunta "por que não submeter em agosto" (preparar com o orientador).
+Verificado: título de Wharton et al. em duas fontes secundárias divergentes (adotado o da Wikipedia, igual ao do GPT). | Não verificado: o livro de Wharton et al.; Kneale et al. (2017). | Limitações: GPT sem acesso ao repositório.
+Próxima tarefa e bloqueios: autor envia o e-mail; resposta da coordenação decide formalização e submissão.
+Links/commits: Drive https://docs.google.com/document/d/1lSLVGNz5Seh2XSHxtqZFvpY4IVQOTYlgfeJhZ_mfy5c/edit ; este commit.
+
 ENTREGA — Handoff do app e protocolo de revisão Claude Code ↔ Codex — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `19fcb3f`.
 Realizado e arquivos alterados: `docs/HANDOFF_APP.md` (novo), `docs/revisoes/README.md` (novo), seção "Implementação e revisão" no `AGENTS.md`; skills `/revisar` e `/testar-emulador` reduzidas a apontar para as seções 6 e 5 do handoff (roteiro do autor movido para lá sem mudança de conteúdo, mais o passo de gravar a revisão e a regressão da seção 7); `DECISOES` (DEC-026), `00_INDICE`, `ESTADO`, `REGISTRO_IA`.
