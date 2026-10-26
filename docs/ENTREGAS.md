@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Resposta do orientador e caminho C (CEP + personas) — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
+Partida: genki `3fe845c`.
+Realizado e arquivos alterados: registro da resposta do orientador; conferência do Ofício-Circular nº 17/2022/CONEP (TCC deve ser submetido) e do Regimento do CEP-IFRS (prazos 10 + 30 dias); justificativas propostas (amostra: Faulkner, 2003; embalagens; SUS); trilhas CEP e personas com cronograma integrado. Drive: duas seções novas no plano de 26/10 e aviso de precedência no topo. Aqui: `DECISOES` (DEC-024), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-024 (26/10).
+Sugestões pendentes: só embalagens na PoC; justificativas a revisar pelo autor.
+Verificado: Ofício 17/2022 e Regimento CEP-IFRS (texto online); Faulkner (2003) no PubMed (autoria não exibida na página). | Não verificado: contato da coordenação/CEP; fontes de personas e percurso cognitivo. | Limitações: prazo real do CEP desconhecido.
+Próxima tarefa e bloqueios: e-mail à coordenação/CEP (contato a confirmar pelo autor); resposta ao orientador; rascunhos do protocolo.
+Links/commits: Drive https://docs.google.com/document/d/1LZW0Ylpso5zc3NihXLg0mBhXrhynfKIHsBysZtWoqrs/edit ; este commit.
+
 ENTREGA — Plano de etapas, cronograma e e-mail ao orientador — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
 Partida: genki `ad3b988`; genki-prototype `295212e`; Drive: proposta final, metodologia de 21/10.
 Realizado e arquivos alterados: verificação do protótipo pelos registros (análise final, P7/P7b/P7c, retorno do autor); conferência da referência da SUS brasileira no texto online; plano com procedimentos por objetivo, redução de variáveis, cronograma, 16 tarefas e 8 perguntas ao orientador com propostas. Drive: novo doc "Genki — Plano de etapas e cronograma até a entrega" (Avaliação/) e aviso no topo do doc de metodologia de 21/10. Aqui: `ESTADO`, `DECISOES` (DEC-023), `ENTREGAS`, `REGISTRO_IA`, `00_INDICE`. Rascunho do e-mail entregue ao autor no chat.

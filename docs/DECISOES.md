@@ -28,14 +28,15 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | DEC-022 | 21/10 | Protótipo reaberto | O autor está revisando o protótipo no Figma Make, com o GPT, por razões de usabilidade. O v1 deixa de ser a referência final; a nova exportação passa a ser referência quando concluída e colocada no Drive. Até lá, a ESPEC vale para dados, regras e fluxos; telas seguem o protótipo mais recente | aceita 21/10 (autor) |
 | DEC-021 | 21/10 | Testes de código | **Simplificado (S5)**: só testes unitários da lógica pura; UI e Android verificados manualmente no aparelho | aceita 21/10 com S5 (vetável) |
 | DEC-023 | 26/10 | Plano até a entrega | Sequência de 16 tarefas e cronograma (Android a partir de 26/10, congelamento 02/11, heurística 02–03/11, verificação técnica 03–05/11, participantes 06–11/11 só com autorização). Classificação da pesquisa mantida conforme a proposta. Sessão única por participante (T1–T4 + SUS, sem gravação, mesmo aparelho). Protótipo web não é usado com participantes. Fluxo de voz V1–V6 do retorno do autor fica como trabalho futuro (V6 só com nova DEC). Perguntas ao orientador com propostas (cenário B proposto, só embalagens etc.) — **as propostas dependem do orientador**. Documento: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega | aceita 26/10 (autor) |
+| DEC-024 | 26/10 | Objetivo i após resposta do orientador | **Caminho C:** submeter o protocolo ao CEP-IFRS (submissão meta 30/10, comprovante guardado) e fazer avaliação guiada por 2 personas (T1–T4 no app congelado, 05–06/11) como complemento analítico; testes com pessoas reais só com parecer de aprovação (sessões 10–13/11 se aprovado até ~09/11). SUS nunca respondida por personas. Personas são acréscimo à proposta: registrar como divergência na monografia. **Meta de 10 participantes** (Faulkner, 2003). Substitui o cenário B e a amostra de 5 da DEC-023. Pendente: só embalagens na PoC de imagem | aceita 26/10 (autor) |
 
 ## Pendentes
 
 | Tema | Situação |
 | --- | --- |
 | Padrão de autoria dos commits de assistentes | A definir pelo autor antes do desenvolvimento |
-| Cenário do objetivo i e procedimento ético | **Orientador (26/10):** CEP obrigatório (CEP-IFRS); tempo sozinho não justifica ficar sem pessoas reais; perguntou sobre personas. Regimento CEP-IFRS: até 10 dias de conferência + 30 de parecer. Decisão do autor pendente (submeter já ao CEP; personas como complemento ou substituição) |
-| Número de participantes | **Orientador (26/10):** 5 é pouco; exige justificativa forte. Decisão do autor pendente |
+| Contato da coordenação/CEP indicada pelo orientador | Autor confirma o contato; pergunta documentos, pesquisador responsável e assinatura da folha de rosto |
+| Fontes metodológicas de personas e percurso cognitivo | Não estão na proposta; localizar e conferir antes de escrever o método |
 | Âncoras/escolha da SUS | **Orientador (26/10):** pode usar, com justificativa própria da escolha. Pendente |
 | Declaração de IA | **Orientador (26/10):** atualizar na versão final, com todas as IAs mencionadas e justificadas |
 | Prescrições fictícias na PoC (DEC-006) | **Orientador (26/10):** decisão do autor, bem justificada. Pendente |
