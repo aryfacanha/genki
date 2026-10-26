@@ -50,6 +50,12 @@ class MedicationTextTest {
     }
 
     @Test
+    fun longDateIsPortuguese() {
+        assertEquals("Segunda-feira, 26 de outubro", MedicationText.longDate(LocalDate.of(2026, 10, 26)))
+        assertEquals("Domingo, 1 de novembro", MedicationText.longDate(LocalDate.of(2026, 11, 1)))
+    }
+
+    @Test
     fun duplicateTimeHasItsOwnMessage() {
         assertEquals("Este horário já foi adicionado.", MedicationText.error(Field.TIMES, Problem.DUPLICATE_TIME))
         assertEquals("Adicione ao menos um horário.", MedicationText.error(Field.TIMES, Problem.MISSING))

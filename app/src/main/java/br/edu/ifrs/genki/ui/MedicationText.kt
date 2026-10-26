@@ -8,6 +8,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /**
  * Textos de exibição montados a partir dos dados, com as frases do protótipo
@@ -61,6 +62,11 @@ object MedicationText {
     private val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     fun date(date: LocalDate): String = date.format(dateFormat)
+
+    private val longDateFormat = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", Locale.forLanguageTag("pt-BR"))
+
+    /** "Segunda-feira, 26 de outubro" (topo da Hoje), sempre em português. */
+    fun longDate(date: LocalDate): String = date.format(longDateFormat).replaceFirstChar { it.uppercase() }
 
     /** "De 01/11/2026 até 07/11/2026". */
     fun period(start: LocalDate, end: LocalDate?): String =

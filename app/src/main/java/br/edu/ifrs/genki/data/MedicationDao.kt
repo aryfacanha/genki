@@ -19,6 +19,22 @@ abstract class MedicationDao {
     @Query("SELECT * FROM medication WHERE id = :id")
     abstract fun observe(id: Long): Flow<MedicationWithTimes?>
 
+    @Transaction
+    @Query("SELECT * FROM medication WHERE id = :id")
+    abstract suspend fun get(id: Long): MedicationWithTimes?
+
+    @Transaction
+    @Query("SELECT * FROM medication")
+    abstract suspend fun getAll(): List<MedicationWithTimes>
+
+    /** Medicamento dono do horário; `null` se o horário foi apagado (alarme antigo). */
+    @Transaction
+    @Query("SELECT medication.* FROM medication JOIN schedule_time ON schedule_time.medicationId = medication.id WHERE schedule_time.id = :timeId")
+    abstract suspend fun findByTime(timeId: Long): MedicationWithTimes?
+
+    @Query("SELECT id FROM schedule_time WHERE medicationId = :medicationId")
+    abstract suspend fun timeIds(medicationId: Long): List<Long>
+
     @Insert
     protected abstract suspend fun insertMedication(medication: MedicationEntity): Long
 

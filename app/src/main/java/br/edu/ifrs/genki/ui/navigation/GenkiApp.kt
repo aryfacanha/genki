@@ -1,5 +1,9 @@
 package br.edu.ifrs.genki.ui.navigation
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -9,6 +13,7 @@ import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,11 +24,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +48,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import br.edu.ifrs.genki.R
+import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.details.DetailScreen
 import br.edu.ifrs.genki.ui.form.MedicationFormScreen
@@ -73,14 +84,19 @@ fun GenkiApp() {
             snackbarHostState.showSnackbar(message)
         }
     }
+    // Ao salvar um medicamento sem a permissão de notificações, explica e pede (ESPEC §6, Android 13+).
+    val context = LocalContext.current
+    var explainNotifications by remember { mutableStateOf(false) }
+    val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     // Barra inferior só nas três abas; detalhes e formulários ocupam a tela inteira.
     val onTopLevel = TopLevelTab.entries.any { tab -> currentDestination?.hasRoute(tab.route::class) == true }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = {
-            // Na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
-            val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true
+            // Na Hoje e na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
+            val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true ||
+                currentDestination?.hasRoute(HomeRoute::class) == true
             SnackbarHost(snackbarHostState, Modifier.padding(bottom = if (aboveAddButton) 80.dp else 0.dp))
         },
         bottomBar = {
@@ -134,7 +150,7 @@ fun GenkiApp() {
             startDestination = HomeRoute,
             modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
         ) {
-            composable<HomeRoute> { HomeScreen() }
+            composable<HomeRoute> { HomeScreen(onAdd = { navController.navigate(AddMedicationRoute) }) }
             composable<MedicationsRoute> {
                 MedicationsScreen(
                     onOpen = { id -> navController.navigate(DetailRoute(id)) },
@@ -156,7 +172,13 @@ fun GenkiApp() {
                 MedicationFormScreen(
                     editId = null,
                     onClose = { navController.popBackStack() },
-                    onSaved = { message -> showMessage(message); navController.popBackStack() },
+                    onSaved = { message ->
+                        showMessage(message)
+                        navController.popBackStack()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.canNotify(context)) {
+                            explainNotifications = true
+                        }
+                    },
                 )
             }
             composable<EditMedicationRoute> { entry ->
@@ -167,5 +189,22 @@ fun GenkiApp() {
                 )
             }
         }
+    }
+
+    if (explainNotifications) {
+        AlertDialog(
+            onDismissRequest = { explainNotifications = false },
+            title = { Text("Permitir notificações?") },
+            text = { Text("Para avisar nos horários dos medicamentos, o Genki precisa mostrar notificações.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    explainNotifications = false
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        requestNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }) { Text("Permitir") }
+            },
+            dismissButton = { TextButton(onClick = { explainNotifications = false }) { Text("Agora não") } },
+        )
     }
 }
