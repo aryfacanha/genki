@@ -53,7 +53,7 @@ Código gerado ≠ compilado ≠ testado no aparelho. Texto proposto ≠ revisad
 - Autoria de commits feitos por assistentes: **padrão ainda a definir pelo autor** (ver `docs/ESTADO.md`).
   Até lá, o autor do commit é o autor do TCC e o assistente aparece em `Co-Authored-By`.
 
-## Implementação e revisão (app Android, DEC-025)
+## Implementação e revisão (app Android, DEC-026)
 
 - Retrato técnico do código, como rodar, checagem no emulador, roteiro de revisão e Diário: `docs/HANDOFF_APP.md`.
   Leia antes de mexer no app e atualize-o ao terminar (seções 2, 3, 7 e Diário).

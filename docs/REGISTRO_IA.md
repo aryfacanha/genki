@@ -6,7 +6,7 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
-Sessão adicional em 26/10/2026 (noite, 4) — Claude Code (Opus 5.5): handoff técnico do app e protocolo de revisão entre Claude Code e Codex, propostos pelo assistente e aceitos pelo autor (DEC-025). Arquivos: `docs/HANDOFF_APP.md`, `docs/revisoes/README.md`, `AGENTS.md`, `.claude/skills/*/SKILL.md`; aqui `DECISOES`, `00_INDICE`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Destino: processo de desenvolvimento, não integrado à monografia.
+Sessão adicional em 26/10/2026 (noite, 4) — Claude Code (Opus 5.5): handoff técnico do app e protocolo de revisão entre Claude Code e Codex, propostos pelo assistente e aceitos pelo autor (DEC-026). Arquivos: `docs/HANDOFF_APP.md`, `docs/revisoes/README.md`, `AGENTS.md`, `.claude/skills/*/SKILL.md`; aqui `DECISOES`, `00_INDICE`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Destino: processo de desenvolvimento, não integrado à monografia.
 
 Sessão adicional em 26/10/2026 (noite, 3) — Claude Code (Opus 5.5): criação de duas skills do Claude Code com conteúdo fornecido pelo autor (`/testar-emulador`: build, testes, instalação, captura de tela e logcat; `/revisar`: revisão do último commit contra ESPEC/AGENTS/protótipo), ambas só por pedido explícito do autor. Arquivos: `.claude/skills/testar-emulador/SKILL.md`, `.claude/skills/revisar/SKILL.md`; aqui `REGISTRO_IA`. Texto do autor, copiado sem alteração; skills ainda não executadas; destino: ferramenta de desenvolvimento, não integrado à monografia.
 

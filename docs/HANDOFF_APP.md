@@ -1,6 +1,6 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
-Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — criação deste arquivo (DEC-025).
+Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — criação deste arquivo (DEC-026).
 Quem assumir: leia `AGENTS.md`, `docs/ESTADO.md` e este arquivo, confira o estado real (`git log`, build) e não confie só
 neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se mudaram) e acrescente uma linha no Diário**.
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
@@ -92,7 +92,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
   `GenkiEval` no Logcat (`adb logcat -d -s GenkiEval`).
 - M1 em diante: acrescentar ao entregar cada marco.
 
-## 8. Divisão de trabalho (DEC-025)
+## 8. Divisão de trabalho (DEC-026)
 
 - **Claude Code implementa; Codex revisa** (mesma divisão do protótipo, decisão do autor de 21/10).
 - **Modo só Codex:** quando o limite do Claude Code acabar, o Codex implementa seguindo este arquivo e escreve no Diário
@@ -106,7 +106,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
 - 2026-10-26 — Claude Code — `/testar-emulador` no Pixel_6_2 (API 35): regressão M0 passa; com fonte 1,3× "Medicamentos" era cortado na barra inferior → rótulo com `autoSize` (16 sp → mín. 12 sp) em `GenkiApp.kt`, a pedido do autor — build, testes e emulador em 1,0×/1,3×/1,5× OK — pendente: corte persiste a partir de 1,8×; TalkBack não testado.
-- 2026-10-26 — Claude Code — cria este arquivo, a seção "Implementação e revisão" no `AGENTS.md` e `docs/revisoes/`; skills `/revisar` e `/testar-emulador` passam a apontar para as seções 5 e 6 (DEC-025) — só documentação — pendente: primeira revisão pelo Codex.
+- 2026-10-26 — Claude Code — cria este arquivo, a seção "Implementação e revisão" no `AGENTS.md` e `docs/revisoes/`; skills `/revisar` e `/testar-emulador` passam a apontar para as seções 5 e 6 (DEC-026) — só documentação — pendente: primeira revisão pelo Codex.
 - 2026-10-26 — Claude Code — config: skills `/testar-emulador` e `/revisar` em `.claude/skills/` (texto do autor; só o Claude Code as lê) (`19fcb3f`) — não executadas — nenhuma.
 - 2026-10-26 — Claude Code — tema e barra inferior alinhados ao protótipo (`53fe97a`); divergências em `docs/DIVERGENCIAS_PROTOTIPO.md` (`0f73cb0`) — build e testes passam — não visto no aparelho.
 - 2026-10-26 — Claude Code — M0: estrutura base (`cec21ab`) sobre o template do autor (`c1f2b7e`) — build e testes passam — não aberto no aparelho.

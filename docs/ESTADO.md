@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — handoff do app e protocolo de revisão (DEC-025); antes: 26/10, Claude Code — tema e barra inferior do M0 alinhados ao protótipo e divergências protótipo × ESPEC; antes: 26/10, Claude Code — M0 do app Android; antes: 26/10, Claude (chat do Projeto) — plano de etapas e cronograma (DEC-023).
+Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — handoff do app e protocolo de revisão (DEC-026); antes: 26/10, Claude Code — tema e barra inferior do M0 alinhados ao protótipo e divergências protótipo × ESPEC; antes: 26/10, Claude Code — M0 do app Android; antes: 26/10, Claude (chat do Projeto) — plano de etapas e cronograma (DEC-023).
 
 ## Situação
 
@@ -14,7 +14,7 @@ Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — handoff do app e protoc
 | Arquitetura | **Definida** — especificação v2.0 aceita (DEC-008 a 017, 021) | `docs/ESPEC_ARQUITETURA.md` |
 | Metodologia de avaliação | **Definida** (DEC-018); pontos dependentes do orientador em aberto | Drive, Avaliação/ |
 | Código Android | **M0 implementado e compilado em 26/10; não aberto em aparelho/emulador.** Template "Empty Activity" (autor, `c1f2b7e`) + estrutura base (Claude Code, `cec21ab`): dependências da ESPEC §1, pacotes da §2, `GenkiApplication`/`AppContainer` vazio, barra inferior Hoje · Medicamentos · Ajustes com telas provisórias, tema com os tokens do protótipo (só claro), `GenkiEval` só no debug. **Alinhado ao protótipo `295212e` em 26/10 (só visual):** paleta completa de `shared.tsx` nos papéis do M3 (sem roxo padrão), tipografia sem estilo abaixo de 16 sp, barra inferior com linha superior, indicador verde-claro, rótulo 16 sp (negrito no ativo) e ícone de comprimidos do protótipo Versões (DEC-011): AGP 9.4.1 (Kotlin 2.2.10 embutido), Gradle 9.6.0, compileSdk/targetSdk 37, minSdk 26 | `app/`, `gradle/libs.versions.toml` |
-| Handoff do app | `docs/HANDOFF_APP.md` (DEC-025): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
+| Handoff do app | `docs/HANDOFF_APP.md` (DEC-026): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
 | Testes | `GenkiEvalTest` (2 unitários) passa; `.\gradlew.bat assembleDebug test` ok em 26/10 | `app/src/test/` |
 | Monografia pós-proposta | Não está no Drive | — |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
