@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 26/10/2026 — Claude (Opus 5.5, chat do Projeto): plano metodológico por etapas, cronograma até a entrega, perguntas ao orientador com propostas e rascunho do e-mail; conferência da referência da SUS brasileira. Arquivos: Drive (Avaliação/ plano de 26/10; aviso no doc de metodologia); aqui `ESTADO`, `DECISOES`, `ENTREGAS`, `REGISTRO_IA`, `00_INDICE`. Plano aceito pelo autor (DEC-023); e-mail a ser revisado e enviado pelo autor; destino: planejamento, não integrado à monografia.
+
 Sessão adicional em 22/10/2026 — Claude Code (Opus 5.5) e Codex (gpt-6.1-sol): P4g "revisão da voz mais curta" implementado pelo Claude Code com a escolha do autor (após medição que descartou juntar Dias e Horários); revisão independente pelo Codex no navegador sem achados. Arquivos: genki-prototype `src/UsarVozMedicamento.tsx`, `src/GenkiFocused.css`, `docs/HANDOFF.md`, `docs/REVISAO_P4G_CODEX.md`; aqui `ESTADO`, `ENTREGAS` e `REGISTRO_IA`. Validação pelo autor pendente; destino: documentação técnica do protótipo, não integrado à monografia.
 
 Sessão adicional em 22/10/2026 — Claude Code (Opus 5.5) e Codex (gpt-6.1-sol): P4f "Desfazer na exclusão" implementado pelo Claude Code com a escolha do autor; revisão independente pelo Codex no navegador sem achados. Arquivos: genki-prototype `src/App.tsx`, `src/MedicamentosScreen.tsx`, `docs/HANDOFF.md`, `docs/REVISAO_P4F_CODEX.md`; aqui `ESTADO`, `ENTREGAS` e `REGISTRO_IA`. Validação pelo autor pendente; destino: documentação técnica do protótipo, não integrado à monografia.

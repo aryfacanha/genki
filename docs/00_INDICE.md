@@ -11,6 +11,8 @@ Pasta: https://drive.google.com/drive/folders/1JZBdXTuPRvPtcUwVDdbKvA7g7SA3__XG
 | **Proposta oficial** (marco acadêmico) | Arquivos/Genki_Proposta_Final.pdf | https://drive.google.com/file/d/1aSbtKncsWQdCIbnItByySUQRuO5xzBIb/view |
 | **Requisitos oficiais RF/RNF** | Arquitetura/Requisitos/Requisitos (aba "Requisitos") | https://docs.google.com/spreadsheets/d/18YdF337444bBPXeIh2Hd9LQZaB6gOKD6LdlAr2FKrVI/edit |
 | **Metodologia de avaliação e pauta com o orientador** | Avaliação/Genki — Metodologia de avaliação e pauta com o orientador | https://docs.google.com/document/d/1d0-V2nuJ3xX7auqvIPPUP3LcWYDNTZfSrNPDI1e82XE/edit |
+| **Plano de etapas e cronograma até a entrega** (26/10, DEC-023) | Avaliação/Genki — Plano de etapas e cronograma até a entrega | https://docs.google.com/document/d/1LZW0Ylpso5zc3NihXLg0mBhXrhynfKIHsBysZtWoqrs/edit |
+| Protótipo publicado (orientador) | Netlify | https://joyful-biscuit-677f74.netlify.app |
 | Monografia | — | ainda não está no Drive |
 | Manual IFRS / modelo do curso | — | ainda não está no Drive |
 | Artigos e referências | — | ainda não estão no Drive (há um `.bib` no Projeto do Claude) |

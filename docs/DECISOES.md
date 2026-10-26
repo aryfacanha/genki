@@ -27,13 +27,14 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | DEC-020 | 20/10 | Proposta oficial | `Arquivos/Genki_Proposta_Final.pdf` no Drive (mesmo envelope Docusign do PDF anexado ao Projeto do Claude) | aceita 20/10 (autor) |
 | DEC-022 | 21/10 | Protótipo reaberto | O autor está revisando o protótipo no Figma Make, com o GPT, por razões de usabilidade. O v1 deixa de ser a referência final; a nova exportação passa a ser referência quando concluída e colocada no Drive. Até lá, a ESPEC vale para dados, regras e fluxos; telas seguem o protótipo mais recente | aceita 21/10 (autor) |
 | DEC-021 | 21/10 | Testes de código | **Simplificado (S5)**: só testes unitários da lógica pura; UI e Android verificados manualmente no aparelho | aceita 21/10 com S5 (vetável) |
+| DEC-023 | 26/10 | Plano até a entrega | Sequência de 16 tarefas e cronograma (Android a partir de 26/10, congelamento 02/11, heurística 02–03/11, verificação técnica 03–05/11, participantes 06–11/11 só com autorização). Classificação da pesquisa mantida conforme a proposta. Sessão única por participante (T1–T4 + SUS, sem gravação, mesmo aparelho). Protótipo web não é usado com participantes. Fluxo de voz V1–V6 do retorno do autor fica como trabalho futuro (V6 só com nova DEC). Perguntas ao orientador com propostas (cenário B proposto, só embalagens etc.) — **as propostas dependem do orientador**. Documento: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega | aceita 26/10 (autor) |
 
 ## Pendentes
 
 | Tema | Situação |
 | --- | --- |
 | Padrão de autoria dos commits de assistentes | A definir pelo autor antes do desenvolvimento |
-| Cenário do objetivo i (A/B/C) e procedimento ético | Depende do orientador (pauta no Drive) |
+| Cenário do objetivo i (A/B/C) e procedimento ético | Depende do orientador; proposta do autor: cenário B (plano de 26/10) |
 | Prescrições fictícias na PoC (DEC-006) | Depende do orientador |
 | Celular de teste | Ainda não definido pelo autor |
 | Exportação do protótipo revisado (DEC-022) | Autor/GPT: colocar no Drive e listar as mudanças que afetam dados ou regras |

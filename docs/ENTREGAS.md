@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Plano de etapas, cronograma e e-mail ao orientador — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
+Partida: genki `ad3b988`; genki-prototype `295212e`; Drive: proposta final, metodologia de 21/10.
+Realizado e arquivos alterados: verificação do protótipo pelos registros (análise final, P7/P7b/P7c, retorno do autor); conferência da referência da SUS brasileira no texto online; plano com procedimentos por objetivo, redução de variáveis, cronograma, 16 tarefas e 8 perguntas ao orientador com propostas. Drive: novo doc "Genki — Plano de etapas e cronograma até a entrega" (Avaliação/) e aviso no topo do doc de metodologia de 21/10. Aqui: `ESTADO`, `DECISOES` (DEC-023), `ENTREGAS`, `REGISTRO_IA`, `00_INDICE`. Rascunho do e-mail entregue ao autor no chat.
+Decisões aceitas pelo autor nesta sessão: DEC-023 (26/10).
+Sugestões pendentes: respostas propostas ao orientador (dependem dele).
+Verificado: proposta §1.2.2 e §2; SUS: referência, amostra, alfa e pontuação no texto do artigo (Redalyc/Distant Reader); Netlify responde com o título "Genki — protótipo". | Não verificado: build do protótipo (registro npm bloqueado na sandbox); versão publicada no Netlify; itens finais da SUS no PDF. | Limitações: plano feito sem resposta do orientador.
+Próxima tarefa e bloqueios: autor envia o e-mail e inicia o M0; resposta do orientador até 28/10 decide cenário e participantes.
+Links/commits: Drive https://docs.google.com/document/d/1LZW0Ylpso5zc3NihXLg0mBhXrhynfKIHsBysZtWoqrs/edit ; este commit.
+
 ENTREGA — Protótipo: revisão geral, P5 "telas estreitas" e P6 "fala não entendida" + revisões do Codex — 22/10/2026 — Claude Code (Opus 5.5) e Codex
 Partida: genki-prototype `5722918`; principal `62ba3a9`.
 Realizado e arquivos alterados: revisão geral conjunta (`docs/REVISAO_GERAL_CODEX.md`, `docs/REVISAO_GERAL_CLAUDE.md`) e HANDOFF enxuto (histórico em `docs/HANDOFF_HISTORICO.md`). P5 (`a2b3607`, `index.css`, `DigitarMedicamento.tsx`): "Remover" do horário desce para baixo do campo quando não cabe; lista de revisão/Detalhes empilhada em telas ≤ 340 px; nome acessível da concentração igual ao rótulo visível. P6 (`d5da449`…`092cb0d`, `App.tsx`, `UsarVozMedicamento.tsx`): botão do painel de demonstração "Simular: próxima fala de correção não entendida" leva à tela "Não consegui entender" (Tentar novamente / Digitar resposta); a resposta digitada só aceita a frase sugerida pela ajuda ("o amlodipino é às 9 da manhã"); o interpretador das falas simuladas ficou igual ao anterior. Revisões: `docs/REVISAO_P5_CODEX.md`, `docs/REVISAO_P6_CODEX.md`.
