@@ -36,7 +36,7 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | Tema | Situação |
 | --- | --- |
 | Padrão de autoria dos commits de assistentes | A definir pelo autor antes do desenvolvimento |
-| Contato com a coordenação (orientação do orientador em 26/10) | Justificativa formal redigida (Drive, Avaliação/Genki — Justificativa formal da avaliação com personas) e e-mails à coordenação/CEP; envio pelo autor |
+| Contato com a coordenação (orientação do orientador em 26/10) | Justificativa formal (Drive, Avaliação/Genki - Justificativa formal da avaliação com personas) conciliada com a revisão do GPT em 26/10; e-mail final à Coordenação TADS (coord.tads@canoas.ifrs.edu.br); envio pelo autor. CEP não será contatado diretamente por ora (autor, 26/10) |
 | CEP: submeter ou não | CEP-IFRS (cepesquisa@ifrs.edu.br) orienta coleta 45–60 dias após a submissão (página do CEP, 26/10) → coleta só após 16/11. Autor perguntou ao orientador em 26/10 se ainda submete (protocolo como apêndice) ou concentra nas personas. Aguarda resposta; a DEC-024 pode ser revista |
 | Fontes metodológicas de personas e percurso cognitivo | Não estão na proposta; localizar e conferir antes de escrever o método |
 | Âncoras/escolha da SUS | **Orientador (26/10):** pode usar, com justificativa própria da escolha. Pendente |

@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Justificativa formal, conciliação com a revisão do GPT e e-mail à Coordenação TADS — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
+Partida: genki `5e0f668`; Drive: justificativa formal, revisão do GPT (26/10), plano de 26/10.
+Realizado e arquivos alterados: justificativa formal criada e depois ajustada com as recomendações do GPT (dispensa a confirmar; 27/11 = primeira análise, não aprovação; adequação a formalizar, não substituição; executor e registro por método; intenção de submeter sem afirmar submissão; objetivo i não realizado ou parcial; sem tempos/taxas/SUS reais; título de Wharton et al. 1994). Nota de conciliação e espelho das DEC-023/024/025 no plano do Drive (o GPT não acessa o GitHub). E-mail final à coordenação entregue no chat. Aqui: `ESTADO`, `DECISOES`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-025; contatar só a coordenação do curso, não o CEP diretamente.
+Sugestões pendentes: resposta factual à pergunta "por que não submeter em agosto" (preparar com o orientador).
+Verificado: título de Wharton et al. em duas fontes secundárias divergentes (adotado o da Wikipedia, igual ao do GPT). | Não verificado: o livro de Wharton et al.; Kneale et al. (2017). | Limitações: GPT sem acesso ao repositório.
+Próxima tarefa e bloqueios: autor envia o e-mail; resposta da coordenação decide formalização e submissão.
+Links/commits: Drive https://docs.google.com/document/d/1lSLVGNz5Seh2XSHxtqZFvpY4IVQOTYlgfeJhZ_mfy5c/edit ; este commit.
+
 ENTREGA — Resposta do orientador e caminho C (CEP + personas) — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
 Partida: genki `3fe845c`.
 Realizado e arquivos alterados: registro da resposta do orientador; conferência do Ofício-Circular nº 17/2022/CONEP (TCC deve ser submetido) e do Regimento do CEP-IFRS (prazos 10 + 30 dias); justificativas propostas (amostra: Faulkner, 2003; embalagens; SUS); trilhas CEP e personas com cronograma integrado. Drive: duas seções novas no plano de 26/10 e aviso de precedência no topo. Aqui: `DECISOES` (DEC-024), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
