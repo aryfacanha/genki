@@ -34,8 +34,11 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | Tema | Situação |
 | --- | --- |
 | Padrão de autoria dos commits de assistentes | A definir pelo autor antes do desenvolvimento |
-| Cenário do objetivo i (A/B/C) e procedimento ético | Depende do orientador; proposta do autor: cenário B (plano de 26/10) |
-| Prescrições fictícias na PoC (DEC-006) | Depende do orientador |
+| Cenário do objetivo i e procedimento ético | **Orientador (26/10):** CEP obrigatório (CEP-IFRS); tempo sozinho não justifica ficar sem pessoas reais; perguntou sobre personas. Regimento CEP-IFRS: até 10 dias de conferência + 30 de parecer. Decisão do autor pendente (submeter já ao CEP; personas como complemento ou substituição) |
+| Número de participantes | **Orientador (26/10):** 5 é pouco; exige justificativa forte. Decisão do autor pendente |
+| Âncoras/escolha da SUS | **Orientador (26/10):** pode usar, com justificativa própria da escolha. Pendente |
+| Declaração de IA | **Orientador (26/10):** atualizar na versão final, com todas as IAs mencionadas e justificadas |
+| Prescrições fictícias na PoC (DEC-006) | **Orientador (26/10):** decisão do autor, bem justificada. Pendente |
 | Celular de teste | Ainda não definido pelo autor |
 | Exportação do protótipo revisado (DEC-022) | Autor/GPT: colocar no Drive e listar as mudanças que afetam dados ou regras |
 
