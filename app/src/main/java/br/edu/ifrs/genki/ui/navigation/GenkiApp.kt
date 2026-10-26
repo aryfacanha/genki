@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -90,11 +92,17 @@ fun GenkiApp() {
                             },
                             icon = { Icon(tab.icon, contentDescription = null) },
                             label = {
+                                // Com fonte ampliada (1,3× no emulador) "Medicamentos" era cortado; o rótulo
+                                // encolhe só o necessário para caber, sem passar de 16 sp na escala normal.
                                 Text(
                                     stringResource(tab.label),
                                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
+                                    autoSize = TextAutoSize.StepBased(
+                                        minFontSize = 12.sp,
+                                        maxFontSize = MaterialTheme.typography.labelMedium.fontSize,
+                                    ),
                                 )
                             },
                             colors = NavigationBarItemDefaults.colors(

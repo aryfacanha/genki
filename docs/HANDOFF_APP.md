@@ -15,7 +15,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
-| M0 Base | Implementado e compilado. Tema e barra inferior alinhados ao protótipo `295212e`. **Não aberto em aparelho/emulador** (aceite da ESPEC §9 pendente) | `c1f2b7e`, `cec21ab`, `53fe97a` |
+| M0 Base | Implementado, compilado e aberto no emulador (Pixel_6_2, API 35) em 26/10: regressão da seção 7 passa. Tema e barra inferior alinhados ao protótipo `295212e`. Aceite manual do autor no aparelho (ESPEC §9) pendente | `c1f2b7e`, `cec21ab`, `53fe97a`, correção do rótulo (ver Diário) |
 | M1 CRUD | Não iniciado. Antes: decisões #2, #7, #12 de `DIVERGENCIAS_PROTOTIPO.md` | — |
 | M2 Lembretes | Não iniciado. Antes: decisões #13, #14, #16 | — |
 | M3 Voz | Não iniciado | — |
@@ -27,9 +27,10 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 | --- | --- |
 | `.\gradlew.bat assembleDebug test` | Passa em `53fe97a` (Claude Code, 26/10) |
 | Testes unitários | `GenkiEvalTest` (2) |
-| App aberto em emulador/aparelho | **Não** — emulador `Medium_Phone_API_37.0` não inicia por falta de espaço em disco |
-| Abas, cores, barra inferior, rótulo com fonte ampliada | Não verificados no aparelho |
-| `GenkiEval` no Logcat | Não verificado |
+| App aberto em emulador/aparelho | Emulador Pixel_6_2 (API 35), 26/10, Claude Code. Aparelho físico: não |
+| Abas, cores, barra inferior | Verificados no emulador (capturas): abre em Hoje, três abas trocam, indicador verde-claro e negrito na ativa, sem roxo |
+| Rótulo da barra com fonte ampliada | Inteiro até 1,5×; **a partir de 1,8× "Medicamentos" é cortado com reticências** (limitação: a largura da aba não comporta a palavra; o rótulo encolhe até 12 sp e depois corta) |
+| `GenkiEval` no Logcat | Verificado no emulador (`app_iniciado`); nenhum erro do processo do app |
 | Revisão independente (Codex) | Nenhuma ainda |
 
 ## 4. Como rodar
@@ -104,6 +105,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-26 — Claude Code — `/testar-emulador` no Pixel_6_2 (API 35): regressão M0 passa; com fonte 1,3× "Medicamentos" era cortado na barra inferior → rótulo com `autoSize` (16 sp → mín. 12 sp) em `GenkiApp.kt`, a pedido do autor — build, testes e emulador em 1,0×/1,3×/1,5× OK — pendente: corte persiste a partir de 1,8×; TalkBack não testado.
 - 2026-10-26 — Claude Code — cria este arquivo, a seção "Implementação e revisão" no `AGENTS.md` e `docs/revisoes/`; skills `/revisar` e `/testar-emulador` passam a apontar para as seções 5 e 6 (DEC-025) — só documentação — pendente: primeira revisão pelo Codex.
 - 2026-10-26 — Claude Code — config: skills `/testar-emulador` e `/revisar` em `.claude/skills/` (texto do autor; só o Claude Code as lê) (`19fcb3f`) — não executadas — nenhuma.
 - 2026-10-26 — Claude Code — tema e barra inferior alinhados ao protótipo (`53fe97a`); divergências em `docs/DIVERGENCIAS_PROTOTIPO.md` (`0f73cb0`) — build e testes passam — não visto no aparelho.
