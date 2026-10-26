@@ -47,12 +47,12 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 | Modelo e versão Android do celular de teste (ainda não definido) | Autor | Verificação no aparelho a partir do M1; o M0 pode usar emulador |
 | Confirmar o Genki(22) como referência final de UX; listar mudanças em relação à v1 que afetem dados ou regras; decidir se o export vai também para o Drive | Autor | Telas do M1 em diante |
 | Protótipo: telas que ainda rolam (Editar, telas e revisão da voz com 2+ medicamentos); Editar ainda rola (edição por seção não iniciada; decisão do autor); estudo exploratório MyTherapy do Codex aguardando avaliação; sem teste com leitor de tela real/Android nem voz pt-BR real | Autor decide; Claude Code implementa, Codex revisa | Nada urgente para o M0 |
-| E-mail ao orientador (rascunho pronto em 26/10; envio pelo autor): 8 perguntas do plano de 26/10 com propostas (ético, cenário — proposta B, participantes, heurística só pelo autor, só embalagens, âncoras da SUS, prazo de mudanças no protótipo, declaração de IA) | Autor | Objetivo i; MET-2. Quanto mais tarde, menor a chance do cenário A |
+| Resposta do orientador (e-mail **enviado pelo autor em 26/10**; retorno pedido até 28/10): 8 perguntas do plano de 26/10 com propostas (ético, cenário — proposta B, participantes, heurística só pelo autor, só embalagens, âncoras da SUS, prazo de mudanças no protótipo, declaração de IA) | Autor | Objetivo i; MET-2. Quanto mais tarde, menor a chance do cenário A |
 | Padrão de autoria dos commits | Autor | Nada urgente |
 | Subir monografia (ou modelo IFRS) e artigos ao Drive | Autor | Redação |
 | Conferir lista de heurísticas (Galavi et al., 2024) no artigo; SUS (Lourenço; Carmona; Lopes, 2022, Aquichan 22(2):e2228): pontuação e amostra conferidas em 26/10 no texto online; **itens finais (Tabela 1 é pré-final; itens 1, 4 e 7) e forma ABNT dos nomes ainda a conferir no PDF**; âncoras em português a definir | Qualquer assistente, com os PDFs | MET-3, MET-6 |
 
 ## Próximo passo
 
-Autor: enviar o e-mail ao orientador e criar o projeto Android (M0) hoje, conforme `docs/ESPEC_ARQUITETURA.md` §1–2 e §9,
+E-mail ao orientador enviado em 26/10. Autor: instalar o Android Studio (em andamento em 26/10) e criar o projeto Android (M0), conforme `docs/ESPEC_ARQUITETURA.md` §1–2 e §9,
 já prevendo o registro `GenkiEval` (DEC-015). Sequência completa no plano de 26/10 (Drive, Avaliação/).
