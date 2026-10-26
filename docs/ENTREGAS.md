@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: estrutura base (M0) — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `c1f2b7e` (template "Empty Activity" commitado pelo autor).
+Realizado e arquivos alterados: dependências da ESPEC §1 em `gradle/libs.versions.toml`, `build.gradle.kts`, `app/build.gradle.kts` (Navigation Compose 2.9.8 + kotlinx-serialization 1.9.0, lifecycle 2.10.0 runtime/viewmodel-compose, Room 2.8.4 com KSP 2.3.12, coroutines-test 1.10.2; `buildConfig = true`); `GenkiApplication` (no manifest), `AppContainer` vazio, `GenkiEval`, `MainActivity`, `ui/navigation` (rotas tipadas e barra inferior), `ui/home`, `ui/medications`, `ui/settings` (provisórias), `ui/theme` (tokens do protótipo), `strings.xml`, `GenkiEvalTest` no lugar do `ExampleUnitTest`.
+Decisões aceitas pelo autor nesta sessão: nenhuma DEC nova; autor aprovou o diff e autorizou o commit.
+Sugestões pendentes: `material-icons-core` acrescentado para os ícones da barra (fora da §1; trocável por drawables); lifecycle unificado em 2.10.0 (template tinha 2.6.1); tema só claro, sem cor dinâmica.
+Verificado: `.\gradlew.bat assembleDebug test` (build sem avisos; 2 testes passam); versões escolhidas pelo kotlin-stdlib exigido nos POMs (até o Kotlin 2.2.10 embutido no AGP 9.4.1). | Não verificado: app aberto em aparelho ou emulador (o emulador recusa iniciar por falta de espaço em disco); navegação entre abas; `GenkiEval` no Logcat; Room sem entidades. | Limitações: tema escuro do sistema ignorado; `ExampleInstrumentedTest` do template mantido e não executado.
+Próxima tarefa e bloqueios: abrir no emulador/aparelho para fechar o aceite do M0; M1. Bloqueio: espaço em disco ou celular de teste.
+Links/commits: `cec21ab`; este commit.
+
 ENTREGA — Resposta do orientador e caminho C (CEP + personas) — 26/10/2026 — Claude (Opus 5.5, chat do Projeto "Genki - TCC")
 Partida: genki `3fe845c`.
 Realizado e arquivos alterados: registro da resposta do orientador; conferência do Ofício-Circular nº 17/2022/CONEP (TCC deve ser submetido) e do Regimento do CEP-IFRS (prazos 10 + 30 dias); justificativas propostas (amostra: Faulkner, 2003; embalagens; SUS); trilhas CEP e personas com cronograma integrado. Drive: duas seções novas no plano de 26/10 e aviso de precedência no topo. Aqui: `DECISOES` (DEC-024), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.

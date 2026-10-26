@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-Atualizado em 26/10/2026, por Claude (Opus 5.5, chat do Projeto) — plano de etapas e cronograma até a entrega (DEC-023); antes: 22/10, Claude Code — revisão geral do protótipo, P5, P6.
+Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — M0 do app Android; antes: 26/10, Claude (chat do Projeto) — plano de etapas e cronograma (DEC-023).
 
 ## Situação
 
@@ -13,8 +13,8 @@ Atualizado em 26/10/2026, por Claude (Opus 5.5, chat do Projeto) — plano de et
 | **Plano até a entrega** | **Aceito pelo autor em 26/10 (DEC-023; objetivo i revisto pela DEC-024: CEP + personas, meta de 10 participantes)**: sequência de 16 tarefas, cronograma, redução de variáveis na sessão com participantes, perguntas ao orientador com propostas | Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega |
 | Arquitetura | **Definida** — especificação v2.0 aceita (DEC-008 a 017, 021) | `docs/ESPEC_ARQUITETURA.md` |
 | Metodologia de avaliação | **Definida** (DEC-018); pontos dependentes do orientador em aberto | Drive, Avaliação/ |
-| Código Android | Nenhum | Este repositório (só documentação) |
-| Testes | Nenhum | — |
+| Código Android | **M0 implementado e compilado em 26/10; não aberto em aparelho/emulador.** Template "Empty Activity" (autor, `c1f2b7e`) + estrutura base (Claude Code, `cec21ab`): dependências da ESPEC §1, pacotes da §2, `GenkiApplication`/`AppContainer` vazio, barra inferior Hoje · Medicamentos · Ajustes com telas provisórias, tema com os tokens do protótipo (só claro), `GenkiEval` só no debug. Versões (DEC-011): AGP 9.4.1 (Kotlin 2.2.10 embutido), Gradle 9.6.0, compileSdk/targetSdk 37, minSdk 26 | `app/`, `gradle/libs.versions.toml` |
+| Testes | `GenkiEvalTest` (2 unitários) passa; `.\gradlew.bat assembleDebug test` ok em 26/10 | `app/src/test/` |
 | Monografia pós-proposta | Não está no Drive | — |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
@@ -47,6 +47,7 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 | Confirmar o Genki(22) como referência final de UX; listar mudanças em relação à v1 que afetem dados ou regras; decidir se o export vai também para o Drive | Autor | Telas do M1 em diante |
 | Protótipo: telas que ainda rolam (Editar, telas e revisão da voz com 2+ medicamentos); Editar ainda rola (edição por seção não iniciada; decisão do autor); estudo exploratório MyTherapy do Codex aguardando avaliação; sem teste com leitor de tela real/Android nem voz pt-BR real | Autor decide; Claude Code implementa, Codex revisa | Nada urgente para o M0 |
 | Resposta do orientador recebida em 26/10 (registrada no plano de 26/10, Drive, e em `DECISOES.md` › Pendentes): CEP obrigatório; personas?; amostra de 5 pequena; heurística solo ok; embalagens a critério do autor; justificar a SUS; protótipo em análise; declaração de IA completa. Caminho decidido (DEC-024). CEP-IFRS: cepesquisa@ifrs.edu.br; Regimento vigente de 2024 (prazos 10 + 30 dias, arts. 12 V e 27); a página do CEP orienta coleta 45–60 dias após a submissão. **Resposta ao orientador redigida em 26/10 (envio pelo autor), perguntando se ainda vale submeter**. Calendário do CEP-IFRS: reuniões 30/10 (prazo 23/10, vencido), 27/11 (prazo 20/11) e 11/12 → primeira análise possível depois da entrega. Checklist de submissão e estrutura de justificativa das personas: Drive, Avaliação/Genki — Checklist do CEP e justificativa das personas (sugestão pendente) | Autor | Objetivo i; protocolo CEP |
+| Aceite do M0 "abre no aparelho" (ESPEC §9): o emulador `Medium_Phone_API_37.0` não inicia por falta de espaço em disco; abas, tema e linha `GenkiEval` no Logcat não conferidos | Autor (liberar espaço ou conectar o celular) | Fechar o aceite do M0; verificação do M1 |
 | Padrão de autoria dos commits | Autor | Nada urgente |
 | Subir monografia (ou modelo IFRS) e artigos ao Drive | Autor | Redação |
 | Conferir lista de heurísticas (Galavi et al., 2024) no artigo; SUS (Lourenço; Carmona; Lopes, 2022, Aquichan 22(2):e2228): pontuação e amostra conferidas em 26/10 no texto online; **itens finais (Tabela 1 é pré-final; itens 1, 4 e 7) e forma ABNT dos nomes ainda a conferir no PDF**; âncoras em português a definir | Qualquer assistente, com os PDFs | MET-3, MET-6 |
@@ -54,7 +55,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App (outro chat/assistente):** instalar o Android Studio e criar o projeto Android (M0) conforme `docs/ESPEC_ARQUITETURA.md`
-  §1–2 e §9, com o registro `GenkiEval` (DEC-015); depois M1 em 27–28/10.
+- **App:** abrir o M0 em emulador ou aparelho para fechar o aceite; depois M1 (CRUD manual com `DraftValidator`) em 27–28/10.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.

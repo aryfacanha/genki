@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 26/10/2026 (noite) — Claude Code (Opus 5.5): implementação do M0 do app Android (dependências, estrutura de pacotes, barra inferior com telas provisórias, tema, registro `GenkiEval`, teste unitário) sobre o template criado pelo autor. Arquivos: `app/`, `gradle/libs.versions.toml`, `build.gradle.kts`; aqui `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Diff aprovado e commit autorizado pelo autor (`cec21ab`); compilado e testado na máquina, não aberto em aparelho; destino: código do produto, não integrado à monografia.
+
 Sessão adicional em 26/10/2026 (fim da tarde) — Claude (Opus 5.5, chat do Projeto): checklist de submissão ao CEP-IFRS e estrutura de justificativa para avaliação só com personas, com busca e conferência parcial de fontes (Wharton et al., 1994; Lee et al., 2021; Haldane et al., 2019; outras a conferir). Arquivos: Drive (novo doc em Avaliação/); aqui `ESTADO`, `00_INDICE`, `REGISTRO_IA`. Sugestão pendente de revisão do autor; não integrado à monografia.
 
 Sessão adicional em 26/10/2026 (tarde) — Claude (Opus 5.5, chat do Projeto): análise da resposta do orientador, conferência de normas do CEP e de fonte para tamanho de amostra, caminho C (CEP + personas) e cronograma integrado. Arquivos: Drive (plano de 26/10); aqui `DECISOES` (DEC-024), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Decisão do autor registrada; destino: planejamento, não integrado à monografia.
