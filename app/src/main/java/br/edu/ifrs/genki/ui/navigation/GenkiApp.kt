@@ -2,9 +2,10 @@ package br.edu.ifrs.genki.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -15,13 +16,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,31 +36,24 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import br.edu.ifrs.genki.R
+import br.edu.ifrs.genki.ui.components.PillsIcon
+import br.edu.ifrs.genki.ui.details.DetailScreen
+import br.edu.ifrs.genki.ui.form.MedicationFormScreen
 import br.edu.ifrs.genki.ui.home.HomeScreen
 import br.edu.ifrs.genki.ui.medications.MedicationsScreen
 import br.edu.ifrs.genki.ui.settings.SettingsScreen
 import br.edu.ifrs.genki.ui.theme.GenkiNavInactive
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable object HomeRoute
 @Serializable object MedicationsRoute
 @Serializable object SettingsRoute
-
-// Ícone de comprimidos da aba Medicamentos, copiado do protótipo (`IconPills` em `src/shared.tsx`).
-private val PillsIcon: ImageVector = ImageVector.Builder(
-    name = "Pills",
-    defaultWidth = 24.dp,
-    defaultHeight = 24.dp,
-    viewportWidth = 24f,
-    viewportHeight = 24f,
-).addPath(
-    pathData = addPathNodes(
-        "M4.22 11.29l6.36-6.36a4.243 4.243 0 016 6L10.22 17.3a4.243 4.243 0 01-6-6z" +
-            "m10.25 7.45l1.06-1.06a2.12 2.12 0 000-3l-1.06-1.06-4.24 4.24 1.06 1.06c.83.83 2.17.83 3-.18z"
-    ),
-    fill = SolidColor(Color.Black),
-).build()
+@Serializable data class DetailRoute(val id: Long)
+@Serializable object AddMedicationRoute
+@Serializable data class EditMedicationRoute(val id: Long)
 
 private enum class TopLevelTab(val route: Any, @param:StringRes val label: Int, val icon: ImageVector) {
     Home(HomeRoute, R.string.tab_home, Icons.Filled.Home),
@@ -70,10 +65,26 @@ private enum class TopLevelTab(val route: Any, @param:StringRes val label: Int, 
 fun GenkiApp() {
     val navController = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val showMessage: (String) -> Unit = { message ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+    // Barra inferior só nas três abas; detalhes e formulários ocupam a tela inteira.
+    val onTopLevel = TopLevelTab.entries.any { tab -> currentDestination?.hasRoute(tab.route::class) == true }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            // Na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
+            val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true
+            SnackbarHost(snackbarHostState, Modifier.padding(bottom = if (aboveAddButton) 80.dp else 0.dp))
+        },
         bottomBar = {
+            if (!onTopLevel) return@Scaffold
             // Como no protótipo (`BottomNav`): fundo da superfície com linha fina acima, sem elevação;
             // indicador verde-claro atrás do ícone ativo e rótulo de 16 sp sempre visível.
             Column {
@@ -121,11 +132,40 @@ fun GenkiApp() {
         NavHost(
             navController = navController,
             startDestination = HomeRoute,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
         ) {
             composable<HomeRoute> { HomeScreen() }
-            composable<MedicationsRoute> { MedicationsScreen() }
+            composable<MedicationsRoute> {
+                MedicationsScreen(
+                    onOpen = { id -> navController.navigate(DetailRoute(id)) },
+                    onAdd = { navController.navigate(AddMedicationRoute) },
+                )
+            }
             composable<SettingsRoute> { SettingsScreen() }
+            composable<DetailRoute> { entry ->
+                val id = entry.toRoute<DetailRoute>().id
+                DetailScreen(
+                    id = id,
+                    onBack = { navController.popBackStack() },
+                    onEdit = { navController.navigate(EditMedicationRoute(id)) },
+                    onDeleted = { navController.popBackStack() },
+                    showMessage = showMessage,
+                )
+            }
+            composable<AddMedicationRoute> {
+                MedicationFormScreen(
+                    editId = null,
+                    onClose = { navController.popBackStack() },
+                    onSaved = { message -> showMessage(message); navController.popBackStack() },
+                )
+            }
+            composable<EditMedicationRoute> { entry ->
+                MedicationFormScreen(
+                    editId = entry.toRoute<EditMedicationRoute>().id,
+                    onClose = { navController.popBackStack() },
+                    onSaved = { message -> showMessage(message); navController.popBackStack() },
+                )
+            }
         }
     }
 }
