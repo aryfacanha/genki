@@ -6,6 +6,8 @@ Comparação: genki-prototype `295212e` (`src/data.ts`, `medicationValidation.ts
 também `App.tsx` e `GenkiHome.tsx`) × `docs/ESPEC_ARQUITETURA.md` §3–§7.
 Pela DEC-022, enquanto o autor não decidir cada item, **vale a ESPEC** para dados e regras; as telas seguem o protótipo.
 
+**Decididos:** #2, #7 e #12 em 26/10 (DEC-027): erro para horário repetido, rótulos do protótipo, exclusão só com confirmação.
+
 `CadastrarMedicamento.tsx` só tem a escolha Voz (destacada) / Digitar / Câmera, igual à ESPEC §5: nada a registrar.
 `SIM_NOW` (relógio fixo da demonstração) não entra: o app usa o relógio e o fuso do aparelho.
 

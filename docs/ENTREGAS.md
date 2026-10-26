@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: M1 CRUD manual — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `cbed4c9`; genki-prototype `295212e` (telas de lista, detalhes, cadastro manual em etapas, revisão, edição).
+Realizado e arquivos alterados: `domain/` (`Medication`, `MedicationDraft`, `DraftValidator` com `DUPLICATE_TIME`), `data/` (entidades, conversores, `MedicationDao`, `GenkiDatabase`, `MedicationRepository` que só aceita `Valid`), `AppContainer`; `ui/medications` (lista), `ui/details` (detalhes, lembretes liga/desliga, exclusão com confirmação), `ui/form` (3 etapas + revisão; edição em página única; "Descartar alterações?"), `ui/components`, `ui/MedicationText`; navegação e aviso (snackbar) em `GenkiApp`. Testes: `DraftValidatorTest`, `MedicationTextTest`, `MappersTest`. Docs: DEC-027 em `DECISOES`, `DIVERGENCIAS_PROTOTIPO`, `ESPEC_ARQUITETURA` §3–§4, `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-027 (#2 erro para horário repetido; #7 rótulos do protótipo; #12 exclusão sem "Desfazer"), 26/10.
+Sugestões pendentes: escolha Voz/Digitar/Câmera só no M3 (hoje "Adicionar" abre direto o manual); textos em Kotlin em vez de `strings.xml`.
+Verificado: `.\gradlew.bat assembleDebug test` (27 testes); fluxo completo no emulador Pixel_6_2 API 35 (erros por etapa, horário repetido, datas, revisão/Alterar, salvar, reabrir o app, detalhes, lembretes, edição, descarte, exclusão, fonte 1,5×); `GenkiEval` registra cadastro, edição e exclusão. | Não verificado: aparelho físico, TalkBack, fonte ≥ 1,8× no formulário, `FormViewModel` sem teste automatizado. | Limitações: calendário/relógio no idioma do sistema; lembretes só gravam a escolha até o M2.
+Próxima tarefa e bloqueios: revisão do Codex (M1); autor decidir #13, #14, #16; M2.
+Links/commits: `f2ff130`; este commit.
+
 ENTREGA — M0 no emulador, rótulo com fonte ampliada e merge com o chat do Projeto — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `21a995b` (local, à frente do remoto); remoto em `3dbaca6`.
 Realizado e arquivos alterados: `/testar-emulador` no Pixel_6_2 (API 35); `ui/navigation/GenkiApp.kt` (rótulo da barra com `autoSize`, 16 → mín. 12 sp) (`d74a75b`); decisão do handoff renumerada de DEC-025 para DEC-026, porque o chat do Projeto já usou DEC-025 (referências em `AGENTS.md` e docs; as mensagens dos commits `21a995b` e `d74a75b` ainda dizem DEC-025); merge com o remoto mantendo os dois lados em `DECISOES`, `ENTREGAS`, `ESTADO`, `REGISTRO_IA`; pendência "Confirmar o Genki(22) como referência" retirada (resolvida pela DEC-025). `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.

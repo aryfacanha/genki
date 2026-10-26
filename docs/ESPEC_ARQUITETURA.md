@@ -79,7 +79,7 @@ data class ScheduleTimeEntity(
 
 - Conversores: `LocalDate` ↔ String ISO. `fallbackToDestructiveMigration()` até o congelamento (02/11).
 - "Duas vezes ao dia" / "a cada X horas" (RF06) **não são persistidos**: viram horários concretos antes da revisão.
-- "Ainda não sei" (DEC-009): agenda como contínuo, sem data final; UI mostra "Duração a definir".
+- "Ainda não sei" (DEC-009): agenda como contínuo, sem data final; UI mostra "Ainda não sei" com a ajuda do protótipo (DEC-027).
 - Duplicidade: **sem tratamento** (S1). Mesmo nome pode ser cadastrado duas vezes; limitação registrada.
 
 Ajustes (S3), em `SharedPreferences`: `repeatEnabled: Boolean = true`, `intervalMinutes: Int = 20` (10 | 20 | 30).
@@ -107,18 +107,18 @@ data class MedicationDraft(
 
 `DraftValidator.normalizeAndValidate(draft, today): Result` — usado por manual, edição, voz e câmera.
 Normaliza (trim; startDate padrão = hoje; durationDays → endDate; endDate = null se não for TEMPORARY;
-horários ordenados e sem repetição) e valida (S4, regras mínimas):
+horários ordenados; repetidos geram `DUPLICATE_TIME`, DEC-027) e valida (S4, regras mínimas):
 
 | Campo | Regra |
 | --- | --- |
 | Nome | obrigatório |
 | Dose | obrigatória |
 | Dias | ao menos um |
-| Horários | ao menos um |
+| Horários | ao menos um; sem repetidos (DEC-027) |
 | Tratamento | obrigatório |
 | Data final | obrigatória se TEMPORARY; não anterior ao início |
 
-Retorna `Valid(draft)` ou `Invalid(List<Pair<Field, Problem>>)` com `Problem ∈ {MISSING, END_BEFORE_START}`.
+Retorna `Valid(draft)` ou `Invalid(List<Pair<Field, Problem>>)` com `Problem ∈ {MISSING, END_BEFORE_START, DUPLICATE_TIME}`.
 A voz usa os campos `MISSING` para decidir o que perguntar (RF15). Só `Valid` chega ao repositório.
 
 Sessão de cadastro: `RegistrationSession` (no `AppContainer`) guarda `List<MedicationDraft>` entre voz, câmera,

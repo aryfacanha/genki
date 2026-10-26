@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 26/10/2026 (noite, 6) — Claude Code (Opus 5.5): implementação do M1 do app (CRUD manual com validação única, revisão antes de salvar, persistência local) e registro das decisões #2, #7 e #12 sugeridas pelo assistente e aceitas pelo autor (DEC-027). Arquivos: `app/src/main/java/br/edu/ifrs/genki/{domain,data,ui}/`, testes em `app/src/test/`; aqui `DECISOES`, `DIVERGENCIAS_PROTOTIPO`, `ESPEC_ARQUITETURA`, `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Compilado, testado e conferido no emulador, não em aparelho; aguardando revisão do Codex; destino: código do produto, não integrado à monografia.
+
 Sessão adicional em 26/10/2026 (noite, 5) — Claude Code (Opus 5.5): checagem do M0 no emulador, correção do rótulo da barra inferior com fonte ampliada e merge com as alterações do chat do Projeto (decisão do handoff renumerada para DEC-026), a pedido do autor. Arquivos: `ui/navigation/GenkiApp.kt`, `AGENTS.md`; aqui `HANDOFF_APP`, `DECISOES`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Compilado e visto no emulador, não em aparelho; destino: código do produto e processo, não integrado à monografia.
 
 Sessão adicional em 26/10/2026 (noite, 4) — Claude Code (Opus 5.5): handoff técnico do app e protocolo de revisão entre Claude Code e Codex, propostos pelo assistente e aceitos pelo autor (DEC-026). Arquivos: `docs/HANDOFF_APP.md`, `docs/revisoes/README.md`, `AGENTS.md`, `.claude/skills/*/SKILL.md`; aqui `DECISOES`, `00_INDICE`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Destino: processo de desenvolvimento, não integrado à monografia.

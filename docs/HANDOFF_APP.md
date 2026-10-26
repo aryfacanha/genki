@@ -1,6 +1,6 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
-Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — criação deste arquivo (DEC-026).
+Atualizado em: 26/10/2026, por Claude Code (Opus 5.5) — M1 (CRUD manual); antes: criação deste arquivo (DEC-026).
 Quem assumir: leia `AGENTS.md`, `docs/ESTADO.md` e este arquivo, confira o estado real (`git log`, build) e não confie só
 neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se mudaram) e acrescente uma linha no Diário**.
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
@@ -16,7 +16,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 | Marco | Situação | Commits |
 | --- | --- | --- |
 | M0 Base | Implementado, compilado e aberto no emulador (Pixel_6_2, API 35) em 26/10: regressão da seção 7 passa. Tema e barra inferior alinhados ao protótipo `295212e`. Aceite manual do autor no aparelho (ESPEC §9) pendente | `c1f2b7e`, `cec21ab`, `53fe97a`, correção do rótulo (ver Diário) |
-| M1 CRUD | Não iniciado. Antes: decisões #2, #7, #12 de `DIVERGENCIAS_PROTOTIPO.md` | — |
+| M1 CRUD | Implementado, compilado e conferido no emulador em 26/10 (cadastro em 3 etapas + revisão, lista, detalhes, edição, exclusão; dados persistem ao reabrir). Decisões #2, #7, #12 aplicadas (DEC-027). Aceite manual do autor no aparelho pendente | `f2ff130` |
 | M2 Lembretes | Não iniciado. Antes: decisões #13, #14, #16 | — |
 | M3 Voz | Não iniciado | — |
 | M4 Câmera | Não iniciado | — |
@@ -25,8 +25,10 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Item | Situação |
 | --- | --- |
-| `.\gradlew.bat assembleDebug test` | Passa em `53fe97a` (Claude Code, 26/10) |
-| Testes unitários | `GenkiEvalTest` (2) |
+| `.\gradlew.bat assembleDebug test` | Passa em `f2ff130` (Claude Code, 26/10) |
+| Testes unitários | 27: `GenkiEvalTest` (2), `DraftValidatorTest` (15), `MedicationTextTest` (6), `MappersTest` (4). `FormViewModel` (etapas, voltar, "Alterar" da revisão) sem teste automatizado |
+| M1 no emulador (Pixel_6_2, API 35, 26/10) | Erros por etapa com as frases do protótipo; dias específicos; horário repetido → "Este horário já foi adicionado."; relógio 24 h; data de início = hoje; término vazio e anterior ao início; revisão com "Alterar" e "Concluir alteração"; salvar → aviso "Medicamento adicionado"; fechar e reabrir mantém os dados (RNF06); detalhes; desativar lembretes (preservado ao editar); edição com "Descartar alterações?"; exclusão com confirmação; fonte 1,5× no formulário. Capturas em `build/m1_*.png` (não versionadas) |
+| Limitações do M1 | "Adicionar medicamento" abre direto o formulário manual (a escolha Voz/Digitar/Câmera entra no M3, com `RegistrationSession`); calendário e relógio seguem o idioma do sistema (emulador em inglês); ligar/desligar lembretes só grava a escolha (alarmes no M2); textos das telas em Kotlin, não em `strings.xml` (app só em português); na edição, trocar para "Tem data para terminar" mostra como início a data do cadastro (divergência #5) |
 | App aberto em emulador/aparelho | Emulador Pixel_6_2 (API 35), 26/10, Claude Code. Aparelho físico: não |
 | Abas, cores, barra inferior | Verificados no emulador (capturas): abre em Hoje, três abas trocam, indicador verde-claro e negrito na ativa, sem roxo |
 | Rótulo da barra com fonte ampliada | Inteiro até 1,5×; **a partir de 1,8× "Medicamentos" é cortado com reticências** (limitação: a largura da aba não comporta a palavra; o rótulo encolhe até 12 sp e depois corta) |
@@ -90,7 +92,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - **M0:** o app abre na aba Hoje; as três abas (Hoje, Medicamentos, Ajustes) trocam de tela; a aba ativa tem o fundo
   verde-claro atrás do ícone e o rótulo em negrito; nenhum texto roxo/lilás do Material padrão; build debug registra
   `GenkiEval` no Logcat (`adb logcat -d -s GenkiEval`).
-- M1 em diante: acrescentar ao entregar cada marco.
+- **M1:** Medicamentos vazia mostra "Nenhum medicamento cadastrado."; "Adicionar medicamento" → etapas 1–3 bloqueiam com erro em campo vazio; dois horários iguais → "Este horário já foi adicionado."; "Tem data para terminar" exige término não anterior ao início; revisão mostra tudo e "Alterar" volta só àquela etapa; "Confirmar e salvar" → cartão na lista e aviso acima do botão; fechar e reabrir o app mantém o cartão; detalhes → Editar (sair com mudança pergunta "Descartar alterações?"), Desativar lembretes (cartão mostra "Lembretes desligados"), Excluir pede confirmação. Logcat: `cadastro_iniciado`, `medicamento_salvo`, `medicamento_editado`, `medicamento_excluido`.
+- M2 em diante: acrescentar ao entregar cada marco.
 
 ## 8. Divisão de trabalho (DEC-026)
 
@@ -105,6 +108,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-26 — Claude Code — M1 (`f2ff130`): `domain/` (modelo, rascunho, `DraftValidator` com `DUPLICATE_TIME`), `data/` (Room, DAO, repositório só com `Valid`), telas de lista, detalhes, formulário em etapas + revisão e edição; navegação com rotas `DetailRoute`, `AddMedicationRoute`, `EditMedicationRoute`, barra inferior só nas abas e aviso (snackbar) no `Scaffold`; DEC-027 (#2, #7, #12) — 27 testes passam; fluxo completo conferido no emulador — pendente: revisão do Codex; aceite do autor no aparelho; TalkBack.
 - 2026-10-26 — Claude Code — `/testar-emulador` no Pixel_6_2 (API 35): regressão M0 passa; com fonte 1,3× "Medicamentos" era cortado na barra inferior → rótulo com `autoSize` (16 sp → mín. 12 sp) em `GenkiApp.kt`, a pedido do autor — build, testes e emulador em 1,0×/1,3×/1,5× OK — pendente: corte persiste a partir de 1,8×; TalkBack não testado.
 - 2026-10-26 — Claude Code — cria este arquivo, a seção "Implementação e revisão" no `AGENTS.md` e `docs/revisoes/`; skills `/revisar` e `/testar-emulador` passam a apontar para as seções 5 e 6 (DEC-026) — só documentação — pendente: primeira revisão pelo Codex.
 - 2026-10-26 — Claude Code — config: skills `/testar-emulador` e `/revisar` em `.claude/skills/` (texto do autor; só o Claude Code as lê) (`19fcb3f`) — não executadas — nenhuma.
