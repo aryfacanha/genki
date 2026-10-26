@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Handoff do app e protocolo de revisão Claude Code ↔ Codex — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `19fcb3f`.
+Realizado e arquivos alterados: `docs/HANDOFF_APP.md` (novo), `docs/revisoes/README.md` (novo), seção "Implementação e revisão" no `AGENTS.md`; skills `/revisar` e `/testar-emulador` reduzidas a apontar para as seções 6 e 5 do handoff (roteiro do autor movido para lá sem mudança de conteúdo, mais o passo de gravar a revisão e a regressão da seção 7); `DECISOES` (DEC-025), `00_INDICE`, `ESTADO`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-025 (26/10).
+Sugestões pendentes: comando do Codex CLI copiado do protótipo (modelo pode precisar de ajuste).
+Verificado: só documentação; nada executado. | Não verificado: se o Codex segue o handoff na prática; skills após a mudança. | Limitações: nenhuma.
+Próxima tarefa e bloqueios: abrir o M0 no aparelho/emulador; primeira revisão do Codex (M0).
+Links/commits: este commit.
+
 ENTREGA — App Android: tema e navegação do M0 alinhados ao protótipo + divergências protótipo × ESPEC — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `8864ce1`; genki-prototype `295212e` (`docs/HANDOFF.md` §2).
 Realizado e arquivos alterados: `ui/theme/Color.kt` (paleta de `src/shared.tsx`), `Theme.kt` (todos os papéis do M3 com tons do protótipo, inclusive secondary/tertiary/surfaceContainer*), `Type.kt` (escala do protótipo: 48/26/22/20/18/17/16 sp, nenhum estilo abaixo de 16 sp), `ui/navigation/GenkiApp.kt` (barra inferior como `BottomNav`: fundo da superfície sem elevação, linha superior, indicador `#b7f0d4`, ativo `#1b6b4a` em negrito, inativo `#5e6761`, rótulo 16 sp, ícone de comprimidos do protótipo). Tarefa 2: `docs/DIVERGENCIAS_PROTOTIPO.md` (17 divergências de dados/regras, só levantamento); `00_INDICE`, `ESTADO`, `REGISTRO_IA`.

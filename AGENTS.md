@@ -52,3 +52,14 @@ Código gerado ≠ compilado ≠ testado no aparelho. Texto proposto ≠ revisad
 - Mensagem de commit: `tipo: resumo (RFxx)`, tipos `feat`, `fix`, `test`, `docs`, `chore`.
 - Autoria de commits feitos por assistentes: **padrão ainda a definir pelo autor** (ver `docs/ESTADO.md`).
   Até lá, o autor do commit é o autor do TCC e o assistente aparece em `Co-Authored-By`.
+
+## Implementação e revisão (app Android, DEC-025)
+
+- Retrato técnico do código, como rodar, checagem no emulador, roteiro de revisão e Diário: `docs/HANDOFF_APP.md`.
+  Leia antes de mexer no app e atualize-o ao terminar (seções 2, 3, 7 e Diário).
+- Papéis: **Claude Code implementa; Codex revisa.** Sem limite do Claude Code, o Codex implementa em "modo só Codex"
+  e o Claude Code revisa esse trabalho antes de começar algo novo.
+- Revisões ficam em `docs/revisoes/REVISAO_<marco>_<ASSISTENTE>.md`, com achados S1–S4. Quem revisa não altera código
+  sem pedido do autor.
+- Mudança de configuração (`.claude/`, skills, `AGENTS.md`, Gradle, versões, manifest) vai para o Diário do handoff.
+  As skills do Claude Code (`.claude/skills/`) só apontam para o handoff; o roteiro vale igual para todos os assistentes.
