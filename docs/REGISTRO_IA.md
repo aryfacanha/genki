@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 26/10/2026 (noite) — Claude (Opus 5.5, chat do Projeto): justificativa formal da avaliação com personas e e-mails à coordenação e ao CEP; registro da aprovação do protótipo pelo orientador (DEC-025). Arquivos: Drive (novo doc em Avaliação/); aqui `DECISOES`, `ESTADO`, `00_INDICE`, `REGISTRO_IA`. Rascunhos pendentes de revisão do autor e do orientador.
+
 Sessão adicional em 26/10/2026 (fim da tarde) — Claude (Opus 5.5, chat do Projeto): checklist de submissão ao CEP-IFRS e estrutura de justificativa para avaliação só com personas, com busca e conferência parcial de fontes (Wharton et al., 1994; Lee et al., 2021; Haldane et al., 2019; outras a conferir). Arquivos: Drive (novo doc em Avaliação/); aqui `ESTADO`, `00_INDICE`, `REGISTRO_IA`. Sugestão pendente de revisão do autor; não integrado à monografia.
 
 Sessão adicional em 26/10/2026 (tarde) — Claude (Opus 5.5, chat do Projeto): análise da resposta do orientador, conferência de normas do CEP e de fonte para tamanho de amostra, caminho C (CEP + personas) e cronograma integrado. Arquivos: Drive (plano de 26/10); aqui `DECISOES` (DEC-024), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Decisão do autor registrada; destino: planejamento, não integrado à monografia.

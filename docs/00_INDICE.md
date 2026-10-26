@@ -13,6 +13,7 @@ Pasta: https://drive.google.com/drive/folders/1JZBdXTuPRvPtcUwVDdbKvA7g7SA3__XG
 | **Metodologia de avaliação e pauta com o orientador** | Avaliação/Genki — Metodologia de avaliação e pauta com o orientador | https://docs.google.com/document/d/1d0-V2nuJ3xX7auqvIPPUP3LcWYDNTZfSrNPDI1e82XE/edit |
 | **Plano de etapas e cronograma até a entrega** (26/10, DEC-023) | Avaliação/Genki — Plano de etapas e cronograma até a entrega | https://docs.google.com/document/d/1LZW0Ylpso5zc3NihXLg0mBhXrhynfKIHsBysZtWoqrs/edit |
 | Checklist do CEP e justificativa das personas (26/10, sugestão) | Avaliação/Genki — Checklist do CEP e justificativa das personas | https://docs.google.com/document/d/1aW9eouZRjAX7T9xXBCE98hrYwOZuAM0rhV-O_D3MRAs/edit |
+| Justificativa formal da avaliação com personas (26/10, rascunho) | Avaliação/Genki — Justificativa formal da avaliação com personas | https://docs.google.com/document/d/1lSLVGNz5Seh2XSHxtqZFvpY4IVQOTYlgfeJhZ_mfy5c/edit |
 | Protótipo publicado (orientador) | Netlify | https://joyful-biscuit-677f74.netlify.app |
 | Monografia | — | ainda não está no Drive |
 | Manual IFRS / modelo do curso | — | ainda não está no Drive |
