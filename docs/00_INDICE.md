@@ -29,6 +29,7 @@ Cronograma institucional 2026/2: monografia em PDF até 16/11/2026; bancas de 23
 | Decisões (aceitas, pendentes, substituídas) | `docs/DECISOES.md` |
 | Especificação técnica do app | `docs/ESPEC_ARQUITETURA.md` |
 | Mapa RF/RNF → marcos e alterações pendentes na planilha | `docs/REQUISITOS_MAPA.md` |
+| Divergências de dados/regras entre o protótipo e a ESPEC (aguardam decisão) | `docs/DIVERGENCIAS_PROTOTIPO.md` |
 | Log de entregas (quem fez o quê) | `docs/ENTREGAS.md` |
 | Registro de uso de IA | `docs/REGISTRO_IA.md` |
 | Instruções para assistentes | `AGENTS.md` (`CLAUDE.md` aponta para ele) |

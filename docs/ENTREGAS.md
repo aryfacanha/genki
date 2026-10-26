@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: tema e navegação do M0 alinhados ao protótipo + divergências protótipo × ESPEC — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `8864ce1`; genki-prototype `295212e` (`docs/HANDOFF.md` §2).
+Realizado e arquivos alterados: `ui/theme/Color.kt` (paleta de `src/shared.tsx`), `Theme.kt` (todos os papéis do M3 com tons do protótipo, inclusive secondary/tertiary/surfaceContainer*), `Type.kt` (escala do protótipo: 48/26/22/20/18/17/16 sp, nenhum estilo abaixo de 16 sp), `ui/navigation/GenkiApp.kt` (barra inferior como `BottomNav`: fundo da superfície sem elevação, linha superior, indicador `#b7f0d4`, ativo `#1b6b4a` em negrito, inativo `#5e6761`, rótulo 16 sp, ícone de comprimidos do protótipo). Tarefa 2: `docs/DIVERGENCIAS_PROTOTIPO.md` (17 divergências de dados/regras, só levantamento); `00_INDICE`, `ESTADO`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma DEC nova; tarefa pedida pelo autor.
+Sugestões pendentes: as recomendações da tabela de divergências; rótulo da barra com `maxLines = 1` (reticências se não couber).
+Verificado: `.\gradlew.bat assembleDebug test` (build ok; testes passam). | Não verificado: nada visto em aparelho/emulador (cores, altura da barra, rótulo "Medicamentos" com fonte ampliada — com escala ≥ ~1,3 pode ficar com reticências em tela de 360 dp); voz do protótipo para "por N dias". | Limitações: tema escuro ignorado; DemoClock, DemoIntro e painel de demonstração fora, como pedido.
+Próxima tarefa e bloqueios: abrir no aparelho/emulador; autor decidir #2, #7 e #12 antes do M1 e #13, #14 e #16 antes do M2.
+Links/commits: commit "chore: alinha tema e navegação ao protótipo (M0)"; este commit.
+
 ENTREGA — App Android: estrutura base (M0) — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `c1f2b7e` (template "Empty Activity" commitado pelo autor).
 Realizado e arquivos alterados: dependências da ESPEC §1 em `gradle/libs.versions.toml`, `build.gradle.kts`, `app/build.gradle.kts` (Navigation Compose 2.9.8 + kotlinx-serialization 1.9.0, lifecycle 2.10.0 runtime/viewmodel-compose, Room 2.8.4 com KSP 2.3.12, coroutines-test 1.10.2; `buildConfig = true`); `GenkiApplication` (no manifest), `AppContainer` vazio, `GenkiEval`, `MainActivity`, `ui/navigation` (rotas tipadas e barra inferior), `ui/home`, `ui/medications`, `ui/settings` (provisórias), `ui/theme` (tokens do protótipo), `strings.xml`, `GenkiEvalTest` no lugar do `ExampleUnitTest`.
