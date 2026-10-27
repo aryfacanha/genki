@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -149,6 +151,11 @@ fun GenkiApp() {
             navController = navController,
             startDestination = HomeRoute,
             modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
+            // Troca de tela sem esmaecer (pedido do autor, 27/10).
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None },
         ) {
             composable<HomeRoute> { HomeScreen(onAdd = { navController.navigate(AddMedicationRoute) }) }
             composable<MedicationsRoute> {
