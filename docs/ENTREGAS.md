@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Segunda revisão dos reparos de M3/M4 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`cb98e3c`, `git pull` atualizado; alvo `69711ce`; roteiro atual, revisão anterior, handoff/ESPEC/decisões e originais da proposta/requisitos reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_CORRECAO2_M3_M4_CODEX.md`, nota histórica no relatório anterior, `HANDOFF_APP` §2/3/7/Diário, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. RV-M3-04/C-01/C-02 fechados; RV-M3-02/C-03 parcialmente corrigidos e abertos; novo RV-M3D-01 S2. Total três S2 abertos. Nenhuma correção de código/configuração; arquivos temporários removidos; alterações locais do autor preservadas.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: reiniciar dias da fala em correção explícita; não reinterpretar fragmentos de data inválida na pergunta; respeitar ano ou pedir esclarecimento.
+Verificado: build e 101 testes existentes, zero falhas/erros; 21 reprodutores antigos passam; 15 testes vizinhos (11 passam/4 falham), com comparação a `69711ce^`. | Não verificado: telas (opcionais), voz/TTS/câmera/embalagens/aparelho reais, TalkBack e alarmes nesta rodada. | Limitações: número sem marcador pode integrar nome; fração com “de” ou sem unidade deixa dose pendente.
+Próxima tarefa e bloqueios: corrigir/revisar RV-M3-02/C-03/D-01; depois aceite no aparelho. Emulador/dados/fonte/relógio não acessados nem alterados; `app/src` sem ajustes.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO2_M3_M4_CODEX.md`; nenhum commit/push nesta sessão.
+
 ENTREGA — App Android: segunda correção da revisão M3/M4 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `09ce68b`; `docs/revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`; `VoiceParserTest` (+5). Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.

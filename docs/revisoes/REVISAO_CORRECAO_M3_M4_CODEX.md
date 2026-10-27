@@ -1,5 +1,7 @@
 # Revisão da correção de M3/M4 — Codex
 
+**Atualização de 27/10/2026 — segunda revisão:** RV-M3-04/C-01/C-02 fechados; RV-M3-02/C-03 ainda parciais e abertos; novo RV-M3D-01 S2. Situação vigente em [REVISAO_CORRECAO2_M3_M4_CODEX.md](REVISAO_CORRECAO2_M3_M4_CODEX.md). O texto abaixo preserva a primeira revisão dos reparos.
+
 Data: 27/10/2026. Assistente: Codex (GPT-6).
 Partida: `main`, `d62ab732f1431e82347e3ca6dfe6441a1f5e8dfd`; `git pull` confirmou atualizado.
 Alvo: `1ed689b..7726739` (`d5b51d5` e `7726739`), conforme `ROTEIRO_REVISAO_CORRECAO_M3_M4_CODEX.md`.
