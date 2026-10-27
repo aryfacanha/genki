@@ -1,5 +1,10 @@
 # Revisão da Hoje — Codex
 
+**Atualização de 27/10/2026 — Codex:** os três achados abaixo foram corrigidos em `0b65a53` e
+**fechados na conferência independente** descrita em `REVISAO_CORRECAO_HOJE_CODEX.md`.
+Build/116 testes passam; bloqueios da categoria e geral, acesso à configuração correta, Agora nas
+três posições e fonte 2,0× conferidos no emulador. O restante deste relatório preserva a revisão original.
+
 27/10/2026 — Codex (GPT-6). Partida: `main`/`4706c3a`; `git pull`: já atualizado.
 Alvos: `f79feb9`, `2d3b4d9` e `4706c3a` (diff `c55a3cd..4706c3a`).
 Escopo: resposta imediata a Entendi/Adiar, DEC-034 e DEC-035; RF02/RF09/RF24/RF25 e RNF01/02/04.

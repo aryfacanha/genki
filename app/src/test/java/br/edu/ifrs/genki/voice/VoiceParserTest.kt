@@ -514,4 +514,44 @@ class VoiceParserTest {
         assertFalse(result.understood)
         assertEquals(listOf(l), result.drafts)
     }
+    // ── teste do autor no A31 com o roteiro de voz (27/10) ──────────────
+
+    @Test
+    fun correctionInsideTheSameUtterance() {
+        assertEquals(listOf(t(9)), one("losartana às 8, na verdade às 9").times)
+        assertEquals(listOf(t(8), t(21)), one("losartana às 8 e às 20, na verdade às 21").times)
+    }
+
+    @Test
+    fun notBeforeAKnownTimeRemovesIt() {
+        val m = voice("Metformina", t(8), t(20))
+        assertEquals(listOf(t(9), t(20)), parse("na verdade a metformina é às 9:00 não às 8:00", listOf(m)).drafts.single().times)
+        assertEquals(listOf(t(9), t(20)), parse("às 9 não às 8", listOf(m), m.localId).drafts.single().times)
+        // Horário novo depois do "não" continua trocando o último dito (RV-M3-04).
+        assertEquals(listOf(t(8), t(21)), one("losartana às 8 e às 20, não, às 21").times)
+    }
+
+    @Test
+    fun fillerWordsAreNotNames() {
+        val l = voice("Losartana", t(8), t(20))
+        val result = parse("numa segunda fala só às 8", listOf(l))
+        assertEquals(listOf("Losartana"), result.drafts.map { it.name })
+        assertEquals(listOf(t(8)), result.drafts.single().times)
+        assertFalse(parse("oi tudo bem").understood)
+    }
+
+    @Test
+    fun firstOfTheMonth() {
+        assertEquals(LocalDate.of(2027, 10, 1), one("losartana às 8 até primeiro de outubro").endDate)
+        assertEquals(LocalDate.of(2026, 11, 1), one("losartana às 8 até 1º de novembro").endDate)
+        val l = voice("Losartana", t(8))
+        assertEquals(LocalDate.of(2026, 12, 1), parse("primeiro de dezembro", listOf(l), l.localId, Field.END_DATE).drafts.single().endDate)
+    }
+
+    @Test
+    fun chosenDaysAnswer() {
+        val l = voice("Losartana", t(8))
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), parse("segunda, quarta e sexta", listOf(l), l.localId, Field.DAYS).drafts.single().days)
+        assertEquals(setOf(SATURDAY, SUNDAY), parse("domingo e sábado", listOf(l), l.localId, Field.DAYS).drafts.single().days)
+    }
 }

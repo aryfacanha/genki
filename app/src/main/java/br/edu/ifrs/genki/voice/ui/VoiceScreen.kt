@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -23,11 +26,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -57,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
@@ -71,6 +79,7 @@ import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.Speaker
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 /**
@@ -140,7 +149,8 @@ fun VoiceScreen(
     }
     BackHandler(onBack = handleBack)
 
-    Column(Modifier.fillMaxSize()) {
+    // O teclado empurra a tela, sem cobrir o campo da resposta digitada (teste do autor no A31, 27/10).
+    Column(Modifier.fillMaxSize().imePadding()) {
         GenkiTopBar(
             if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
             onBack = handleBack,
@@ -222,7 +232,12 @@ private fun ColumnScope.Asking(
     val question = state.question ?: return
     var typing by rememberSaveable { mutableStateOf(false) }
     var typed by rememberSaveable { mutableStateOf("") }
-    Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
+    // Com o teclado aberto, rola até o fim para o campo e o "Enviar" ficarem à vista.
+    val scroll = rememberScrollState()
+    val imeVisible = WindowInsets.isImeVisible
+    // O teclado sobe animado e o fim da tela muda várias vezes; acompanha até ele parar.
+    LaunchedEffect(typing) { if (typing) snapshotFlow { scroll.maxValue }.collect { scroll.scrollTo(it) } }
+    Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = 20.dp, vertical = 20.dp)) {
         SectionTitle(if (state.correctionPending) "Confira a correção" else "Entendi até agora")
         Spacer(Modifier.height(8.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -284,7 +299,9 @@ private fun ColumnScope.Asking(
         }
         // Resposta digitada (como no protótipo): datas e o que não está nos botões; passa pelo mesmo interpretador.
         if (!state.correctionPending) {
-            if (typing) {
+            if (typing && question.field == Field.DAYS && !state.correcting) {
+                DayPicker(onDone = { onAnswer(it); typing = false })
+            } else if (typing) {
                 // Abre já com o teclado no campo.
                 val focus = remember { FocusRequester() }
                 LaunchedEffect(Unit) { focus.requestFocus() }
@@ -307,7 +324,10 @@ private fun ColumnScope.Asking(
                 )
             } else {
                 TextButton(onClick = { typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
-                    Text("Digitar a resposta", textDecoration = TextDecoration.Underline)
+                    Text(
+                        if (question.field == Field.DAYS && !state.correcting) "Escolher os dias" else "Digitar a resposta",
+                        textDecoration = TextDecoration.Underline,
+                    )
                 }
             }
         }
@@ -319,6 +339,8 @@ private fun ColumnScope.Asking(
         }
         return
     }
+    // Digitando (teclado aberto), o microfone sai de baixo para o campo e o "Enviar" caberem acima do teclado.
+    if (typing && imeVisible) return
     BottomActions {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MicButton(state.listening, size = 64, onClick = onMic)
@@ -497,5 +519,39 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
                 }
             }
         }
+    }
+}
+
+/**
+ * Dias escolhidos por toque na pergunta dos dias, em vez de digitar (teste do autor no A31, 27/10). Vira a frase
+ * "segunda, quarta e sexta" e passa pelo mesmo interpretador das outras respostas.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun DayPicker(onDone: (String) -> Unit) {
+    var chosen by rememberSaveable { mutableStateOf(listOf<DayOfWeek>()) }
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 16.dp)) {
+        MedicationText.WEEK.forEach { day ->
+            FilterChip(
+                selected = day in chosen,
+                onClick = { chosen = if (day in chosen) chosen - day else chosen + day },
+                label = { Text(MedicationText.dayName(day).replaceFirstChar { it.uppercase() }) },
+                // Marcado com ✓, não só pela cor.
+                leadingIcon = if (day in chosen) { { Icon(Icons.Filled.Check, contentDescription = null) } } else null,
+                modifier = Modifier.heightIn(min = 48.dp),
+            )
+        }
+    }
+    if (chosen.isNotEmpty()) {
+        PrimaryButton(
+            "Confirmar dias",
+            onClick = {
+                val names = MedicationText.WEEK.filter { it in chosen }.map(MedicationText::dayName)
+                onDone(if (names.size == 7) "todos os dias" else names.dropLast(1).joinToString(", ").let {
+                    if (it.isEmpty()) names.last() else "$it e ${names.last()}"
+                })
+            },
+            modifier = Modifier.padding(top = 8.dp),
+        )
     }
 }

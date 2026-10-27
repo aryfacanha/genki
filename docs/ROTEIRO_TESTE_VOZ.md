@@ -63,11 +63,12 @@ Todos "não salvar". Responda às perguntas que aparecerem com os botões.
 | V29 | "Losartana um comprimido às 8 e às 20" e, numa **segunda fala**, "só às 8" | Horários = só 08:00 |
 | V30 | "Losartana um comprimido às 8"; numa **segunda fala**, "na verdade é às 9" | 08:00 vira **09:00** |
 | V31 | "Losartana às 8 e às 20, não, às 21" (uma fala só) | 08:00 e **21:00** |
-| V32 | Numa fala só: "Losartana às 8, na verdade às 9" | **Achado conhecido:** hoje fica com 08:00 **e** 09:00 (a correção na mesma fala não troca). Confirme e anote; ver nota no fim |
+| V32 | Numa fala só: "Losartana às 8, na verdade às 9" | Só **09:00** (corrigido em 27/10; antes ficava 08:00 e 09:00) |
 | V33 | "Losartana"; na pergunta da dose, diga "o nome é atenolol" | Nome passa a Atenolol; continua perguntando a dose. Nenhum medicamento novo |
 | V34 | "Losartana"; na pergunta dos horários, diga "umas 9 da noite" | 21:00 para Losartana; **não** cria medicamento novo |
 | V35 | Numa pergunta, toque **Algo errado? Corrigir por voz** e diga "atenolol" | "Confira a correção" com o nome trocado. Toque **Desfazer** → volta igual, na mesma pergunta. Repita e toque **Manter correção** → nome trocado, segue as perguntas |
 | V36 | Faça V02 até a revisão; toque **Corrigir por voz** e diga "na verdade a metformina é às 9" | "Confira a correção": Metformina 09:00 e 20:00; Losartana intacta. **Manter correção** |
+| V36b | Igual, dizendo "na verdade a metformina é às 9, não às 8" | Metformina 09:00 e 20:00 (corrigido em 27/10; antes ficava 08:00 e 20:00) |
 | V37 | Na revisão, toque **Corrigir** num medicamento, mude a dose no formulário e conclua | Volta à revisão com a dose nova; o outro intacto |
 | V38 | Na revisão com dois, toque **Remover da lista** num deles | Revisão fica com um só. Remover o último volta ao início da voz |
 
@@ -76,10 +77,12 @@ Todos "não salvar". Responda às perguntas que aparecerem com os botões.
 | # | Diga | Deve acontecer |
 |---|---|---|
 | V39 | "Losartana um comprimido às 8 por um mês" | Não preenche a duração; **pergunta** por quanto tempo |
-| V40 | "Losartana um comprimido dia sim dia não às 8" | Não preenche os dias; **pergunta** os dias |
+| V40 | "Losartana um comprimido dia sim dia não às 8" | Não preenche os dias; **pergunta** os dias. **Escolher os dias** mostra os 7 dias para tocar (✓ no marcado) e **Confirmar dias** |
+| V40b | Em qualquer pergunta, **Digitar a resposta** | O campo e o **Enviar** ficam acima do teclado; o microfone some enquanto digita |
 | V41 | "Losartana um comprimido às 8 até 31 de fevereiro" | Data impossível ignorada; **pergunta** a duração |
-| V42 | "Losartana um comprimido às 8 até dia 1 de outubro" | Data já passou este ano → entende **01/10/2027**. Confira se isso faz sentido para você |
-| V43 | "Bom dia" | "Não entendi. Tente de novo." |
+| V42 | "Losartana um comprimido às 8 até primeiro de outubro" (ou "1º de outubro") | Data já passou este ano → entende **01/10/2027** ("primeiro" aceito desde 27/10) |
+| V43 | "Bom dia" e "Oi, tudo bem" | "Não entendi. Tente de novo." (nenhum vira remédio) |
+| V43b | "Losartana um comprimido às 8 e às 20" e depois "numa segunda fala só às 8" | Só 08:00; "numa" e "fala" não viram remédio |
 
 ## E. Saídas, erros e permissões
 
@@ -94,8 +97,8 @@ Todos "não salvar". Responda às perguntas que aparecerem com os botões.
 | V50 | Desligue a internet (modo avião) e fale V01 | Se o pacote offline de português estiver instalado, funciona; senão aparece erro do reconhecedor e dá para digitar. Anote qual aconteceu |
 | V51 | Com o volume de mídia baixo e depois alto, abra a voz | As perguntas são lidas em voz alta em português (com volume alto) |
 
-## Nota — achado ao preparar o roteiro (V32)
+## Histórico
 
-"Losartana às 8, na verdade às 9" **numa fala só** fica com 08:00 e 09:00. "Na verdade" só troca horários de falas
-anteriores (V30 funciona); dentro da mesma fala os horários se somam. Os testes do interpretador não cobriam esse
-caso. Correção ainda **não feita**: aguarda decisão do autor.
+- 27/10: primeira rodada do autor no A31. Corrigidos V32 (correção na mesma fala), V36b ("às 9, não às 8"),
+  V42 ("primeiro de outubro"), V43/V43b ("oi tudo", "numa segunda fala" viravam remédio) e V40/V40b (teclado
+  cobria o campo; dias escolhidos por toque). V50 ok. Demais pedidos do autor registrados em `docs/ESTADO.md`.

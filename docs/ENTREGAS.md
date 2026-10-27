@@ -15,6 +15,34 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Reinstalação do app no A31 — 27/10/2026, 18:22 — Codex (GPT-6)
+Observação de tela: Hoje exibiu “Você ainda não possui lembretes.” Não houve contagem de registros antes; banco/WAL mantiveram tamanho/data anteriores e nenhuma escrita de medicamentos foi realizada pelo assistente.
+Partida: `main`/`a6d9b5a`; pull já atualizado; diferença desde `0b65a53` apenas em documentação, código do app inalterado.
+Realizado e arquivos alterados: APK arm64-v8a reinstalado com `-r`; registros em estado/handoff/entregas/registro de IA.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova decisão de produto; reinstalação pedida pelo autor.
+Sugestões pendentes: nenhuma.
+Verificado: build e 116 testes executados passam; instalação Success, lastUpdateTime 18:22:25, primeira instalação/banco preservados, abertura e árvore da tela; nenhum crash AndroidRuntime observado no processo atual. | Não verificado: aceite completo, voz/TTS, câmera, TalkBack ou ciclo de lembretes nesta reinstalação.
+Próxima tarefa e bloqueios: testes manuais do autor.
+Links/commits: `a6d9b5a` (código igual a `0b65a53`); evidência local `build/a31_reinstalacao.xml`; sem código/configuração, commit ou push.
+
+ENTREGA — Atualização do app no A31 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`0b65a53`; `git pull` já atualizado; versão com as correções da Hoje revisadas nesta sessão.
+Realizado e arquivos alterados: compilação arm64-v8a e instalação de atualização no Samsung A31; apenas documentação (`ESTADO.md`, `HANDOFF_APP.md`, `ENTREGAS.md`, `REGISTRO_IA.md`) alterada.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova decisão de produto; instalação solicitada pelo autor.
+Sugestões pendentes: nenhuma.
+Verificado: build/116 testes passam (testes `UP-TO-DATE`); APK de 26,9 MiB, instalação com `-r` retorna Success, lastUpdateTime 17:43:28; Hoje aberta com dados e aviso pendente preservados, sem crash AndroidRuntime observado no processo atual. | Não verificado: aceite completo, alarmes reais, voz/TTS, câmera e TalkBack nesta instalação. | Limitações: mensagens E de USNET/OpenGLRenderer/ion do sistema no Logcat; app abriu normalmente.
+Próxima tarefa e bloqueios: continuar os testes manuais do autor no A31.
+Links/commits: código `0b65a53`; capturas locais `build/a31_atualizado.png` e `build/a31_atualizacao.xml`; sem alteração de código, commit ou push.
+
+ENTREGA — Conferência das correções da Hoje — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`0b65a53`; `git pull` já atualizado; roteiro do handoff §6 e casos da Hoje em §7; proposta e requisitos atuais consultados no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_CORRECAO_HOJE_CODEX.md`, nota em `REVISAO_HOJE_CODEX.md`, `HANDOFF_APP.md` (§2/3/7 e Diário), `ESTADO.md`, `ENTREGAS.md`, `REGISTRO_IA.md`. **RV-HOJE-01/02/03 fechados, sem achado novo no escopo**; código não alterado.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: nenhuma nova; aceite completo no aparelho continua separado.
+Verificado: build/116 testes passam (`UP-TO-DATE`); emulador API 35: bloqueio da categoria/ajuste correto/recuperação, bloqueio geral/pedido de permissão, Agora antes/entre/depois, fonte 2,0×, próximo dia, abas e Detalhes/voltar. Sem erro do PID atual/crash AndroidRuntime; permissões/hora/fonte restauradas, medicamentos preservados, alertas vazios. | Não verificado: A31, TalkBack audível, voz/TTS, câmera, Doze; ciclo real de lembretes e CRUD/M3/M4 completos não repetidos.
+Próxima tarefa e bloqueios: continuar aceite manual no A31 e verificações técnicas previstas; sem novo reparo desses achados na cobertura executada.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO_HOJE_CODEX.md`; alvo `0b65a53`; sem commit/push.
+
 ENTREGA — Revisão das melhorias da Hoje (DEC-034/035) — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`4706c3a`; `git pull` já atualizado; alvos `f79feb9`, `2d3b4d9`, `4706c3a`; proposta/requisitos atuais consultados no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_HOJE_CODEX.md`, `HANDOFF_APP.md` (§2/3/7 e Diário), `ESTADO.md`, `ENTREGAS.md`, `REGISTRO_IA.md`. Um S2 e dois S3 abertos; código não alterado.
@@ -23,6 +51,15 @@ Sugestões pendentes: correções de RV-HOJE-01/02/03; não implementadas pelo r
 Verificado: build/116 testes passam (`UP-TO-DATE`); emulador API 35, Detalhes/voltar, bloqueio global/Ajustes, disparo 19:30, resposta imediata Adiar/Entendi e próximo dia. Reproduzidos canal bloqueado sem aviso, Agora ausente antes do primeiro horário e texto comprimido em 2,0×. | Não verificado: A31, TalkBack audível, voz/TTS reais, câmera/Doze, grupos e retorno do adiamento nesta rodada. | Limitações: emulador ficou offline; recuperado com reinício autorizado; permissões, relógio automático e fonte restaurados, alertas vazios, medicamentos preservados.
 Próxima tarefa e bloqueios: Claude Code reparar os três achados; Codex conferir; continuar aceite no A31.
 Links/commits: `docs/revisoes/REVISAO_HOJE_CODEX.md`; sem commit/push.
+
+ENTREGA — App Android: ajustes da voz após o roteiro de teste do autor — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`a6d9b5a`; retorno do autor com `docs/ROTEIRO_TESTE_VOZ.md` no A31.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/ui/VoiceScreen.kt`, `VoiceParserTest.kt`; docs (roteiro atualizado).
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (correções de defeito; seletor de dias como resposta ao item V40).
+Sugestões pendentes: unidade da dose selecionável; cancelar no formulário; lista de nomes de medicamentos; volume da leitura.
+Verificado: `assembleDebug test` (121); emulador com fala injetada (ver Diário). | Não verificado: voz real no A31 após a correção; TalkBack no seletor de dias.
+Próxima tarefa e bloqueios: reteste do autor; revisão do Codex; decisão sobre as sugestões.
+Links/commits: este commit.
 
 ENTREGA — App Android: correção dos achados da revisão da Hoje — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`fa1fbbd` (revisão do Codex `docs/revisoes/REVISAO_HOJE_CODEX.md` registrada nesse commit).

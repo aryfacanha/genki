@@ -105,6 +105,9 @@ object VoiceParser {
         "costumo", "costuma", "acho", "acredito", "talvez", "creio",
         // "Tomo" ouvido como "como" pelo reconhecedor do Samsung A31 (27/10); "como" também é palavra comum.
         "como", "pego", "faco", "remedinho",
+        // Teste do autor no A31 (27/10): "numa segunda fala" e "oi, tudo bem" viravam remédio.
+        "num", "numa", "oi", "ola", "alo", "tudo", "beleza", "obrigado", "obrigada", "tchau", "fala", "falo", "falei",
+        "disse", "digo",
     )
 
     private val ALL_DAYS = DayOfWeek.entries.toSet()
@@ -119,6 +122,8 @@ object VoiceParser {
     ) {
         val drafts = input.toMutableList()
         val before = input.associate { it.localId to it.times }
+        /** Base da correção: horários de antes desta fala e os ditos nesta fala antes de "na verdade" (V32, 27/10). */
+        val base = before.toMutableMap()
         val beforeDays = input.associate { it.localId to it.days }
         /** Dias já ditos nesta fala, por rascunho: trechos separados ("segunda e quarta e também sexta") se somam. */
         val spokenDays = mutableMapOf<String, Set<DayOfWeek>>()
@@ -194,6 +199,13 @@ object VoiceParser {
         private fun addTime(time: LocalTime) {
             apply { it }
             val negated = lastTime
+            // "Às 9, não às 8" com 08:00 já entendido: o "não" tira o horário dito depois dele (teste do autor, 27/10).
+            val removing = group.filter { before[it].orEmpty().contains(time) }
+            if (negateLast && removing.isNotEmpty()) {
+                removing.forEach { negatedBefore.getOrPut(it) { mutableSetOf() } += time }
+                negateLast = false
+                return
+            }
             if (negateLast && negated != null) {
                 negated.first.forEach { id ->
                     newTimes[id]?.remove(negated.second)
@@ -210,10 +222,12 @@ object VoiceParser {
                 val index = drafts.indexOfFirst { it.localId == id }
                 if (index < 0) return@forEach
                 val draft = drafts[index]
-                val old = before[id].orEmpty() - negatedBefore[id].orEmpty()
+                val removed = negatedBefore[id].orEmpty()
+                val old = base[id].orEmpty() - removed
                 val times = when {
                     replaceAll || old.isEmpty() -> spoken
-                    correction -> replaceNearest(old, spoken)
+                    // Com um horário tirado por "não", a troca já foi dita; não troca outro pelo mais próximo.
+                    correction && removed.isEmpty() -> replaceNearest(old, spoken)
                     else -> old + spoken
                 }
                 drafts[index] = draft.copy(times = times.distinct().sorted())
@@ -273,6 +287,11 @@ object VoiceParser {
         private fun correct(end: Int): Int {
             correction = true
             spokenDays.clear()
+            // "Às 8, na verdade às 9" na mesma fala: o que foi dito antes passa a ser o que a correção troca.
+            newTimes.forEach { (id, spoken) ->
+                base[id] = (base[id].orEmpty() + spoken).distinct()
+                spoken.clear()
+            }
             return end
         }
 
@@ -415,7 +434,9 @@ object VoiceParser {
                 askedAboutTime -> i
                 else -> return i
             }
-            val (day, j) = whole(dateStart) ?: return i
+            // "Primeiro de outubro" e "1º de outubro" (teste do autor, 27/10).
+            val (day, afterDay) = (if (isAny(dateStart, "primeiro")) 1 to dateStart + 1 else whole(dateStart)) ?: return i
+            val j = if (isAny(afterDay, "º", "ª") || (isAny(afterDay, "o") && isAny(afterDay + 1, "de"))) afterDay + 1 else afterDay
             var next = j
             var month: Int? = null
             var year: Int? = null
