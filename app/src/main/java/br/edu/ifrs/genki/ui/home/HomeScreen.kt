@@ -1,5 +1,6 @@
 package br.edu.ifrs.genki.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,8 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -36,8 +42,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.ifrs.genki.data.MedicationRepository
+import br.edu.ifrs.genki.data.Settings
+import br.edu.ifrs.genki.domain.ActiveAlert
+import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.Occurrence
 import br.edu.ifrs.genki.domain.OccurrenceCalculator
+import br.edu.ifrs.genki.reminders.AlertStore
+import br.edu.ifrs.genki.reminders.ReminderAction
+import br.edu.ifrs.genki.reminders.ReminderScheduler
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.GenkiCard
@@ -53,17 +65,26 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 data class HomeState(
     val hasMedications: Boolean,
     val date: LocalDate,
     val today: List<Occurrence>,
-    /** Primeiro horário de hoje a partir do minuto atual; `null` = os de hoje já passaram. */
+    /** Primeiro horário de hoje a partir do minuto atual, fora os avisos pendentes; `null` = os de hoje já passaram. */
     val next: Occurrence?,
+    /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
+    val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
+    val intervalMinutes: Int = 20,
 )
 
-class HomeViewModel(repository: MedicationRepository) : ViewModel() {
+class HomeViewModel(
+    repository: MedicationRepository,
+    alertStore: AlertStore,
+    settings: Settings,
+    private val scheduler: ReminderScheduler,
+) : ViewModel() {
     /** Relógio do aparelho a cada minuto, para a Hoje andar sozinha. */
     private val minutes = flow {
         while (true) {
@@ -73,22 +94,43 @@ class HomeViewModel(repository: MedicationRepository) : ViewModel() {
         }
     }
 
-    val state: StateFlow<HomeState?> = combine(repository.observeAll(), minutes) { medications, now ->
+    val state: StateFlow<HomeState?> = combine(
+        repository.observeAll(), minutes, alertStore.alerts, settings.reminders,
+    ) { medications, now, alerts, reminderSettings ->
         val today = OccurrenceCalculator.today(medications, now.toLocalDate())
         val minute = now.toLocalTime().truncatedTo(ChronoUnit.MINUTES)
-        HomeState(medications.isNotEmpty(), now.toLocalDate(), today, today.firstOrNull { it.time >= minute })
+        // Aviso de medicamento apagado não aparece (o cancelamento já limpa; isto cobre a corrida).
+        val withMedication = alerts.mapNotNull { alert ->
+            medications.firstOrNull { it.id == alert.medicationId }?.let { alert to it }
+        }
+        HomeState(
+            hasMedications = medications.isNotEmpty(),
+            date = now.toLocalDate(),
+            today = today,
+            next = ActiveAlert.nextOccurrence(today, alerts, minute),
+            alerts = withMedication,
+            intervalMinutes = reminderSettings.intervalMinutes,
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    /** "Entendi": nada é registrado (DEC-004). */
+    fun acknowledge(timeId: Long) = scheduler.respond(ReminderAction.ACK, timeId)
+
+    fun snooze(timeId: Long) = scheduler.respond(ReminderAction.SNOOZE, timeId)
 
     companion object {
         val Factory = viewModelFactory {
-            initializer { HomeViewModel(genkiContainer().medicationRepository) }
+            initializer {
+                val container = genkiContainer()
+                HomeViewModel(container.medicationRepository, container.alertStore, container.settings, container.reminderScheduler)
+            }
         }
     }
 }
 
 /**
- * Hoje (RF09, visualização), como `GenkiHome.tsx`, mas só com os horários do dia:
- * sem "Visto às"/"Adiado para", porque reconhecer não registra nada (DEC-004, DEC-028).
+ * Hoje (RF09), como `GenkiHome.tsx`: avisos pendentes com "Entendi" e "Adiar" (DEC-029), próximo lembrete e
+ * horários do dia. A lista não mostra "Visto às", porque reconhecer não registra nada (DEC-004, DEC-028).
  */
 @Composable
 fun HomeScreen(
@@ -117,7 +159,26 @@ fun HomeScreen(
                     modifier = Modifier.padding(top = 16.dp),
                 )
                 else -> {
-                    NextCard(s.next)
+                    s.alerts.forEach { (alert, medication) ->
+                        AlertCard(
+                            alert = alert,
+                            medication = medication,
+                            intervalMinutes = s.intervalMinutes,
+                            onAcknowledge = { viewModel.acknowledge(alert.timeId) },
+                            onSnooze = { viewModel.snooze(alert.timeId) },
+                        )
+                    }
+                    if (s.alerts.isEmpty()) {
+                        NextCard(s.next)
+                    } else {
+                        s.next?.let { next ->
+                            Text(
+                                "Depois: ${MedicationText.time(next.time)} · ${next.medication.name}",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 12.dp),
+                            )
+                        }
+                    }
                     Text(
                         "Hoje",
                         style = MaterialTheme.typography.titleLarge,
@@ -136,7 +197,7 @@ fun HomeScreen(
     }
 }
 
-/** Cartão verde do próximo lembrete; só informa (as respostas ficam na notificação). */
+/** Cartão verde do próximo lembrete; só informa. */
 @Composable
 private fun NextCard(next: Occurrence?) {
     Surface(
@@ -153,19 +214,76 @@ private fun NextCard(next: Occurrence?) {
             Text("Próximo lembrete", color = GenkiCardSubtext)
             Text(MedicationText.time(next.time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(40.dp).background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f), RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(PillsIcon, contentDescription = null, tint = GenkiCardSubtext, modifier = Modifier.size(20.dp))
-                }
-                Spacer(Modifier.width(12.dp))
-                Column {
-                    Text(next.medication.name, style = MaterialTheme.typography.titleLarge)
-                    Text(MedicationText.doseLine(next.medication.concentration, next.medication.dose), color = GenkiCardSubtext)
-                }
+            MedicationLine(next.medication)
+        }
+    }
+}
+
+/**
+ * Cartão verde "Agora" (aviso tocando: "Entendi" e "Adiar N min") ou "Lembrete adiado" (só "Entendi"),
+ * como no protótipo. Os botões fazem o mesmo que os da notificação.
+ */
+@Composable
+private fun AlertCard(
+    alert: ActiveAlert,
+    medication: Medication,
+    intervalMinutes: Int,
+    onAcknowledge: () -> Unit,
+    onSnooze: () -> Unit,
+) {
+    val snoozedUntil = alert.snoozedUntil?.atZone(ZoneId.systemDefault())?.toLocalTime()
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+    ) {
+        Column(Modifier.padding(20.dp)) {
+            if (snoozedUntil == null) {
+                Text("Agora", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+                Text(MedicationText.time(alert.time), style = MaterialTheme.typography.displayLarge)
+            } else {
+                Text("Lembrete adiado", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+                Text("Novo alerta às ${MedicationText.time(snoozedUntil)}", style = MaterialTheme.typography.titleLarge)
+                Text("Horário original: ${MedicationText.time(alert.time)}", color = GenkiCardSubtext)
             }
+            Spacer(Modifier.height(8.dp))
+            MedicationLine(medication)
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = onAcknowledge,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            ) { Text("Entendi", fontWeight = FontWeight.SemiBold) }
+            if (snoozedUntil == null) {
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = onSnooze,
+                    border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = GenkiCardSubtext),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                ) { Text("Adiar $intervalMinutes min") }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MedicationLine(medication: Medication) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier.size(40.dp).background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f), RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(PillsIcon, contentDescription = null, tint = GenkiCardSubtext, modifier = Modifier.size(20.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column {
+            Text(medication.name, style = MaterialTheme.typography.titleLarge)
+            Text(MedicationText.doseLine(medication.concentration, medication.dose), color = GenkiCardSubtext)
         }
     }
 }

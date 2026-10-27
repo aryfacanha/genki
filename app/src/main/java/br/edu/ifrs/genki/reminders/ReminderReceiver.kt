@@ -13,6 +13,7 @@ import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_TIME_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 /** FIRE, REPEAT (até 3), ACK, SNOOZE e FIRE_SNOOZED (ESPEC §6, RF09, RF24, RF25). */
 class ReminderReceiver : BroadcastReceiver() {
@@ -30,12 +31,13 @@ class ReminderReceiver : BroadcastReceiver() {
                     ReminderAction.ACK -> {
                         Notifications.cancel(context, timeId)
                         scheduler.cancelFollowUps(timeId)
+                        container.alertStore.remove(listOf(timeId))
                         GenkiEval.log("lembrete_reconhecido", "timeId" to timeId)
                     }
                     ReminderAction.SNOOZE -> {
                         Notifications.cancel(context, timeId)
                         scheduler.cancelFollowUps(timeId)
-                        scheduler.scheduleSnoozed(timeId)
+                        container.alertStore.snoozed(timeId, Instant.ofEpochMilli(scheduler.scheduleSnoozed(timeId)))
                         GenkiEval.log("lembrete_adiado", "timeId" to timeId)
                     }
                     else -> notify(context, container, action, timeId, count)
@@ -62,6 +64,7 @@ class ReminderReceiver : BroadcastReceiver() {
         val scheduler = container.reminderScheduler
 
         Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed = action == ReminderAction.FIRE_SNOOZED)
+        container.alertStore.ringing(timeId, medication.id, time)
         GenkiEval.log("lembrete_emitido", "timeId" to timeId, "acao" to action, "repeticao" to count)
 
         when (action) {

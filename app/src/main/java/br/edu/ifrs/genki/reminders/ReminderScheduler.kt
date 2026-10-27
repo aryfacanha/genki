@@ -23,6 +23,7 @@ enum class ReminderAction { FIRE, REPEAT, ACK, SNOOZE, FIRE_SNOOZED }
 class ReminderScheduler(
     private val context: Context,
     private val settings: Settings,
+    private val alertStore: AlertStore,
     private val now: () -> ZonedDateTime = { ZonedDateTime.now() },
 ) {
     private val alarms = context.getSystemService(AlarmManager::class.java)
@@ -50,20 +51,24 @@ class ReminderScheduler(
         ReminderPlan.Disabled -> cancel(listOf(timeId))
     }
 
-    /** Cancela alarmes, repetições, adiamentos e a notificação dos horários. */
+    /** Cancela alarmes, repetições, adiamentos, a notificação e o cartão da Hoje dos horários. */
     fun cancel(timeIds: List<Long>) {
         timeIds.forEach { timeId ->
             ReminderAction.entries.forEach { alarms.cancel(pendingIntent(context, it, timeId)) }
             Notifications.cancel(context, timeId)
         }
+        alertStore.remove(timeIds)
     }
 
     /** Repetição sem resposta (RF24), [count] = 1..3. */
     fun scheduleRepeat(timeId: Long, count: Int) =
         set(ReminderAction.REPEAT, timeId, afterInterval(), count)
 
-    /** "Adiar N min" (RF25). */
-    fun scheduleSnoozed(timeId: Long) = set(ReminderAction.FIRE_SNOOZED, timeId, afterInterval())
+    /** "Adiar N min" (RF25). Devolve quando volta a avisar. */
+    fun scheduleSnoozed(timeId: Long): Long = afterInterval().also { set(ReminderAction.FIRE_SNOOZED, timeId, it) }
+
+    /** Botões do cartão da Hoje: mesmo caminho dos botões da notificação. */
+    fun respond(action: ReminderAction, timeId: Long) = pendingIntent(context, action, timeId).send()
 
     fun cancelFollowUps(timeId: Long) {
         alarms.cancel(pendingIntent(context, ReminderAction.REPEAT, timeId))

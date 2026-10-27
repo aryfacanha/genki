@@ -10,11 +10,13 @@ import kotlinx.coroutines.launch
 
 /**
  * Reinício, atualização do app, troca de hora/fuso e permissão de alarme exato → reagenda tudo.
- * Repetições e adiamentos pendentes não voltam (S2).
+ * Repetições e adiamentos pendentes não voltam (S2); no reinício, os cartões da Hoje também somem (DEC-029).
  */
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val repository = (context.applicationContext as GenkiApplication).container.medicationRepository
+        val container = (context.applicationContext as GenkiApplication).container
+        val repository = container.medicationRepository
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) container.alertStore.clear()
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
