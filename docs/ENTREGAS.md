@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: últimos itens da revisão de M3 — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `10b4cc2`; `docs/revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `ui/home/HomeScreen.kt`; `VoiceParserTest` (+2); roteiro `revisoes/ROTEIRO_CONFERENCIA_M3_CODEX.md`. Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (correção pedida pelo autor).
+Sugestões pendentes: nenhuma.
+Verificado: 112 testes; reprodutores do Codex 43/43; instalado no A31. | Não verificado: telas (mudança só de texto no cartão). | Limitações: "até 29/2" sem ano em ano não bissexto fica sem data.
+Próxima tarefa e bloqueios: conferência do Codex; teste do autor no A31.
+Links/commits: `0cef3f1`.
+
 ENTREGA — App Android: terceira revisão da correção M3/M4 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`b56dd661df9a2b100b1d533587bbc1d335d5eaa8`; `git pull` atualizado; roteiro atualizado e alvos `fac6a0a`, `8191c25`, `d7b8c63`, `24888ec`, `caafe29`; originais consultados no Drive.
 Realizado e arquivos alterados: relatório `docs/revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`, nota histórica na segunda revisão, `HANDOFF_APP` (§2/3/7 e Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. **RV-M3C-03/D-01 fechados; RV-M3-02 S2 residual; RV-M3E-01 S3 novo.** Sem S1/gravação sem revisão observados; sem correção permanente de código/configuração.
