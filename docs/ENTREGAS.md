@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: chips estáticos e aviso de volume no meio da tela — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`15dc9ef`; segunda rodada do autor com o roteiro da voz no A31 (V32b e V46b ok).
+Realizado e arquivos alterados: `ui/components/Components.kt` (`CheckSlot`), `ui/form/FormScreen.kt`, `voice/ui/VoiceScreen.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: ajuste visual pedido pelo autor (complementa a DEC-036).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (126); emulador (ver Diário). | Não verificado: A31 (desconectado); TalkBack; fonte ampliada.
+Próxima tarefa e bloqueios: instalar no A31; revisão do Codex.
+Links/commits: este commit.
+
 ENTREGA — <tema> — <data> — <assistente (modelo exibido)>
 Partida: <documentos/commit>
 Realizado e arquivos alterados: <...>

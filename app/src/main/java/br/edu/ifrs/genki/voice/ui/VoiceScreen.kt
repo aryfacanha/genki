@@ -6,38 +6,40 @@ import android.media.AudioManager
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,6 +62,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -71,6 +74,7 @@ import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
+import br.edu.ifrs.genki.ui.components.CheckSlot
 import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
@@ -79,11 +83,11 @@ import br.edu.ifrs.genki.ui.components.MicIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
-import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.Speaker
-import kotlinx.coroutines.delay
+import br.edu.ifrs.genki.voice.SpeechInput
 import java.time.DayOfWeek
 import java.time.LocalDate
+import kotlinx.coroutines.delay
 
 /**
  * Cadastrar por voz (`UsarVozMedicamento.tsx`, ESPEC §7): início com o microfone, perguntas do que falta
@@ -152,44 +156,67 @@ fun VoiceScreen(
     }
     BackHandler(onBack = handleBack)
 
-    // A leitura em voz alta segue o volume de mídia do Android; abaixo de 30 %, avisa (teste do autor no A31, 27/10).
+    // A leitura em voz alta segue o volume de mídia do Android. Quando fica abaixo de 30 %, um aviso aparece no meio
+    // da tela e some sozinho em alguns segundos ou ao aumentar o volume (teste do autor no A31, 27/10).
     val audio = remember { context.getSystemService(AudioManager::class.java) }
-    var lowVolume by remember { mutableStateOf(false) }
+    var volumeNotice by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
+        var wasLow = false
         while (true) {
             val max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-            lowVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC) * 10 < max * 3
-            delay(1_000)
+            val low = audio.getStreamVolume(AudioManager.STREAM_MUSIC) * 10 < max * 3
+            if (low && !wasLow) volumeNotice = true
+            if (!low) volumeNotice = false
+            wasLow = low
+            delay(500)
         }
     }
+    LaunchedEffect(volumeNotice) {
+        if (volumeNotice) { delay(4_000); volumeNotice = false }
+    }
 
-    // O teclado empurra a tela, sem cobrir o campo da resposta digitada (teste do autor no A31, 27/10).
-    Column(Modifier.fillMaxSize().imePadding()) {
-        GenkiTopBar(
-            if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
-            onBack = handleBack,
-        )
-        if (lowVolume) {
-            Text(
-                "O volume está baixo. Aumente para ouvir as perguntas.",
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer)
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+    Box(Modifier.fillMaxSize()) {
+        // O teclado empurra a tela, sem cobrir o campo da resposta digitada (teste do autor no A31, 27/10).
+        Column(Modifier.fillMaxSize().imePadding()) {
+            GenkiTopBar(
+                if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
+                onBack = handleBack,
             )
+            when (state.phase) {
+                VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
+                VoicePhase.ASKING -> Asking(
+                    state, onMic, preferTyping,
+                    onAnswer = { speaker.stop(); viewModel.tapped(it) },
+                    onCorrect = { viewModel.beginCorrection(); onMic() },
+                    onKeep = viewModel::keepCorrection,
+                    onUndo = viewModel::undoCorrection,
+                )
+                VoicePhase.REVIEW -> Review(
+                    state, onMic, onFix, viewModel::remove, viewModel::save,
+                    onKeep = viewModel::keepCorrection, onUndo = viewModel::undoCorrection,
+                )
+            }
         }
-        when (state.phase) {
-            VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
-            VoicePhase.ASKING -> Asking(
-                state, onMic, preferTyping,
-                onAnswer = { speaker.stop(); viewModel.tapped(it) },
-                onCorrect = { viewModel.beginCorrection(); onMic() },
-                onKeep = viewModel::keepCorrection,
-                onUndo = viewModel::undoCorrection,
-            )
-            VoicePhase.REVIEW -> Review(
-                state, onMic, onFix, viewModel::remove, viewModel::save,
-                onKeep = viewModel::keepCorrection, onUndo = viewModel::undoCorrection,
-            )
+        AnimatedVisibility(
+            visible = volumeNotice,
+            enter = fadeIn(),
+            exit = fadeOut(animationSpec = tween(durationMillis = 800)),
+            modifier = Modifier.align(Alignment.Center).padding(horizontal = 32.dp),
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface,
+                shape = RoundedCornerShape(16.dp),
+                shadowElevation = 6.dp,
+            ) {
+                Text(
+                    "O volume está baixo. Aumente para ouvir as perguntas.",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
+                        .semantics { liveRegion = LiveRegionMode.Polite },
+                )
+            }
         }
     }
 
@@ -559,7 +586,7 @@ private fun DayPicker(onDone: (String) -> Unit) {
                 onClick = { chosen = if (day in chosen) chosen - day else chosen + day },
                 label = { Text(MedicationText.dayName(day).replaceFirstChar { it.uppercase() }) },
                 // Marcado com ✓, não só pela cor.
-                leadingIcon = if (day in chosen) { { Icon(Icons.Filled.Check, contentDescription = null) } } else null,
+                leadingIcon = { CheckSlot(day in chosen) },
                 modifier = Modifier.heightIn(min = 48.dp),
             )
         }

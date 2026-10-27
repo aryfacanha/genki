@@ -27,7 +27,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
@@ -72,6 +71,7 @@ import br.edu.ifrs.genki.domain.Problem
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
+import br.edu.ifrs.genki.ui.components.CheckSlot
 import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
@@ -293,9 +293,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                         unit = choice
                     },
                     label = { Text(if (choice == DoseUnit.ML) "ml" else choice.singular.replaceFirstChar { it.uppercase() }) },
-                    leadingIcon = if (selected) {
-                        { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                    } else null,
+                    leadingIcon = { CheckSlot(selected) },
                     modifier = Modifier.heightIn(min = 48.dp),
                 )
             }
@@ -386,9 +384,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
                         }
                     },
                     label = { Text(MedicationText.dayShort(day)) },
-                    leadingIcon = if (selected) {
-                        { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                    } else null,
+                    leadingIcon = { CheckSlot(selected) },
                     modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = MedicationText.dayName(day) },
                 )
             }
