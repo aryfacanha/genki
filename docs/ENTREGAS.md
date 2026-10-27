@@ -20,8 +20,8 @@ Partida: `main`/`c55a3cd`; retorno do autor no A31.
 Realizado e arquivos alterados: `reminders/ReminderScheduler.kt` (`acknowledge`, `snooze`), `reminders/ReminderReceiver.kt`, `ui/home/HomeScreen.kt`; docs.
 Decisões aceitas pelo autor nesta sessão: nenhuma (correção de defeito; câmera fora de foco por ora, a pedido do autor).
 Sugestões pendentes: nenhuma.
-Verificado: `assembleDebug test` passa; instalado no A31; TalkBack funcionando (informado pelo autor). | Não verificado: resposta instantânea no A31 (teste do autor); revisão do Codex.
-Próxima tarefa e bloqueios: autor conferir no A31.
+Verificado: `assembleDebug test` passa; instalado no A31; TalkBack funcionando (informado pelo autor). resposta instantânea confirmada pelo autor no A31. | Não verificado: revisão do Codex.
+Próxima tarefa e bloqueios: revisão do Codex.
 Links/commits: este commit.
 
 ENTREGA — App Android: conferência de fechamento do M3 — 27/10/2026 — Codex (GPT-6)
