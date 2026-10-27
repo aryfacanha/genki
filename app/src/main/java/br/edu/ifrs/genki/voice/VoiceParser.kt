@@ -18,6 +18,8 @@ import java.time.YearMonth
  * - Nome: palavras que não são número, unidade, dia, horário nem palavra comum. Nome novo = rascunho novo (RF14);
  *   nome já citado volta para aquele rascunho. "A e B" sem nada entre os dois recebem as mesmas informações.
  * - Sem nome na fala, vale para [target] (o rascunho da pergunta na tela), senão para o último (RF13).
+ * - Respondendo a uma pergunta ([expecting] que não seja o nome), tudo vale para [target]: nomes ditos são ignorados e
+ *   não criam medicamento novo (pedido do autor, 27/10, após teste no Samsung A31: "umas 9 da noite" virava remédio).
  * - Horários se somam; "na verdade" troca o horário mais próximo; "só" troca todos (RF16).
  */
 object VoiceParser {
@@ -96,6 +98,9 @@ object VoiceParser {
         "anotar", "bom", "boa", "olha", "assim", "tipo", "la", "aqui", "ai", "certo", "isso", "mesmo", "mesma",
         "horario", "horarios", "vou", "vai", "estou", "to", "ta", "foi", "era", "deve", "devo", "mandou", "medico",
         "medica", "receita", "receitou", "hum", "hmm", "ahn", "ah", "eh", "oh", "ne", "pois", "bem", "sabe",
+        // Aproximação e hábito: "umas 9", "lá pelas 8", "por volta das 7", "mais ou menos", "geralmente".
+        "umas", "uns", "volta", "cerca", "aproximadamente", "ou", "menos", "quase", "geralmente", "normalmente",
+        "costumo", "costuma", "acho", "acredito", "talvez", "creio",
     )
 
     private val ALL_DAYS = DayOfWeek.entries.toSet()
@@ -581,6 +586,8 @@ object VoiceParser {
             if (!isNameWord(i, first = true)) return i
             var j = i
             while (j < t.size && isNameWord(j, first = j == i)) j++
+            // Resposta a uma pergunta: o nome dito (repetido ou palavra desconhecida) não muda de medicamento.
+            if (target != null && expecting != null && expecting != Field.NAME) return j
             val words = t.subList(i, j).map { it.text }.toMutableList()
             val digits = t.getOrNull(j)?.text
             val unitAfter = norm(j + 1)?.let { it in STRENGTH_UNITS || it in DOSE_UNITS } == true

@@ -60,6 +60,7 @@ import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.InfoRow
 import br.edu.ifrs.genki.ui.components.MicIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
+import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.Speaker
@@ -123,6 +124,8 @@ fun VoiceScreen(
     val handleBack = {
         when {
             state.listening -> input.stop()
+            // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
+            state.correctionPending -> viewModel.undoCorrection()
             state.drafts.isNotEmpty() -> askDiscard = true
             else -> { viewModel.discard(); onClose() }
         }
@@ -137,7 +140,10 @@ fun VoiceScreen(
         when (state.phase) {
             VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
             VoicePhase.ASKING -> Asking(state, onMic, preferTyping, onQuickAnswer = { speaker.stop(); viewModel.tapped(it) })
-            VoicePhase.REVIEW -> Review(state, onMic, onFix, viewModel::remove, viewModel::save)
+            VoicePhase.REVIEW -> Review(
+                state, onMic, onFix, viewModel::remove, viewModel::save,
+                onKeep = viewModel::keepCorrection, onUndo = viewModel::undoCorrection,
+            )
         }
     }
 
@@ -244,13 +250,29 @@ private fun ColumnScope.Review(
     onFix: (String) -> Unit,
     onRemove: (String) -> Unit,
     onSave: () -> Unit,
+    onKeep: () -> Unit,
+    onUndo: () -> Unit,
 ) {
     Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
-        Text(
-            "Para mudar algo, toque em Corrigir ou fale de novo.",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 16.dp),
-        )
+        if (state.correctionPending) {
+            Text(
+                "Confira a correção",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            )
+            state.heard?.let { Text("Você disse: “$it”", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            Text(
+                "Se estiver certo, toque em Manter correção. Para voltar como estava, toque em Desfazer.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp, bottom = 16.dp),
+            )
+        } else {
+            Text(
+                "Para mudar algo, toque em Corrigir ou fale de novo.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
+        }
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             state.drafts.forEach { draft ->
                 ReviewCard(
@@ -262,6 +284,13 @@ private fun ColumnScope.Review(
         }
         Spacer(Modifier.height(16.dp))
         Listening(state, idle = "", center = false)
+    }
+    if (state.correctionPending) {
+        BottomActions {
+            PrimaryButton("Manter correção", onClick = onKeep)
+            SecondaryButton("Desfazer", onClick = onUndo)
+        }
+        return
     }
     BottomActions {
         PrimaryButton(if (state.drafts.size > 1) "Confirmar e salvar todos" else "Confirmar e salvar", onClick = onSave)

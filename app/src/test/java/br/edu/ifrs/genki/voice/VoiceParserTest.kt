@@ -423,6 +423,34 @@ class VoiceParserTest {
         assertEquals(LocalDate.of(2027, 1, 1), one("amoxicilina até 1/1").endDate)
     }
 
+    // ── retorno do autor no Samsung A31 (27/10) ───────────────────────────
+
+    @Test
+    fun approximateTimeWords() {
+        val l = voice("Losartana")
+        listOf("eu tomo umas 9 da noite", "lá pelas 9 da noite", "por volta das 21", "mais ou menos às 9 da noite").forEach {
+            val result = parse(it, listOf(l), l.localId, Field.TIMES).drafts
+            assertEquals(it, 1, result.size)
+            assertEquals(it, listOf(t(21)), result.single().times)
+        }
+    }
+
+    @Test
+    fun answerToQuestionNeverCreatesMedication() {
+        // Respostas direcionadas: durante uma pergunta, tudo vale para o medicamento perguntado.
+        val l = voice("Losartana")
+        val result = parse("também tomo metformina às 20", listOf(l), l.localId, Field.TIMES).drafts
+        assertEquals(listOf("Losartana"), result.map { it.name })
+        assertEquals(listOf(t(20)), result.single().times)
+        // Palavra desconhecida sozinha não é entendida (a tela diz "Não entendi").
+        assertFalse(parse("sei lá umas coisas", listOf(l), l.localId, Field.TIMES).understood)
+        // Sem pergunta (fala livre ou "Corrigir por voz"), nome novo continua criando medicamento.
+        assertEquals(2, parse("também tomo metformina às 20", listOf(l), l.localId).drafts.size)
+        // A pergunta do nome continua aceitando nome.
+        val unnamed = MedicationDraft(source = DraftSource.VOICE)
+        assertEquals("Losartana", parse("losartana", listOf(unnamed), unnamed.localId, Field.NAME).drafts.single().name)
+    }
+
     // ── não entendido (RF15) ───────────────────────────────────────────
 
     @Test

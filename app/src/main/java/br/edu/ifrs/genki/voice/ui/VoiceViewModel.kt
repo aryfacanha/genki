@@ -39,6 +39,8 @@ data class VoiceUiState(
     val message: String? = null,
     val prompt: Prompt? = null,
     val savedMessage: String? = null,
+    /** "Corrigir por voz" na revisão já aplicado, esperando "Manter correção" ou "Desfazer". */
+    val correctionPending: Boolean = false,
 )
 
 /**
@@ -57,6 +59,8 @@ class VoiceViewModel(
     val state: StateFlow<VoiceUiState> = _state.asStateFlow()
     private var promptId = 0
     private var saving = false
+    /** Rascunhos antes da correção por voz feita na revisão; "Desfazer" (ou voltar) os restaura. */
+    private var beforeCorrection: List<MedicationDraft>? = null
 
     init {
         if (!fromSession) {
@@ -98,9 +102,37 @@ class VoiceViewModel(
             _state.update { it.copy(heard = heard, partial = "", message = "Não entendi. Tente de novo.", prompt = prompt(retry)) }
             return
         }
+        if (s.phase == VoicePhase.REVIEW) {
+            // Correção na revisão: mostra o resultado e pede confirmação antes de seguir.
+            if (beforeCorrection == null) beforeCorrection = session.drafts.value
+            session.set(result.drafts)
+            _state.update {
+                it.copy(
+                    heard = heard, partial = "", message = null, correctionPending = true,
+                    prompt = prompt("Confira a correção. Toque em Manter correção ou em Desfazer."),
+                )
+            }
+            return
+        }
         session.set(result.drafts)
         _state.update { it.copy(heard = heard, partial = "", message = null) }
         advance()
+    }
+
+    /** "Manter correção": segue; se faltar algo, pergunta. */
+    fun keepCorrection() {
+        GenkiEval.log("voz_correcao_mantida")
+        beforeCorrection = null
+        _state.update { it.copy(correctionPending = false) }
+        advance()
+    }
+
+    /** "Desfazer" ou voltar durante a correção: a revisão volta como estava. */
+    fun undoCorrection() {
+        GenkiEval.log("voz_correcao_desfeita")
+        beforeCorrection?.let(session::set)
+        beforeCorrection = null
+        _state.update { it.copy(correctionPending = false, heard = null, phase = VoicePhase.REVIEW) }
     }
 
     /** Próxima pergunta ou a revisão. */
