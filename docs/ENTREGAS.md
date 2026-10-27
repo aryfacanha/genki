@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: correção da revisão M3/M4 — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `1ed689b`; `docs/revisoes/REVISAO_M3_M4_CODEX.md`.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `domain/Frequency.kt` (novo), `ui/form/FormViewModel.kt`, `FormScreen.kt`, `voice/ui/VoiceScreen.kt`, `VoiceViewModel.kt`, `ui/home/HomeScreen.kt`; testes `VoiceParserTest` (+5) e `FormFieldsTest` (5, novo). Docs: `DECISOES` (DEC-030), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-030 (27/10); correção de todos os achados pedida pelo autor.
+Sugestões pendentes: nenhuma.
+Verificado: 96 testes; no emulador, aviso pendente depois da meia-noite (RV-M2B-01), data final na revisão da voz (RV-M3-05), frequência na troca para digitação (RV-M3-03) e dias sem seleção (DEC-030). | Não verificado: RV-M4-01 em execução (só inspeção), voz real, aparelho. | Limitações: handoff §3.
+Próxima tarefa e bloqueios: nova revisão do Codex dos dois commits; celular de teste.
+Links/commits: `d5b51d5`, `7726739`.
+
 ENTREGA — Revisão de M3/M4 e melhorias de M1/M2 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`7fd7c89`; `git pull` atualizado; alvo `a590fa5..9a235fc`, roteiro atual, handoff/ESPEC/decisões, proposta e células dos requisitos oficiais reabertas no Drive.
 Realizado e arquivos alterados: revisão do diff e testes independentes no Pixel_6_2 API 35; relatório `docs/revisoes/REVISAO_M3_M4_CODEX.md` (seis S2 e dois S3 abertos). Atualizados `HANDOFF_APP` §2/3/7 e Diário, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Sem mudança permanente em código/configuração; ajustes de texto/foto e teste adicionais temporários removidos; APK original reinstalado. Alterações locais preexistentes do autor preservadas.
