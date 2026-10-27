@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão dos reparos de M3/M4 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`d62ab73`, `git pull` atualizado; alvo `1ed689b..7726739`; roteiro da correção, handoff/ESPEC/decisões e originais da proposta/planilha reabertos no Drive.
+Realizado e arquivos alterados: relatório `docs/revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`, nota histórica no relatório anterior, atualização de `HANDOFF_APP` §2/3/7/Diário, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Seis achados antigos fechados; RV-M3-02/04 parcialmente corrigidos, ainda abertos; três novos S2 (regressão de nome/horário e erros preexistentes de fração/data). Cinco S2 abertos. Nenhuma correção de código/configuração feita pelo revisor; ajustes de teste removidos; original reinstalado; alterações locais do autor preservadas.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (DEC-030 já aceita e conferida).
+Sugestões pendentes: correções conservadoras dos casos abertos na tabela do relatório.
+Verificado: build e 96 testes existentes, zero falhas/erros; reprodutores antigos 7/7; 14 testes vizinhos temporários (sete falham), com comparação ao parser anterior; UI de frequência/DEC-030/manual/edição, revisão de datas em dois medicamentos, Adiar após a meia-noite sem horários no dia e Entendi, câmera → completar por voz → salvar com origem CAMERA. | Não verificado: voz real, TTS audível, aparelho, embalagens reais, TalkBack, Doze/fuso/reinício novamente. | Limitações: testes de fala/foto usam entradas injetadas; cobertura exata no relatório.
+Próxima tarefa e bloqueios: Claude Code corrige os cinco S2; Codex revisa; aceite do autor no celular. Metformina 08:00 e Losartana 19:30 preservadas/reativadas; dados de teste removidos; relógio/fonte restaurados.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`; nenhum commit/push nesta sessão.
+
 ENTREGA — App Android: correção da revisão M3/M4 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `1ed689b`; `docs/revisoes/REVISAO_M3_M4_CODEX.md`.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `domain/Frequency.kt` (novo), `ui/form/FormViewModel.kt`, `FormScreen.kt`, `voice/ui/VoiceScreen.kt`, `VoiceViewModel.kt`, `ui/home/HomeScreen.kt`; testes `VoiceParserTest` (+5) e `FormFieldsTest` (5, novo). Docs: `DECISOES` (DEC-030), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.

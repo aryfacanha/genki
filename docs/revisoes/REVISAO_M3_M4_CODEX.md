@@ -1,5 +1,7 @@
 # Revisão de M3/M4 e melhorias de M1/M2 — Codex
 
+**Atualização de 27/10/2026 — revisão dos reparos:** seis achados abaixo foram fechados; RV-M3-02/04 seguem abertos por correção parcial e três novos S2 foram encontrados. Situação atual e evidências em [REVISAO_CORRECAO_M3_M4_CODEX.md](REVISAO_CORRECAO_M3_M4_CODEX.md). O resultado e a tabela abaixo preservam a revisão original, anterior aos reparos.
+
 Data: 27/10/2026. Assistente: Codex (GPT-6).
 Partida: `main`, `7fd7c8906acc558f059129915f33f5f4b744e8cc`; `git pull`: atualizado.
 Alvo: `a590fa5..9a235fc`, conforme `ROTEIRO_REVISAO_M3_M4_CODEX.md`; o HEAD acrescenta documentação ao alvo.
