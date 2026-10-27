@@ -28,18 +28,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,7 +57,9 @@ import br.edu.ifrs.genki.domain.ActiveAlert
 import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.Occurrence
 import br.edu.ifrs.genki.domain.OccurrenceCalculator
+import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.reminders.AlertStore
+import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.reminders.ReminderScheduler
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
@@ -68,6 +76,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
@@ -75,8 +84,12 @@ data class HomeState(
     val hasMedications: Boolean,
     val date: LocalDate,
     val today: List<Occurrence>,
+    /** Minuto atual: na lista, os horários até ele já passaram. */
+    val minute: LocalTime,
     /** Primeiro horário de hoje depois do minuto atual, fora os avisos pendentes; `null` = os de hoje já passaram. */
     val next: Occurrence?,
+    /** Primeiro horário de outro dia, para quando os de hoje acabaram (`null` = nenhum). */
+    val upcoming: Pair<LocalDate, Occurrence>? = null,
     /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
     val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
     val intervalMinutes: Int = 20,
@@ -110,7 +123,9 @@ class HomeViewModel(
             hasMedications = medications.isNotEmpty(),
             date = now.toLocalDate(),
             today = today,
+            minute = minute,
             next = ActiveAlert.nextOccurrence(today, alerts, minute),
+            upcoming = OccurrenceCalculator.firstAfter(medications, now.toLocalDate(), ZoneId.systemDefault()),
             alerts = withMedication,
             intervalMinutes = reminderSettings.intervalMinutes,
         )
@@ -143,9 +158,18 @@ class HomeViewModel(
 @Composable
 fun HomeScreen(
     onAdd: () -> Unit,
+    onOpenSettings: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    // Permissões mudam fora do app; relê ao voltar para a tela, como em Ajustes.
+    val context = LocalContext.current
+    var resumes by remember { mutableIntStateOf(0) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
+    val notificationsAllowed = remember(resumes) { Notifications.canNotify(context) }
+    val exactAllowed = remember(resumes) {
+        (context.applicationContext as GenkiApplication).container.reminderScheduler.canScheduleExact()
+    }
     Column(Modifier.fillMaxSize()) {
         val s = state
         Column(
@@ -158,16 +182,22 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            if (s?.hasMedications == true && (!notificationsAllowed || !exactAllowed)) {
+                PermissionWarning(notificationsAllowed, onOpenSettings)
+            }
             when {
                 s == null -> Unit
                 !s.hasMedications -> EmptyState()
                 // Avisos pendentes vêm antes de "Nenhum lembrete para hoje": um adiado pode passar da meia-noite
                 // depois do último dia do tratamento (RV-M2B-01).
-                s.today.isEmpty() && s.alerts.isEmpty() -> Text(
-                    "Nenhum lembrete para hoje.",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
+                s.today.isEmpty() && s.alerts.isEmpty() -> {
+                    Text(
+                        "Nenhum lembrete para hoje.",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
+                    )
+                    s.upcoming?.let { UpcomingCard(it, s.date) }
+                }
                 else -> {
                     // Vários avisos ao mesmo tempo: um cartão só, com "Ver um por um" (pedido do autor, 27/10).
                     val (ringing, snoozed) = s.alerts.partition { it.first.snoozedUntil == null }
@@ -182,11 +212,16 @@ fun HomeScreen(
                         )
                     }
                     if (s.alerts.isEmpty()) {
-                        NextCard(s.next)
+                        NextCard(s.next, s.upcoming, s.date)
                     } else {
-                        s.next?.let { next ->
+                        val after = s.next?.let { "${MedicationText.time(it.time)} · ${it.medication.name}" }
+                            ?: s.upcoming?.let { (date, occurrence) ->
+                                "${MedicationText.upcomingDay(date, s.date).lowercase()}, " +
+                                    "${MedicationText.time(occurrence.time)} · ${occurrence.medication.name}"
+                            }
+                        after?.let {
                             Text(
-                                "Depois: ${MedicationText.time(next.time)} · ${next.medication.name}",
+                                "Depois: $it",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 12.dp),
                             )
@@ -200,8 +235,14 @@ fun HomeScreen(
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
                         )
+                        // Linha "Agora" entre os horários que já passaram e os que faltam; não diz se foi tomado (DEC-004).
+                        val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            s.today.forEach { TodayRow(it) }
+                            s.today.forEachIndexed { index, occurrence ->
+                                if (index == firstAhead && index > 0) NowMarker(s.minute)
+                                TodayRow(occurrence, past = index < firstAhead)
+                            }
+                            if (firstAhead == s.today.size) NowMarker(s.minute)
                         }
                     }
                     Spacer(Modifier.height(16.dp))
@@ -214,9 +255,18 @@ fun HomeScreen(
     }
 }
 
-/** Cartão verde do próximo lembrete; só informa. */
+/** Cartão verde do próximo lembrete; só informa. Sem mais horários hoje, mostra o do próximo dia. */
 @Composable
-private fun NextCard(next: Occurrence?) {
+private fun NextCard(next: Occurrence?, upcoming: Pair<LocalDate, Occurrence>?, today: LocalDate) {
+    if (next == null && upcoming != null) {
+        Text(
+            "Os lembretes de hoje já passaram.",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(top = 6.dp, bottom = 12.dp),
+        )
+        UpcomingCard(upcoming, today)
+        return
+    }
     Surface(
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -387,9 +437,74 @@ private fun MedicationLine(medication: Medication) {
     }
 }
 
+/** Próximo lembrete em outro dia ("Amanhã" ou a data), no mesmo cartão verde. */
 @Composable
-private fun TodayRow(occurrence: Occurrence) {
-    GenkiCard {
+private fun UpcomingCard(upcoming: Pair<LocalDate, Occurrence>, today: LocalDate) {
+    val (date, occurrence) = upcoming
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(20.dp)) {
+            Text("Próximo lembrete", color = GenkiCardSubtext)
+            Text(MedicationText.upcomingDay(date, today), style = MaterialTheme.typography.titleLarge)
+            Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.displayLarge)
+            Spacer(Modifier.height(8.dp))
+            MedicationLine(occurrence.medication)
+        }
+    }
+}
+
+/** Faixa "Agora · 16:42" na lista do dia. */
+@Composable
+private fun NowMarker(minute: LocalTime) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text("Agora · ${MedicationText.time(minute)}", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.width(12.dp))
+        Box(Modifier.weight(1f).height(2.dp).background(MaterialTheme.colorScheme.primary))
+    }
+}
+
+/**
+ * Notificações ou alarme exato desligados: avisa na Hoje, não só em Ajustes, porque o lembrete pode não aparecer
+ * ou atrasar (o MyTherapy faz o mesmo; no Pixel 8a o alarme exato estava desligado).
+ */
+@Composable
+private fun PermissionWarning(notificationsAllowed: Boolean, onOpenSettings: () -> Unit) {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text(
+                if (notificationsAllowed) "Os lembretes podem atrasar" else "Os lembretes não vão aparecer",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                if (notificationsAllowed) {
+                    "Os alarmes no horário exato estão desligados para o Genki."
+                } else {
+                    "As notificações do Genki estão desligadas."
+                },
+            )
+            TextButton(
+                onClick = onOpenSettings,
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onErrorContainer),
+                modifier = Modifier.heightIn(min = 48.dp),
+            ) { Text("Resolver em Ajustes", fontWeight = FontWeight.SemiBold) }
+        }
+    }
+}
+
+/** Horário que já passou fica mais claro; a linha "Agora" diz isso ao TalkBack. */
+@Composable
+private fun TodayRow(occurrence: Occurrence, past: Boolean) {
+    GenkiCard(Modifier.alpha(if (past) 0.6f else 1f)) {
         Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.width(16.dp))

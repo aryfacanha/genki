@@ -60,4 +60,11 @@ class MedicationTextTest {
         assertEquals("Este horário já foi adicionado.", MedicationText.error(Field.TIMES, Problem.DUPLICATE_TIME))
         assertEquals("Adicione ao menos um horário.", MedicationText.error(Field.TIMES, Problem.MISSING))
     }
+
+    @Test
+    fun upcomingDaySaysTomorrowOrTheDate() {
+        val today = LocalDate.of(2026, 10, 27)
+        assertEquals("Amanhã", MedicationText.upcomingDay(LocalDate.of(2026, 10, 28), today))
+        assertEquals("Quinta-feira, 29 de outubro", MedicationText.upcomingDay(LocalDate.of(2026, 10, 29), today))
+    }
 }

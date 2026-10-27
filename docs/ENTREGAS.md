@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: Hoje com linha "Agora", próximo dia e aviso de permissões (DEC-034) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`1918620`; MyTherapy no A31 por ADB (navegação sem salvar; cadastro de teste abandonado no passo de estoque).
+Realizado e arquivos alterados: `domain/OccurrenceCalculator.kt`, `ui/MedicationText.kt`, `ui/home/HomeScreen.kt`, `ui/navigation/GenkiApp.kt`, testes; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-034.
+Sugestões pendentes: na tela de introdução (DEC-032), perguntar o horário do primeiro remédio para sugerir horários.
+Verificado: `assembleDebug test` (116 testes); A31 e emulador (ver Diário do handoff). | Não verificado: TalkBack e fonte ampliada nas novidades; revisão do Codex.
+Próxima tarefa e bloqueios: teste do autor no A31.
+Links/commits: este commit.
+
 ENTREGA — App Android: "Entendi"/"Adiar" atualizam a Hoje na hora — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`c55a3cd`; retorno do autor no A31.
 Realizado e arquivos alterados: `reminders/ReminderScheduler.kt` (`acknowledge`, `snooze`), `reminders/ReminderReceiver.kt`, `ui/home/HomeScreen.kt`; docs.

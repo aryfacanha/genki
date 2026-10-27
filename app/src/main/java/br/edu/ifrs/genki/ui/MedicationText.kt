@@ -65,6 +65,10 @@ object MedicationText {
 
     private val longDateFormat = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM", Locale.forLanguageTag("pt-BR"))
 
+    /** "Amanhã" ou "Quinta-feira, 29 de outubro" (próximo lembrete em outro dia). */
+    fun upcomingDay(date: LocalDate, today: LocalDate): String =
+        if (date == today.plusDays(1)) "Amanhã" else longDate(date)
+
     /** "Segunda-feira, 26 de outubro" (topo da Hoje), sempre em português. */
     fun longDate(date: LocalDate): String = date.format(longDateFormat).replaceFirstChar { it.uppercase() }
 

@@ -103,4 +103,32 @@ class OccurrenceCalculatorTest {
             list.map { "${it.time} ${it.medication.name}" },
         )
     }
+
+    @Test
+    fun firstAfterTodayIsTomorrowsEarliest() {
+        val a = med(name = "Metformina", times = listOf(LocalTime.of(20, 0), LocalTime.of(9, 0)))
+        val b = med(name = "Losartana", times = listOf(LocalTime.of(9, 0)))
+        val (date, occurrence) = OccurrenceCalculator.firstAfter(listOf(a, b), monday, zone)!!
+        assertEquals(monday.plusDays(1), date)
+        assertEquals(LocalTime.of(9, 0), occurrence.time)
+        assertEquals("Losartana", occurrence.medication.name)
+    }
+
+    @Test
+    fun firstAfterSkipsDaysAndDisabledAndEnded() {
+        // Segunda: o próximo só de quinta; o desligado e o que termina hoje não contam.
+        val thursday = med(name = "A", days = setOf(DayOfWeek.THURSDAY))
+        val off = med(name = "B", enabled = false)
+        val ended = med(name = "C", end = monday)
+        val (date, occurrence) = OccurrenceCalculator.firstAfter(listOf(thursday, off, ended), monday, zone)!!
+        assertEquals(monday.plusDays(3), date)
+        assertEquals("A", occurrence.medication.name)
+        assertNull(OccurrenceCalculator.firstAfter(listOf(off, ended), monday, zone))
+    }
+
+    @Test
+    fun firstAfterWaitsForStartDate() {
+        val later = med(start = monday.plusDays(10))
+        assertEquals(monday.plusDays(10), OccurrenceCalculator.firstAfter(listOf(later), monday, zone)!!.first)
+    }
 }

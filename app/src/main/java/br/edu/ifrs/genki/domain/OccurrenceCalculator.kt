@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.domain
 
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 /** Um horário de um medicamento num dia (lista Hoje). */
@@ -38,4 +39,20 @@ object OccurrenceCalculator {
             .filter { it.remindersEnabled && isScheduledOn(it, date) }
             .flatMap { medication -> medication.times.map { Occurrence(it, medication) } }
             .sortedWith(compareBy({ it.time }, { it.medication.name.lowercase() }))
+
+    /**
+     * Primeiro horário depois do dia [date] (lembretes ligados), para a Hoje quando os de hoje acabaram
+     * (comparação com o MyTherapy, 27/10); `null` = nenhum (tratamentos terminados ou lembretes desligados).
+     */
+    fun firstAfter(medications: List<Medication>, date: LocalDate, zone: ZoneId): Pair<LocalDate, Occurrence>? {
+        val endOfDay = ZonedDateTime.of(date, LocalTime.MAX, zone)
+        return medications
+            .filter { it.remindersEnabled }
+            .flatMap { medication ->
+                medication.times.mapNotNull { time ->
+                    next(medication, time, endOfDay)?.let { it.toLocalDate() to Occurrence(time, medication) }
+                }
+            }
+            .minWithOrNull(compareBy({ it.first }, { it.second.time }, { it.second.medication.name.lowercase() }))
+    }
 }

@@ -191,7 +191,19 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None },
         ) {
-            composable<HomeRoute> { HomeScreen(onAdd = { navController.navigate(AddChoiceRoute) }) }
+            composable<HomeRoute> {
+                HomeScreen(
+                    onAdd = { navController.navigate(AddChoiceRoute) },
+                    // Como o toque na aba Ajustes.
+                    onOpenSettings = {
+                        navController.navigate(SettingsRoute) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
+            }
             composable<MedicationsRoute> {
                 MedicationsScreen(
                     onOpen = { id -> navController.navigate(DetailRoute(id)) },
