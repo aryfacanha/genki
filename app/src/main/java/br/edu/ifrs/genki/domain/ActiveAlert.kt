@@ -29,8 +29,12 @@ data class ActiveAlert(
             return ActiveAlert(timeId, medicationId, LocalTime.of(minute / 60, minute % 60), snoozed)
         }
 
-        /** Próximo horário de hoje a partir de [minute], sem os que já estão avisando ou adiados. */
+        /**
+         * Próximo horário de hoje **depois** de [minute], sem os que estão avisando ou adiados. O horário do minuto atual
+         * já tocou: está no cartão "Agora" ou já foi respondido; mostrá-lo como próximo depois de "Entendi" pedia uma
+         * segunda resposta (retorno do autor, 27/10).
+         */
         fun nextOccurrence(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): Occurrence? =
-            today.firstOrNull { occurrence -> occurrence.time >= minute && alerts.none { it.matches(occurrence) } }
+            today.firstOrNull { occurrence -> occurrence.time > minute && alerts.none { it.matches(occurrence) } }
     }
 }

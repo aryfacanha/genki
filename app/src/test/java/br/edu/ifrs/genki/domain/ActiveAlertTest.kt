@@ -47,7 +47,15 @@ class ActiveAlertTest {
     }
 
     @Test
-    fun alertOfOtherMedicationDoesNotHideOccurrence() {
-        assertEquals(t0800, ActiveAlert.nextOccurrence(today(1), listOf(ActiveAlert(1, 2, t0800)), t0800)?.time)
+    fun acknowledgedInSameMinuteIsNotNext() {
+        // Às 08:00:30, depois de "Entendi" (sem aviso pendente), o próximo é o das 20:00, não o das 08:00 de novo.
+        assertEquals(t2000, ActiveAlert.nextOccurrence(today(1), emptyList(), t0800)?.time)
+    }
+
+    @Test
+    fun beforeTheMinuteItIsNext() {
+        assertEquals(t0800, ActiveAlert.nextOccurrence(today(1), emptyList(), LocalTime.of(7, 59))?.time)
+        // Depois do último horário: nada mais hoje.
+        assertNull(ActiveAlert.nextOccurrence(today(1), emptyList(), t2000))
     }
 }

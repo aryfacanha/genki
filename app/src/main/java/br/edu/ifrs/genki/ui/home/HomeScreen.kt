@@ -76,7 +76,7 @@ data class HomeState(
     val hasMedications: Boolean,
     val date: LocalDate,
     val today: List<Occurrence>,
-    /** Primeiro horário de hoje a partir do minuto atual, fora os avisos pendentes; `null` = os de hoje já passaram. */
+    /** Primeiro horário de hoje depois do minuto atual, fora os avisos pendentes; `null` = os de hoje já passaram. */
     val next: Occurrence?,
     /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
     val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
