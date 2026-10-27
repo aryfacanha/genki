@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: melhorias do autor no M1/M2 (DEC-029) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `a590fa5` + docs locais da revisão Codex (commitados em `bbc650d`); lista de melhorias do autor após teste no Pixel 8a.
+Realizado e arquivos alterados: `ui/navigation/GenkiApp.kt` (sem transições); `ui/form/FormScreen.kt` (horário repetido e término); `domain/ActiveAlert.kt`, `reminders/AlertStore.kt` (novos), `AppContainer`, `ReminderScheduler`, `ReminderReceiver`, `BootReceiver`, `ui/home/HomeScreen.kt`; teste `ActiveAlertTest` (5). Docs: `DECISOES` (DEC-029), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-029 (pedido do autor em 27/10).
+Sugestões pendentes: nenhuma.
+Verificado: build e 48 testes; instalação no Pixel 8a; `dumpsys alarm` mostrou alarmes inexatos no aparelho. | Não verificado: telas novas no aparelho (estava bloqueado), cartões "Agora"/"Lembrete adiado" com aviso real, TalkBack. | Limitações: reinício do aparelho apaga os cartões pendentes (como já apagava repetições e adiamentos).
+Próxima tarefa e bloqueios: teste do autor; revisão do Codex; M3 (voz).
+Links/commits: `1ddd544`, `290b638`, `bbc650d`, `d592b8a`.
+
 ENTREGA — Revisão da correção RV-M2-01/02 — 26/10/2026 — Codex (GPT-6)
 Partida: genki `main` em `a590fa5`; `git pull` atualizado; handoff, decisões, ESPEC e proposta/requisitos atuais reabertos no Drive.
 Realizado e arquivos alterados: revisão do diff e teste no Pixel_6_2 API 35; **RV-M2-01/02 fechados, sem novos achados de código**. Relatório `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md`, nota histórica no relatório anterior; atualizados `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. §7 orienta configurar minutos consecutivos por arraste no relógio. Nenhum código/configuração do app alterado; fixture removida; relógio/fonte mantidos.

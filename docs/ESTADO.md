@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Claude Code (Opus 5.5):** melhorias pedidas pelo autor após teste no Pixel 8a (DEC-029, revisa em parte a DEC-028 #13): Hoje com cartão "Agora" (Entendi/Adiar) e "Lembrete adiado"; relógio recusa horário repetido; término não aceita data antes do início; sem esmaecer entre telas. 48 testes passam; instalado no Pixel 8a. Alarmes do Pixel 8a estavam inexatos (permissão "Alarmes e lembretes" desligada). Próximo: M3 (voz). Revisão do Codex de `1ddd544..d592b8a` pendente.
+
 **Nova revisão em 26/10/2026, Codex (GPT-6), `main`/`a590fa5`: RV-M2-01/02 fechados, correção aprovada na cobertura executada, sem novos achados de código.** Build passa; 43 testes existentes sem falhas. No emulador: último dia com 22:44/22:45, dois avisos e repetições preservados, inclusive com novo processo do app; Adiar/Entendi isolados por horário e cancelamento ao desativar conferidos. Pendentes: retorno de Adiar, ciclo completo de três repetições/deslizar na revisão independente e aceite no aparelho físico. Relatório: `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md`. Os registros abaixo preservam o histórico anterior.
 
 **Correção em 26/10/2026, Claude Code (Opus 5.5):** RV-M2-01/02 corrigidos (`domain/ReminderPlan`, `ReminderScheduler.syncFired`); 43 testes passam; último dia com horários 21:40/21:41 conferido no emulador (os dois avisos ficam até interação e repetem). **Nova revisão do Codex pendente.**
