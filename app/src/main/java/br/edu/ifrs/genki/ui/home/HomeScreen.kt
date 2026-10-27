@@ -239,7 +239,7 @@ fun HomeScreen(
                         val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             s.today.forEachIndexed { index, occurrence ->
-                                if (index == firstAhead && index > 0) NowMarker(s.minute)
+                                if (index == firstAhead) NowMarker(s.minute)
                                 TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
                             }
                             if (firstAhead == s.today.size) NowMarker(s.minute)
@@ -510,7 +510,13 @@ private fun TodayRow(occurrence: Occurrence, past: Boolean, onOpen: () -> Unit) 
     val textColor = if (past) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
     val content = @Composable {
         Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.titleLarge, color = textColor)
+            // "Passou" embaixo do horário, não à direita: com fonte ampliada o nome e a dose ficam com a largura (RV-HOJE-03).
+            Column {
+                Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.titleLarge, color = textColor)
+                if (past) {
+                    Text("Passou", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelLarge)
+                }
+            }
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1f)) {
                 Text(occurrence.medication.name, style = MaterialTheme.typography.titleMedium, color = textColor)
@@ -518,10 +524,6 @@ private fun TodayRow(occurrence: Occurrence, past: Boolean, onOpen: () -> Unit) 
                     MedicationText.doseLine(occurrence.medication.concentration, occurrence.medication.dose),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            }
-            if (past) {
-                Spacer(Modifier.width(8.dp))
-                Text("Passou", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelLarge)
             }
         }
     }

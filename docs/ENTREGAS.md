@@ -24,6 +24,15 @@ Verificado: build/116 testes passam (`UP-TO-DATE`); emulador API 35, Detalhes/vo
 Próxima tarefa e bloqueios: Claude Code reparar os três achados; Codex conferir; continuar aceite no A31.
 Links/commits: `docs/revisoes/REVISAO_HOJE_CODEX.md`; sem commit/push.
 
+ENTREGA — App Android: correção dos achados da revisão da Hoje — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`fa1fbbd` (revisão do Codex `docs/revisoes/REVISAO_HOJE_CODEX.md` registrada nesse commit).
+Realizado e arquivos alterados: `reminders/Notifications.kt`, `ui/settings/SettingsScreen.kt`, `ui/home/HomeScreen.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (correção de achados).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (116); emulador (ver Diário). | Não verificado: A31 (instalado), TalkBack falando.
+Próxima tarefa e bloqueios: conferência curta do Codex de RV-HOJE-01/02/03; testes manuais do autor.
+Links/commits: este commit.
+
 ENTREGA — App Android: ajustes finos da Hoje (DEC-035) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`2d3b4d9`.
 Realizado e arquivos alterados: `ui/home/HomeScreen.kt`, `ui/navigation/GenkiApp.kt`, `ui/details/DetailScreen.kt`; docs.

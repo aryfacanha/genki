@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import android.provider.Settings.EXTRA_APP_PACKAGE
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -71,9 +69,9 @@ fun SettingsScreen() {
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
     val notificationsAllowed = remember(resumes) { Notifications.canNotify(context) }
     val exactAllowed = remember(resumes) { container.reminderScheduler.canScheduleExact() }
-    // Depois de duas recusas o sistema não pergunta mais; aí abre a tela de notificações do app.
-    val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (!granted) openNotificationSettings(context)
+    // Depois de duas recusas o sistema não pergunta mais; aí, ou com a categoria desligada, abre o ajuste do sistema.
+    val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (!Notifications.canNotify(context)) openNotificationSettings(context)
         resumes++
     }
 
@@ -122,7 +120,7 @@ fun SettingsScreen() {
                 status = if (notificationsAllowed) "Permitidas" else "Não permitidas. Sem elas, os lembretes não aparecem.",
                 action = if (notificationsAllowed) null else "Permitir notificações",
                 onAction = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (!Notifications.hasPermission(context)) {
                         requestNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
                         openNotificationSettings(context)
@@ -155,7 +153,7 @@ fun SettingsScreen() {
 }
 
 private fun openNotificationSettings(context: Context) {
-    context.startActivity(Intent(ACTION_APP_NOTIFICATION_SETTINGS).putExtra(EXTRA_APP_PACKAGE, context.packageName))
+    context.startActivity(Notifications.settingsIntent(context))
 }
 
 @Composable

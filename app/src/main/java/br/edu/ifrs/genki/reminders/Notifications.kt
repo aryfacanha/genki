@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -27,10 +28,29 @@ object Notifications {
         context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
+    /** Permissão, notificações do app e a categoria "Lembretes de medicamentos" (o único canal) ligadas (RV-HOJE-01). */
     fun canNotify(context: Context): Boolean =
         NotificationManagerCompat.from(context).areNotificationsEnabled() &&
-            (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)
+            hasPermission(context) &&
+            !channelBlocked(context)
+
+    fun hasPermission(context: Context): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    private fun channelBlocked(context: Context): Boolean =
+        context.getSystemService(NotificationManager::class.java).getNotificationChannel(CHANNEL)?.importance ==
+            NotificationManager.IMPORTANCE_NONE
+
+    /** Ajuste do sistema que resolve: a categoria, se só ela estiver desligada; senão, as notificações do app. */
+    fun settingsIntent(context: Context): Intent =
+        if (NotificationManagerCompat.from(context).areNotificationsEnabled() && channelBlocked(context)) {
+            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                .putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL)
+        } else {
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        }
 
     /** "Lembrete das 08:00" / "Losartana 50 mg · 1 comprimido", com "Entendi" e "Adiar N min". */
     fun show(context: Context, timeId: Long, medication: Medication, time: LocalTime, intervalMinutes: Int, snoozed: Boolean) {
