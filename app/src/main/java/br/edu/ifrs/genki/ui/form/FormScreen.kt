@@ -40,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -67,6 +68,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
+import br.edu.ifrs.genki.domain.Problem
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
@@ -385,6 +387,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
     editing?.let { index ->
         TimeDialog(
             initial = fields.times.getOrNull(index) ?: LocalTime.of(8, 0),
+            taken = fields.times.filterIndexed { i, _ -> i != index }.toSet(),
             onDismiss = { editing = null },
             onConfirm = { time ->
                 editing = null
@@ -452,7 +455,12 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
             viewModel.edit(Field.END_DATE) { it.copy(startDate = date) }
         }
         Spacer(Modifier.height(10.dp))
-        DateField("Data de término", fields.endDate, isError = state.errors[Field.END_DATE] != null) { date ->
+        DateField(
+            "Data de término",
+            fields.endDate,
+            isError = state.errors[Field.END_DATE] != null,
+            notBefore = viewModel.startDateOrToday(),
+        ) { date ->
             viewModel.edit(Field.END_DATE) { it.copy(endDate = date) }
         }
         FieldError(state.errors[Field.END_DATE]?.let { MedicationText.error(Field.END_DATE, it) })
@@ -460,7 +468,13 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
 }
 
 @Composable
-private fun DateField(label: String, date: LocalDate?, isError: Boolean = false, onPick: (LocalDate) -> Unit) {
+private fun DateField(
+    label: String,
+    date: LocalDate?,
+    isError: Boolean = false,
+    notBefore: LocalDate? = null,
+    onPick: (LocalDate) -> Unit,
+) {
     var open by rememberSaveable { mutableStateOf(false) }
     Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(bottom = 6.dp))
     OutlinedButton(
@@ -477,28 +491,45 @@ private fun DateField(label: String, date: LocalDate?, isError: Boolean = false,
             modifier = Modifier.fillMaxWidth(),
         )
     }
-    if (open) DateDialog(date, onDismiss = { open = false }) { open = false; onPick(it) }
+    if (open) DateDialog(date, notBefore, onDismiss = { open = false }) { open = false; onPick(it) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TimeDialog(initial: LocalTime, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
+private fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
     val state = rememberTimePickerState(initialHour = initial.hour, initialMinute = initial.minute, is24Hour = true)
+    // Horário já da lista: avisa no próprio relógio e não deixa confirmar (o validador continua checando).
+    val repeated = LocalTime.of(state.hour, state.minute) in taken
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Escolha o horário") },
-        text = { TimePicker(state) },
-        confirmButton = { TextButton(onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }) { Text("OK") } },
+        text = {
+            Column {
+                TimePicker(state)
+                FieldError(if (repeated) MedicationText.error(Field.TIMES, Problem.DUPLICATE_TIME) else null)
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }, enabled = !repeated) { Text("OK") }
+        },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DateDialog(initial: LocalDate?, onDismiss: () -> Unit, onConfirm: (LocalDate) -> Unit) {
+private fun DateDialog(initial: LocalDate?, notBefore: LocalDate?, onDismiss: () -> Unit, onConfirm: (LocalDate) -> Unit) {
     // O DatePicker representa o dia escolhido como meia-noite UTC; a conversão em UTC só desfaz isso
     // (a data continua civil; "hoje" vem do fuso do aparelho no validador).
-    val state = rememberDatePickerState(initialSelectedDateMillis = initial?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli())
+    val notBeforeMillis = notBefore?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
+    val state = rememberDatePickerState(
+        initialSelectedDateMillis = initial?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli(),
+        // Término: dias antes do início ficam desabilitados no calendário.
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = notBeforeMillis == null || utcTimeMillis >= notBeforeMillis
+            override fun isSelectableYear(year: Int) = notBefore == null || year >= notBefore.year
+        },
+    )
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
