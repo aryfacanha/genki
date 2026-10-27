@@ -276,7 +276,8 @@ private fun AlertGroup(
     ) {
         Column(Modifier.padding(20.dp)) {
             Text(if (snoozed) "Lembretes adiados" else "Agora", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
-            Text("${group.size} medicamentos", style = MaterialTheme.typography.headlineMedium)
+            // Conta avisos (um remédio com dois horários são dois), por isso "lembretes".
+            Text("${group.size} lembretes", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(8.dp))
             group.forEach { (alert, medication) ->
                 val time = alert.snoozedUntil?.atZone(ZoneId.systemDefault())?.toLocalTime()

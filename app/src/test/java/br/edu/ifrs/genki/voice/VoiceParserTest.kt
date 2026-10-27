@@ -457,6 +457,27 @@ class VoiceParserTest {
     }
 
     @Test
+    fun correctionAfterDayListWithAnotherMedication() {
+        // RV-M3-02 (resto): "na verdade" logo após a lista de dias.
+        val drafts = parse("losartana segunda e quarta na verdade sexta e metformina sábado").drafts
+        assertEquals(setOf(FRIDAY), drafts.first { it.name == "Losartana" }.days)
+        assertEquals(setOf(SATURDAY), drafts.first { it.name == "Metformina" }.days)
+        // Sem correção, a lista continua somando.
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), one("losartana segunda e quarta e na sexta").days)
+    }
+
+    @Test
+    fun nameIsDuringAnyQuestion() {
+        // RV-M3E-01: "o nome é X" na pergunta dos dias troca o nome, sem criar medicamento.
+        val l = voice("Losartana").copy(dose = "1 comprimido")
+        val result = parse("o nome é atenolol", listOf(l), l.localId, Field.DAYS)
+        assertTrue(result.understood)
+        assertEquals(listOf("Atenolol"), result.drafts.map { it.name })
+        // Nome solto continua ignorado na resposta.
+        assertFalse(parse("atenolol", listOf(l), l.localId, Field.DAYS).understood)
+    }
+
+    @Test
     fun quickAnswersAreUnderstood() {
         // Cada botão de resposta passa pelo interpretador e preenche o campo da pergunta.
         val base = voice("Losartana").copy(dose = "1 comprimido", days = all, times = listOf(t(8)))

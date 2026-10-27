@@ -504,6 +504,8 @@ object VoiceParser {
                 val d = day(j)
                 when {
                     d != null -> found += d
+                    // "na verdade" encerra a lista: é correção, não conector (RV-M3-02).
+                    isAny(j, "na") && isAny(j + 1, "verdade") -> break
                     isAny(j, "e", "na", "no", "nas", "nos", "feira") -> Unit
                     else -> break
                 }
@@ -594,7 +596,8 @@ object VoiceParser {
             var j = i
             while (j < t.size && isNameWord(j, first = j == i)) j++
             // Resposta a uma pergunta: o nome dito (repetido ou palavra desconhecida) não muda de medicamento.
-            if (target != null && expecting != null && expecting != Field.NAME) return j
+            // "O nome é X" vale mesmo assim: troca o nome do perguntado, sem criar outro (RV-M3E-01).
+            if (target != null && expecting != null && expecting != Field.NAME && !renameNext) return j
             val words = t.subList(i, j).map { it.text }.toMutableList()
             val digits = t.getOrNull(j)?.text
             val unitAfter = norm(j + 1)?.let { it in STRENGTH_UNITS || it in DOSE_UNITS } == true
