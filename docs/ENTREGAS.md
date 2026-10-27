@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: retorno do autor no Samsung A31 (voz) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `b2567ad`; retorno do autor após teste manual no A31.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/Speaker.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`; `VoiceParserTest` (+2). Docs: `DECISOES` (DEC-031), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-031 (27/10).
+Sugestões pendentes: nenhuma.
+Verificado: 106 testes; emulador com texto injetado (resposta direcionada, correção com Manter/Desfazer, voltar = desfazer, leitor pronto). | Não verificado: voz alta no A31, reconhecimento real no A31 depois da correção. | Limitações: no meio de uma pergunta não dá para acrescentar outro medicamento (só na fala livre ou na revisão).
+Próxima tarefa e bloqueios: autor reconferir no A31; revisão do Codex; ADB instável no cabo atual.
+Links/commits: `8191c25`.
+
 ENTREGA — App Android: terceira correção da revisão M3/M4 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `d0abc1b`; `docs/revisoes/REVISAO_CORRECAO2_M3_M4_CODEX.md`.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`; `VoiceParserTest` (+3); roteiro `revisoes/ROTEIRO_REVISAO_CORRECAO3_M3_M4_CODEX.md`. Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
