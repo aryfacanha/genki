@@ -102,13 +102,13 @@ fun MedicationFormScreen(
 
     val handleBack = {
         if (!viewModel.back()) {
-            if (state.changed) askDiscard = true else onClose()
+            if (viewModel.hasUnsavedData()) askDiscard = true else onClose()
         }
     }
     BackHandler(onBack = handleBack)
     // Cadastro novo: "Cancelar" no topo sai de qualquer etapa, perguntando antes se algo foi preenchido (V46, 27/10).
     val handleCancel: (() -> Unit)? = if (viewModel.isEdit || viewModel.isFix) null else {
-        { if (state.changed) askDiscard = true else onClose() }
+        { if (viewModel.hasUnsavedData()) askDiscard = true else onClose() }
     }
 
     Column(Modifier.fillMaxSize().imePadding()) {

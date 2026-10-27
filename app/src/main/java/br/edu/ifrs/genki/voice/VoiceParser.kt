@@ -221,16 +221,7 @@ object VoiceParser {
             newTimes.forEach { (id, spoken) ->
                 val index = drafts.indexOfFirst { it.localId == id }
                 if (index < 0) return@forEach
-                val draft = drafts[index]
-                val removed = negatedBefore[id].orEmpty()
-                val old = base[id].orEmpty() - removed
-                val times = when {
-                    replaceAll || old.isEmpty() -> spoken
-                    // Com um horário tirado por "não", a troca já foi dita; não troca outro pelo mais próximo.
-                    correction && removed.isEmpty() -> replaceNearest(old, spoken)
-                    else -> old + spoken
-                }
-                drafts[index] = draft.copy(times = times.distinct().sorted())
+                drafts[index] = drafts[index].copy(times = merged(id, spoken).distinct().sorted())
             }
             // "De 8 em 8 horas" + primeiro horário → os outros horários do dia (RF06).
             drafts.replaceAll { draft ->
@@ -241,6 +232,18 @@ object VoiceParser {
                     draft.times.size >= perDay -> draft.copy(everyHours = null)
                     else -> draft.copy(times = Frequency.fill(draft.times.min(), every), everyHours = null)
                 }
+            }
+        }
+
+        /** Horários de [id] depois do que foi dito ([spoken]) sobre a base (antes da fala ou da última correção). */
+        private fun merged(id: String, spoken: List<LocalTime>): List<LocalTime> {
+            val removed = negatedBefore[id].orEmpty()
+            val old = base[id].orEmpty() - removed
+            return when {
+                replaceAll || old.isEmpty() -> spoken
+                // Com um horário tirado por "não", a troca já foi dita; não troca outro pelo mais próximo.
+                correction && removed.isEmpty() -> replaceNearest(old, spoken)
+                else -> old + spoken
             }
         }
 
@@ -285,13 +288,15 @@ object VoiceParser {
 
         /** Correção a partir daqui: os dias ditos antes nesta mesma fala também deixam de valer (RV-M3-02). */
         private fun correct(end: Int): Int {
-            correction = true
-            spokenDays.clear()
-            // "Às 8, na verdade às 9" na mesma fala: o que foi dito antes passa a ser o que a correção troca.
+            // "Às 8, na verdade às 9" na mesma fala: o que foi dito antes passa a ser o que a correção troca. Com outra
+            // correção depois ("…, na verdade às 10"), a anterior já vale consolidada (RV-VZ-02).
             newTimes.forEach { (id, spoken) ->
-                base[id] = (base[id].orEmpty() + spoken).distinct()
+                if (spoken.isEmpty()) return@forEach
+                base[id] = merged(id, spoken).distinct()
                 spoken.clear()
             }
+            correction = true
+            spokenDays.clear()
             return end
         }
 

@@ -523,6 +523,16 @@ class VoiceParserTest {
     }
 
     @Test
+    fun severalCorrectionsInTheSameUtterance() {
+        // RV-VZ-02: a correção anterior vale consolidada antes da seguinte.
+        assertEquals(listOf(t(10)), one("losartana às 8, na verdade às 9, na verdade às 10").times)
+        assertEquals(listOf(t(9)), one("losartana às 8, na verdade às 9, na verdade todos os dias").times)
+        val both = parse("losartana às 8, na verdade às 9 e metformina às 20, na verdade às 21").drafts
+        assertEquals(listOf(t(9)), both.single { it.name == "Losartana" }.times)
+        assertEquals(listOf(t(21)), both.single { it.name == "Metformina" }.times)
+    }
+
+    @Test
     fun notBeforeAKnownTimeRemovesIt() {
         val m = voice("Metformina", t(8), t(20))
         assertEquals(listOf(t(9), t(20)), parse("na verdade a metformina é às 9:00 não às 8:00", listOf(m)).drafts.single().times)

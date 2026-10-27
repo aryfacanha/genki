@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: correção de RV-VZ-01/02 — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main` após o registro da revisão `REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`.
+Realizado e arquivos alterados: `ui/form/FormViewModel.kt`, `ui/form/FormScreen.kt`, `voice/VoiceParser.kt`, `VoiceParserTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (correção de achados).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (126); emulador (ver Diário). | Não verificado: voz real no A31.
+Próxima tarefa e bloqueios: conferência do Codex; teste do autor.
+Links/commits: este commit.
+
 ENTREGA — Revisão dos ajustes de voz e DEC-036 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`0ea0da7`; pull já atualizado; alvos `fa75715` e `0ea0da7`; originais consultados no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`, estado/handoff (§2/3/7 e Diário)/entregas/registro. **Dois S2 abertos**: Cancelar recebido sem confirmação (novo) e horário antigo após outra correção na mesma fala (preexistente/residual). Sem correção permanente de código.

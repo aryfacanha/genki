@@ -156,6 +156,12 @@ class FormViewModel(
     val isFix: Boolean get() = mode is FormMode.FixDraft
 
     private var baseline = FormFields()
+
+    /**
+     * Sair perde algo: na edição, o que mudou; no cadastro novo, qualquer dado, inclusive o que veio da voz por
+     * "Prefiro digitar" sem mudança no formulário (RV-VZ-01).
+     */
+    fun hasUnsavedData(): Boolean = _state.value.changed || (mode is FormMode.New && _state.value.fields != FormFields())
     private var beforeSectionEdit: FormFields? = null
     private var saving = false
 
