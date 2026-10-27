@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: "Entendi"/"Adiar" atualizam a Hoje na hora — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`c55a3cd`; retorno do autor no A31.
+Realizado e arquivos alterados: `reminders/ReminderScheduler.kt` (`acknowledge`, `snooze`), `reminders/ReminderReceiver.kt`, `ui/home/HomeScreen.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma (correção de defeito; câmera fora de foco por ora, a pedido do autor).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` passa; instalado no A31; TalkBack funcionando (informado pelo autor). | Não verificado: resposta instantânea no A31 (teste do autor); revisão do Codex.
+Próxima tarefa e bloqueios: autor conferir no A31.
+Links/commits: este commit.
+
 ENTREGA — App Android: conferência de fechamento do M3 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`5e5abe2f503e55435a605b0bc2cf3cfe1ed97c12`; `git pull` atualizado; alvo `0cef3f1`, roteiro `ROTEIRO_CONFERENCIA_M3_CODEX.md`.
 Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_M3_CODEX.md`, `HANDOFF_APP` (§2/3/7 e Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. **RV-M3-02 (resto)/E-01 fechados; texto do cartão “N lembretes” conferido; M3 revisado na cobertura técnica executada.**

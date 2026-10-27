@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import br.edu.ifrs.genki.GenkiEval
 import br.edu.ifrs.genki.data.MedicationWithTimes
 import br.edu.ifrs.genki.data.Settings
 import br.edu.ifrs.genki.data.minuteOfDayToTime
 import br.edu.ifrs.genki.data.toDomain
 import br.edu.ifrs.genki.domain.ReminderPlan
+import java.time.Instant
 import java.time.ZonedDateTime
 
 /** Ações do [ReminderReceiver] (ESPEC §6). Estado só nos extras do Intent, sem tabela de alertas (S2). */
@@ -64,13 +66,28 @@ class ReminderScheduler(
     fun scheduleRepeat(timeId: Long, count: Int, snoozed: Boolean = false) =
         set(ReminderAction.REPEAT, timeId, afterInterval(), count, snoozed)
 
-    /** "Adiar N min" (RF25). Devolve quando volta a avisar. */
-    fun scheduleSnoozed(timeId: Long): Long = afterInterval().also { set(ReminderAction.FIRE_SNOOZED, timeId, it) }
+    /**
+     * "Entendi" (notificação ou cartão da Hoje): nada é registrado (DEC-004). Chamado direto pela Hoje, sem
+     * broadcast, para o cartão sumir na hora (no A31 o broadcast demorava).
+     */
+    fun acknowledge(timeId: Long) {
+        Notifications.cancel(context, timeId)
+        cancelFollowUps(timeId)
+        alertStore.remove(listOf(timeId))
+        GenkiEval.log("lembrete_reconhecido", "timeId" to timeId)
+    }
 
-    /** Botões do cartão da Hoje: mesmo caminho dos botões da notificação. */
-    fun respond(action: ReminderAction, timeId: Long) = pendingIntent(context, action, timeId).send()
+    /** "Adiar N min" (RF25): volta a avisar depois do intervalo. */
+    fun snooze(timeId: Long) {
+        Notifications.cancel(context, timeId)
+        cancelFollowUps(timeId)
+        val at = afterInterval()
+        set(ReminderAction.FIRE_SNOOZED, timeId, at)
+        alertStore.snoozed(timeId, Instant.ofEpochMilli(at))
+        GenkiEval.log("lembrete_adiado", "timeId" to timeId)
+    }
 
-    fun cancelFollowUps(timeId: Long) {
+    private fun cancelFollowUps(timeId: Long) {
         alarms.cancel(pendingIntent(context, ReminderAction.REPEAT, timeId))
         alarms.cancel(pendingIntent(context, ReminderAction.FIRE_SNOOZED, timeId))
     }

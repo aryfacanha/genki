@@ -52,7 +52,6 @@ import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.Occurrence
 import br.edu.ifrs.genki.domain.OccurrenceCalculator
 import br.edu.ifrs.genki.reminders.AlertStore
-import br.edu.ifrs.genki.reminders.ReminderAction
 import br.edu.ifrs.genki.reminders.ReminderScheduler
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
@@ -118,9 +117,9 @@ class HomeViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /** "Entendi": nada é registrado (DEC-004). */
-    fun acknowledge(timeId: Long) = scheduler.respond(ReminderAction.ACK, timeId)
+    fun acknowledge(timeId: Long) = scheduler.acknowledge(timeId)
 
-    fun snooze(timeId: Long) = scheduler.respond(ReminderAction.SNOOZE, timeId)
+    fun snooze(timeId: Long) = scheduler.snooze(timeId)
 
     /** Cartão único com vários avisos: "Entendi"/"Adiar" valem para todos os do cartão. */
     fun acknowledgeAll(timeIds: List<Long>) = timeIds.forEach(::acknowledge)

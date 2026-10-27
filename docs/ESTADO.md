@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Claude Code (Opus 5.5):** retorno do autor no A31 — "Entendi"/"Adiar" no cartão da Hoje não atualizavam na hora (iam por broadcast); agora agem direto pelo `ReminderScheduler`, mesmo código dos botões da notificação. TalkBack funcionando (autor). Câmera fora de foco por ora. Instalado no A31; pendente confirmação do autor e revisão do Codex.
+
 **Conferência de fechamento em 27/10/2026, Codex (GPT-6), `main`/`5e5abe2`, alvo `0cef3f1`: RV-M3-02 (resto) e RV-M3E-01 fechados; texto do cartão corrigido para “N lembretes”. M3 pode ser dado como revisado na cobertura técnica executada.** Build e 112 testes existentes passam; reprodutores locais 43/43. Sem achado novo no escopo restrito. Temporários removidos, `app/src` sem mudanças; nenhuma instalação/operação no emulador ou A31 nesta sessão. Relatório: `docs/revisoes/CONFERENCIA_M3_CODEX.md`. Aceite completo no A31 permanece pendente; registros abaixo preservam o histórico.
 
 **27/10/2026, Claude Code (Opus 5.5):** revisão de fechamento do Codex (`REVISAO_CORRECAO3_M3_M4_CODEX.md`) sem S1; os dois itens restantes (RV-M3-02 resto, RV-M3E-01) e o texto do cartão corrigidos em `0cef3f1`; 112 testes; reprodutores do Codex 43/43. Falta só a conferência curta do Codex para fechar o M3.
