@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: M4 câmera e ajustes — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `bbc9608`; ESPEC §8, `REQUISITOS_MAPA` (RF20–RF23), protótipo `CadastrarMedicamento.tsx`/`UsarCameraMedicamento.tsx`.
+Realizado e arquivos alterados: `camera/OcrParser.kt`, `camera/ui/CameraViewModel.kt`, `camera/ui/CameraScreen.kt` (novos); `AddChoiceScreen` (Usar câmera), `GenkiApp` (`CameraRoute`, `VoiceRoute(fromSession)`), `VoiceViewModel`/`VoiceScreen`, `Components` (`CameraIcon`), `libs.versions.toml` e `app/build.gradle.kts` (CameraX 1.4.2, ML Kit text-recognition 16.0.1), manifest (`CAMERA`); `OcrParserTest` (6). Ajustes `f214691`: "(adiado)" nas repetições, erro de voz único, rótulo da barra até 2,0×. Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (pedido do autor: M4 com os ajustes pequenos, 27/10).
+Sugestões pendentes: aceitar o APK maior (55,7 MB debug) pelo modelo embutido, que dispensa internet e Google Play Services.
+Verificado: build e 87 testes; no emulador, pré-visualização, foto, falha sem texto, "Tentar de novo", leitura de imagem de embalagem (nome, concentração, sem dose), continuação por voz e por formulário; "(adiado)" na repetição; rótulo em 2,0×. | Não verificado: embalagens reais, câmera de aparelho físico, TalkBack. | Limitações: handoff §3.
+Próxima tarefa e bloqueios: revisão do Codex; celular de teste; congelamento 02/11.
+Links/commits: `f214691`, `0c06d49`.
+
 ENTREGA — App Android: M3 voz (parser e telas) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `6aec0b7`; ESPEC §7, `REQUISITOS_MAPA` (RF06, RF11–RF19), protótipo `UsarVozMedicamento.tsx` e `CadastrarMedicamento.tsx`.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/VoiceQuestions.kt`, `voice/SpeechInput.kt`, `voice/Speaker.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/add/AddChoiceScreen.kt`, `domain/RegistrationSession.kt` (novos); `MedicationDraft.everyHours`, `DraftValidator`, `FormViewModel`/`FormScreen` (`FormMode`), `GenkiApp` (rotas), `AppContainer`, `Components` (`MicIcon`), manifest (`RECORD_AUDIO`, `<queries>`); testes `VoiceParserTest` (28) e `VoiceQuestionsTest` (5). Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
