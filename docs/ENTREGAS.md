@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: correção RV-M2-01/02 (lembretes) — 26/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `34b37c8` (registro da revisão Codex); relatório `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`.
+Realizado e arquivos alterados: `domain/ReminderPlan.kt` (novo: decisão pura Schedule / NoMoreOccurrences / Disabled e `afterFire`); `reminders/ReminderScheduler.kt` (tratamento encerrado cancela só o próximo `FIRE`; `syncFired` reagenda só o horário que tocou); `reminders/ReminderReceiver.kt` (usa `syncFired`); teste `ReminderPlanTest` (6). Docs: `HANDOFF_APP` (§2, §3, §7, Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma (correção pedida pelo autor em 26/10, conforme o relatório do Codex).
+Sugestões pendentes: nenhuma nova.
+Verificado: `.\gradlew.bat assembleDebug test` (43 testes, sem falhas); emulador Pixel_6_2 API 35: tratamento de um dia com horários 21:40 e 21:41 (ajustados no banco, porque o relógio só escolhe múltiplos de 5 min) → os dois `FIRE` mantidos, os dois avisos ficam até interação, repetições às 21:50/21:51 e próximas agendadas; exclusão cancela tudo. | Não verificado: Adiar/Entendi depois da correção, ciclo das 3 repetições até o fim, aparelho físico, TalkBack. | Limitações: as do M2 (DEC-028) continuam.
+Próxima tarefa e bloqueios: nova revisão do Codex; aceite do autor no aparelho; M3 (voz).
+Links/commits: este commit.
+
 ENTREGA — Revisão independente do app Android M0/M1/M2 — 26/10/2026 — Codex (GPT-6)
 Partida: genki `main` em `42a0d16`; `git pull` atualizado; M1 `f2ff130`, M2 `f111670`; ESPEC, handoff, decisões e originais atuais da proposta/requisitos no Drive; protótipo local `295212e`.
 Realizado e arquivos alterados: revisão do código e verificação no Pixel_6_2 API 35; relatório `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`; atualizados `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Nenhum código do app/configuração alterado. Dados de teste removidos; fonte restaurada.

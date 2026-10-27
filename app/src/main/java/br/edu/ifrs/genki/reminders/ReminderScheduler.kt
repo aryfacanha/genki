@@ -10,7 +10,7 @@ import br.edu.ifrs.genki.data.MedicationWithTimes
 import br.edu.ifrs.genki.data.Settings
 import br.edu.ifrs.genki.data.minuteOfDayToTime
 import br.edu.ifrs.genki.data.toDomain
-import br.edu.ifrs.genki.domain.OccurrenceCalculator
+import br.edu.ifrs.genki.domain.ReminderPlan
 import java.time.ZonedDateTime
 
 /** Ações do [ReminderReceiver] (ESPEC §6). Estado só nos extras do Intent, sem tabela de alertas (S2). */
@@ -29,15 +29,25 @@ class ReminderScheduler(
 
     fun canScheduleExact(): Boolean = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarms.canScheduleExactAlarms()
 
-    /** Agenda o próximo FIRE de cada horário; lembretes desligados ou tratamento encerrado cancelam tudo. */
+    /** Agenda o próximo FIRE de cada horário (ver [ReminderPlan]). */
     fun sync(entity: MedicationWithTimes, after: ZonedDateTime = now()) {
         val medication = entity.toDomain()
         entity.times.forEach { time ->
-            val next = if (medication.remindersEnabled) {
-                OccurrenceCalculator.next(medication, minuteOfDayToTime(time.minuteOfDay), after)
-            } else null
-            if (next == null) cancel(listOf(time.id)) else set(ReminderAction.FIRE, time.id, next.toInstant().toEpochMilli())
+            apply(time.id, ReminderPlan.of(medication, minuteOfDayToTime(time.minuteOfDay), after))
         }
+    }
+
+    /** Depois de um FIRE, reagenda só o horário que tocou (RV-M2-02). */
+    fun syncFired(entity: MedicationWithTimes, timeId: Long) {
+        val time = entity.times.firstOrNull { it.id == timeId } ?: return
+        apply(timeId, ReminderPlan.afterFire(entity.toDomain(), minuteOfDayToTime(time.minuteOfDay), now()))
+    }
+
+    private fun apply(timeId: Long, plan: ReminderPlan) = when (plan) {
+        is ReminderPlan.Schedule -> set(ReminderAction.FIRE, timeId, plan.at.toInstant().toEpochMilli())
+        // Só o FIRE: o aviso da última ocorrência fica até Entendi/deslizar (RV-M2-01).
+        ReminderPlan.NoMoreOccurrences -> alarms.cancel(pendingIntent(context, ReminderAction.FIRE, timeId))
+        ReminderPlan.Disabled -> cancel(listOf(timeId))
     }
 
     /** Cancela alarmes, repetições, adiamentos e a notificação dos horários. */

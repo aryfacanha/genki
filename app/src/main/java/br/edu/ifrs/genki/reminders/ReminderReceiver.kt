@@ -13,7 +13,6 @@ import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_TIME_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.ZonedDateTime
 
 /** FIRE, REPEAT (até 3), ACK, SNOOZE e FIRE_SNOOZED (ESPEC §6, RF09, RF24, RF25). */
 class ReminderReceiver : BroadcastReceiver() {
@@ -70,8 +69,7 @@ class ReminderReceiver : BroadcastReceiver() {
             ReminderAction.REPEAT -> if (settings.repeatEnabled && count < MAX_REPEATS) scheduler.scheduleRepeat(timeId, count + 1)
             else -> Unit
         }
-        // Próxima ocorrência; um minuto à frente evita reagendar a que acabou de tocar.
-        if (action == ReminderAction.FIRE) scheduler.sync(entity, after = ZonedDateTime.now().plusMinutes(1))
+        if (action == ReminderAction.FIRE) scheduler.syncFired(entity, timeId)
     }
 
     companion object {
