@@ -11,6 +11,9 @@
     <!-- Câmera (ESPEC §8): uma foto da embalagem; a imagem não é guardada. -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+    <!-- Sem rede (AGENTS.md, ESPEC §1): o ML Kit traz estas permissões para telemetria; o modelo embutido não precisa delas. -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
 
     <!-- Android 11+: enxergar o reconhecedor de fala e o leitor de texto do sistema. -->
     <queries>
@@ -60,6 +63,17 @@
                 <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <!-- Telemetria do ML Kit (datatransport) desligada: sem rede no app; a leitura não depende dela. -->
+        <service
+            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+            tools:node="remove" />
+        <service
+            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+            tools:node="remove" />
+        <receiver
+            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+            tools:node="remove" />
     </application>
 
 </manifest>
