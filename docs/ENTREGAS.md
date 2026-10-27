@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Conferência da correção dos ajustes de voz/DEC-036 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`d4d6350`; pull já atualizado; alvo `d4d6350`, após `1cc5f31`; originais atuais consultados no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`, nota no relatório anterior, estado/handoff (§2/3/7 e Diário)/entregas/registro. **RV-VZ-01/02 fechados**, sem achado novo no escopo.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: nenhuma nova; aceite completo no aparelho continua separado.
+Verificado: build/126 testes existentes executados e 9/9 reprodutores passam; emulador: formulário recebido confirma Cancelar/voltar, mantém/descarta corretamente; cadastro vazio/edição sem alterações saem normalmente; abas/detalhes/lista. Original recompilado/reinstalado após retirar instrumentação/teste, medicamentos/fonte/relógio/permissões preservados; sem crash AndroidRuntime observado. | Não verificado: A31, voz/TTS reais/audíveis, TalkBack, câmera, fonte ampliada ou ciclo temporal dos lembretes nesta conferência.
+Próxima tarefa e bloqueios: continuar aceite manual no A31 e verificações técnicas previstas; nenhum novo reparo desses achados na cobertura executada.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`; alvo `d4d6350`; sem código/configuração permanente, commit ou push.
+
 ENTREGA — App Android: correção de RV-VZ-01/02 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main` após o registro da revisão `REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`.
 Realizado e arquivos alterados: `ui/form/FormViewModel.kt`, `ui/form/FormScreen.kt`, `voice/VoiceParser.kt`, `VoiceParserTest.kt`; docs.

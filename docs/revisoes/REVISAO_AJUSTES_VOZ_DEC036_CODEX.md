@@ -1,5 +1,10 @@
 # Revisão dos ajustes de voz e DEC-036 — Codex
 
+**Atualização de 27/10/2026 — Codex:** RV-VZ-01/02 corrigidos em `d4d6350` e **fechados** na
+conferência independente `REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`. Build/126 testes e os
+nove reprodutores passam; Cancelar/voltar, manter/descartar, cadastro vazio e edição sem mudanças
+conferidos no emulador. Sem achado novo no escopo; abaixo permanece o registro histórico da revisão.
+
 27/10/2026 — Codex (GPT-6). Partida: `main`/`0ea0da7`; `git pull`: já atualizado.
 Alvos: `fa75715` e `0ea0da7`, diff `a6d9b5a..0ea0da7`.
 Roteiro: `HANDOFF_APP.md` §5/6/7 e casos pertinentes de `ROTEIRO_TESTE_VOZ.md`.
