@@ -36,6 +36,7 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | DEC-029 | 27/10 | Melhorias do autor após teste no Pixel 8a | Sem animação de esmaecer ao trocar de tela; o relógio recusa horário já da lista (aviso no diálogo, OK desabilitado); o calendário do término desabilita datas anteriores ao início; **revisa em parte a DEC-028 #13**: a Hoje mostra o aviso pendente em cartão verde "Agora" com "Entendi" e "Adiar N min" e, depois de adiar, "Lembrete adiado / Novo alerta às HH:MM". Avisos pendentes ficam em SharedPreferences (`AlertStore`) só enquanto pendentes: "Entendi", desativar, excluir ou reiniciar o aparelho apagam. A lista do dia continua sem "Visto às"; nada vira histórico (DEC-004) | aceita 27/10 (pedido do autor) |
 | DEC-030 | 27/10 | Dias ausentes ao passar da voz/câmera para o formulário (ponto da revisão Codex `REVISAO_M3_M4_CODEX.md`) | Rascunho sem dias abre o formulário **sem opção marcada** ("Todos os dias" e "Dias específicos" desmarcados); o validador pede "Selecione pelo menos um dia." O cadastro manual continua começando em "Todos os dias" (protótipo). "Duas vezes ao dia"/"de 8 em 8 horas" continuam implicando todos os dias | aceita 27/10 (autor, recomendação do Claude Code) |
 | DEC-031 | 27/10 | Voz após teste do autor no Samsung A31 | (a) **Respostas direcionadas:** durante uma pergunta da voz (exceto a do nome), tudo o que for dito vale para o medicamento perguntado; nomes e palavras desconhecidas não criam medicamento novo. Medicamento novo só na fala livre (início) ou em "Corrigir por voz" na revisão. (b) **"Corrigir por voz" com confirmação:** o resultado aparece com "Manter correção" e "Desfazer"; voltar desfaz só a correção, sem perder o cadastro | aceita 27/10 (proposta do autor; (a) avaliada pelo Claude Code como adequada) |
+| DEC-032 | 27/10 | Som do lembrete | Por padrão, o lembrete toca como **notificação comum** (respeita silencioso/vibrar). A opção de tocar **como alarme** (toca mesmo no silencioso, no volume de alarme) será oferecida numa **tela de introdução ao app**, ainda a desenvolver (fora da proposta: registrar a divergência ao especificá-la). O app não força a notificação aberta (o Android não permite); no Samsung, o estilo de pop-up "Detalhado" mostra os botões; tocar na notificação abre a Hoje com o cartão "Agora" | aceita 27/10 (autor) |
 
 ## Pendentes
 
@@ -49,6 +50,7 @@ Numere decisões novas continuando a sequência. Não apague decisões: marque c
 | Declaração de IA | **Orientador (26/10):** atualizar na versão final, com todas as IAs mencionadas e justificadas |
 | Prescrições fictícias na PoC (DEC-006) | **Orientador (26/10):** decisão do autor, bem justificada. Pendente |
 | Celular de teste | Ainda não definido pelo autor |
+| Tela de introdução ao app (DEC-032): oferecer "tocar como alarme" e orientar o estilo de pop-up | Autor decide quando especificar; fora da proposta |
 | Mudanças do protótipo que afetem dados ou regras (DEC-022/025) | Listar ao especificar cada marco do Android |
 
 ## Detalhes das decisões de 19/10

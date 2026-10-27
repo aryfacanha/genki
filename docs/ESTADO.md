@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Claude Code (Opus 5.5):** voz real e leitura em voz alta funcionando no A31 com a versão nova; toque na notificação abre a Hoje; DEC-032 (som comum por padrão; opção de alarme numa futura tela de introdução, fora da proposta). Pendente: confirmar som da notificação e estilo de pop-up no A31.
+
 **27/10/2026, Claude Code (Opus 5.5):** **celular de teste definido: Samsung Galaxy A31 (Android 12)**, com reconhecedor do Google. Retorno do autor na voz corrigido em `8191c25` (DEC-031: respostas direcionadas; "Corrigir por voz" com Manter/Desfazer; leitura em voz alta mais tolerante). 106 testes. Pendentes: autor reconferir no A31; revisão do Codex de `fac6a0a` e `8191c25`; testes de fonte, lembretes e TalkBack adiados pelo autor.
 
 **27/10/2026, Claude Code (Opus 5.5):** os três S2 da segunda revisão da correção (`REVISAO_CORRECAO2_M3_M4_CODEX.md`) corrigidos em `fac6a0a`; 104 testes; reprodutores do Codex 36/36. Revisão de fechamento do interpretador pelo Codex pendente (escopo fechado); depois, teste no celular de teste.

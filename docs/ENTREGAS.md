@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: notificação e voz no Samsung A31 — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `3299836`; retorno do autor (notificação sem som e fechada; voz sem leitura em pt).
+Realizado e arquivos alterados: `MainActivity.kt`, `reminders/Notifications.kt`, `ui/navigation/GenkiApp.kt`, `voice/VoiceParser.kt` (+1 teste), `app/build.gradle.kts` (`genki.abi`). Docs: `DECISOES` (DEC-032), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-032 (27/10).
+Sugestões pendentes: tela de introdução (fora da proposta).
+Verificado: 107 testes; no A31: voz real reconhecida, leitor da Samsung pronto em pt e sintetizando, avisos das 08:00 publicados com o relógio adiantado e reagendados ao voltar a hora, alarmes exatos, canal com som padrão. | Não verificado: se o som tocou; toque na notificação → Hoje no aparelho. | Limitações: o app não força a notificação expandida.
+Próxima tarefa e bloqueios: retorno do autor sobre som e pop-up; revisão do Codex.
+Links/commits: `d7b8c63`.
+
 ENTREGA — App Android: retorno do autor no Samsung A31 (voz) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `b2567ad`; retorno do autor após teste manual no A31.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/Speaker.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`; `VoiceParserTest` (+2). Docs: `DECISOES` (DEC-031), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
