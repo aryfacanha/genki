@@ -125,6 +125,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-27 — Claude Code — **config:** manifest remove `INTERNET`, `ACCESS_NETWORK_STATE` e os componentes `datatransport` (telemetria) que o ML Kit acrescentava ao manifest final (`9a235fc`); roteiro `revisoes/ROTEIRO_REVISAO_M3_M4_CODEX.md` para a revisão de `a590fa5..9a235fc` — leitura da imagem de embalagem continua funcionando no emulador; manifest final conferido; erro inofensivo `TransportRuntime.Executor` no Logcat ao usar a câmera — pendente: revisão do Codex.
+
 - 2026-10-27 — Claude Code — M4 (`0c06d49`): `camera/OcrParser` (+6 testes), `camera/ui/CameraViewModel` e `CameraScreen`, opção "Usar câmera", `CameraRoute`, `VoiceRoute(fromSession)` (voz começa pelo rascunho da câmera), `CameraIcon`. **Config:** `libs.versions.toml` com `camerax = 1.4.2` (camera-camera2, camera-lifecycle, camera-view) e `mlkitTextRecognition = 16.0.1` (`com.google.mlkit:text-recognition`, modelo embutido); manifest com `CAMERA` e `uses-feature camera.any required=false` — 87 testes passam; fluxo no emulador (§3) — pendente: embalagens reais no aparelho, revisão do Codex.
 - 2026-10-27 — Claude Code — ajustes (`f214691`): repetição de aviso adiado mantém "(adiado)" (extra `snoozed` no `REPEAT`; conferido no emulador com o relógio: "Lembrete das 19:30 (adiado)" na 1ª repetição); `SpeechInput` ignora a segunda resposta de erro do serviço; rótulo da barra com `minFontSize = 8.sp` (inteiro em 2,0× no emulador) — build e testes passam.
 
