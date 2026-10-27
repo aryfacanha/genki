@@ -39,7 +39,10 @@ object Notifications {
         val text = listOfNotNull(medication.name, medication.concentration).joinToString(" ") + " · " + medication.dose
         val openApp = PendingIntent.getActivity(
             context, 0,
-            Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
+            // SINGLE_TOP reaproveita a tela aberta (sem recriar o app nem perder um cadastro em andamento) e pede a Hoje.
+            Intent(context, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(MainActivity.EXTRA_OPEN_HOME, true),
             PendingIntent.FLAG_IMMUTABLE,
         )
         val ack = ReminderScheduler.pendingIntent(context, ReminderAction.ACK, timeId)

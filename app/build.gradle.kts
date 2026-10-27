@@ -19,6 +19,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // APK menor para um aparelho só: `-Pgenki.abi=arm64-v8a` (Samsung A31; o ADB pelo cabo cai em envios grandes).
+        // Sem a propriedade, o APK leva as bibliotecas do ML Kit para todos os processadores (emulador incluído).
+        providers.gradleProperty("genki.abi").orNull?.let { abi -> ndk { abiFilters += abi } }
     }
 
     buildTypes {

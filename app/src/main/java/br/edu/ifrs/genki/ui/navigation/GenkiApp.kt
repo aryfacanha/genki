@@ -28,6 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,8 +87,22 @@ private enum class TopLevelTab(val route: Any, @param:StringRes val label: Int, 
 }
 
 @Composable
-fun GenkiApp() {
+fun GenkiApp(openHomeRequests: Int = 0) {
     val navController = rememberNavController()
+    // Toque na notificação do lembrete: vai para a Hoje (cartão "Agora"), exceto no meio de um cadastro ou edição,
+    // que não pode ser descartado sem perguntar.
+    LaunchedEffect(openHomeRequests) {
+        if (openHomeRequests == 0) return@LaunchedEffect
+        val current = navController.currentDestination
+        val inForm = listOf(AddChoiceRoute::class, VoiceRoute::class, CameraRoute::class, AddMedicationRoute::class,
+            EditMedicationRoute::class, FixDraftRoute::class).any { current?.hasRoute(it) == true }
+        if (!inForm) {
+            navController.navigate(HomeRoute) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+    }
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()

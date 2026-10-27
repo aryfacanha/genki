@@ -436,6 +436,12 @@ class VoiceParserTest {
     }
 
     @Test
+    fun recognizerHearingComoForTomo() {
+        // Reconhecimento real no A31: "tomo metoprolol" saiu "como metoprolol".
+        assertEquals("Metoprolol", one("como metoprolol").name)
+    }
+
+    @Test
     fun answerToQuestionNeverCreatesMedication() {
         // Respostas direcionadas: durante uma pergunta, tudo vale para o medicamento perguntado.
         val l = voice("Losartana")

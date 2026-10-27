@@ -101,6 +101,8 @@ object VoiceParser {
         // Aproximação e hábito: "umas 9", "lá pelas 8", "por volta das 7", "mais ou menos", "geralmente".
         "umas", "uns", "volta", "cerca", "aproximadamente", "ou", "menos", "quase", "geralmente", "normalmente",
         "costumo", "costuma", "acho", "acredito", "talvez", "creio",
+        // "Tomo" ouvido como "como" pelo reconhecedor do Samsung A31 (27/10); "como" também é palavra comum.
+        "como", "pego", "faco", "remedinho",
     )
 
     private val ALL_DAYS = DayOfWeek.entries.toSet()
