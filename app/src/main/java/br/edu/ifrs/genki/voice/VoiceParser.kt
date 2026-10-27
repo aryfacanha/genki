@@ -111,6 +111,10 @@ object VoiceParser {
         val drafts = input.toMutableList()
         val before = input.associate { it.localId to it.times }
         val beforeDays = input.associate { it.localId to it.days }
+        /** Dias já ditos nesta fala, por rascunho: trechos separados ("segunda e quarta e também sexta") se somam. */
+        val spokenDays = mutableMapOf<String, Set<DayOfWeek>>()
+        /** Horários de antes desta fala desfeitos com "não" ("às 20, não, às 21" com 20:00 já entendido). */
+        val negatedBefore = mutableMapOf<String, MutableSet<LocalTime>>()
         val newTimes = linkedMapOf<String, MutableList<LocalTime>>()
         var group = mutableListOf<String>()
         var groupHasInfo = false
@@ -180,7 +184,10 @@ object VoiceParser {
             apply { it }
             val negated = lastTime
             if (negateLast && negated != null) {
-                negated.first.forEach { id -> newTimes[id]?.remove(negated.second) }
+                negated.first.forEach { id ->
+                    newTimes[id]?.remove(negated.second)
+                    if (before[id].orEmpty().contains(negated.second)) negatedBefore.getOrPut(id) { mutableSetOf() } += negated.second
+                }
                 negateLast = false
             }
             group.forEach { newTimes.getOrPut(it) { mutableListOf() } += time }
@@ -192,7 +199,7 @@ object VoiceParser {
                 val index = drafts.indexOfFirst { it.localId == id }
                 if (index < 0) return@forEach
                 val draft = drafts[index]
-                val old = before[id].orEmpty()
+                val old = before[id].orEmpty() - negatedBefore[id].orEmpty()
                 val times = when {
                     replaceAll || old.isEmpty() -> spoken
                     correction -> replaceNearest(old, spoken)
@@ -333,7 +340,12 @@ object VoiceParser {
         /** "1 comprimido", "meio comprimido", "10 gotas", "uma cápsula", "1 comprimido e meio". */
         private fun dose(i: Int): Int {
             val half = isAny(i, "meio", "meia")
-            val (amount, j) = if (half) t[i].text.lowercase() to i + 1 else number(i)?.let { format(it.first) to it.second } ?: return i
+            // "1/2 comprimido": a fração fica como foi dita (o denominador não é a dose).
+            val fraction = number(i)?.let { (n, k) ->
+                if (isAny(k, "/")) number(k + 1)?.let { (d, m) -> "${format(n)}/${format(d)}" to m } else null
+            }
+            val (amount, j) = fraction
+                ?: if (half) t[i].text.lowercase() to i + 1 else number(i)?.let { format(it.first) to it.second } ?: return i
             val unitNorm = norm(j) ?: return i
             if (unitNorm !in DOSE_UNITS) return i
             var text = "$amount ${if (unitNorm.startsWith("mililitro")) "ml" else t[j].text.lowercase()}"
@@ -385,10 +397,22 @@ object VoiceParser {
                 else -> return i
             }
             val (day, j) = whole(dateStart) ?: return i
-            val month = if (isAny(j, "de")) MONTHS.indexOf(norm(j + 1)).takeIf { it >= 0 } else null
+            var next = j
+            val month = when {
+                isAny(j, "de") -> MONTHS.indexOf(norm(j + 1)).takeIf { it >= 0 }?.also { next = j + 2 }
+                isAny(j, "/") -> {
+                    val (m, k) = whole(j + 1) ?: return i
+                    if (m !in 1..12) return i
+                    next = k
+                    // "15/12/2026": o ano é aceito e ignorado (vale a próxima ocorrência da data).
+                    if (isAny(k, "/") && whole(k + 1) != null) next = whole(k + 1)!!.second
+                    m - 1
+                }
+                else -> null
+            }
             val end = civilDate(day, month) ?: return i
             set(TreatmentType.TEMPORARY, end = end)
-            return if (month != null) j + 2 else j
+            return next
         }
 
         /** Dia [day] (do mês [month], 0 = janeiro) a partir de hoje; sem mês, o próximo dia [day]. */
@@ -412,9 +436,12 @@ object VoiceParser {
         private fun days(i: Int): Int {
             fun set(days: Set<DayOfWeek>, end: Int, additive: Boolean = false): Int {
                 apply { draft ->
-                    val previous = beforeDays[draft.localId]
-                    val add = additive && !correction && !replaceAll && previous != null && previous != ALL_DAYS
-                    draft.copy(days = if (add) previous.orEmpty() + days else days)
+                    val id = draft.localId
+                    val previous = beforeDays[id]
+                    val keepPrevious = additive && !correction && !replaceAll && previous != null && previous != ALL_DAYS
+                    val thisUtterance = if (additive) spokenDays[id].orEmpty() + days else days
+                    spokenDays[id] = thisUtterance
+                    draft.copy(days = if (keepPrevious) previous.orEmpty() + thisUtterance else thisUtterance)
                 }
                 return end
             }
@@ -534,7 +561,9 @@ object VoiceParser {
             val words = t.subList(i, j).map { it.text }.toMutableList()
             val digits = t.getOrNull(j)?.text
             val unitAfter = norm(j + 1)?.let { it in STRENGTH_UNITS || it in DOSE_UNITS } == true
-            if (words.last().length == 1 && digits != null && digits.length <= 3 && digits.all(Char::isDigit) && !unitAfter) {
+            // "vitamina d 8 horas" e resposta à pergunta do horário: o número é hora, não parte do nome.
+            val timeAfter = isAny(j + 1, "h", "hora", "horas") || periodWord(j + 1) || expecting == Field.TIMES
+            if (words.last().length == 1 && digits != null && digits.length <= 3 && digits.all(Char::isDigit) && !unitAfter && !timeAfter) {
                 words[words.lastIndex] = words.last() + digits
                 j++
             }

@@ -324,6 +324,64 @@ class VoiceParserTest {
         }
     }
 
+    // ── casos da revisão Codex da correção (REVISAO_CORRECAO_M3_M4_CODEX.md) ──
+
+    @Test
+    fun daysInSeparateStretchesOfOneUtterance() {
+        // RV-M3-02 (restante).
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), one("losartana segunda e quarta e também sexta").days)
+        val first = one("losartana segunda e quarta")
+        assertEquals(
+            setOf(MONDAY, WEDNESDAY, FRIDAY, SATURDAY),
+            parse("e sexta e também sábado", listOf(first), first.localId).drafts.single().days,
+        )
+        // Correção explícita substitui o anterior, mas soma os trechos da própria fala.
+        assertEquals(setOf(FRIDAY, SATURDAY), parse("na verdade é sexta e também sábado", listOf(first), first.localId).drafts.single().days)
+    }
+
+    @Test
+    fun negationRemovesTimeUnderstoodBefore() {
+        // RV-M3-04 (restante): 20:00 já estava no rascunho.
+        val l = voice("Losartana", t(8), t(20))
+        assertEquals(listOf(t(8), t(21)), parse("às 20 não às 21", listOf(l), l.localId).drafts.single().times)
+        // Sem negação, continua somando.
+        assertEquals(listOf(t(8), t(20), t(21)), parse("e às 21", listOf(l), l.localId).drafts.single().times)
+    }
+
+    @Test
+    fun numberThatIsTimeDoesNotJoinName() {
+        // RV-M3C-01.
+        one("vitamina d 8 horas").let {
+            assertEquals("Vitamina d", it.name)
+            assertEquals(listOf(t(8)), it.times)
+        }
+        val d = voice("Vitamina d")
+        val answered = parse("vitamina d 8", listOf(d), d.localId, Field.TIMES).drafts
+        assertEquals(1, answered.size)
+        assertEquals(listOf(t(8)), answered.single().times)
+        // B12 continua.
+        assertEquals("Vitamina B12", one("vitamina b 12 um comprimido").name)
+    }
+
+    @Test
+    fun fractionDose() {
+        // RV-M3C-02.
+        one("losartana 1/2 comprimido às 8").let {
+            assertEquals("1/2 comprimido", it.dose)
+            assertEquals(listOf(t(8)), it.times)
+        }
+    }
+
+    @Test
+    fun slashDate() {
+        // RV-M3C-03: hoje 27/10/2026.
+        assertEquals(LocalDate.of(2026, 12, 15), one("amoxicilina até 15/12").endDate)
+        assertEquals(LocalDate.of(2026, 11, 15), one("amoxicilina até 15/11").endDate)
+        assertEquals(LocalDate.of(2026, 12, 15), one("amoxicilina até 15/12/2026").endDate)
+        // Mês inválido não vira data: a duração fica para perguntar.
+        assertNull(one("amoxicilina até 15/13").endDate)
+    }
+
     // ── não entendido (RF15) ───────────────────────────────────────────
 
     @Test
