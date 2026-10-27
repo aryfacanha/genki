@@ -32,6 +32,7 @@ Cronograma institucional 2026/2: monografia em PDF até 16/11/2026; bancas de 23
 | Mapa RF/RNF → marcos e alterações pendentes na planilha | `docs/REQUISITOS_MAPA.md` |
 | Divergências de dados/regras entre o protótipo e a ESPEC (aguardam decisão) | `docs/DIVERGENCIAS_PROTOTIPO.md` |
 | **Handoff técnico do app** (estado do código, como rodar, revisão, Diário) | `docs/HANDOFF_APP.md` |
+| Roteiro de teste manual do cadastro por voz (A31) | `docs/ROTEIRO_TESTE_VOZ.md` |
 | Relatórios de revisão do app | `docs/revisoes/` |
 | Log de entregas (quem fez o quê) | `docs/ENTREGAS.md` |
 | Registro de uso de IA | `docs/REGISTRO_IA.md` |
