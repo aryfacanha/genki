@@ -163,7 +163,7 @@ class VoiceViewModel(
         viewModelScope.launch {
             results.forEach { valid ->
                 val id = repository.insert(valid as DraftValidator.Result.Valid)
-                GenkiEval.log("medicamento_salvo", "fonte" to DraftSource.VOICE, "id" to id)
+                GenkiEval.log("medicamento_salvo", "fonte" to valid.draft.source, "id" to id)
             }
             session.clear()
             val n = results.size

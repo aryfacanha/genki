@@ -9,6 +9,7 @@ import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.DraftValidator
 import br.edu.ifrs.genki.domain.Field
+import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.Problem
@@ -28,17 +29,22 @@ import java.time.LocalTime
 
 enum class DaysMode { ALL, SPECIFIC }
 
-/** O que está na tela. "Todos os dias" e dias específicos ficam separados, como no protótipo. */
+/**
+ * O que está na tela. "Todos os dias" e dias específicos ficam separados, como no protótipo.
+ * [daysMode] nulo = nenhuma opção marcada (rascunho da voz/câmera sem dias; decisão do autor em 27/10).
+ */
 data class FormFields(
     val name: String = "",
     val concentration: String = "",
     val dose: String = "",
-    val daysMode: DaysMode = DaysMode.ALL,
+    val daysMode: DaysMode? = DaysMode.ALL,
     val specificDays: Set<DayOfWeek> = emptySet(),
     val times: List<LocalTime> = emptyList(),
     val treatment: TreatmentType? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
+    /** Frequência dita na voz sem horário ainda ("duas vezes ao dia"): o 1º horário gera os outros (RV-M3-03). */
+    val everyHours: Int? = null,
 ) {
     fun toDraft(existingId: Long?) = MedicationDraft(
         existingId = existingId,
@@ -46,33 +52,50 @@ data class FormFields(
         name = name,
         concentration = concentration,
         dose = dose,
-        days = if (daysMode == DaysMode.ALL) DayOfWeek.entries.toSet() else specificDays,
+        days = when (daysMode) {
+            DaysMode.ALL -> DayOfWeek.entries.toSet()
+            DaysMode.SPECIFIC -> specificDays
+            null -> null
+        },
         times = times,
         treatment = treatment,
         startDate = startDate,
         endDate = endDate,
+        everyHours = everyHours,
     )
+
+    /** Novo horário; com frequência pendente e lista vazia, gera os horários do dia. */
+    fun addTime(time: LocalTime): FormFields {
+        val every = everyHours
+        return if (every != null && times.isEmpty()) copy(times = Frequency.fill(time, every), everyHours = null)
+        else copy(times = times + time)
+    }
 
     companion object {
         fun from(medication: Medication): FormFields = from(medication.toDraft())
 
         /**
          * Marcar os 7 dias reabre como "Todos os dias" (divergência #1, sem efeito nos lembretes).
-         * Rascunho da voz sem dias abre como o cadastro manual, em "Todos os dias", e o usuário confere na revisão.
+         * Rascunho da voz/câmera sem dias abre sem opção marcada: o usuário escolhe (decisão do autor, 27/10).
          */
         fun from(draft: MedicationDraft): FormFields {
             val days = draft.days.orEmpty()
-            val everyDay = days.isEmpty() || days.size == 7
+            val everyDay = days.size == 7
             return FormFields(
                 name = draft.name.orEmpty(),
                 concentration = draft.concentration.orEmpty(),
                 dose = draft.dose.orEmpty(),
-                daysMode = if (everyDay) DaysMode.ALL else DaysMode.SPECIFIC,
+                daysMode = when {
+                    days.isEmpty() -> null
+                    everyDay -> DaysMode.ALL
+                    else -> DaysMode.SPECIFIC
+                },
                 specificDays = if (everyDay) emptySet() else days,
                 times = draft.times,
                 treatment = draft.treatment,
                 startDate = draft.startDate,
                 endDate = draft.endDate,
+                everyHours = draft.everyHours,
             )
         }
     }

@@ -63,6 +63,7 @@ import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.Speaker
+import java.time.LocalDate
 
 /**
  * Cadastrar por voz (`UsarVozMedicamento.tsx`, ESPEC §7): início com o microfone, perguntas do que falta
@@ -339,6 +340,13 @@ private fun SoFarCard(draft: MedicationDraft, current: Boolean) {
     }
 }
 
+/** Início e fim como o validador vai gravar: "por N dias" vira data final (DEC-003, RF08). */
+private fun period(draft: MedicationDraft): String? {
+    val start = draft.startDate ?: LocalDate.now()
+    val end = draft.durationDays?.let { start.plusDays(it - 1L) } ?: draft.endDate ?: return null
+    return MedicationText.period(start, end)
+}
+
 @Composable
 private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() -> Unit)?) {
     val missing = "Falta informar"
@@ -359,12 +367,7 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
             InfoRow(
                 "Duração",
                 treatment?.let(MedicationText::treatment) ?: missing,
-                secondary = when {
-                    treatment != TreatmentType.TEMPORARY -> null
-                    draft.durationDays != null -> "Por ${draft.durationDays} dias a partir de hoje"
-                    draft.endDate != null -> "Até ${MedicationText.date(draft.endDate)}"
-                    else -> missing
-                },
+                secondary = if (treatment == TreatmentType.TEMPORARY) period(draft) ?: missing else null,
                 help = if (treatment == TreatmentType.UNDEFINED) MedicationText.UNKNOWN_DURATION_HELP else null,
             )
             if (onRemove != null) {

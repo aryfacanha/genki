@@ -302,6 +302,8 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
             }
         }
     }
+    // Nenhuma opção marcada (veio da voz/câmera sem dias): o erro aparece aqui.
+    if (fields.daysMode == null) FieldError(state.errors[Field.DAYS]?.let { MedicationText.error(Field.DAYS, it) })
     if (fields.daysMode == DaysMode.SPECIFIC) {
         FlowRow(
             Modifier.padding(top = 8.dp),
@@ -342,6 +344,13 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
         style = MaterialTheme.typography.titleSmall,
         modifier = Modifier.padding(top = 20.dp, bottom = 8.dp),
     )
+    fields.everyHours?.let { every ->
+        Text(
+            "Você disse de $every em $every horas: escolha o primeiro horário e o Genki completa os outros.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 8.dp),
+        )
+    }
     // `null` = fechado; -1 = novo horário; n = alterar o horário n.
     var editing by rememberSaveable { mutableStateOf<Int?>(null) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -400,7 +409,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
             onConfirm = { time ->
                 editing = null
                 viewModel.edit(Field.TIMES) {
-                    it.copy(times = if (index < 0) it.times + time else it.times.mapIndexed { i, t -> if (i == index) time else t })
+                    if (index < 0) it.addTime(time) else it.copy(times = it.times.mapIndexed { i, t -> if (i == index) time else t })
                 }
             },
         )

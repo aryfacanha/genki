@@ -153,7 +153,9 @@ fun HomeScreen(
             when {
                 s == null -> Unit
                 !s.hasMedications -> EmptyState()
-                s.today.isEmpty() -> Text(
+                // Avisos pendentes vêm antes de "Nenhum lembrete para hoje": um adiado pode passar da meia-noite
+                // depois do último dia do tratamento (RV-M2B-01).
+                s.today.isEmpty() && s.alerts.isEmpty() -> Text(
                     "Nenhum lembrete para hoje.",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(top = 16.dp),
@@ -179,13 +181,17 @@ fun HomeScreen(
                             )
                         }
                     }
-                    Text(
-                        "Hoje",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
-                    )
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        s.today.forEach { TodayRow(it) }
+                    if (s.today.isEmpty()) {
+                        Text("Nenhum outro lembrete para hoje.", modifier = Modifier.padding(top = 16.dp))
+                    } else {
+                        Text(
+                            "Hoje",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
+                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            s.today.forEach { TodayRow(it) }
+                        }
                     }
                     Spacer(Modifier.height(16.dp))
                 }
