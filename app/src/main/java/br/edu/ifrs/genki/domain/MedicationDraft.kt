@@ -21,4 +21,5 @@ data class MedicationDraft(
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
     val durationDays: Int? = null,       // "por 7 dias" → endDate = início + 6 (DEC-003)
+    val everyHours: Int? = null,         // voz: "de 8 em 8 horas" sem horário ainda; o 1º horário gera os outros (RF06)
 )

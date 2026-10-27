@@ -36,6 +36,7 @@ object DraftValidator {
             startDate = start,
             endDate = end,
             durationDays = null,
+            everyHours = null,
         )
 
         val problems = buildList {

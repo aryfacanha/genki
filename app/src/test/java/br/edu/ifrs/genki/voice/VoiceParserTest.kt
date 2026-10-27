@@ -1,0 +1,285 @@
+package br.edu.ifrs.genki.voice
+
+import br.edu.ifrs.genki.domain.DraftSource
+import br.edu.ifrs.genki.domain.Field
+import br.edu.ifrs.genki.domain.MedicationDraft
+import br.edu.ifrs.genki.domain.TreatmentType
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import java.time.DayOfWeek
+import java.time.DayOfWeek.FRIDAY
+import java.time.DayOfWeek.MONDAY
+import java.time.DayOfWeek.SATURDAY
+import java.time.DayOfWeek.SUNDAY
+import java.time.DayOfWeek.WEDNESDAY
+import java.time.LocalDate
+import java.time.LocalTime
+
+/**
+ * Corpus do parser de voz (ESPEC §7, RF06, RF11–RF16). Frases no formato que o reconhecedor do Android costuma
+ * devolver (minúsculas, números em algarismos ou por extenso, "20h", "8:30"). Hoje = terça, 27/10/2026.
+ */
+class VoiceParserTest {
+
+    private val today = LocalDate.of(2026, 10, 27)
+    private val all = DayOfWeek.entries.toSet()
+
+    private fun parse(text: String, drafts: List<MedicationDraft> = emptyList(), target: String? = null, expecting: Field? = null) =
+        VoiceParser.parse(text, drafts, today, target, expecting)
+
+    private fun one(text: String) = parse(text).drafts.single()
+
+    private fun t(h: Int, m: Int = 0) = LocalTime.of(h, m)
+
+    private fun voice(name: String, vararg times: LocalTime) =
+        MedicationDraft(source = DraftSource.VOICE, name = name, times = times.toList())
+
+    // ── fala única completa (RF12) ──────────────────────────────────────
+
+    @Test
+    fun completeSentence() {
+        val d = one("Eu tomo losartana 50 mg, 1 comprimido às 8 da manhã todos os dias, uso contínuo")
+        assertEquals("Losartana", d.name)
+        assertEquals("50 mg", d.concentration)
+        assertEquals("1 comprimido", d.dose)
+        assertEquals(listOf(t(8)), d.times)
+        assertEquals(all, d.days)
+        assertEquals(TreatmentType.CONTINUOUS, d.treatment)
+        assertEquals(DraftSource.VOICE, d.source)
+    }
+
+    @Test
+    fun strengthNeverBecomesDose() {
+        val d = one("losartana 50 mg")
+        assertEquals("50 mg", d.concentration)
+        assertNull(d.dose)
+    }
+
+    @Test
+    fun strengthInWords() {
+        assertEquals("850 mg", one("metformina oitocentos e cinquenta miligramas").concentration)
+        assertEquals("20 mg", one("omeprazol 20mg").concentration)
+        assertEquals("2,5 mg", one("anlodipino 2,5 mg").concentration)
+    }
+
+    @Test
+    fun doses() {
+        assertEquals("meio comprimido", one("losartana meio comprimido").dose)
+        assertEquals("10 gotas", one("dipirona 10 gotas").dose)
+        assertEquals("1 cápsula", one("omeprazol uma cápsula").dose)
+        assertEquals("1 comprimido e meio", one("losartana um comprimido e meio").dose)
+        assertEquals("2 colheres de sopa", one("xarope 2 colheres de sopa").dose)
+    }
+
+    // ── horários ─────────────────────────────────────────────────────
+
+    @Test
+    fun timeFormats() {
+        assertEquals(listOf(t(8)), one("losartana às 8").times)
+        assertEquals(listOf(t(20)), one("losartana 20h").times)
+        assertEquals(listOf(t(20)), one("losartana às 8 da noite").times)
+        assertEquals(listOf(t(14)), one("losartana às 2 da tarde").times)
+        assertEquals(listOf(t(8, 30)), one("losartana às 8:30").times)
+        assertEquals(listOf(t(8, 30)), one("losartana às 8 e meia").times)
+        assertEquals(listOf(t(12)), one("losartana ao meio-dia").times)
+        assertEquals(listOf(t(22)), one("losartana às vinte e duas horas").times)
+    }
+
+    @Test
+    fun eightAndTwentyIsEightTwenty() {
+        // ESPEC §7: "8 e 20" = 08:20.
+        assertEquals(listOf(t(8, 20)), one("losartana às 8 e 20").times)
+    }
+
+    @Test
+    fun twoTimes() {
+        assertEquals(listOf(t(8), t(20)), one("losartana às 8 e às 20").times)
+        assertEquals(listOf(t(8), t(20)), one("losartana às 8 e 20 horas").times)
+        assertEquals(listOf(t(8), t(14), t(22)), one("losartana às 8, 14 e 22").times)
+    }
+
+    // ── frequência (RF06) ───────────────────────────────────────────────
+
+    @Test
+    fun everyEightHoursWithFirstTime() {
+        val d = one("amoxicilina de 8 em 8 horas a partir das 6")
+        assertEquals(listOf(t(6), t(14), t(22)), d.times)
+        assertNull(d.everyHours)
+    }
+
+    @Test
+    fun twiceADayWaitsForFirstTime() {
+        val d = one("metformina duas vezes ao dia")
+        assertEquals(12, d.everyHours)
+        assertTrue(d.times.isEmpty())
+        assertEquals(all, d.days)
+        // Resposta à pergunta do primeiro horário.
+        val answered = parse("às 7", listOf(d), target = d.localId, expecting = Field.TIMES).drafts.single()
+        assertEquals(listOf(t(7), t(19)), answered.times)
+    }
+
+    @Test
+    fun everyTwelveHours() {
+        assertEquals(listOf(t(9), t(21)), one("losartana a cada 12 horas às 9").times)
+    }
+
+    // ── dias ──────────────────────────────────────────────────────────
+
+    @Test
+    fun days() {
+        assertEquals(setOf(MONDAY, WEDNESDAY), one("losartana segunda e quarta").days)
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), one("losartana segunda, quarta e sexta-feira").days)
+        assertEquals(DayOfWeek.entries.take(5).toSet(), one("losartana de segunda a sexta").days)
+        assertEquals(setOf(SATURDAY, SUNDAY), one("losartana no fim de semana").days)
+        assertEquals(all, one("losartana todo dia").days)
+    }
+
+    @Test
+    fun alternateDaysIsNotGuessed() {
+        // "Dia sim, dia não" está fora do escopo: fica sem dias e a tela pergunta.
+        assertNull(one("losartana dia sim dia não").days)
+    }
+
+    // ── tratamento ───────────────────────────────────────────────────────
+
+    @Test
+    fun treatment() {
+        one("amoxicilina por 7 dias").let {
+            assertEquals(TreatmentType.TEMPORARY, it.treatment)
+            assertEquals(7, it.durationDays)
+        }
+        assertEquals(14, one("amoxicilina por duas semanas").durationDays)
+        one("amoxicilina até dia 15").let {
+            assertEquals(TreatmentType.TEMPORARY, it.treatment)
+            assertEquals(LocalDate.of(2026, 11, 15), it.endDate)
+        }
+        assertEquals(LocalDate.of(2026, 10, 30), one("amoxicilina até dia 30").endDate)
+        assertEquals(LocalDate.of(2027, 1, 10), one("amoxicilina até 10 de janeiro").endDate)
+        assertEquals(TreatmentType.UNDEFINED, one("amoxicilina ainda não sei").treatment)
+        assertEquals(TreatmentType.CONTINUOUS, one("losartana para sempre").treatment)
+    }
+
+    @Test
+    fun treatmentAnswers() {
+        val d = voice("Amoxicilina", t(8))
+        assertEquals(TreatmentType.UNDEFINED, parse("não sei", listOf(d), d.localId, Field.TREATMENT).drafts.single().treatment)
+        assertEquals(LocalDate.of(2026, 11, 5), parse("dia 5", listOf(d), d.localId, Field.TREATMENT).drafts.single().endDate)
+    }
+
+    // ── vários medicamentos (RF14) ───────────────────────────────────────
+
+    @Test
+    fun twoMedicationsInOneSentence() {
+        val drafts = parse("losartana 50 mg às 8 e metformina 850 mg às 8 e às 20").drafts
+        assertEquals(listOf("Losartana", "Metformina"), drafts.map { it.name })
+        assertEquals(listOf(t(8)), drafts[0].times)
+        assertEquals(listOf(t(8), t(20)), drafts[1].times)
+        assertEquals("850 mg", drafts[1].concentration)
+    }
+
+    @Test
+    fun namesJoinedShareInformation() {
+        val drafts = parse("losartana e sinvastatina um comprimido às 21").drafts
+        assertEquals(2, drafts.size)
+        drafts.forEach {
+            assertEquals("1 comprimido", it.dose)
+            assertEquals(listOf(t(21)), it.times)
+        }
+    }
+
+    @Test
+    fun compoundName() {
+        assertEquals("Carbonato de cálcio", one("carbonato de cálcio 500 mg").name)
+        assertEquals("Vitamina D", one("vitamina D 7 gotas").name)
+    }
+
+    @Test
+    fun commonWordsAreNotNames() {
+        val drafts = parse("eu tomo o remédio da pressão em jejum às 7").drafts
+        assertEquals(listOf<String?>(null), drafts.map { it.name })
+        assertEquals(listOf(t(7)), drafts.single().times)
+    }
+
+    // ── fala progressiva e contexto (RF12, RF13) ───────────────────────────
+
+    @Test
+    fun answerGoesToAskedMedication() {
+        val l = voice("Losartana", t(8))
+        val m = voice("Metformina", t(8))
+        val result = parse("dois comprimidos", listOf(l, m), target = l.localId, expecting = Field.DOSE).drafts
+        assertEquals("2 comprimidos", result[0].dose)
+        assertNull(result[1].dose)
+    }
+
+    @Test
+    fun bareNumberIsTimeOnlyWhenAskedForTime() {
+        val l = voice("Losartana")
+        assertEquals(listOf(t(8)), parse("8", listOf(l), l.localId, Field.TIMES).drafts.single().times)
+        assertTrue(parse("8", listOf(l), l.localId, Field.DOSE).drafts.single().times.isEmpty())
+    }
+
+    @Test
+    fun answerCanAddAnotherMedication() {
+        val l = voice("Losartana", t(8))
+        val result = parse("também tomo metformina às 20", listOf(l), target = l.localId).drafts
+        assertEquals(listOf("Losartana", "Metformina"), result.map { it.name })
+        assertEquals(listOf(t(8)), result[0].times)
+        assertEquals(listOf(t(20)), result[1].times)
+    }
+
+    @Test
+    fun mentioningExistingNameUpdatesIt() {
+        val l = voice("Losartana", t(8))
+        val m = voice("Metformina", t(8))
+        val result = parse("a losartana é 1 comprimido", listOf(l, m)).drafts
+        assertEquals(2, result.size)
+        assertEquals("1 comprimido", result[0].dose)
+    }
+
+    @Test
+    fun timesAccumulate() {
+        val l = voice("Losartana", t(8))
+        assertEquals(listOf(t(8), t(20)), parse("e também às 20", listOf(l), l.localId).drafts.single().times)
+    }
+
+    // ── correção (RF16) ──────────────────────────────────────────────────
+
+    @Test
+    fun correctionReplacesNearestTime() {
+        val l = voice("Losartana", t(8), t(20))
+        assertEquals(listOf(t(9), t(20)), parse("na verdade é às 9", listOf(l), l.localId).drafts.single().times)
+    }
+
+    @Test
+    fun onlyReplacesAllTimes() {
+        val l = voice("Losartana", t(8), t(20))
+        assertEquals(listOf(t(9)), parse("só às 9", listOf(l), l.localId).drafts.single().times)
+    }
+
+    @Test
+    fun bothAlsoAddsToAll() {
+        val l = voice("Losartana", t(8))
+        val m = voice("Metformina", t(8))
+        val result = parse("os dois também às 18", listOf(l, m)).drafts
+        result.forEach { assertEquals(listOf(t(8), t(18)), it.times) }
+    }
+
+    @Test
+    fun doseCorrectionOverwrites() {
+        val l = voice("Losartana").copy(dose = "1 comprimido")
+        assertEquals("2 comprimidos", parse("na verdade são 2 comprimidos", listOf(l), l.localId).drafts.single().dose)
+    }
+
+    // ── não entendido (RF15) ───────────────────────────────────────────
+
+    @Test
+    fun nothingUnderstood() {
+        val l = voice("Losartana", t(8))
+        val result = parse("hum não sei", listOf(l), l.localId, Field.DOSE)
+        assertFalse(result.understood)
+        assertEquals(listOf(l), result.drafts)
+    }
+}
