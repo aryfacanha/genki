@@ -118,6 +118,8 @@ class VoiceViewModel(
             SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> MIC_DENIED
             SpeechRecognizer.ERROR_NETWORK, SpeechRecognizer.ERROR_NETWORK_TIMEOUT, SpeechRecognizer.ERROR_SERVER ->
                 "O reconhecimento de voz não está disponível agora. Você pode digitar."
+            // Sem serviço de reconhecimento escolhido no sistema (ex.: GrapheneOS sem Google), visto no Pixel 8a em 27/10.
+            SpeechRecognizer.ERROR_CLIENT -> UNAVAILABLE
             else -> "Não consegui ouvir. Toque no microfone e fale de novo."
         }
         _state.update { it.copy(message = message, partial = "", prompt = prompt(message)) }
@@ -125,7 +127,7 @@ class VoiceViewModel(
 
     fun micDenied() = _state.update { it.copy(message = MIC_DENIED) }
 
-    fun unavailable() = _state.update { it.copy(message = "Este aparelho não tem reconhecimento de voz. Você pode digitar.") }
+    fun unavailable() = _state.update { it.copy(message = UNAVAILABLE) }
 
     /**
      * "Prefiro digitar" (RF18). `true` = abrir o formulário com o rascunho (zero ou um medicamento);
@@ -174,7 +176,8 @@ class VoiceViewModel(
             "cada=${d.everyHours}, trat=${d.treatment}, fim=${d.endDate}, por=${d.durationDays}}"
 
     companion object {
-        private const val MIC_DENIED = "Sem acesso ao microfone. Você pode permitir nas configurações ou digitar."
+        private const val UNAVAILABLE = "Este aparelho não tem reconhecimento de voz configurado. Você pode digitar."
+        private const val MIC_DENIED ="Sem acesso ao microfone. Você pode permitir nas configurações ou digitar."
 
         val Factory = viewModelFactory {
             initializer {
