@@ -258,19 +258,26 @@ object VoiceParser {
 
         // ── regras ───────────────────────────────────────────────────────────
 
+        /** Correção a partir daqui: os dias ditos antes nesta mesma fala também deixam de valer (RV-M3-02). */
+        private fun correct(end: Int): Int {
+            correction = true
+            spokenDays.clear()
+            return end
+        }
+
         private fun cue(i: Int): Int = when {
-            isAny(i, "na") && isAny(i + 1, "verdade") -> { correction = true; i + 2 }
-            isAny(i, "quer") && isAny(i + 1, "dizer") -> { correction = true; i + 2 }
-            isAny(i, "melhor") && isAny(i + 1, "dizendo") -> { correction = true; i + 2 }
-            isAny(i, "corrigindo", "corrige", "errei", "alias") -> { correction = true; i + 1 }
-            isAny(i, "so", "somente", "apenas") -> { replaceAll = true; i + 1 }
+            isAny(i, "na") && isAny(i + 1, "verdade") -> correct(i + 2)
+            isAny(i, "quer") && isAny(i + 1, "dizer") -> correct(i + 2)
+            isAny(i, "melhor") && isAny(i + 1, "dizendo") -> correct(i + 2)
+            isAny(i, "corrigindo", "corrige", "errei", "alias") -> correct(i + 1)
+            isAny(i, "so", "somente", "apenas") -> { replaceAll = true; spokenDays.clear(); i + 1 }
             // "Não sei" é resposta de duração (regra do tratamento).
             isAny(i, "nao") && isAny(i + 1, "sei") -> i
             // "às 8 e às 20, não, às 21": o "não" desfaz o último horário dito.
             isAny(i, "nao") && lastTime != null && (isAny(i + 1, "as", "das", "e") || whole(i + 1) != null) -> {
                 negateLast = true; i + 1
             }
-            isAny(i, "nao") -> { correction = true; i + 1 }
+            isAny(i, "nao") -> correct(i + 1)
             else -> i
         }
 
@@ -398,21 +405,37 @@ object VoiceParser {
             }
             val (day, j) = whole(dateStart) ?: return i
             var next = j
-            val month = when {
-                isAny(j, "de") -> MONTHS.indexOf(norm(j + 1)).takeIf { it >= 0 }?.also { next = j + 2 }
+            var month: Int? = null
+            var year: Int? = null
+            when {
+                isAny(j, "de") && MONTHS.indexOf(norm(j + 1)) >= 0 -> {
+                    month = MONTHS.indexOf(norm(j + 1)) + 1
+                    next = j + 2
+                    if (isAny(next, "de")) whole(next + 1)?.let { (y, k) -> year = y; next = k }
+                }
                 isAny(j, "/") -> {
                     val (m, k) = whole(j + 1) ?: return i
-                    if (m !in 1..12) return i
+                    month = m
                     next = k
-                    // "15/12/2026": o ano é aceito e ignorado (vale a próxima ocorrência da data).
-                    if (isAny(k, "/") && whole(k + 1) != null) next = whole(k + 1)!!.second
-                    m - 1
+                    if (isAny(k, "/")) whole(k + 1)?.let { (y, after) -> year = y; next = after }
                 }
-                else -> null
             }
-            val end = civilDate(day, month) ?: return i
+            // Data impossível ou já passada: a expressão inteira é consumida (os pedaços não viram outro dia)
+            // e nada é preenchido; a tela pergunta de novo (RV-M3C-03, RV-M3D-01).
+            val end = date(day, month, year) ?: return next
             set(TreatmentType.TEMPORARY, end = end)
             return next
+        }
+
+        /** Dia/mês(/ano) dito; sem ano, a próxima ocorrência; com ano, exatamente ele. `null` = impossível ou passado. */
+        private fun date(day: Int, month: Int?, year: Int?): LocalDate? {
+            if (month == null) return civilDate(day, null)
+            if (month !in 1..12) return null
+            if (year == null) return civilDate(day, month - 1)
+            val fullYear = if (year < 100) 2000 + year else year
+            val ym = YearMonth.of(fullYear, month)
+            if (day !in 1..ym.lengthOfMonth()) return null
+            return ym.atDay(day).takeIf { it >= today }
         }
 
         /** Dia [day] (do mês [month], 0 = janeiro) a partir de hoje; sem mês, o próximo dia [day]. */

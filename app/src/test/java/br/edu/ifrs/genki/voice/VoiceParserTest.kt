@@ -382,6 +382,47 @@ class VoiceParserTest {
         assertNull(one("amoxicilina até 15/13").endDate)
     }
 
+    // ── casos da segunda revisão da correção (REVISAO_CORRECAO2_M3_M4_CODEX.md) ──
+
+    @Test
+    fun correctionInsideUtteranceDropsEarlierDays() {
+        // RV-M3-02 (regressão).
+        assertEquals(setOf(FRIDAY), one("losartana segunda e quarta na verdade só sexta").days)
+        assertEquals(setOf(FRIDAY), one("losartana segunda e quarta, não, sexta").days)
+        // Trechos aditivos continuam somando.
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY, SATURDAY), one("losartana segunda, quarta e também sexta e sábado").days)
+        val first = one("losartana segunda e quarta")
+        assertEquals(setOf(SATURDAY, SUNDAY), parse("na verdade só sábado e também domingo", listOf(first), first.localId).drafts.single().days)
+    }
+
+    @Test
+    fun invalidDateIsNotReadAsAnotherDay() {
+        // RV-M3C-03: nem sem contexto nem como resposta da duração ou da data.
+        val d = voice("Amoxicilina", t(8)).copy(dose = "1 cápsula", days = all)
+        for (field in listOf(null, Field.TREATMENT, Field.END_DATE)) {
+            for (text in listOf("até 31/2", "até 15/13", "31/2", "até 31 de fevereiro")) {
+                val result = parse(text, listOf(d), d.localId, field).drafts.single()
+                assertNull("$text ($field)", result.endDate)
+                assertNull("$text ($field)", result.treatment)
+            }
+        }
+    }
+
+    @Test
+    fun spokenYearIsRespected() {
+        // RV-M3D-01: hoje 27/10/2026.
+        assertEquals(LocalDate.of(2027, 12, 15), one("amoxicilina até 15/12/2027").endDate)
+        assertEquals(LocalDate.of(2026, 12, 15), one("amoxicilina até 15/12/26").endDate)
+        assertEquals(LocalDate.of(2027, 1, 10), one("amoxicilina até 10 de janeiro de 2027").endDate)
+        // Data já passada não vira término nem muda de ano sozinha.
+        one("amoxicilina até 15/12/2025").let {
+            assertNull(it.endDate)
+            assertNull(it.treatment)
+        }
+        // Sem ano, continua a próxima ocorrência.
+        assertEquals(LocalDate.of(2027, 1, 1), one("amoxicilina até 1/1").endDate)
+    }
+
     // ── não entendido (RF15) ───────────────────────────────────────────
 
     @Test
