@@ -36,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -158,6 +157,7 @@ class HomeViewModel(
 @Composable
 fun HomeScreen(
     onAdd: () -> Unit,
+    onOpen: (Long) -> Unit,
     onOpenSettings: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 ) {
@@ -231,7 +231,7 @@ fun HomeScreen(
                         Text("Nenhum outro lembrete para hoje.", modifier = Modifier.padding(top = 16.dp))
                     } else {
                         Text(
-                            "Hoje",
+                            "Horários de hoje",
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
                         )
@@ -240,7 +240,7 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             s.today.forEachIndexed { index, occurrence ->
                                 if (index == firstAhead && index > 0) NowMarker(s.minute)
-                                TodayRow(occurrence, past = index < firstAhead)
+                                TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
                             }
                             if (firstAhead == s.today.size) NowMarker(s.minute)
                         }
@@ -501,21 +501,40 @@ private fun PermissionWarning(notificationsAllowed: Boolean, onOpenSettings: () 
     }
 }
 
-/** Horário que já passou fica mais claro; a linha "Agora" diz isso ao TalkBack. */
+/**
+ * Um horário do dia; tocar abre os Detalhes do medicamento. O que já passou fica em fundo cinza, sem borda e com
+ * "Passou" (não diz se foi tomado, DEC-004); cor secundária em vez de transparência, para manter o contraste.
+ */
 @Composable
-private fun TodayRow(occurrence: Occurrence, past: Boolean) {
-    GenkiCard(Modifier.alpha(if (past) 0.6f else 1f)) {
+private fun TodayRow(occurrence: Occurrence, past: Boolean, onOpen: () -> Unit) {
+    val textColor = if (past) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+    val content = @Composable {
         Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.titleLarge)
+            Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.titleLarge, color = textColor)
             Spacer(Modifier.width(16.dp))
-            Column {
-                Text(occurrence.medication.name, style = MaterialTheme.typography.titleMedium)
+            Column(Modifier.weight(1f)) {
+                Text(occurrence.medication.name, style = MaterialTheme.typography.titleMedium, color = textColor)
                 Text(
                     MedicationText.doseLine(occurrence.medication.concentration, occurrence.medication.dose),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            if (past) {
+                Spacer(Modifier.width(8.dp))
+                Text("Passou", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelLarge)
+            }
         }
+    }
+    if (past) {
+        Surface(
+            onClick = onOpen,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            content = content,
+        )
+    } else {
+        GenkiCard(onClick = onOpen, content = content)
     }
 }
 

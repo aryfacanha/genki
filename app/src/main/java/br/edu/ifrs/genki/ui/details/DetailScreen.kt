@@ -83,6 +83,7 @@ class DetailViewModel(private val id: Long, private val repository: MedicationRe
 @Composable
 fun DetailScreen(
     id: Long,
+    backLabel: String,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDeleted: () -> Unit,
@@ -93,7 +94,7 @@ fun DetailScreen(
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize()) {
-        GenkiTopBar("Detalhes do medicamento", onBack = onBack, backLabel = "Voltar para Medicamentos")
+        GenkiTopBar("Detalhes do medicamento", onBack = onBack, backLabel = backLabel)
         val med = medication ?: return@Column
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 16.dp),

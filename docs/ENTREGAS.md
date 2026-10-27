@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: ajustes finos da Hoje (DEC-035) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`2d3b4d9`.
+Realizado e arquivos alterados: `ui/home/HomeScreen.kt`, `ui/navigation/GenkiApp.kt`, `ui/details/DetailScreen.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-035. "Não avisar hoje" estudado e deixado de lado pelo autor.
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (116); emulador (ver Diário). | Não verificado: TalkBack falando, fonte ampliada, A31 (instalado, não conferido).
+Próxima tarefa e bloqueios: teste do autor (Hoje e alarmes no A31); revisão do Codex.
+Links/commits: este commit.
+
 ENTREGA — App Android: Hoje com linha "Agora", próximo dia e aviso de permissões (DEC-034) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`1918620`; MyTherapy no A31 por ADB (navegação sem salvar; cadastro de teste abandonado no passo de estoque).
 Realizado e arquivos alterados: `domain/OccurrenceCalculator.kt`, `ui/MedicationText.kt`, `ui/home/HomeScreen.kt`, `ui/navigation/GenkiApp.kt`, testes; docs.

@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Claude Code (Opus 5.5):** DEC-035 (Hoje): toque no horário abre Detalhes, "Passou" em fundo cinza, título "Horários de hoje". Conferido no emulador; instalado no A31. Autor informou: TalkBack funciona; linha "Agora" e alarmes ainda não testados por ele. Pendente: teste do autor; revisão do Codex de `f79feb9`, `2d3b4d9` e deste commit.
+
 **27/10/2026, Claude Code (Opus 5.5):** comparação com o MyTherapy no A31 (só navegação, nada salvo nele) e DEC-034 na Hoje: linha "Agora" com horários passados mais claros, próximo lembrete de outro dia ("Amanhã") e aviso de permissões desligadas. 116 testes; conferido no A31 (linha "Agora") e no emulador (relógio às 21:00 e notificação revogada, restaurados). Pendente: teste do autor e revisão do Codex.
 
 **27/10/2026, Claude Code (Opus 5.5):** retorno do autor no A31 — "Entendi"/"Adiar" no cartão da Hoje não atualizavam na hora (iam por broadcast); agora agem direto pelo `ReminderScheduler`, mesmo código dos botões da notificação. TalkBack funcionando (autor). Câmera fora de foco por ora. **Confirmado pelo autor no A31.** Pendente: revisão do Codex.

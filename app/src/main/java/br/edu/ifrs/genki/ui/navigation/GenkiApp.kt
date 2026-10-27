@@ -69,7 +69,7 @@ import kotlinx.serialization.Serializable
 @Serializable object HomeRoute
 @Serializable object MedicationsRoute
 @Serializable object SettingsRoute
-@Serializable data class DetailRoute(val id: Long)
+@Serializable data class DetailRoute(val id: Long, val fromHome: Boolean = false)
 @Serializable object AddChoiceRoute
 /** [fromSession] = começa com o rascunho da câmera. */
 @Serializable data class VoiceRoute(val fromSession: Boolean = false)
@@ -194,6 +194,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             composable<HomeRoute> {
                 HomeScreen(
                     onAdd = { navController.navigate(AddChoiceRoute) },
+                    onOpen = { id -> navController.navigate(DetailRoute(id, fromHome = true)) },
                     // Como o toque na aba Ajustes.
                     onOpenSettings = {
                         navController.navigate(SettingsRoute) {
@@ -245,9 +246,11 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             }
             composable<SettingsRoute> { SettingsScreen() }
             composable<DetailRoute> { entry ->
-                val id = entry.toRoute<DetailRoute>().id
+                val route = entry.toRoute<DetailRoute>()
+                val id = route.id
                 DetailScreen(
                     id = id,
+                    backLabel = if (route.fromHome) "Voltar para Hoje" else "Voltar para Medicamentos",
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(EditMedicationRoute(id)) },
                     onDeleted = { navController.popBackStack() },
