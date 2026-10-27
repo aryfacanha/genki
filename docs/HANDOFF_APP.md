@@ -19,7 +19,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 | M1 CRUD | Implementado, compilado e conferido no emulador em 26/10 (cadastro em 3 etapas + revisão, lista, detalhes, edição, exclusão; dados persistem ao reabrir). Decisões #2, #7, #12 aplicadas (DEC-027). Codex revisou em `42a0d16`, sem achados novos na cobertura do relatório. Aceite manual do autor no aparelho pendente | `f2ff130` |
 | M2 Lembretes | Implementado e compilado; fluxo principal conferido pelo Claude Code em 26/10 (DEC-028). **RV-M2-01/02 corrigidos em `a590fa5` e fechados pelo Codex no emulador em 26/10**, sem novos achados na correção. Avisos do último dia/minutos consecutivos e reabertura com novo processo passam; Adiar/Entendi e cancelamento ao desativar conferidos. Retorno de Adiar, ciclo completo de três repetições/deslizar na revisão independente e aceite no aparelho continuam pendentes | `f111670`, `a590fa5`; `revisoes/REVISAO_CORRECAO_M2_CODEX.md` |
 | M2 — melhorias do autor (DEC-029) | Implementado e compilado em 27/10; instalado no Pixel 8a (Android 17) do autor, tela não conferida (aparelho bloqueado). Cartão "Agora"/"Lembrete adiado" na Hoje, relógio sem horário repetido, término não anterior ao início, sem esmaecer. Teste do autor e revisão do Codex pendentes | `1ddd544`, `290b638`, `d592b8a` |
-| M3 Voz | Não iniciado | — |
+| M3 Voz | **Em andamento.** Parte 1 (27/10): `voice/VoiceParser` (regras, sem LLM) com corpus de 28 testes em `VoiceParserTest` (nome, concentração ≠ dose, dose, horários, "de 8 em 8 horas"/"duas vezes ao dia", dias, tratamento, vários medicamentos, contexto da pergunta, correção, não entendido); `MedicationDraft.everyHours`. Falta: escolha Voz/Digitar/Câmera, `RegistrationSession`, tela de voz (`SpeechRecognizer` + TTS + perguntas), revisão de vários rascunhos, "Prefiro digitar", `RECORD_AUDIO`, `GenkiEval` | `4bebc3b` |
 | M4 Câmera | Não iniciado | — |
 
 ## 3. Verificado e não verificado
@@ -115,6 +115,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-27 — Claude Code — M3 parte 1 (`4bebc3b`): `voice/VoiceParser.parse(texto, rascunhos, hoje, target, expecting)` e corpus `VoiceParserTest` (28); `MedicationDraft.everyHours` (zerado pelo validador). Decisões de interpretação registradas no KDoc: "às 8 e 20" = 08:20 (ESPEC §7), "às 8, 14 e 22" = três horários, "dia sim, dia não" e "por um mês" não são interpretados (a tela pergunta), "na verdade" troca o horário mais próximo e "só" troca todos — 76 testes passam — pendente: telas de voz e teste com o reconhecedor real no aparelho.
 
 - 2026-10-27 — Claude Code — melhorias do autor (DEC-029): `NavHost` sem transições (`1ddd544`); `TimeDialog` recusa horário repetido e `DateDialog` com `SelectableDates` a partir do início (`290b638`); `domain/ActiveAlert` + `reminders/AlertStore` (SharedPreferences `genki_alerts`), receptor grava tocando/adiado e apaga no ACK, `ReminderScheduler.cancel` e boot limpam, `respond()` usa o mesmo PendingIntent da notificação; Hoje com cartões "Agora"/"Lembrete adiado" (`d592b8a`). Também commitados os docs da revisão Codex que estavam locais (`bbc650d`) — 48 testes passam; instalado no Pixel 8a, telas não conferidas (bloqueado) — pendente: teste do autor, revisão do Codex, permissão de alarme exato no Pixel 8a.
 
