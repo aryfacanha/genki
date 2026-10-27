@@ -64,12 +64,13 @@ Todos "não salvar". Responda às perguntas que aparecerem com os botões.
 | V30 | "Losartana um comprimido às 8"; numa **segunda fala**, "na verdade é às 9" | 08:00 vira **09:00** |
 | V31 | "Losartana às 8 e às 20, não, às 21" (uma fala só) | 08:00 e **21:00** |
 | V32 | Numa fala só: "Losartana às 8, na verdade às 9" | Só **09:00** (corrigido em 27/10; antes ficava 08:00 e 09:00) |
+| V32b | Numa fala só: "Losartana às 8, na verdade às 9, na verdade às 10" | Só **10:00** (corrigido em 27/10, RV-VZ-02) |
 | V33 | "Losartana"; na pergunta da dose, diga "o nome é atenolol" | Nome passa a Atenolol; continua perguntando a dose. Nenhum medicamento novo |
 | V34 | "Losartana"; na pergunta dos horários, diga "umas 9 da noite" | 21:00 para Losartana; **não** cria medicamento novo |
 | V35 | Numa pergunta, toque **Algo errado? Corrigir por voz** e diga "atenolol" | "Confira a correção" com o nome trocado. Toque **Desfazer** → volta igual, na mesma pergunta. Repita e toque **Manter correção** → nome trocado, segue as perguntas |
 | V36 | Faça V02 até a revisão; toque **Corrigir por voz** e diga "na verdade a metformina é às 9" | "Confira a correção": Metformina 09:00 e 20:00; Losartana intacta. **Manter correção** |
 | V36b | Igual, dizendo "na verdade a metformina é às 9, não às 8" | Metformina 09:00 e 20:00 (corrigido em 27/10; antes ficava 08:00 e 20:00) |
-| V37 | Na revisão, toque **Corrigir** num medicamento, mude a dose no formulário e conclua | Volta à revisão com a dose nova; o outro intacto |
+| V37 | Na revisão, toque **Corrigir** num medicamento, mude a dose no formulário e conclua | A dose aparece separada: **Comprimido ✓** e a quantidade ("1"). Mude a quantidade para 2 (ou toque outra unidade) e conclua: volta à revisão com "2 comprimidos"; o outro intacto |
 | V38 | Na revisão com dois, toque **Remover da lista** num deles | Revisão fica com um só. Remover o último volta ao início da voz |
 
 ## D. O que o Genki não entende (deve perguntar, não chutar)
@@ -90,15 +91,18 @@ Todos "não salvar". Responda às perguntas que aparecerem com os botões.
 |---|---|---|
 | V44 | Toque no microfone e fique em silêncio | "Não ouvi nada. Toque no microfone e fale de novo." |
 | V45 | Toque no microfone e, enquanto ouve, toque de novo (**Parar de ouvir**) | Para sem travar; dá para falar de novo |
-| V46 | Com **um** medicamento falado, toque **Prefiro digitar** | Abre o formulário (etapa 1) com o que foi dito preenchido |
+| V46 | Com **um** medicamento falado, toque **Prefiro digitar** | Abre "Novo medicamento" (etapa 1) com o que foi dito; dose em **Comprimido ✓** + quantidade. No topo há **Cancelar**: ele e a seta de voltar perguntam **"Descartar cadastro?"** mesmo sem você mexer em nada |
+| V46b | Fale "Xarope uma colher de sopa às 8" e toque **Prefiro digitar** | A dose abre em **Outro ✓**, com "1 colher de sopa" no texto livre |
 | V47 | Com **dois** falados, toque **Prefiro digitar** | Vai para a revisão, com "Corrigir" em cada um |
 | V48 | No meio das perguntas, toque em voltar | "Descartar cadastro?" → **Continuar cadastro** mantém tudo; **Descartar** sai e nada aparece em Medicamentos |
 | V49 | Configurações → Apps → Genki → Permissões → Microfone: **Negar**; abra a voz e toque no microfone | "Sem acesso ao microfone. Você pode permitir nas configurações ou digitar." Digitar funciona. **Depois devolva a permissão** |
 | V50 | Desligue a internet (modo avião) e fale V01 | Se o pacote offline de português estiver instalado, funciona; senão aparece erro do reconhecedor e dá para digitar. Anote qual aconteceu |
-| V51 | Com o volume de mídia baixo e depois alto, abra a voz | As perguntas são lidas em voz alta em português (com volume alto) |
+| V51 | Com o volume de mídia baixo (menos de um terço) abra a voz; depois aumente | Com volume baixo aparece **"O volume está baixo. Aumente para ouvir as perguntas."**; ao aumentar, o aviso some em até 1 s e as perguntas são lidas em português |
 
 ## Histórico
 
 - 27/10: primeira rodada do autor no A31. Corrigidos V32 (correção na mesma fala), V36b ("às 9, não às 8"),
   V42 ("primeiro de outubro"), V43/V43b ("oi tudo", "numa segunda fala" viravam remédio) e V40/V40b (teclado
   cobria o campo; dias escolhidos por toque). V50 ok. Demais pedidos do autor registrados em `docs/ESTADO.md`.
+- 27/10 (depois): DEC-036 (dose com unidade, Cancelar no cadastro, aviso de volume) mudou V37, V46, V46b e V51;
+  RV-VZ-01/02 do Codex acrescentaram V32b e a confirmação do Cancelar/voltar em V46.
