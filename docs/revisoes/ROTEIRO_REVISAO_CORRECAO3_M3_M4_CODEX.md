@@ -7,7 +7,7 @@ do dito sem passar pela revisão. Objetivo do autor: encerrar a revisão do inte
 
 ## 1. Alvo
 
-`main`, commits **`fac6a0a`** (só `voice/VoiceParser.kt` e `VoiceParserTest`) e **`8191c25`** (abaixo). Achados de `REVISAO_CORRECAO2_M3_M4_CODEX.md`:
+`main`, commits **`fac6a0a`** (só `voice/VoiceParser.kt` e `VoiceParserTest`), **`8191c25`**, **`d7b8c63`**, **`24888ec`** e **`caafe29`** (abaixo). Achados de `REVISAO_CORRECAO2_M3_M4_CODEX.md`:
 
 | ID | Correção | Onde olhar |
 | --- | --- | --- |
@@ -27,9 +27,23 @@ do dito sem passar pela revisão. Objetivo do autor: encerrar a revisão do inte
 Telas mudaram neste commit: conferir no emulador com o texto injetado do `ROTEIRO_REVISAO_M3_M4_CODEX.md` §4.2.
 Aparelho de teste definido: Samsung A31 (Android 12); o ADB pelo cabo atual cai — não depender dele.
 
+**Acrescentado em 27/10 (a pedido do autor): `d7b8c63`, `24888ec`, `caafe29`** (DEC-032, DEC-033, retorno do autor no A31):
+
+| Commit | Mudança | Onde olhar | O que conferir |
+| --- | --- | --- | --- |
+| `d7b8c63` | Toque na notificação reaproveita a tela (`SINGLE_TOP`) e vai para a Hoje, exceto no meio de cadastro/edição | `MainActivity` (`onNewIntent`, `openHomeRequests`), `Notifications`, `GenkiApp` | Toque com o app fechado, aberto na Hoje, em Detalhes e no meio do formulário/voz (não pode perder o que foi preenchido) |
+| `d7b8c63` | "como" e afins como palavras comuns (reconhecedor ouviu "como" por "tomo") | `VoiceParser.COMMON` | "como" não vira nome; frases com "como" no sentido comum |
+| `d7b8c63` | **Config:** `-Pgenki.abi=<abi>` no `app/build.gradle.kts` (`ndk.abiFilters`) | `defaultConfig` | Sem a propriedade o APK não muda (emulador x86_64 continua funcionando) |
+| `24888ec` | "Algo errado? Corrigir por voz" durante as perguntas: fala seguinte com `expecting = NAME` corrige o medicamento da pergunta (nome dito troca o nome), com "Manter correção"/"Desfazer"; "o nome é X" em qualquer fala | `VoiceViewModel.beginCorrection/cancelCorrection/interpret`, `VoiceParser.name` (`renameTarget`, `renameNext`), `VoiceScreen.Asking`, `handleBack` | Correção com dado e sem nome ("na verdade é às 9"); "o nome é" com dois medicamentos; voltar em cada estado (corrigindo, correção pendente); erro de reconhecimento durante a correção |
+| `24888ec` | Botões de resposta (`QuickAnswer`) em dose, dias, horários e duração; "Digitar a resposta" com foco automático | `VoiceQuestions`, `VoiceScreen.Asking` | Todo botão é entendido (há teste); resposta digitada vazia; digitar durante a correção |
+| `24888ec` | Hoje: vários avisos do mesmo tipo num cartão só, com "Entendi"/"Adiar" para todos e "Ver um por um"/"Ver juntos" | `HomeScreen.AlertGroup`, `HomeViewModel.acknowledgeAll/snoozeAll` | Tocando + adiado ao mesmo tempo (dois cartões); "Adiar" em grupo; 1 aviso continua com o cartão antigo |
+| `caafe29` | "Próximo lembrete" só depois do minuto atual (o do minuto já tocou) | `ActiveAlert.nextOccurrence` | Antes do minuto aparece; depois de "Entendi" no mesmo minuto não reaparece; alarme inexato atrasado (efeito aceito: durante o minuto o cartão já mostra o seguinte) |
+
+Com o relógio (handoff §5 passo 8) e o texto injetado, as telas novas podem ser vistas no emulador; o Claude Code conferiu os fluxos (handoff §3, linhas de 27/10).
+
 ## 2. Execução
 
-1. `git pull`; `.\gradlew.bat assembleDebug test` — esperado: **106 testes, 0 falhas**.
+1. `git pull`; `.\gradlew.bat assembleDebug test` — esperado: **110 testes, 0 falhas**.
 2. Reprodutores locais em `build/` (`TemporaryReviewTest`, `TemporaryCorrectionReviewTest`, `TemporarySecondCorrectionTest`,
    com `VoiceParserBaseline.kt` e `VoiceParserBeforeSecond.kt`): copiar para `app/src/test/java/br/edu/ifrs/genki/voice/`,
    rodar `--tests "br.edu.ifrs.genki.voice.Temporary*"`, **remover**. O Claude Code obteve 36/36 (7 + 14 + 15).
