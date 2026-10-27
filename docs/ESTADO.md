@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Claude Code (Opus 5.5):** os três S2 da segunda revisão da correção (`REVISAO_CORRECAO2_M3_M4_CODEX.md`) corrigidos em `fac6a0a`; 104 testes; reprodutores do Codex 36/36. Revisão de fechamento do interpretador pelo Codex pendente (escopo fechado); depois, teste no celular de teste.
+
 **Segunda revisão dos reparos em 27/10/2026, Codex (GPT-6), `main`/`cb98e3c`, alvo `69711ce`: RV-M3-04 e RV-M3C-01/02 fechados; RV-M3-02 e RV-M3C-03 parcialmente corrigidos, ainda abertos (S2).** Novo S2 RV-M3D-01: ano explícito ignorado. **Três S2 abertos; build e 101 testes existentes passam.** Os 21 reprodutores anteriores passam; 15 testes vizinhos (11 passam/4 falham) confirmam dias da mesma fala mantidos após “só”, data inválida reinterpretada na pergunta de duração e ano trocado. Revisão restrita à lógica; telas opcionais não repetidas, nenhum acesso/mudança no emulador. Arquivos temporários removidos, `app/src` sem alterações. Relatório: `docs/revisoes/REVISAO_CORRECAO2_M3_M4_CODEX.md`. Próximo: corrigir/revisar os três casos; voz real, TTS, embalagens e aceite no aparelho continuam pendentes. Registros anteriores abaixo preservam o histórico.
 
 **27/10/2026, Claude Code (Opus 5.5):** os cinco S2 abertos na revisão da correção (`REVISAO_CORRECAO_M3_M4_CODEX.md`: RV-M3-02/04 restantes, RV-M3C-01/02/03) corrigidos em `69711ce`; 101 testes; reprodutores do Codex 20/20. Nova revisão do Codex pendente.
