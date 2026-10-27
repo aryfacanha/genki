@@ -442,6 +442,33 @@ class VoiceParserTest {
     }
 
     @Test
+    fun correctingNameDuringQuestions() {
+        // "Algo errado? Corrigir por voz" durante as perguntas: nome dito troca o do medicamento da pergunta.
+        val wrong = one("como metoprolol").copy(name = "Como metoprolol")
+        parse("metoprolol", listOf(wrong), wrong.localId, Field.NAME).drafts.single().let {
+            assertEquals("Metoprolol", it.name)
+        }
+        parse("na verdade é metoprolol um comprimido", listOf(wrong), wrong.localId, Field.NAME).drafts.single().let {
+            assertEquals("Metoprolol", it.name)
+            assertEquals("1 comprimido", it.dose)
+        }
+        // "O nome é …" em fala livre também troca.
+        assertEquals("Metoprolol", parse("o nome é metoprolol", listOf(wrong), wrong.localId).drafts.single().name)
+    }
+
+    @Test
+    fun quickAnswersAreUnderstood() {
+        // Cada botão de resposta passa pelo interpretador e preenche o campo da pergunta.
+        val base = voice("Losartana").copy(dose = "1 comprimido", days = all, times = listOf(t(8)))
+        for (field in listOf(Field.DOSE, Field.DAYS, Field.TIMES, Field.TREATMENT)) {
+            val question = VoiceQuestions.ask(base, field)
+            question.quickAnswers.forEach { answer ->
+                assertTrue("${field}: ${answer.label}", parse(answer.text, listOf(base), base.localId, field).understood)
+            }
+        }
+    }
+
+    @Test
     fun answerToQuestionNeverCreatesMedication() {
         // Respostas direcionadas: durante uma pergunta, tudo vale para o medicamento perguntado.
         val l = voice("Losartana")

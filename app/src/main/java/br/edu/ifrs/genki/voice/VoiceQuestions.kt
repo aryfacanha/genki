@@ -5,14 +5,17 @@ import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import java.time.LocalDate
 
+/** Botão de resposta: [label] na tela, [text] vai para o [VoiceParser] como se fosse falado. */
+data class QuickAnswer(val label: String, val text: String = label)
+
 /** Pergunta da voz sobre um campo que falta (RF15), escrita na tela e falada (RF19). */
 data class VoiceQuestion(
     val draftId: String,
     val field: Field,
     val text: String,
     val example: String,
-    /** Respostas por toque; cada uma vai para o [VoiceParser] como se fosse falada. */
-    val quickAnswers: List<String> = emptyList(),
+    /** Respostas por toque (voz principal, toque para agilizar; pedido do autor, 27/10). */
+    val quickAnswers: List<QuickAnswer> = emptyList(),
 )
 
 object VoiceQuestions {
@@ -30,19 +33,29 @@ object VoiceQuestions {
         val name = draft.name ?: "o medicamento"
         return when (field) {
             Field.NAME -> VoiceQuestion(draft.localId, field, "Qual é o nome do medicamento?", "Exemplo: losartana")
-            Field.DOSE -> VoiceQuestion(draft.localId, field, "Quanto você toma de $name por vez?", "Exemplo: 1 comprimido")
+            Field.DOSE -> VoiceQuestion(
+                draft.localId, field, "Quanto você toma de $name por vez?", "Exemplo: 1 comprimido",
+                quickAnswers = listOf("1 comprimido", "2 comprimidos", "meio comprimido", "1 cápsula", "10 gotas").map(::QuickAnswer),
+            )
             Field.DAYS -> VoiceQuestion(
                 draft.localId, field, "Em quais dias você toma $name?", "Exemplo: segunda e quarta",
-                quickAnswers = listOf("Todos os dias"),
+                quickAnswers = listOf("Todos os dias", "Segunda a sexta", "Fim de semana").map(::QuickAnswer),
             )
             Field.TIMES -> if (draft.everyHours != null) {
-                VoiceQuestion(draft.localId, field, "Qual é o primeiro horário de $name no dia?", "Exemplo: às 8")
+                VoiceQuestion(
+                    draft.localId, field, "Qual é o primeiro horário de $name no dia?", "Exemplo: às 8",
+                    quickAnswers = listOf(6, 7, 8).map { QuickAnswer("%02d:00".format(it), "às $it") },
+                )
             } else {
-                VoiceQuestion(draft.localId, field, "Em quais horários você toma $name?", "Exemplo: às 8 e às 20")
+                VoiceQuestion(
+                    draft.localId, field, "Em quais horários você toma $name?", "Exemplo: às 8 e às 20",
+                    quickAnswers = listOf(8, 12, 20).map { QuickAnswer("%02d:00".format(it), "às $it") } +
+                        QuickAnswer("08:00 e 20:00", "às 8 e às 20"),
+                )
             }
             Field.TREATMENT -> VoiceQuestion(
                 draft.localId, field, "Por quanto tempo você vai usar $name?", "Exemplo: por 7 dias",
-                quickAnswers = listOf("Uso contínuo", "Ainda não sei"),
+                quickAnswers = listOf("Uso contínuo", "Ainda não sei", "Por 7 dias", "Por 10 dias").map(::QuickAnswer),
             )
             Field.END_DATE -> VoiceQuestion(draft.localId, field, "Até que dia você vai usar $name?", "Exemplo: até dia 15")
         }

@@ -20,6 +20,8 @@ import java.time.YearMonth
  * - Sem nome na fala, vale para [target] (o rascunho da pergunta na tela), senão para o último (RF13).
  * - Respondendo a uma pergunta ([expecting] que não seja o nome), tudo vale para [target]: nomes ditos são ignorados e
  *   não criam medicamento novo (pedido do autor, 27/10, após teste no Samsung A31: "umas 9 da noite" virava remédio).
+ * - Com [expecting] = nome e [target] (pergunta do nome ou "Corrigir por voz" durante as perguntas), o nome dito
+ *   **troca** o nome do medicamento da pergunta; "o nome é X" faz o mesmo em qualquer fala.
  * - Horários se somam; "na verdade" troca o horário mais próximo; "só" troca todos (RF16).
  */
 object VoiceParser {
@@ -132,6 +134,8 @@ object VoiceParser {
         /** Último horário dito nesta fala e para quem; "não, às 21" troca esse horário (RV-M3-04). */
         var lastTime: Pair<List<String>, LocalTime>? = null
         var negateLast = false
+        /** "o nome é X": o próximo nome troca o do medicamento atual. */
+        var renameNext = false
         var understood = false
         /** Horários seguidos na fala ("às 8, 14 e 22"): número solto continua a lista. */
         var timeRun = 0
@@ -278,6 +282,7 @@ object VoiceParser {
             isAny(i, "melhor") && isAny(i + 1, "dizendo") -> correct(i + 2)
             isAny(i, "corrigindo", "corrige", "errei", "alias") -> correct(i + 1)
             isAny(i, "so", "somente", "apenas") -> { replaceAll = true; spokenDays.clear(); i + 1 }
+            isAny(i, "nome") -> { renameNext = true; i + 1 }
             // "Não sei" é resposta de duração (regra do tratamento).
             isAny(i, "nao") && isAny(i + 1, "sei") -> i
             // "às 8 e às 20, não, às 21": o "não" desfaz o último horário dito.
@@ -610,7 +615,15 @@ object VoiceParser {
                 return j
             }
             val existing = drafts.firstOrNull { it.name != null && sameName(it.name, spoken) }
+            val renameTarget = (expecting == Field.NAME && target != null && drafts.any { it.localId == target }) ||
+                (renameNext && group.size == 1)
             when {
+                renameTarget -> {
+                    val id = if (expecting == Field.NAME && target != null) target else group.single()
+                    drafts.replaceAll { if (it.localId == id) it.copy(name = capitalize(spoken)) else it }
+                    group = mutableListOf(id)
+                    renameNext = false
+                }
                 existing != null -> {
                     group = mutableListOf(existing.localId)
                     groupHasInfo = false

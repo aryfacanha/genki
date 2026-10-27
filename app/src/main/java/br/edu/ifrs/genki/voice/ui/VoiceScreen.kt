@@ -21,6 +21,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
@@ -38,6 +43,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
@@ -126,6 +133,7 @@ fun VoiceScreen(
             state.listening -> input.stop()
             // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
             state.correctionPending -> viewModel.undoCorrection()
+            state.correcting -> viewModel.cancelCorrection()
             state.drafts.isNotEmpty() -> askDiscard = true
             else -> { viewModel.discard(); onClose() }
         }
@@ -139,7 +147,13 @@ fun VoiceScreen(
         )
         when (state.phase) {
             VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
-            VoicePhase.ASKING -> Asking(state, onMic, preferTyping, onQuickAnswer = { speaker.stop(); viewModel.tapped(it) })
+            VoicePhase.ASKING -> Asking(
+                state, onMic, preferTyping,
+                onAnswer = { speaker.stop(); viewModel.tapped(it) },
+                onCorrect = { viewModel.beginCorrection(); onMic() },
+                onKeep = viewModel::keepCorrection,
+                onUndo = viewModel::undoCorrection,
+            )
             VoicePhase.REVIEW -> Review(
                 state, onMic, onFix, viewModel::remove, viewModel::save,
                 onKeep = viewModel::keepCorrection, onUndo = viewModel::undoCorrection,
@@ -196,10 +210,20 @@ private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: ()
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ColumnScope.Asking(state: VoiceUiState, onMic: () -> Unit, onType: () -> Unit, onQuickAnswer: (String) -> Unit) {
+private fun ColumnScope.Asking(
+    state: VoiceUiState,
+    onMic: () -> Unit,
+    onType: () -> Unit,
+    onAnswer: (String) -> Unit,
+    onCorrect: () -> Unit,
+    onKeep: () -> Unit,
+    onUndo: () -> Unit,
+) {
     val question = state.question ?: return
+    var typing by rememberSaveable { mutableStateOf(false) }
+    var typed by rememberSaveable { mutableStateOf("") }
     Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
-        SectionTitle("Entendi até agora")
+        SectionTitle(if (state.correctionPending) "Confira a correção" else "Entendi até agora")
         Spacer(Modifier.height(8.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             state.drafts.forEach { SoFarCard(it, current = it.localId == question.draftId) }
@@ -211,33 +235,101 @@ private fun ColumnScope.Asking(state: VoiceUiState, onMic: () -> Unit, onType: (
                 modifier = Modifier.padding(top = 12.dp),
             )
         }
-        Spacer(Modifier.height(24.dp))
-        Text(
-            question.text,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-        )
-        Text(question.example, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
-        if (question.quickAnswers.isNotEmpty()) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 12.dp),
-            ) {
-                question.quickAnswers.forEach { answer ->
-                    AssistChip(
-                        onClick = { onQuickAnswer(answer) },
-                        label = { Text(answer) },
-                        modifier = Modifier.heightIn(min = 48.dp),
-                    )
+        when {
+            state.correctionPending -> Text(
+                "Se estiver certo, toque em Manter correção. Para voltar como estava, toque em Desfazer.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 12.dp).semantics { liveRegion = LiveRegionMode.Polite },
+            )
+            state.correcting -> {
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    "Diga a correção",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                )
+                Text(
+                    "Exemplo: o nome é metoprolol; ou: na verdade é às 9",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
+            else -> {
+                // Correção fora da pergunta: o nome entendido errado, por exemplo (pedido do autor, 27/10).
+                TextButton(onClick = onCorrect, modifier = Modifier.heightIn(min = 48.dp)) {
+                    Text("Algo errado? Corrigir por voz", textDecoration = TextDecoration.Underline)
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    question.text,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                )
+                Text(question.example, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+                if (question.quickAnswers.isNotEmpty()) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(top = 12.dp),
+                    ) {
+                        question.quickAnswers.forEach { answer ->
+                            AssistChip(
+                                onClick = { onAnswer(answer.text) },
+                                label = { Text(answer.label) },
+                                modifier = Modifier.heightIn(min = 48.dp),
+                            )
+                        }
+                    }
                 }
             }
         }
+        // Resposta digitada (como no protótipo): datas e o que não está nos botões; passa pelo mesmo interpretador.
+        if (!state.correctionPending) {
+            if (typing) {
+                // Abre já com o teclado no campo.
+                val focus = remember { FocusRequester() }
+                LaunchedEffect(Unit) { focus.requestFocus() }
+                OutlinedTextField(
+                    value = typed,
+                    onValueChange = { typed = it },
+                    label = { Text(if (state.correcting) "Digite a correção" else "Digite a resposta") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                    keyboardActions = KeyboardActions(onSend = {
+                        if (typed.isNotBlank()) { onAnswer(typed); typed = ""; typing = false }
+                    }),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp).focusRequester(focus),
+                )
+                PrimaryButton(
+                    "Enviar",
+                    onClick = { if (typed.isNotBlank()) { onAnswer(typed); typed = ""; typing = false } },
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            } else {
+                TextButton(onClick = { typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
+                    Text("Digitar a resposta", textDecoration = TextDecoration.Underline)
+                }
+            }
+        }
+    }
+    if (state.correctionPending) {
+        BottomActions {
+            PrimaryButton("Manter correção", onClick = onKeep)
+            SecondaryButton("Desfazer", onClick = onUndo)
+        }
+        return
     }
     BottomActions {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MicButton(state.listening, size = 64, onClick = onMic)
             Spacer(Modifier.size(16.dp))
-            Column(Modifier.weight(1f)) { Listening(state, idle = "Toque no microfone para responder", center = false) }
+            Column(Modifier.weight(1f)) {
+                Listening(
+                    state,
+                    idle = if (state.correcting) "Toque no microfone e diga a correção" else "Toque no microfone para responder",
+                    center = false,
+                )
+            }
         }
         TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
     }

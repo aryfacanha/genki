@@ -9,6 +9,7 @@ import br.edu.ifrs.genki.GenkiEval
 import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.DraftValidator
+import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.RegistrationSession
 import br.edu.ifrs.genki.ui.genkiContainer
@@ -39,8 +40,10 @@ data class VoiceUiState(
     val message: String? = null,
     val prompt: Prompt? = null,
     val savedMessage: String? = null,
-    /** "Corrigir por voz" na revisão já aplicado, esperando "Manter correção" ou "Desfazer". */
+    /** "Corrigir por voz" (revisão ou perguntas) já aplicado, esperando "Manter correção" ou "Desfazer". */
     val correctionPending: Boolean = false,
+    /** "Algo errado? Corrigir por voz" tocado durante as perguntas: a próxima fala corrige o medicamento da pergunta. */
+    val correcting: Boolean = false,
 )
 
 /**
@@ -83,8 +86,16 @@ class VoiceViewModel(
 
     fun partial(text: String) = _state.update { it.copy(partial = text) }
 
-    /** Resposta por toque: mesmo interpretador, sem "Você disse". */
+    /** Resposta por toque ou digitada: mesmo interpretador, sem "Você disse". */
     fun tapped(answer: String) = interpret(answer, spoken = false)
+
+    /** "Algo errado? Corrigir por voz" durante as perguntas (pedido do autor, 27/10). */
+    fun beginCorrection() {
+        GenkiEval.log("voz_correcao_iniciada", "pergunta" to _state.value.question?.field)
+        _state.update { it.copy(correcting = true, message = null, prompt = prompt("Diga a correção.")) }
+    }
+
+    fun cancelCorrection() = _state.update { it.copy(correcting = false, message = null) }
 
     /** Resultado do reconhecedor. */
     fun heard(text: String, latencyMs: Long?) {
@@ -95,20 +106,22 @@ class VoiceViewModel(
     private fun interpret(text: String, spoken: Boolean) {
         val s = _state.value
         val heard = if (spoken) text else null
-        val result = VoiceParser.parse(text, session.drafts.value, today(), s.question?.draftId, s.question?.field)
+        // Corrigindo durante as perguntas: tudo vale para o medicamento da pergunta e um nome dito troca o nome dele.
+        val expecting = if (s.correcting) Field.NAME else s.question?.field
+        val result = VoiceParser.parse(text, session.drafts.value, today(), s.question?.draftId, expecting)
         GenkiEval.log("voz_interpretado", "entendeu" to result.understood, "rascunhos" to result.drafts.map(::summary))
         if (!result.understood) {
             val retry = "Não entendi. " + (s.question?.let { "${it.text} ${it.example}." } ?: "Diga o nome do medicamento e como você toma.")
             _state.update { it.copy(heard = heard, partial = "", message = "Não entendi. Tente de novo.", prompt = prompt(retry)) }
             return
         }
-        if (s.phase == VoicePhase.REVIEW) {
-            // Correção na revisão: mostra o resultado e pede confirmação antes de seguir.
+        if (s.phase == VoicePhase.REVIEW || s.correcting) {
+            // Correção (revisão ou perguntas): mostra o resultado e pede confirmação antes de seguir.
             if (beforeCorrection == null) beforeCorrection = session.drafts.value
             session.set(result.drafts)
             _state.update {
                 it.copy(
-                    heard = heard, partial = "", message = null, correctionPending = true,
+                    heard = heard, partial = "", message = null, correctionPending = true, correcting = false,
                     prompt = prompt("Confira a correção. Toque em Manter correção ou em Desfazer."),
                 )
             }
@@ -127,12 +140,12 @@ class VoiceViewModel(
         advance()
     }
 
-    /** "Desfazer" ou voltar durante a correção: a revisão volta como estava. */
+    /** "Desfazer" ou voltar durante a correção: a tela volta como estava (revisão ou a mesma pergunta). */
     fun undoCorrection() {
         GenkiEval.log("voz_correcao_desfeita")
         beforeCorrection?.let(session::set)
         beforeCorrection = null
-        _state.update { it.copy(correctionPending = false, heard = null, phase = VoicePhase.REVIEW) }
+        _state.update { it.copy(correctionPending = false, correcting = false, heard = null) }
     }
 
     /** Próxima pergunta ou a revisão. */

@@ -28,6 +28,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
@@ -118,6 +122,11 @@ class HomeViewModel(
 
     fun snooze(timeId: Long) = scheduler.respond(ReminderAction.SNOOZE, timeId)
 
+    /** Cartão único com vários avisos: "Entendi"/"Adiar" valem para todos os do cartão. */
+    fun acknowledgeAll(timeIds: List<Long>) = timeIds.forEach(::acknowledge)
+
+    fun snoozeAll(timeIds: List<Long>) = timeIds.forEach(::snooze)
+
     companion object {
         val Factory = viewModelFactory {
             initializer {
@@ -161,13 +170,16 @@ fun HomeScreen(
                     modifier = Modifier.padding(top = 16.dp),
                 )
                 else -> {
-                    s.alerts.forEach { (alert, medication) ->
-                        AlertCard(
-                            alert = alert,
-                            medication = medication,
+                    // Vários avisos ao mesmo tempo: um cartão só, com "Ver um por um" (pedido do autor, 27/10).
+                    val (ringing, snoozed) = s.alerts.partition { it.first.snoozedUntil == null }
+                    listOf(ringing, snoozed).filter { it.isNotEmpty() }.forEach { group ->
+                        AlertGroup(
+                            group = group,
                             intervalMinutes = s.intervalMinutes,
-                            onAcknowledge = { viewModel.acknowledge(alert.timeId) },
-                            onSnooze = { viewModel.snooze(alert.timeId) },
+                            onAcknowledge = viewModel::acknowledge,
+                            onSnooze = viewModel::snooze,
+                            onAcknowledgeAll = viewModel::acknowledgeAll,
+                            onSnoozeAll = viewModel::snoozeAll,
                         )
                     }
                     if (s.alerts.isEmpty()) {
@@ -221,6 +233,87 @@ private fun NextCard(next: Occurrence?) {
             Text(MedicationText.time(next.time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
             MedicationLine(next.medication)
+        }
+    }
+}
+
+/**
+ * Um aviso: cartão próprio. Vários do mesmo tipo (tocando ou adiados): um cartão com a lista e botões para todos;
+ * "Ver um por um" mostra os cartões individuais.
+ */
+@Composable
+private fun AlertGroup(
+    group: List<Pair<ActiveAlert, Medication>>,
+    intervalMinutes: Int,
+    onAcknowledge: (Long) -> Unit,
+    onSnooze: (Long) -> Unit,
+    onAcknowledgeAll: (List<Long>) -> Unit,
+    onSnoozeAll: (List<Long>) -> Unit,
+) {
+    var oneByOne by rememberSaveable { mutableStateOf(false) }
+    if (group.size == 1 || oneByOne) {
+        group.forEach { (alert, medication) ->
+            AlertCard(
+                alert = alert,
+                medication = medication,
+                intervalMinutes = intervalMinutes,
+                onAcknowledge = { onAcknowledge(alert.timeId) },
+                onSnooze = { onSnooze(alert.timeId) },
+            )
+        }
+        if (group.size > 1) {
+            TextButton(onClick = { oneByOne = false }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Ver juntos") }
+        }
+        return
+    }
+    val ids = group.map { it.first.timeId }
+    val snoozed = group.first().first.snoozedUntil != null
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+    ) {
+        Column(Modifier.padding(20.dp)) {
+            Text(if (snoozed) "Lembretes adiados" else "Agora", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+            Text("${group.size} medicamentos", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(8.dp))
+            group.forEach { (alert, medication) ->
+                val time = alert.snoozedUntil?.atZone(ZoneId.systemDefault())?.toLocalTime()
+                Text(
+                    "${MedicationText.time(alert.time)} · ${medication.name}",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+                Text(
+                    MedicationText.doseLine(medication.concentration, medication.dose) +
+                        (time?.let { " · novo alerta às ${MedicationText.time(it)}" } ?: ""),
+                    color = GenkiCardSubtext,
+                )
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = { onAcknowledgeAll(ids) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            ) { Text("Entendi", fontWeight = FontWeight.SemiBold) }
+            if (!snoozed) {
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = { onSnoozeAll(ids) },
+                    border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = GenkiCardSubtext),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                ) { Text("Adiar $intervalMinutes min") }
+            }
+            TextButton(
+                onClick = { oneByOne = true },
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
+                modifier = Modifier.align(Alignment.CenterHorizontally).heightIn(min = 48.dp),
+            ) { Text("Ver um por um") }
         }
     }
 }
