@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: segunda correção da revisão M3/M4 — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `09ce68b`; `docs/revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`; `VoiceParserTest` (+5). Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (correção de todos os achados pedida pelo autor, 27/10).
+Sugestões pendentes: nenhuma.
+Verificado: 101 testes; reprodutores locais do Codex 20/20. | Não verificado: telas (não mudaram), voz real, aparelho. | Limitações: handoff §3.
+Próxima tarefa e bloqueios: nova revisão do Codex de `69711ce`; celular de teste.
+Links/commits: `69711ce`.
+
 ENTREGA — Revisão dos reparos de M3/M4 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`d62ab73`, `git pull` atualizado; alvo `1ed689b..7726739`; roteiro da correção, handoff/ESPEC/decisões e originais da proposta/planilha reabertos no Drive.
 Realizado e arquivos alterados: relatório `docs/revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`, nota histórica no relatório anterior, atualização de `HANDOFF_APP` §2/3/7/Diário, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Seis achados antigos fechados; RV-M3-02/04 parcialmente corrigidos, ainda abertos; três novos S2 (regressão de nome/horário e erros preexistentes de fração/data). Cinco S2 abertos. Nenhuma correção de código/configuração feita pelo revisor; ajustes de teste removidos; original reinstalado; alterações locais do autor preservadas.
