@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**Revisão em 27/10/2026, Codex (GPT-6), `main`/`0ea0da7`, alvos `fa75715` e `0ea0da7`: dois S2 abertos.** RV-VZ-01 novo: Cancelar após Prefiro digitar sai sem confirmação mesmo com dados da voz; RV-VZ-02 preexistente/residual: outra correção na mesma fala mantém horário já substituído. Comparação com `a6d9b5a` distingue a preexistência; correção simples passa. Build/125 testes existentes passam após limpeza; nove probes, seis passam/três falham no mesmo problema de horários. No emulador, dias por toque, teclado, dose e volume baixo/alto conferidos; temporários retirados, APK original reinstalado, volume restaurado e medicamentos/aviso pendente preservados. A31 não operado. Relatório: `docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`. Próximo: reparos pontuais e conferência; instalação/aceite no A31 pendentes. Registros abaixo são históricos.
+
 **27/10/2026, Codex (GPT-6), 18:22:** nova reinstalação solicitada no A31, partida `main`/`a6d9b5a` (mudança desde `0b65a53` apenas documental; mesmo código do app). Build arm64-v8a e 116 testes executados passam; `adb install -r` retorna Success, atualização às 18:22:25; app aberto, primeira instalação/banco preservados e sem crash AndroidRuntime observado no processo atual. Sem alteração de código, dados, permissões ou relógio. Aceite completo permanece pendente.
 
 **27/10/2026, Codex (GPT-6):** versão revisada `0b65a53` reinstalada no Samsung A31 a pedido do autor, às 17:43, com `adb install -r` (APK arm64-v8a, 26,9 MiB). Build e 116 testes passam (testes `UP-TO-DATE`); abertura da Hoje conferida por captura/árvore, com dados cadastrados e aviso pendente preservados. Sem crash AndroidRuntime observado no processo aberto. Sem alteração de código/configuração, permissões, relógio ou dados pelo assistente; documentação de instalação atualizada. Aceite manual completo no A31 continua pendente.
@@ -67,7 +69,7 @@ Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — M2 (lembretes) implemen
 | Metodologia de avaliação | **Definida** (DEC-018); pontos dependentes do orientador em aberto | Drive, Avaliação/ |
 | Código Android | **M0–M4 implementados; M3 revisado na cobertura técnica executada em 27/10.** RV-M3-02 (resto)/E-01 fechados na conferência de `0cef3f1`; texto do grupo corrigido para “N lembretes”. Sem achado novo no escopo restrito. Aceite completo no A31 pendente | `app/`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
 | Handoff do app | `docs/HANDOFF_APP.md` (DEC-026): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
-| Testes | **116 testes existentes, zero falhas/erros**, build/testes passam (`UP-TO-DATE`) na conferência das correções da Hoje em `0b65a53`. Conferência anterior de M3: reprodutores **43/43**, XMLs em `build/conference_TEST-*.xml`; não repetidos nesta rodada. `app/src` sem mudanças | `app/src/test/`, `docs/revisoes/REVISAO_CORRECAO_HOJE_CODEX.md`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
+| Testes | **125 testes existentes executados, zero falhas/erros**, após retirar os temporários da revisão de `0ea0da7`. Nove probes adicionais: seis passam/três falham (variantes de RV-VZ-02); comparação com parser anterior confirma preexistência. Reprodutores históricos 43/43 não repetidos nesta rodada. `app/src` sem mudanças | `app/src/test/`, `docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md` |
 | Monografia pós-proposta | Não está no Drive | — |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
@@ -96,6 +98,7 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 
 | Pendência | Responsável | Bloqueia |
 | --- | --- | --- |
+| RV-VZ-01 e RV-VZ-02 (S2): confirmar cancelamento do rascunho vindo da voz e não manter horário substituído quando há outra correção na mesma fala | Claude Code corrige; Codex confere | Fechamento dos ajustes de voz/DEC-036 |
 | RV-M2-01/02 e RV-M2B-01 fechados; virada do dia de RV-M2B-01 reproduzida independentemente no emulador em 27/10, com cartão e Entendi após o último dia. Aceite completo no aparelho ainda pendente | Autor | Aceite completo de M2 no aparelho |
 | ~~Modelo e versão Android do celular de teste~~ — definido em 27/10: Samsung Galaxy A31, Android 12 | Autor | Verificação no aparelho a partir do M1; o M0 pode usar emulador |
 | Decidir se o export do protótipo vai também para o Drive. **Divergências de dados/regras listadas em 26/10 (`docs/DIVERGENCIAS_PROTOTIPO.md`, 17 itens; até decidir, vale a ESPEC — DEC-022)**; #2, #7, #12 (DEC-027) e #13, #14, #16 (DEC-028) decididas. Itens que eram para o M2: "Visto às"/"Adiado para" na Hoje (#13), escolha do adiamento (#14), seletor de intervalo em Ajustes (#16) | Autor | Telas do M1 em diante |
@@ -110,6 +113,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App:** RV-HOJE-01/02/03 fechados na conferência de `0b65a53` (`docs/revisoes/REVISAO_CORRECAO_HOJE_CODEX.md`); nenhum reparo pendente desses achados na cobertura executada. M3 permanece revisado na cobertura técnica anterior, sem reabrir o interpretador. Continuar aceite completo no A31 e verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, dentro das decisões aceitas.
+- **App:** reparar e conferir pontualmente RV-VZ-01/02 (`docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`), sem reabrir um ciclo amplo do interpretador. RV-HOJE-01/02/03 permanecem fechados. Depois, instalação dos ajustes e aceite completo no A31, com as verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, dentro das decisões aceitas.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.

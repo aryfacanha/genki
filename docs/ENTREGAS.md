@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão dos ajustes de voz e DEC-036 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`0ea0da7`; pull já atualizado; alvos `fa75715` e `0ea0da7`; originais consultados no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`, estado/handoff (§2/3/7 e Diário)/entregas/registro. **Dois S2 abertos**: Cancelar recebido sem confirmação (novo) e horário antigo após outra correção na mesma fala (preexistente/residual). Sem correção permanente de código.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; DEC-036 já registrada como aceita.
+Sugestões pendentes: reparos pontuais de RV-VZ-01/02.
+Verificado: build/125 testes existentes executados passam após limpeza; nove probes, seis passam/três falham (mesmo achado), comparação ao parser anterior; emulador com fala injetada: unidade/quantidade, Cancelar manual, dias por toque, teclado/Enviar, Cancelar recebido e aviso de volume 2/15 → 7/15. | Não verificado: A31, voz/TTS reais/audíveis, TalkBack, fonte ampliada nas unidades, edição completa, câmera e ciclo de lembretes. | Limitações: casos de horários já falhavam antes, não são regressão nova atribuída ao commit.
+Próxima tarefa e bloqueios: corrigir/conferir RV-VZ-01/02 e continuar instalação/aceite no A31.
+Links/commits: `docs/revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md`; ajustes/testes temporários retirados, original reinstalado só no emulador, volume restaurado, originais/aviso pendente preservados; sem commit/push.
+
 ENTREGA — Reinstalação do app no A31 — 27/10/2026, 18:22 — Codex (GPT-6)
 Observação de tela: Hoje exibiu “Você ainda não possui lembretes.” Não houve contagem de registros antes; banco/WAL mantiveram tamanho/data anteriores e nenhuma escrita de medicamentos foi realizada pelo assistente.
 Partida: `main`/`a6d9b5a`; pull já atualizado; diferença desde `0b65a53` apenas em documentação, código do app inalterado.
