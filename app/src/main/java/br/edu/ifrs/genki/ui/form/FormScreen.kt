@@ -106,6 +106,10 @@ fun MedicationFormScreen(
         }
     }
     BackHandler(onBack = handleBack)
+    // Cadastro novo: "Cancelar" no topo sai de qualquer etapa, perguntando antes se algo foi preenchido (V46, 27/10).
+    val handleCancel: (() -> Unit)? = if (viewModel.isEdit || viewModel.isFix) null else {
+        { if (state.changed) askDiscard = true else onClose() }
+    }
 
     Column(Modifier.fillMaxSize().imePadding()) {
         if (!state.loaded) return@Column
@@ -116,16 +120,17 @@ fun MedicationFormScreen(
                 onBack = handleBack,
                 onEditSection = viewModel::editSection,
                 onConfirm = viewModel::save,
+                onCancel = handleCancel,
             )
         } else {
-            FormContent(state, viewModel, onBack = handleBack)
+            FormContent(state, viewModel, onBack = handleBack, onCancel = handleCancel)
         }
     }
 
     if (askDiscard) {
         AlertDialog(
             onDismissRequest = { askDiscard = false },
-            title = { Text("Descartar alterações?") },
+            title = { Text(if (handleCancel != null) "Descartar cadastro?" else "Descartar alterações?") },
             text = { Text("As informações que você não salvou serão perdidas.") },
             confirmButton = { TextButton(onClick = { askDiscard = false }) { Text("Continuar editando") } },
             dismissButton = {
@@ -138,7 +143,12 @@ fun MedicationFormScreen(
 }
 
 @Composable
-private fun ColumnScope.FormContent(state: FormUiState, viewModel: FormViewModel, onBack: () -> Unit) {
+private fun ColumnScope.FormContent(
+    state: FormUiState,
+    viewModel: FormViewModel,
+    onBack: () -> Unit,
+    onCancel: (() -> Unit)?,
+) {
     val isEdit = viewModel.isEdit
     val steps = !isEdit
     val step = state.step
@@ -155,7 +165,7 @@ private fun ColumnScope.FormContent(state: FormUiState, viewModel: FormViewModel
         isEdit -> "Editar medicamento"
         else -> "Novo medicamento"
     }
-    GenkiTopBar(title, onBack = onBack, backLabel = backLabel)
+    GenkiTopBar(title, onBack = onBack, backLabel = backLabel, actionLabel = "Cancelar", onAction = onCancel)
 
     // Cada etapa nova começa do topo.
     key(step) {
@@ -252,14 +262,71 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
     )
     Spacer(Modifier.height(16.dp))
     // Quanto toma por vez: campo separado da concentração.
-    TextInput(
-        label = "Quanto você toma por vez",
-        example = "Exemplo: 1 comprimido",
-        value = fields.dose,
+    DoseInput(
+        dose = fields.dose,
         error = state.errors[Field.DOSE]?.let { MedicationText.error(Field.DOSE, it) },
         onChange = { value -> viewModel.edit(Field.DOSE) { it.copy(dose = value) } },
-        last = true,
     )
+}
+
+/**
+ * Quanto toma: unidade para tocar e a quantidade (pedido do autor, 27/10, comparando com o MyTherapy); "Outro" é o
+ * texto livre de antes. O resultado é o mesmo texto ("2 comprimidos") que o formulário já gravava.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) {
+    val initial = remember { DoseUnit.parse(dose) }
+    var unit by rememberSaveable { mutableStateOf(initial?.second) }
+    var amount by rememberSaveable { mutableStateOf(initial?.takeIf { it.second != DoseUnit.OTHER }?.first.orEmpty()) }
+    Column {
+        Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+            DoseUnit.CHOICES.forEach { choice ->
+                val selected = unit == choice
+                FilterChip(
+                    selected = selected,
+                    onClick = {
+                        // Para "Outro", leva o que já estava montado para o texto livre.
+                        if (choice != DoseUnit.OTHER) onChange(choice.dose(amount))
+                        else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
+                        unit = choice
+                    },
+                    label = { Text(if (choice == DoseUnit.ML) "ml" else choice.singular.replaceFirstChar { it.uppercase() }) },
+                    leadingIcon = if (selected) {
+                        { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                    } else null,
+                    modifier = Modifier.heightIn(min = 48.dp),
+                )
+            }
+        }
+        when (val chosen = unit) {
+            null -> Unit
+            DoseUnit.OTHER -> OutlinedTextField(
+                value = dose,
+                onValueChange = onChange,
+                label = { Text("Como você toma") },
+                supportingText = { Text("Exemplo: 1 colher de sopa", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                isError = error != null,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            else -> OutlinedTextField(
+                value = amount,
+                onValueChange = { amount = it; onChange(chosen.dose(it)) },
+                label = { Text("Quantos ${if (chosen == DoseUnit.ML) "ml" else chosen.plural}") },
+                supportingText = { Text("Exemplo: 1, 2 ou meio", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                isError = error != null,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+        }
+        FieldError(error)
+    }
 }
 
 @Composable
@@ -269,7 +336,6 @@ private fun TextInput(
     value: String,
     error: String?,
     onChange: (String) -> Unit,
-    last: Boolean = false,
 ) {
     Column {
         OutlinedTextField(
@@ -282,7 +348,7 @@ private fun TextInput(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
-                imeAction = if (last) ImeAction.Done else ImeAction.Next,
+                imeAction = ImeAction.Next,
             ),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
@@ -568,8 +634,9 @@ private fun ColumnScope.ReviewContent(
     onBack: () -> Unit,
     onEditSection: (Int) -> Unit,
     onConfirm: () -> Unit,
+    onCancel: (() -> Unit)?,
 ) {
-    GenkiTopBar("Confira antes de salvar", onBack = onBack, backLabel = "Voltar e corrigir")
+    GenkiTopBar("Confira antes de salvar", onBack = onBack, backLabel = "Voltar e corrigir", actionLabel = "Cancelar", onAction = onCancel)
     Column(
         Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp),
     ) {

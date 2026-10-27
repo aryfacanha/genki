@@ -52,6 +52,15 @@ Verificado: build/116 testes passam (`UP-TO-DATE`); emulador API 35, Detalhes/vo
 Próxima tarefa e bloqueios: Claude Code reparar os três achados; Codex conferir; continuar aceite no A31.
 Links/commits: `docs/revisoes/REVISAO_HOJE_CODEX.md`; sem commit/push.
 
+ENTREGA — App Android: dose com unidade, Cancelar no cadastro e aviso de volume (DEC-036) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: commit anterior desta sessão (ajustes da voz).
+Realizado e arquivos alterados: `ui/form/DoseUnit.kt` (novo), `ui/form/FormScreen.kt`, `ui/components/Components.kt`, `voice/ui/VoiceScreen.kt`, `DoseUnitTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-036.
+Sugestões pendentes: lista de nomes de medicamentos (não adotada; limitação para a monografia).
+Verificado: `assembleDebug test` (125); emulador (ver Diário). | Não verificado: A31 (desconectado); TalkBack; fonte ampliada.
+Próxima tarefa e bloqueios: instalar e testar no A31; revisão do Codex.
+Links/commits: este commit.
+
 ENTREGA — App Android: ajustes da voz após o roteiro de teste do autor — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`a6d9b5a`; retorno do autor com `docs/ROTEIRO_TESTE_VOZ.md` no A31.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/ui/VoiceScreen.kt`, `VoiceParserTest.kt`; docs (roteiro atualizado).

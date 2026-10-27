@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,8 +85,15 @@ val MicIcon: ImageVector = ImageVector.Builder(
     fill = SolidColor(Color.Black),
 ).build()
 
+/** Barra do topo; [actionLabel]/[onAction]: botão de texto à direita ("Cancelar" no cadastro, pedido do autor, 27/10). */
 @Composable
-fun GenkiTopBar(title: String, onBack: (() -> Unit)? = null, backLabel: String = "Voltar") {
+fun GenkiTopBar(
+    title: String,
+    onBack: (() -> Unit)? = null,
+    backLabel: String = "Voltar",
+    actionLabel: String? = null,
+    onAction: (() -> Unit)? = null,
+) {
     Column {
         Row(
             Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(start = if (onBack != null) 4.dp else 20.dp, end = 16.dp),
@@ -97,7 +105,14 @@ fun GenkiTopBar(title: String, onBack: (() -> Unit)? = null, backLabel: String =
                 }
                 Spacer(Modifier.width(4.dp))
             }
-            Text(title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.semantics { heading() })
+            Text(
+                title,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.weight(1f).semantics { heading() },
+            )
+            if (actionLabel != null && onAction != null) {
+                TextButton(onClick = onAction, modifier = Modifier.heightIn(min = 48.dp)) { Text(actionLabel) }
+            }
         }
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     }

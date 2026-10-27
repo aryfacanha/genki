@@ -2,9 +2,11 @@ package br.edu.ifrs.genki.voice.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -79,6 +81,7 @@ import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.Speaker
+import kotlinx.coroutines.delay
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -149,12 +152,31 @@ fun VoiceScreen(
     }
     BackHandler(onBack = handleBack)
 
+    // A leitura em voz alta segue o volume de mídia do Android; abaixo de 30 %, avisa (teste do autor no A31, 27/10).
+    val audio = remember { context.getSystemService(AudioManager::class.java) }
+    var lowVolume by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            val max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+            lowVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC) * 10 < max * 3
+            delay(1_000)
+        }
+    }
+
     // O teclado empurra a tela, sem cobrir o campo da resposta digitada (teste do autor no A31, 27/10).
     Column(Modifier.fillMaxSize().imePadding()) {
         GenkiTopBar(
             if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
             onBack = handleBack,
         )
+        if (lowVolume) {
+            Text(
+                "O volume está baixo. Aumente para ouvir as perguntas.",
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer)
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+            )
+        }
         when (state.phase) {
             VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
             VoicePhase.ASKING -> Asking(
