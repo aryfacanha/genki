@@ -86,14 +86,14 @@ import java.time.ZoneOffset
 
 /**
  * Cadastro manual em três etapas + revisão (`DigitarMedicamento.tsx` com `steps`, `ConfirmarMedicamento.tsx`)
- * e edição em página única (`EditarMedicamento.tsx`). [editId] nulo = cadastro novo.
+ * e edição em página única (`EditarMedicamento.tsx`); também corrige um rascunho da voz ([FormMode]).
  */
 @Composable
 fun MedicationFormScreen(
-    editId: Long?,
+    mode: FormMode,
     onClose: () -> Unit,
     onSaved: (String) -> Unit,
-    viewModel: FormViewModel = viewModel(factory = FormViewModel.factory(editId)),
+    viewModel: FormViewModel = viewModel(factory = FormViewModel.factory(mode)),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var askDiscard by rememberSaveable { mutableStateOf(false) }
@@ -142,13 +142,20 @@ private fun ColumnScope.FormContent(state: FormUiState, viewModel: FormViewModel
     val isEdit = viewModel.isEdit
     val steps = !isEdit
     val step = state.step
+    val isFix = viewModel.isFix
     val backLabel = when {
+        isFix -> "Voltar para a revisão"
         isEdit -> "Cancelar edição"
         state.fromReview -> "Voltar para a revisão"
         step > 0 -> "Voltar para a etapa anterior"
         else -> "Voltar"
     }
-    GenkiTopBar(if (isEdit) "Editar medicamento" else "Novo medicamento", onBack = onBack, backLabel = backLabel)
+    val title = when {
+        isFix -> "Corrigir medicamento"
+        isEdit -> "Editar medicamento"
+        else -> "Novo medicamento"
+    }
+    GenkiTopBar(title, onBack = onBack, backLabel = backLabel)
 
     // Cada etapa nova começa do topo.
     key(step) {
@@ -192,6 +199,7 @@ private fun ColumnScope.FormContent(state: FormUiState, viewModel: FormViewModel
     }
 
     val continueLabel = when {
+        isFix -> "Concluir correção"
         isEdit -> "Salvar alterações"
         state.fromReview -> "Concluir alteração"
         step == STEP_FIELDS.lastIndex -> "Continuar para revisão"

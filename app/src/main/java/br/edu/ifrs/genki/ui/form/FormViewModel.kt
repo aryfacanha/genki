@@ -12,6 +12,7 @@ import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.Problem
+import br.edu.ifrs.genki.domain.RegistrationSession
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.domain.toDraft
 import br.edu.ifrs.genki.ui.genkiContainer
@@ -53,16 +54,21 @@ data class FormFields(
     )
 
     companion object {
-        /** Marcar os 7 dias reabre como "Todos os dias" (divergência #1, sem efeito nos lembretes). */
-        fun from(medication: Medication): FormFields {
-            val draft = medication.toDraft()
-            val everyDay = medication.days.size == 7
+        fun from(medication: Medication): FormFields = from(medication.toDraft())
+
+        /**
+         * Marcar os 7 dias reabre como "Todos os dias" (divergência #1, sem efeito nos lembretes).
+         * Rascunho da voz sem dias abre como o cadastro manual, em "Todos os dias", e o usuário confere na revisão.
+         */
+        fun from(draft: MedicationDraft): FormFields {
+            val days = draft.days.orEmpty()
+            val everyDay = days.isEmpty() || days.size == 7
             return FormFields(
                 name = draft.name.orEmpty(),
                 concentration = draft.concentration.orEmpty(),
                 dose = draft.dose.orEmpty(),
                 daysMode = if (everyDay) DaysMode.ALL else DaysMode.SPECIFIC,
-                specificDays = if (everyDay) emptySet() else medication.days,
+                specificDays = if (everyDay) emptySet() else days,
                 times = draft.times,
                 treatment = draft.treatment,
                 startDate = draft.startDate,
@@ -95,26 +101,48 @@ val STEP_FIELDS: List<Set<Field>> = listOf(
     setOf(Field.TREATMENT, Field.END_DATE),
 )
 
-/** Cadastro manual (RF01, RF03–RF05, RF07, RF08) com revisão (RF17) e edição (RF02). */
+/** O que o formulário está fazendo. */
+sealed interface FormMode {
+    /** Cadastro em etapas; [fromSession] = começa com o rascunho da voz ("Prefiro digitar", RF18). */
+    data class New(val fromSession: Boolean = false) : FormMode
+    data class Edit(val id: Long) : FormMode
+    /** "Corrigir" na revisão da voz: página única que devolve o rascunho para a sessão, sem gravar. */
+    data class FixDraft(val localId: String) : FormMode
+}
+
+/** Cadastro manual (RF01, RF03–RF05, RF07, RF08) com revisão (RF17), edição (RF02) e correção por toque (RF18). */
 class FormViewModel(
-    private val editId: Long?,
+    private val mode: FormMode,
     private val repository: MedicationRepository,
+    private val session: RegistrationSession,
     private val today: () -> LocalDate = { LocalDate.now() },
 ) : ViewModel() {
+
+    private val editId = (mode as? FormMode.Edit)?.id
+    private val sessionDraft: MedicationDraft? = when (mode) {
+        is FormMode.FixDraft -> session.get(mode.localId)
+        is FormMode.New -> if (mode.fromSession) session.drafts.value.firstOrNull() else null
+        is FormMode.Edit -> null
+    }
 
     private val _state = MutableStateFlow(FormUiState(loaded = editId == null))
     val state: StateFlow<FormUiState> = _state.asStateFlow()
 
-    val isEdit: Boolean get() = editId != null
+    /** Página única (edição e correção), sem etapas. */
+    val isEdit: Boolean get() = mode !is FormMode.New
+    val isFix: Boolean get() = mode is FormMode.FixDraft
 
     private var baseline = FormFields()
     private var beforeSectionEdit: FormFields? = null
     private var saving = false
 
     init {
-        if (editId == null) {
-            GenkiEval.log("cadastro_iniciado", "fonte" to DraftSource.MANUAL)
-        } else {
+        if (sessionDraft != null) {
+            baseline = FormFields.from(withEndDate(sessionDraft))
+            _state.update { it.copy(fields = baseline) }
+        }
+        if (mode == FormMode.New()) GenkiEval.log("cadastro_iniciado", "fonte" to DraftSource.MANUAL)
+        if (editId != null) {
             viewModelScope.launch {
                 val medication = repository.observe(editId).first() ?: return@launch
                 baseline = FormFields.from(medication)
@@ -131,7 +159,20 @@ class FormViewModel(
         }
     }
 
-    private fun validate() = DraftValidator.normalizeAndValidate(_state.value.fields.toDraft(editId), today())
+    /** "Por 7 dias" da voz vira data de término, que é o que o formulário mostra (DEC-003). */
+    private fun withEndDate(draft: MedicationDraft): MedicationDraft {
+        val days = draft.durationDays ?: return draft
+        val start = draft.startDate ?: today()
+        return draft.copy(startDate = start, endDate = start.plusDays(days - 1L), durationDays = null)
+    }
+
+    /** O rascunho da sessão mantém `localId` e origem (voz), para a revisão e o `GenkiEval`. */
+    private fun currentDraft(): MedicationDraft {
+        val draft = _state.value.fields.toDraft(editId)
+        return sessionDraft?.let { draft.copy(localId = it.localId, source = it.source) } ?: draft
+    }
+
+    private fun validate() = DraftValidator.normalizeAndValidate(currentDraft(), today())
 
     /** Data mostrada no campo "Data de início" quando ainda não foi escolhida. */
     fun startDateOrToday(): LocalDate = _state.value.fields.startDate ?: today()
@@ -200,11 +241,18 @@ class FormViewModel(
             return
         }
         val valid = result as DraftValidator.Result.Valid
+        if (mode is FormMode.FixDraft) {
+            session.replace(valid.draft)
+            GenkiEval.log("rascunho_corrigido", "fonte" to valid.draft.source)
+            _state.update { it.copy(savedMessage = "") }
+            return
+        }
         saving = true
         viewModelScope.launch {
             val message = if (editId == null) {
                 val id = repository.insert(valid)
-                GenkiEval.log("medicamento_salvo", "fonte" to DraftSource.MANUAL, "id" to id)
+                GenkiEval.log("medicamento_salvo", "fonte" to valid.draft.source, "id" to id)
+                session.clear()
                 "Medicamento adicionado"
             } else {
                 repository.update(editId, valid)
@@ -218,8 +266,11 @@ class FormViewModel(
     private fun stepOf(field: Field) = STEP_FIELDS.indexOfFirst { field in it }
 
     companion object {
-        fun factory(editId: Long?) = viewModelFactory {
-            initializer { FormViewModel(editId, genkiContainer().medicationRepository) }
+        fun factory(mode: FormMode) = viewModelFactory {
+            initializer {
+                val container = genkiContainer()
+                FormViewModel(mode, container.medicationRepository, container.registrationSession)
+            }
         }
     }
 }

@@ -52,12 +52,15 @@ import androidx.navigation.toRoute
 import br.edu.ifrs.genki.R
 import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.ui.components.PillsIcon
+import br.edu.ifrs.genki.ui.add.AddChoiceScreen
 import br.edu.ifrs.genki.ui.details.DetailScreen
+import br.edu.ifrs.genki.ui.form.FormMode
 import br.edu.ifrs.genki.ui.form.MedicationFormScreen
 import br.edu.ifrs.genki.ui.home.HomeScreen
 import br.edu.ifrs.genki.ui.medications.MedicationsScreen
 import br.edu.ifrs.genki.ui.settings.SettingsScreen
 import br.edu.ifrs.genki.ui.theme.GenkiNavInactive
+import br.edu.ifrs.genki.voice.ui.VoiceScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -65,8 +68,13 @@ import kotlinx.serialization.Serializable
 @Serializable object MedicationsRoute
 @Serializable object SettingsRoute
 @Serializable data class DetailRoute(val id: Long)
-@Serializable object AddMedicationRoute
+@Serializable object AddChoiceRoute
+@Serializable object VoiceRoute
+/** [fromSession] = formulário começa com o rascunho da voz ("Prefiro digitar"). */
+@Serializable data class AddMedicationRoute(val fromSession: Boolean = false)
 @Serializable data class EditMedicationRoute(val id: Long)
+/** "Corrigir" um rascunho na revisão da voz. */
+@Serializable data class FixDraftRoute(val localId: String)
 
 private enum class TopLevelTab(val route: Any, @param:StringRes val label: Int, val icon: ImageVector) {
     Home(HomeRoute, R.string.tab_home, Icons.Filled.Home),
@@ -90,6 +98,14 @@ fun GenkiApp() {
     val context = LocalContext.current
     var explainNotifications by remember { mutableStateOf(false) }
     val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    // Depois de cadastrar (formulário ou voz): aviso, volta e, sem permissão, explica as notificações.
+    val onAdded: (String) -> Unit = { message ->
+        showMessage(message)
+        navController.popBackStack()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.canNotify(context)) {
+            explainNotifications = true
+        }
+    }
     // Barra inferior só nas três abas; detalhes e formulários ocupam a tela inteira.
     val onTopLevel = TopLevelTab.entries.any { tab -> currentDestination?.hasRoute(tab.route::class) == true }
 
@@ -157,11 +173,34 @@ fun GenkiApp() {
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None },
         ) {
-            composable<HomeRoute> { HomeScreen(onAdd = { navController.navigate(AddMedicationRoute) }) }
+            composable<HomeRoute> { HomeScreen(onAdd = { navController.navigate(AddChoiceRoute) }) }
             composable<MedicationsRoute> {
                 MedicationsScreen(
                     onOpen = { id -> navController.navigate(DetailRoute(id)) },
-                    onAdd = { navController.navigate(AddMedicationRoute) },
+                    onAdd = { navController.navigate(AddChoiceRoute) },
+                )
+            }
+            // A escolha sai da pilha: voltar do formulário ou da voz leva à aba de onde veio.
+            composable<AddChoiceRoute> {
+                AddChoiceScreen(
+                    onBack = { navController.popBackStack() },
+                    onVoice = { navController.navigate(VoiceRoute) { popUpTo<AddChoiceRoute> { inclusive = true } } },
+                    onType = { navController.navigate(AddMedicationRoute()) { popUpTo<AddChoiceRoute> { inclusive = true } } },
+                )
+            }
+            composable<VoiceRoute> {
+                VoiceScreen(
+                    onClose = { navController.popBackStack() },
+                    onType = { navController.navigate(AddMedicationRoute(fromSession = true)) { popUpTo<VoiceRoute> { inclusive = true } } },
+                    onFix = { localId -> navController.navigate(FixDraftRoute(localId)) },
+                    onSaved = onAdded,
+                )
+            }
+            composable<FixDraftRoute> { entry ->
+                MedicationFormScreen(
+                    mode = FormMode.FixDraft(entry.toRoute<FixDraftRoute>().localId),
+                    onClose = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() },
                 )
             }
             composable<SettingsRoute> { SettingsScreen() }
@@ -175,22 +214,16 @@ fun GenkiApp() {
                     showMessage = showMessage,
                 )
             }
-            composable<AddMedicationRoute> {
+            composable<AddMedicationRoute> { entry ->
                 MedicationFormScreen(
-                    editId = null,
+                    mode = FormMode.New(fromSession = entry.toRoute<AddMedicationRoute>().fromSession),
                     onClose = { navController.popBackStack() },
-                    onSaved = { message ->
-                        showMessage(message)
-                        navController.popBackStack()
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.canNotify(context)) {
-                            explainNotifications = true
-                        }
-                    },
+                    onSaved = onAdded,
                 )
             }
             composable<EditMedicationRoute> { entry ->
                 MedicationFormScreen(
-                    editId = entry.toRoute<EditMedicationRoute>().id,
+                    mode = FormMode.Edit(entry.toRoute<EditMedicationRoute>().id),
                     onClose = { navController.popBackStack() },
                     onSaved = { message -> showMessage(message); navController.popBackStack() },
                 )
