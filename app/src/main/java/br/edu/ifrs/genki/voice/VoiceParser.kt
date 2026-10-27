@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.voice
 
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.Field
+import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import java.text.Normalizer
@@ -33,7 +34,7 @@ object VoiceParser {
 
     private class Token(val text: String, val norm: String)
 
-    private val TOKEN = Regex("""\d{1,2}[:h]\d{2}\b|\d+(?:[.,]\d+)?|\p{L}+(?:-\p{L}+)*""")
+    private val TOKEN = Regex("""\d{1,2}[:h]\d{2}\b|\d+(?:[.,]\d+)?|\p{L}\d{1,3}\b|\p{L}+(?:-\p{L}+)*|/""")
     private val CLOCK = Regex("""(\d{1,2})[:h](\d{2})""")
 
     private fun tokenize(text: String) = TOKEN.findAll(text).map { Token(it.value, normalize(it.value)) }.toList()
@@ -109,6 +110,7 @@ object VoiceParser {
     ) {
         val drafts = input.toMutableList()
         val before = input.associate { it.localId to it.times }
+        val beforeDays = input.associate { it.localId to it.days }
         val newTimes = linkedMapOf<String, MutableList<LocalTime>>()
         var group = mutableListOf<String>()
         var groupHasInfo = false
@@ -116,6 +118,9 @@ object VoiceParser {
         var lastNameEnd = -1
         var correction = false
         var replaceAll = false
+        /** Último horário dito nesta fala e para quem; "não, às 21" troca esse horário (RV-M3-04). */
+        var lastTime: Pair<List<String>, LocalTime>? = null
+        var negateLast = false
         var understood = false
         /** Horários seguidos na fala ("às 8, 14 e 22"): número solto continua a lista. */
         var timeRun = 0
@@ -173,7 +178,13 @@ object VoiceParser {
 
         private fun addTime(time: LocalTime) {
             apply { it }
+            val negated = lastTime
+            if (negateLast && negated != null) {
+                negated.first.forEach { id -> newTimes[id]?.remove(negated.second) }
+                negateLast = false
+            }
             group.forEach { newTimes.getOrPut(it) { mutableListOf() } += time }
+            lastTime = group.toList() to time
         }
 
         private fun finish() {
@@ -196,11 +207,7 @@ object VoiceParser {
                 when {
                     draft.times.isEmpty() -> draft
                     draft.times.size >= perDay -> draft.copy(everyHours = null)
-                    else -> {
-                        val first = draft.times.min()
-                        val generated = (0 until perDay).map { first.plusHours(it.toLong() * every) }
-                        draft.copy(times = generated.distinct().sorted(), everyHours = null)
-                    }
+                    else -> draft.copy(times = Frequency.fill(draft.times.min(), every), everyHours = null)
                 }
             }
         }
@@ -250,6 +257,13 @@ object VoiceParser {
             isAny(i, "melhor") && isAny(i + 1, "dizendo") -> { correction = true; i + 2 }
             isAny(i, "corrigindo", "corrige", "errei", "alias") -> { correction = true; i + 1 }
             isAny(i, "so", "somente", "apenas") -> { replaceAll = true; i + 1 }
+            // "Não sei" é resposta de duração (regra do tratamento).
+            isAny(i, "nao") && isAny(i + 1, "sei") -> i
+            // "às 8 e às 20, não, às 21": o "não" desfaz o último horário dito.
+            isAny(i, "nao") && lastTime != null && (isAny(i + 1, "as", "das", "e") || whole(i + 1) != null) -> {
+                negateLast = true; i + 1
+            }
+            isAny(i, "nao") -> { correction = true; i + 1 }
             else -> i
         }
 
@@ -295,12 +309,25 @@ object VoiceParser {
             return end
         }
 
-        /** "50 mg", "500 miligramas", "20mg". Concentração nunca vira dose. */
+        /**
+         * "50 mg", "500 miligramas", "20mg"; composta "250 mg por 5 ml", "250 mg/5 ml", "500 mg por ml" (RV-M3-01).
+         * Concentração nunca vira dose: o volume da composição não é quanto a pessoa toma.
+         */
         private fun strength(i: Int): Int {
             val (value, j) = number(i) ?: return i
             val unit = STRENGTH_UNITS[norm(j)] ?: return i
-            apply { it.copy(concentration = "${format(value)} $unit") }
-            return j + 1
+            var text = "${format(value)} $unit"
+            var end = j + 1
+            if (isAny(end, "por", "/")) {
+                val volume = number(end + 1)
+                val volumeUnit = if (volume != null) volume.second else end + 1
+                if (isAny(volumeUnit, "ml", "mililitro", "mililitros")) {
+                    text += "/" + (volume?.let { "${format(it.first)} " } ?: "") + "ml"
+                    end = volumeUnit + 1
+                }
+            }
+            apply { it.copy(concentration = text) }
+            return end
         }
 
         /** "1 comprimido", "meio comprimido", "10 gotas", "uma cápsula", "1 comprimido e meio". */
@@ -383,7 +410,14 @@ object VoiceParser {
 
         /** "Todo dia", "de segunda a sexta", "segunda e quarta", "fim de semana", "dias úteis". */
         private fun days(i: Int): Int {
-            fun set(days: Set<DayOfWeek>, end: Int): Int { apply { it.copy(days = days) }; return end }
+            fun set(days: Set<DayOfWeek>, end: Int, additive: Boolean = false): Int {
+                apply { draft ->
+                    val previous = beforeDays[draft.localId]
+                    val add = additive && !correction && !replaceAll && previous != null && previous != ALL_DAYS
+                    draft.copy(days = if (add) previous.orEmpty() + days else days)
+                }
+                return end
+            }
             when {
                 isAny(i, "todo", "todos", "toda", "todas") && isAny(i + 1, "dia", "dias") -> return set(ALL_DAYS, i + 2)
                 isAny(i, "todo", "todos") && isAny(i + 1, "o", "os") && isAny(i + 2, "dia", "dias") -> return set(ALL_DAYS, i + 3)
@@ -399,9 +433,9 @@ object VoiceParser {
                 val from = day(i + 1) ?: return i
                 if (!isAny(i + 2, "a", "ate")) return i
                 val to = day(i + 3) ?: return i
-                return set(range(from, to), i + 4)
+                return set(range(from, to), i + 4, additive = true)
             }
-            if (isAny(i + 1, "a", "ate")) day(i + 2)?.let { to -> return set(range(first, to), i + 3) }
+            if (isAny(i + 1, "a", "ate")) day(i + 2)?.let { to -> return set(range(first, to), i + 3, additive = true) }
             val found = mutableSetOf(first)
             var j = i + 1
             while (j < t.size) {
@@ -413,7 +447,7 @@ object VoiceParser {
                 }
                 j++
             }
-            return set(found, j)
+            return set(found, j, additive = true)
         }
 
         private fun day(i: Int): DayOfWeek? {
@@ -497,7 +531,15 @@ object VoiceParser {
             if (!isNameWord(i, first = true)) return i
             var j = i
             while (j < t.size && isNameWord(j, first = j == i)) j++
-            val spoken = t.subList(i, j).joinToString(" ") { it.text }
+            val words = t.subList(i, j).map { it.text }.toMutableList()
+            val digits = t.getOrNull(j)?.text
+            val unitAfter = norm(j + 1)?.let { it in STRENGTH_UNITS || it in DOSE_UNITS } == true
+            if (words.last().length == 1 && digits != null && digits.length <= 3 && digits.all(Char::isDigit) && !unitAfter) {
+                words[words.lastIndex] = words.last() + digits
+                j++
+            }
+            // Letra + número ("b12", "d3") em maiúscula.
+            val spoken = words.joinToString(" ") { if (it.length <= 4 && it.drop(1).all(Char::isDigit) && it.length > 1) it.uppercase() else it }
             val joinsPrevious = lastNameEnd >= 0 && i == lastNameEnd + 1 && isAny(lastNameEnd, "de", "do", "da")
             if (joinsPrevious && group.size == 1) {
                 val id = group.single()

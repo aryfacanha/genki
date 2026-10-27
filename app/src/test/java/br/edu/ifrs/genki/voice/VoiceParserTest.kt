@@ -273,6 +273,57 @@ class VoiceParserTest {
         assertEquals("2 comprimidos", parse("na verdade são 2 comprimidos", listOf(l), l.localId).drafts.single().dose)
     }
 
+    // ── casos da revisão Codex de 27/10 (REVISAO_M3_M4_CODEX.md) ─────────
+
+    @Test
+    fun compoundStrengthIsNotDose() {
+        // RV-M3-01: "por 5 ml" faz parte da concentração; a dose continua vazia e será perguntada.
+        one("amoxicilina 250 mg por 5 ml").let {
+            assertEquals("250 mg/5 ml", it.concentration)
+            assertNull(it.dose)
+        }
+        assertEquals("250 mg/5 ml", one("amoxicilina 250mg/5ml").concentration)
+        assertEquals("500 mg/ml", one("dipirona 500 mg por ml").concentration)
+        // Com a dose dita depois, cada uma no seu campo.
+        one("amoxicilina 250 mg por 5 ml, tomo 10 ml de 8 em 8 horas").let {
+            assertEquals("250 mg/5 ml", it.concentration)
+            assertEquals("10 ml", it.dose)
+        }
+    }
+
+    @Test
+    fun daysSpokenLaterAreAdded() {
+        // RV-M3-02: "e sexta" completa; correção explícita substitui.
+        val first = one("losartana segunda e quarta")
+        assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), parse("e sexta", listOf(first), first.localId).drafts.single().days)
+        assertEquals(setOf(FRIDAY), parse("na verdade é sexta", listOf(first), first.localId).drafts.single().days)
+        assertEquals(setOf(FRIDAY), parse("só sexta", listOf(first), first.localId).drafts.single().days)
+        assertEquals(all, parse("todos os dias", listOf(first), first.localId).drafts.single().days)
+    }
+
+    @Test
+    fun negatedTimeIsReplaced() {
+        // RV-M3-04: o "não" desfaz o último horário dito.
+        assertEquals(listOf(t(8), t(21)), one("losartana às 8 e às 20, não, às 21").times)
+        assertEquals(listOf(t(9)), one("losartana às 8 não às 9").times)
+        // "Não sei" continua sendo resposta de duração.
+        val d = voice("Amoxicilina", t(8))
+        assertEquals(TreatmentType.UNDEFINED, parse("não sei", listOf(d), d.localId, Field.TREATMENT).drafts.single().treatment)
+    }
+
+    @Test
+    fun letterAndNumberStayInName() {
+        // RV-M3-06.
+        assertEquals("Vitamina B12", one("vitamina B12 um comprimido às 8 todos os dias uso contínuo").name)
+        assertEquals("Vitamina B12", one("vitamina b 12 um comprimido").name)
+        assertEquals("Vitamina D3", one("vitamina d3 2000 ui").name)
+        // Letra seguida de concentração não junta.
+        one("vitamina d 7 gotas").let {
+            assertEquals("Vitamina d", it.name)
+            assertEquals("7 gotas", it.dose)
+        }
+    }
+
     // ── não entendido (RF15) ───────────────────────────────────────────
 
     @Test
