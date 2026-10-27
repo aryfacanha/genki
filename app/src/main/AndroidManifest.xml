@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Voz (ESPEC §7): microfone só enquanto o cadastro por voz escuta; nada é gravado (RNF07). -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Câmera (ESPEC §8): uma foto da embalagem; a imagem não é guardada. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
     <!-- Android 11+: enxergar o reconhecedor de fala e o leitor de texto do sistema. -->
     <queries>

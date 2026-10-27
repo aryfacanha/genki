@@ -70,11 +70,12 @@ import br.edu.ifrs.genki.voice.Speaker
  */
 @Composable
 fun VoiceScreen(
+    fromSession: Boolean,
     onClose: () -> Unit,
     onType: () -> Unit,
     onFix: (String) -> Unit,
     onSaved: (String) -> Unit,
-    viewModel: VoiceViewModel = viewModel(factory = VoiceViewModel.Factory),
+    viewModel: VoiceViewModel = viewModel(factory = VoiceViewModel.factory(fromSession)),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current

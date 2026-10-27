@@ -53,6 +53,22 @@ val PillsIcon: ImageVector = ImageVector.Builder(
     fill = SolidColor(Color.Black),
 ).build()
 
+// Câmera do Material Icons ("photo_camera"; o pacote "core" não traz).
+val CameraIcon: ImageVector = ImageVector.Builder(
+    name = "Camera",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f,
+).addPath(
+    pathData = addPathNodes(
+        "M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z" +
+            "M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z" +
+            "m3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+    ),
+    fill = SolidColor(Color.Black),
+).build()
+
 // Microfone do Material Icons (o pacote "core" não traz).
 val MicIcon: ImageVector = ImageVector.Builder(
     name = "Mic",

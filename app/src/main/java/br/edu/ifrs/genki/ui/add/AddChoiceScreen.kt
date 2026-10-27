@@ -29,15 +29,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import br.edu.ifrs.genki.ui.components.CameraIcon
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.MicIcon
 
 /**
- * "Como você quer cadastrar?" (`CadastrarMedicamento.tsx`): voz em destaque e digitar.
- * A opção da câmera entra com o M4.
+ * "Como você quer cadastrar?" (`CadastrarMedicamento.tsx`): voz em destaque, digitar e câmera.
  */
 @Composable
-fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit) {
+fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit, onCamera: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
         GenkiTopBar("Adicionar medicamento", onBack = onBack)
         Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp)) {
@@ -59,6 +59,12 @@ fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit)
                     label = "Digitar",
                     supportingText = "Preencha as informações manualmente.",
                     onClick = onType,
+                )
+                OptionCard(
+                    icon = CameraIcon,
+                    label = "Usar câmera",
+                    supportingText = "Use a embalagem para ajudar a preencher os dados.",
+                    onClick = onCamera,
                 )
             }
         }

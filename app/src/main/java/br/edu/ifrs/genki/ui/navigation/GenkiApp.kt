@@ -50,6 +50,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import br.edu.ifrs.genki.R
+import br.edu.ifrs.genki.camera.ui.CameraScreen
 import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.add.AddChoiceScreen
@@ -69,7 +70,9 @@ import kotlinx.serialization.Serializable
 @Serializable object SettingsRoute
 @Serializable data class DetailRoute(val id: Long)
 @Serializable object AddChoiceRoute
-@Serializable object VoiceRoute
+/** [fromSession] = começa com o rascunho da câmera. */
+@Serializable data class VoiceRoute(val fromSession: Boolean = false)
+@Serializable object CameraRoute
 /** [fromSession] = formulário começa com o rascunho da voz ("Prefiro digitar"). */
 @Serializable data class AddMedicationRoute(val fromSession: Boolean = false)
 @Serializable data class EditMedicationRoute(val id: Long)
@@ -184,12 +187,22 @@ fun GenkiApp() {
             composable<AddChoiceRoute> {
                 AddChoiceScreen(
                     onBack = { navController.popBackStack() },
-                    onVoice = { navController.navigate(VoiceRoute) { popUpTo<AddChoiceRoute> { inclusive = true } } },
+                    onVoice = { navController.navigate(VoiceRoute()) { popUpTo<AddChoiceRoute> { inclusive = true } } },
                     onType = { navController.navigate(AddMedicationRoute()) { popUpTo<AddChoiceRoute> { inclusive = true } } },
+                    onCamera = { navController.navigate(CameraRoute) { popUpTo<AddChoiceRoute> { inclusive = true } } },
                 )
             }
-            composable<VoiceRoute> {
+            // Da câmera segue para a voz ou o formulário já com nome e concentração (RF22).
+            composable<CameraRoute> {
+                CameraScreen(
+                    onClose = { navController.popBackStack() },
+                    onVoice = { navController.navigate(VoiceRoute(fromSession = true)) { popUpTo<CameraRoute> { inclusive = true } } },
+                    onType = { navController.navigate(AddMedicationRoute(fromSession = true)) { popUpTo<CameraRoute> { inclusive = true } } },
+                )
+            }
+            composable<VoiceRoute> { entry ->
                 VoiceScreen(
+                    fromSession = entry.toRoute<VoiceRoute>().fromSession,
                     onClose = { navController.popBackStack() },
                     onType = { navController.navigate(AddMedicationRoute(fromSession = true)) { popUpTo<VoiceRoute> { inclusive = true } } },
                     onFix = { localId -> navController.navigate(FixDraftRoute(localId)) },

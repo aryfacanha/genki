@@ -48,6 +48,8 @@ data class VoiceUiState(
 class VoiceViewModel(
     private val repository: MedicationRepository,
     private val session: RegistrationSession,
+    /** Veio da câmera: começa pelos rascunhos da sessão e pergunta o que falta (ESPEC §8). */
+    fromSession: Boolean = false,
     private val today: () -> LocalDate = { LocalDate.now() },
 ) : ViewModel() {
 
@@ -57,12 +59,15 @@ class VoiceViewModel(
     private var saving = false
 
     init {
-        session.clear()
-        GenkiEval.log("cadastro_iniciado", "fonte" to DraftSource.VOICE)
+        if (!fromSession) {
+            session.clear()
+            GenkiEval.log("cadastro_iniciado", "fonte" to DraftSource.VOICE)
+        }
         // Volta da correção por toque: a sessão muda por fora.
         viewModelScope.launch {
             session.drafts.collect { drafts -> _state.update { it.copy(drafts = drafts) } }
         }
+        if (fromSession && session.drafts.value.isNotEmpty()) advance()
     }
 
     private fun prompt(text: String) = Prompt(++promptId, text)
@@ -179,10 +184,10 @@ class VoiceViewModel(
         private const val UNAVAILABLE = "Este aparelho não tem reconhecimento de voz configurado. Você pode digitar."
         private const val MIC_DENIED ="Sem acesso ao microfone. Você pode permitir nas configurações ou digitar."
 
-        val Factory = viewModelFactory {
+        fun factory(fromSession: Boolean) = viewModelFactory {
             initializer {
                 val container = genkiContainer()
-                VoiceViewModel(container.medicationRepository, container.registrationSession)
+                VoiceViewModel(container.medicationRepository, container.registrationSession, fromSession = fromSession)
             }
         }
     }
