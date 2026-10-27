@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão da correção RV-M2-01/02 — 26/10/2026 — Codex (GPT-6)
+Partida: genki `main` em `a590fa5`; `git pull` atualizado; handoff, decisões, ESPEC e proposta/requisitos atuais reabertos no Drive.
+Realizado e arquivos alterados: revisão do diff e teste no Pixel_6_2 API 35; **RV-M2-01/02 fechados, sem novos achados de código**. Relatório `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md`, nota histórica no relatório anterior; atualizados `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. §7 orienta configurar minutos consecutivos por arraste no relógio. Nenhum código/configuração do app alterado; fixture removida; relógio/fonte mantidos.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: nenhuma nova de código/produto.
+Verificado: build passa, XMLs de 43 testes sem falhas (tarefas `UP-TO-DATE`); último dia com 22:44/22:45 pelo formulário → avisos e repetições agendadas preservados; novo processo/syncAll preserva os avisos; Adiar remove só seu aviso/repetição e agenda retorno; Entendi remove só seu aviso/repetição; desativar cancela o adiamento; exclusão com confirmação. | Não verificado: retorno adiado e ciclo completo de três repetições/deslizar, aparelho físico, Doze/fuso/TalkBack, permissões inicialmente negadas. | Limitações: revisão aprova a correção, não substitui o aceite no aparelho; três `FrameTracker` com teclado, sem crash observado.
+Próxima tarefa e bloqueios: completar regressão temporal de M2 e aceite no aparelho; revisão dos dois reparos concluída.
+Links/commits: `a590fa5`; `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md`; alterações documentais locais, sem commit/push nesta sessão.
+
 ENTREGA — App Android: correção RV-M2-01/02 (lembretes) — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `34b37c8` (registro da revisão Codex); relatório `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`.
 Realizado e arquivos alterados: `domain/ReminderPlan.kt` (novo: decisão pura Schedule / NoMoreOccurrences / Disabled e `afterFire`); `reminders/ReminderScheduler.kt` (tratamento encerrado cancela só o próximo `FIRE`; `syncFired` reagenda só o horário que tocou); `reminders/ReminderReceiver.kt` (usa `syncFired`); teste `ReminderPlanTest` (6). Docs: `HANDOFF_APP` (§2, §3, §7, Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.

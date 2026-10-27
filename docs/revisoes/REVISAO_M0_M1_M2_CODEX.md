@@ -1,5 +1,7 @@
 # Revisão independente — M0, M1 e M2 — Codex
 
+**Atualização em 26/10/2026:** os dois S2 deste relatório foram corrigidos em `a590fa5` e fechados na revisão independente da correção: [REVISAO_CORRECAO_M2_CODEX.md](REVISAO_CORRECAO_M2_CODEX.md). O texto abaixo preserva o resultado histórico da revisão em `42a0d16`.
+
 Data: 26/10/2026. Assistente: Codex (GPT-6). Partida: `main`, `42a0d16`; `git pull` confirmou repositório atualizado. Implementações: M1 `f2ff130`, M2 `f111670`, com regressão do M0. Nenhum código do app foi alterado.
 
 Fontes lidas: `AGENTS.md`, `ESTADO.md`, `DECISOES.md` (especialmente DEC-012/014/021/026–028), `HANDOFF_APP.md`, `ESPEC_ARQUITETURA.md`, `REQUISITOS_MAPA.md`; originais atuais da proposta e da planilha oficial pelo Google Drive; fontes do protótipo local em `295212e` (cadastro, revisão e Ajustes). As decisões aceitas são a referência; as correções abaixo são sugestões pendentes, não novas decisões do autor.

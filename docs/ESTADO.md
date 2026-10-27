@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**Nova revisão em 26/10/2026, Codex (GPT-6), `main`/`a590fa5`: RV-M2-01/02 fechados, correção aprovada na cobertura executada, sem novos achados de código.** Build passa; 43 testes existentes sem falhas. No emulador: último dia com 22:44/22:45, dois avisos e repetições preservados, inclusive com novo processo do app; Adiar/Entendi isolados por horário e cancelamento ao desativar conferidos. Pendentes: retorno de Adiar, ciclo completo de três repetições/deslizar na revisão independente e aceite no aparelho físico. Relatório: `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md`. Os registros abaixo preservam o histórico anterior.
+
 **Correção em 26/10/2026, Claude Code (Opus 5.5):** RV-M2-01/02 corrigidos (`domain/ReminderPlan`, `ReminderScheduler.syncFired`); 43 testes passam; último dia com horários 21:40/21:41 conferido no emulador (os dois avisos ficam até interação e repetem). **Nova revisão do Codex pendente.**
 
 **Revisão independente em 26/10/2026, Codex (GPT-6), `main`/`42a0d16`:** M0/M1 sem achados novos na cobertura executada; **M2 com dois S2 confirmados no emulador** (aviso da última ocorrência cancela a si mesmo; horário no minuto seguinte é retirado pelo reagendamento). Build passa, 37 testes existentes sem falhas; boot reagenda alarmes futuros no emulador. Código não alterado. Correção e nova revisão pendentes: `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`. O registro de implementação abaixo é histórico e não equivale à aprovação de M2 nesta revisão.
@@ -48,7 +50,7 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 
 | Pendência | Responsável | Bloqueia |
 | --- | --- | --- |
-| RV-M2-01/02 corrigidos pelo Claude Code em 26/10 (conferidos no emulador); falta a nova revisão do Codex e completar a regressão independente de repetição/Adiar/Entendi | Codex revisa (DEC-026), mediante pedido do autor | Aprovação de M2 na revisão independente |
+| RV-M2-01/02 fechados pelo Codex em `a590fa5` (26/10); completar regressão temporal (retorno de Adiar, três repetições/deslizar) e aceite no aparelho físico | Autor; assistentes conforme DEC-026 | Aceite completo de M2 no aparelho |
 | Modelo e versão Android do celular de teste (ainda não definido) | Autor | Verificação no aparelho a partir do M1; o M0 pode usar emulador |
 | Decidir se o export do protótipo vai também para o Drive. **Divergências de dados/regras listadas em 26/10 (`docs/DIVERGENCIAS_PROTOTIPO.md`, 17 itens; até decidir, vale a ESPEC — DEC-022)**; #2, #7, #12 (DEC-027) e #13, #14, #16 (DEC-028) decididas. Itens que eram para o M2: "Visto às"/"Adiado para" na Hoje (#13), escolha do adiamento (#14), seletor de intervalo em Ajustes (#16) | Autor | Telas do M1 em diante |
 | Protótipo: telas que ainda rolam (Editar, telas e revisão da voz com 2+ medicamentos); Editar ainda rola (edição por seção não iniciada; decisão do autor); estudo exploratório MyTherapy do Codex aguardando avaliação; sem teste com leitor de tela real/Android nem voz pt-BR real | Autor decide; Claude Code implementa, Codex revisa | Nada urgente para o M0 |
@@ -62,6 +64,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App:** revisão do Codex de M0/M1/M2 concluída em `42a0d16`, sem achados novos em M0/M1 na cobertura executada e com **dois S2 em M2, já corrigidos pelo Claude Code em 26/10**. Próximo: nova revisão do Codex sobre a correção; autor conferir no aparelho (lembretes reais, reinício); depois M3 (voz). Boot/reagendamento futuro já conferido no emulador pelo Codex. Relatório: `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`.
+- **App:** revisão da correção `a590fa5` concluída: **RV-M2-01/02 fechados pelo Codex**, sem novos achados de código. Próximo: completar a regressão temporal de M2 (retorno de Adiar, três repetições/deslizar) e conferência do autor no aparelho (lembretes reais, reinício); depois M3 (voz). Boot/reagendamento futuro já conferido no emulador na revisão anterior. Relatórios: `docs/revisoes/REVISAO_CORRECAO_M2_CODEX.md` e `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.
