@@ -28,11 +28,14 @@ class SpeechInput(private val context: Context, private val events: Events) {
     private var onDevice = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
         SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
     private var endOfSpeechAt: Long? = null
+    /** Escuta em andamento; alguns serviços chamam `onError` duas vezes e só a primeira resposta conta. */
+    private var active = false
 
     fun isAvailable(): Boolean = onDevice || SpeechRecognizer.isRecognitionAvailable(context)
 
     fun start() {
         endOfSpeechAt = null
+        active = true
         val current = recognizer ?: create().also { recognizer = it }
         current.startListening(
             Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -81,12 +84,15 @@ class SpeechInput(private val context: Context, private val events: Events) {
         }
 
         override fun onResults(results: Bundle?) {
+            if (!active) return
+            active = false
             events.listening(false)
             val latency = endOfSpeechAt?.let { SystemClock.elapsedRealtime() - it }
             events.result(first(results).orEmpty(), latency)
         }
 
         override fun onError(error: Int) {
+            if (!active) return
             if (onDevice && (error == ERROR_LANGUAGE_NOT_SUPPORTED || error == ERROR_LANGUAGE_UNAVAILABLE)) {
                 // Reconhecedor do aparelho sem português: tenta o padrão do sistema.
                 onDevice = false
@@ -94,6 +100,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
                 start()
                 return
             }
+            active = false
             events.listening(false)
             events.error(error)
         }

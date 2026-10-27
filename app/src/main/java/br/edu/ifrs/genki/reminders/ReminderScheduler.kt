@@ -60,9 +60,9 @@ class ReminderScheduler(
         alertStore.remove(timeIds)
     }
 
-    /** Repetição sem resposta (RF24), [count] = 1..3. */
-    fun scheduleRepeat(timeId: Long, count: Int) =
-        set(ReminderAction.REPEAT, timeId, afterInterval(), count)
+    /** Repetição sem resposta (RF24), [count] = 1..3; [snoozed] mantém "(adiado)" no título. */
+    fun scheduleRepeat(timeId: Long, count: Int, snoozed: Boolean = false) =
+        set(ReminderAction.REPEAT, timeId, afterInterval(), count, snoozed)
 
     /** "Adiar N min" (RF25). Devolve quando volta a avisar. */
     fun scheduleSnoozed(timeId: Long): Long = afterInterval().also { set(ReminderAction.FIRE_SNOOZED, timeId, it) }
@@ -78,8 +78,8 @@ class ReminderScheduler(
     private fun afterInterval() =
         now().plusMinutes(settings.reminders.value.intervalMinutes.toLong()).toInstant().toEpochMilli()
 
-    private fun set(action: ReminderAction, timeId: Long, atMillis: Long, count: Int = 0) {
-        val intent = pendingIntent(context, action, timeId, count)
+    private fun set(action: ReminderAction, timeId: Long, atMillis: Long, count: Int = 0, snoozed: Boolean = false) {
+        val intent = pendingIntent(context, action, timeId, count, snoozed)
         if (canScheduleExact()) {
             alarms.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, intent)
         } else {
@@ -90,14 +90,22 @@ class ReminderScheduler(
     companion object {
         const val EXTRA_TIME_ID = "timeId"
         const val EXTRA_COUNT = "count"
+        const val EXTRA_SNOOZED = "snoozed"
 
         /** Mesmo horário e ação = mesmo PendingIntent (o `data` diferencia); os extras são atualizados. */
-        fun pendingIntent(context: Context, action: ReminderAction, timeId: Long, count: Int = 0): PendingIntent {
+        fun pendingIntent(
+            context: Context,
+            action: ReminderAction,
+            timeId: Long,
+            count: Int = 0,
+            snoozed: Boolean = false,
+        ): PendingIntent {
             val intent = Intent(context, ReminderReceiver::class.java)
                 .setAction(action.name)
                 .setData(Uri.parse("genki://time/$timeId/${action.name}"))
                 .putExtra(EXTRA_TIME_ID, timeId)
                 .putExtra(EXTRA_COUNT, count)
+                .putExtra(EXTRA_SNOOZED, snoozed)
             return PendingIntent.getBroadcast(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )

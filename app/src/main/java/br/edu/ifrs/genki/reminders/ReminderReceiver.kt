@@ -9,6 +9,7 @@ import br.edu.ifrs.genki.GenkiEval
 import br.edu.ifrs.genki.data.minuteOfDayToTime
 import br.edu.ifrs.genki.data.toDomain
 import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_COUNT
+import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_SNOOZED
 import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_TIME_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,8 @@ class ReminderReceiver : BroadcastReceiver() {
         val action = intent.action?.let { name -> ReminderAction.entries.firstOrNull { it.name == name } } ?: return
         val timeId = intent.getLongExtra(EXTRA_TIME_ID, -1)
         val count = intent.getIntExtra(EXTRA_COUNT, 0)
+        // Aviso adiado e as repetições dele mostram "(adiado)".
+        val snoozed = action == ReminderAction.FIRE_SNOOZED || intent.getBooleanExtra(EXTRA_SNOOZED, false)
         val container = (context.applicationContext as GenkiApplication).container
         val scheduler = container.reminderScheduler
         val pending = goAsync()
@@ -40,7 +43,7 @@ class ReminderReceiver : BroadcastReceiver() {
                         container.alertStore.snoozed(timeId, Instant.ofEpochMilli(scheduler.scheduleSnoozed(timeId)))
                         GenkiEval.log("lembrete_adiado", "timeId" to timeId)
                     }
-                    else -> notify(context, container, action, timeId, count)
+                    else -> notify(context, container, action, timeId, count, snoozed)
                 }
             } finally {
                 pending.finish()
@@ -54,6 +57,7 @@ class ReminderReceiver : BroadcastReceiver() {
         action: ReminderAction,
         timeId: Long,
         count: Int,
+        snoozed: Boolean,
     ) {
         // Revalida: horário apagado ou lembretes desligados depois do agendamento não avisam.
         val entity = container.medicationRepository.byTime(timeId) ?: return
@@ -63,13 +67,13 @@ class ReminderReceiver : BroadcastReceiver() {
         val settings = container.settings.reminders.value
         val scheduler = container.reminderScheduler
 
-        Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed = action == ReminderAction.FIRE_SNOOZED)
+        Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed)
         container.alertStore.ringing(timeId, medication.id, time)
         GenkiEval.log("lembrete_emitido", "timeId" to timeId, "acao" to action, "repeticao" to count)
 
         when (action) {
-            ReminderAction.FIRE, ReminderAction.FIRE_SNOOZED -> if (settings.repeatEnabled) scheduler.scheduleRepeat(timeId, 1)
-            ReminderAction.REPEAT -> if (settings.repeatEnabled && count < MAX_REPEATS) scheduler.scheduleRepeat(timeId, count + 1)
+            ReminderAction.FIRE, ReminderAction.FIRE_SNOOZED -> if (settings.repeatEnabled) scheduler.scheduleRepeat(timeId, 1, snoozed)
+            ReminderAction.REPEAT -> if (settings.repeatEnabled && count < MAX_REPEATS) scheduler.scheduleRepeat(timeId, count + 1, snoozed)
             else -> Unit
         }
         if (action == ReminderAction.FIRE) scheduler.syncFired(entity, timeId)

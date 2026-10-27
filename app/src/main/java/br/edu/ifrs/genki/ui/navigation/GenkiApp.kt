@@ -137,15 +137,15 @@ fun GenkiApp() {
                             },
                             icon = { Icon(tab.icon, contentDescription = null) },
                             label = {
-                                // Com fonte ampliada (1,3× no emulador) "Medicamentos" era cortado; o rótulo
-                                // encolhe só o necessário para caber, sem passar de 16 sp na escala normal.
+                                // Com fonte ampliada "Medicamentos" era cortado; o rótulo encolhe só o necessário
+                                // para caber (8 sp na escala 2,0× ainda dá 16 dp na tela), sem passar de 16 sp na escala normal.
                                 Text(
                                     stringResource(tab.label),
                                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     autoSize = TextAutoSize.StepBased(
-                                        minFontSize = 12.sp,
+                                        minFontSize = 8.sp,
                                         maxFontSize = MaterialTheme.typography.labelMedium.fontSize,
                                     ),
                                 )
