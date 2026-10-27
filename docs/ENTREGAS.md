@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: voz com toque e correção, avisos agrupados (DEC-033) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `02cfdee`; retorno do autor no A31.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/VoiceQuestions.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/home/HomeScreen.kt`; `VoiceParserTest` (+2). Docs: `DECISOES` (DEC-033), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: DEC-033 (27/10).
+Sugestões pendentes: notificação única para avisos do mesmo horário (não feita; o Android agrupa as separadas).
+Verificado: 109 testes; emulador com texto injetado e relógio (handoff §3); instalado no A31. | Não verificado: no A31 pelo autor. | Limitações: "Próximo lembrete" repete o horário recém-reconhecido até virar o minuto.
+Próxima tarefa e bloqueios: teste do autor; revisão do Codex.
+Links/commits: `24888ec`.
+
 ENTREGA — App Android: notificação e voz no Samsung A31 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `3299836`; retorno do autor (notificação sem som e fechada; voz sem leitura em pt).
 Realizado e arquivos alterados: `MainActivity.kt`, `reminders/Notifications.kt`, `ui/navigation/GenkiApp.kt`, `voice/VoiceParser.kt` (+1 teste), `app/build.gradle.kts` (`genki.abi`). Docs: `DECISOES` (DEC-032), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
