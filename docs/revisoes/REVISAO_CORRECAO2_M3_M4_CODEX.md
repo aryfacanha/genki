@@ -1,5 +1,7 @@
 # Segunda revisão da correção de M3/M4 — Codex
 
+**Atualização em 27/10/2026:** a [terceira revisão](REVISAO_CORRECAO3_M3_M4_CODEX.md) fechou RV-M3C-03/RV-M3D-01; RV-M3-02 mantém um S2 residual na lista de dias com “na verdade”. Novo RV-M3E-01 S3: correção explícita de nome ignorada durante pergunta, com alternativa pelo botão. O texto abaixo preserva a situação histórica da segunda revisão.
+
 Data: 27/10/2026. Assistente: Codex (GPT-6).
 Partida: `main`, `cb98e3c02d20ed1c5bbe0a9a8532c000c966cfa5`; `git pull`: atualizado.
 Alvo: `69711ce`, apenas `VoiceParser.kt` e `VoiceParserTest`, conforme `ROTEIRO_REVISAO_CORRECAO2_M3_M4_CODEX.md`.

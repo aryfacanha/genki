@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: terceira revisão da correção M3/M4 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`b56dd661df9a2b100b1d533587bbc1d335d5eaa8`; `git pull` atualizado; roteiro atualizado e alvos `fac6a0a`, `8191c25`, `d7b8c63`, `24888ec`, `caafe29`; originais consultados no Drive.
+Realizado e arquivos alterados: relatório `docs/revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`, nota histórica na segunda revisão, `HANDOFF_APP` (§2/3/7 e Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. **RV-M3C-03/D-01 fechados; RV-M3-02 S2 residual; RV-M3E-01 S3 novo.** Sem S1/gravação sem revisão observados; sem correção permanente de código/configuração.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: reparo pontual do marcador “na verdade” na lista de dias; correção explícita de nome durante pergunta (botão atual funciona). Limitações fora do núcleo registradas sem outro ciclo amplo.
+Verificado: build/110 testes existentes passam após retirar temporários; 36 reprodutores anteriores passam; sete vizinhos, cinco passam/duas falhas. Emulador: Manter/Desfazer inclusive após toque pendente, respostas por botão/texto, notificações (novo processo/preservação de cadastro/edição), grupos Adiar/Entendi/tipos mistos e próximo lembrete no minuto atual. | Não verificado: A31, voz/TTS audíveis, fallback TTS e erro real de reconhecimento, embalagens reais, TalkBack/Doze. | Limitações: texto injetado; evidências locais em `build/`. Temporários retirados, APK original reinstalado só no emulador, dados de teste excluídos, relógio restaurado e medicamentos originais preservados; A31 não operado.
+Próxima tarefa e bloqueios: reparar/reconferir RV-M3-02, avaliar RV-M3E-01 e continuar aceite no A31; distinguir teste do autor/Claude da cobertura independente.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`; nenhum commit/push nesta sessão.
+
 ENTREGA — App Android: voz com toque e correção, avisos agrupados (DEC-033) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `02cfdee`; retorno do autor no A31.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/VoiceQuestions.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/home/HomeScreen.kt`; `VoiceParserTest` (+2). Docs: `DECISOES` (DEC-033), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
