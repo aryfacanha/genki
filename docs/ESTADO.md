@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**Revisão em 27/10/2026, Codex (GPT-6), `main`/`4706c3a`, alvos `f79feb9`, `2d3b4d9` e `4706c3a`: um S2 e dois S3 abertos na Hoje.** RV-HOJE-01: bloqueio só da categoria de notificações não gera aviso; RV-HOJE-02: Agora falta antes do primeiro horário; RV-HOJE-03: Passou comprime nome/dose com fonte 2,0×. Build/116 testes passam (`UP-TO-DATE`); no emulador, Detalhes/voltar, aviso global/Ajustes, disparo 19:30, resposta imediata Adiar/Entendi e próximo dia conferidos. Relatório: `docs/revisoes/REVISAO_HOJE_CODEX.md`. Sem alteração de código, commit/push ou operação no A31. Emulador recuperado após ficar offline; permissões, hora automática e fonte restauradas, alertas vazios, medicamentos preservados. Próximo: correções pontuais e nova conferência; aceite completo no A31 permanece pendente. Registros abaixo preservam o histórico.
+
 **27/10/2026, Claude Code (Opus 5.5):** DEC-035 (Hoje): toque no horário abre Detalhes, "Passou" em fundo cinza, título "Horários de hoje". Conferido no emulador; instalado no A31. Autor informou: TalkBack funciona; linha "Agora" e alarmes ainda não testados por ele. Pendente: teste do autor; revisão do Codex de `f79feb9`, `2d3b4d9` e deste commit.
 
 **27/10/2026, Claude Code (Opus 5.5):** comparação com o MyTherapy no A31 (só navegação, nada salvo nele) e DEC-034 na Hoje: linha "Agora" com horários passados mais claros, próximo lembrete de outro dia ("Amanhã") e aviso de permissões desligadas. 116 testes; conferido no A31 (linha "Agora") e no emulador (relógio às 21:00 e notificação revogada, restaurados). Pendente: teste do autor e revisão do Codex.
@@ -53,7 +55,7 @@ Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — M2 (lembretes) implemen
 | Metodologia de avaliação | **Definida** (DEC-018); pontos dependentes do orientador em aberto | Drive, Avaliação/ |
 | Código Android | **M0–M4 implementados; M3 revisado na cobertura técnica executada em 27/10.** RV-M3-02 (resto)/E-01 fechados na conferência de `0cef3f1`; texto do grupo corrigido para “N lembretes”. Sem achado novo no escopo restrito. Aceite completo no A31 pendente | `app/`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
 | Handoff do app | `docs/HANDOFF_APP.md` (DEC-026): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
-| Testes | **112 testes existentes, zero falhas/erros**, executados antes e após remover temporários. Reprodutores locais: **43/43 passam**, incluindo probes observacionais. XMLs em `build/conference_TEST-*.xml`; `app/src` sem mudanças | `app/src/test/`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
+| Testes | **116 testes existentes, zero falhas/erros**, build/testes passam (`UP-TO-DATE`) na revisão da Hoje. Conferência anterior de M3: reprodutores **43/43**, XMLs em `build/conference_TEST-*.xml`; não repetidos nesta rodada. `app/src` sem mudanças | `app/src/test/`, `docs/revisoes/REVISAO_HOJE_CODEX.md`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
 | Monografia pós-proposta | Não está no Drive | — |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
@@ -82,6 +84,7 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 
 | Pendência | Responsável | Bloqueia |
 | --- | --- | --- |
+| RV-HOJE-01 S2 e RV-HOJE-02/03 S3: aviso para canal bloqueado, Agora antes do primeiro horário e legibilidade com fonte ampliada (`docs/revisoes/REVISAO_HOJE_CODEX.md`) | Claude Code corrige; Codex confere | Fechamento da revisão de DEC-034/035 |
 | RV-M2-01/02 e RV-M2B-01 fechados; virada do dia de RV-M2B-01 reproduzida independentemente no emulador em 27/10, com cartão e Entendi após o último dia. Aceite completo no aparelho ainda pendente | Autor | Aceite completo de M2 no aparelho |
 | ~~Modelo e versão Android do celular de teste~~ — definido em 27/10: Samsung Galaxy A31, Android 12 | Autor | Verificação no aparelho a partir do M1; o M0 pode usar emulador |
 | Decidir se o export do protótipo vai também para o Drive. **Divergências de dados/regras listadas em 26/10 (`docs/DIVERGENCIAS_PROTOTIPO.md`, 17 itens; até decidir, vale a ESPEC — DEC-022)**; #2, #7, #12 (DEC-027) e #13, #14, #16 (DEC-028) decididas. Itens que eram para o M2: "Visto às"/"Adiado para" na Hoje (#13), escolha do adiamento (#14), seletor de intervalo em Ajustes (#16) | Autor | Telas do M1 em diante |
@@ -96,6 +99,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App:** M3 revisado na cobertura técnica executada; RV-M3-02 (resto)/E-01 fechados e texto do grupo conferido (`docs/revisoes/CONFERENCIA_M3_CODEX.md`). Continuar aceite completo no A31 e verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, dentro das decisões aceitas. Esta conferência foi de lógica/testes e inspeção do texto; não repetiu telas nem operou aparelhos. Limitações anteriores continuam registradas, sem abrir outro ciclo amplo do interpretador.
+- **App:** corrigir e conferir RV-HOJE-01 (S2) e RV-HOJE-02/03 (S3), conforme `docs/revisoes/REVISAO_HOJE_CODEX.md`. M3 permanece revisado na cobertura técnica anterior, sem reabrir o interpretador. Continuar aceite completo no A31 e verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, dentro das decisões aceitas.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.

@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão das melhorias da Hoje (DEC-034/035) — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`4706c3a`; `git pull` já atualizado; alvos `f79feb9`, `2d3b4d9`, `4706c3a`; proposta/requisitos atuais consultados no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_HOJE_CODEX.md`, `HANDOFF_APP.md` (§2/3/7 e Diário), `ESTADO.md`, `ENTREGAS.md`, `REGISTRO_IA.md`. Um S2 e dois S3 abertos; código não alterado.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova decisão de produto.
+Sugestões pendentes: correções de RV-HOJE-01/02/03; não implementadas pelo revisor.
+Verificado: build/116 testes passam (`UP-TO-DATE`); emulador API 35, Detalhes/voltar, bloqueio global/Ajustes, disparo 19:30, resposta imediata Adiar/Entendi e próximo dia. Reproduzidos canal bloqueado sem aviso, Agora ausente antes do primeiro horário e texto comprimido em 2,0×. | Não verificado: A31, TalkBack audível, voz/TTS reais, câmera/Doze, grupos e retorno do adiamento nesta rodada. | Limitações: emulador ficou offline; recuperado com reinício autorizado; permissões, relógio automático e fonte restaurados, alertas vazios, medicamentos preservados.
+Próxima tarefa e bloqueios: Claude Code reparar os três achados; Codex conferir; continuar aceite no A31.
+Links/commits: `docs/revisoes/REVISAO_HOJE_CODEX.md`; sem commit/push.
+
 ENTREGA — App Android: ajustes finos da Hoje (DEC-035) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`2d3b4d9`.
 Realizado e arquivos alterados: `ui/home/HomeScreen.kt`, `ui/navigation/GenkiApp.kt`, `ui/details/DetailScreen.kt`; docs.
