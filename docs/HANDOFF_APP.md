@@ -64,6 +64,10 @@ Checagem rápida automatizada. **Não substitui a verificação manual do autor*
    Compare com o esperado para a tarefa e com o protótipo, se disponível.
 6. Se o foco pedir navegação, use `adb shell input tap X Y` / `input text` e capture de novo.
 7. `adb logcat -d *:E` (erros e crashes) e `adb logcat -d -s GenkiEval`.
+8. **Relógio para testar lembretes** (sem root; conferido no emulador API 35 em 27/10): `adb shell settings put global auto_time 0`
+   e `adb shell cmd alarm set-time <epoch em ms>` (ex.: 30 s antes de um horário cadastrado; o alarme toca na hora e,
+   se o salto passar do horário, toca logo). Ao terminar: `cmd alarm set-time` com a hora real e `settings put global auto_time 1`.
+   Em aparelho com Android antigo o comando pode não existir: mudar a hora pelos Ajustes do sistema.
 
 Relatório, sempre neste formato:
 - Build e testes: passou/falhou
@@ -118,6 +122,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-27 — Claude Code — §5 passo 8 (relógio pelo ADB). No emulador, relógio levado a 19:29:30: lembrete das 19:30 emitido às 19:30:00; Hoje com cartão "Agora" (Entendi / Adiar 10 min); "Adiar" → "Lembrete adiado / Novo alerta às 19:40 / Horário original: 19:30"; relógio a 19:40:40 → notificação "Lembrete das 19:30 (adiado)" e cartão "Agora" de novo; "Entendi" no cartão → `lembrete_reconhecido`. **DEC-029 conferida no emulador.** Relógio devolvido à hora real — pendente: mesmo roteiro no celular de teste (Samsung, a confirmar).
 
 - 2026-10-27 — Claude Code — instalado `3200047` + `f2a7a05` no Pixel 8a do autor: o aparelho usa **GrapheneOS** (`akita`), sem serviços de fala do Google. O único `RecognitionService` é o do app Claude, sem padrão escolhido → `SpeechRecognizer: no selected voice recognition service` (erro 5) e nenhum reconhecedor no aparelho; TTS só `app.grapheneos.speechservices` (voz pt não conferida). `f2a7a05`: erro 5 mostra "Este aparelho não tem reconhecimento de voz configurado. Você pode digitar." — build e testes passam; mensagem não vista no aparelho — pendente: autor decidir o reconhecedor (instalar um serviço de reconhecimento e escolhê-lo como padrão, ou outro celular de teste).
 
