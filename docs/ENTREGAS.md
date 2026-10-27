@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: M3 voz (parser e telas) — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: genki `main` em `6aec0b7`; ESPEC §7, `REQUISITOS_MAPA` (RF06, RF11–RF19), protótipo `UsarVozMedicamento.tsx` e `CadastrarMedicamento.tsx`.
+Realizado e arquivos alterados: `voice/VoiceParser.kt`, `voice/VoiceQuestions.kt`, `voice/SpeechInput.kt`, `voice/Speaker.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/add/AddChoiceScreen.kt`, `domain/RegistrationSession.kt` (novos); `MedicationDraft.everyHours`, `DraftValidator`, `FormViewModel`/`FormScreen` (`FormMode`), `GenkiApp` (rotas), `AppContainer`, `Components` (`MicIcon`), manifest (`RECORD_AUDIO`, `<queries>`); testes `VoiceParserTest` (28) e `VoiceQuestionsTest` (5). Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova (pedido do autor para iniciar o M3 e as telas de voz, 27/10).
+Sugestões pendentes: confirmar as escolhas de interpretação listadas no KDoc do `VoiceParser` e no handoff §3 (Limitações do M3); a opção Câmera fica fora da escolha até o M4.
+Verificado: build e 81 testes; no emulador, fallback do reconhecedor, erro "Não ouvi nada" e fluxo completo com texto injetado (perguntas, respostas por toque, revisão, correção por toque e por voz, salvar dois medicamentos, "Prefiro digitar"). | Não verificado: reconhecimento real de fala, TTS audível, Pixel 8a, TalkBack, fonte ampliada nas telas de voz. | Limitações: handoff §3.
+Próxima tarefa e bloqueios: teste de voz do autor no Pixel 8a; revisão do Codex; M4.
+Links/commits: `4bebc3b`, `3200047`.
+
 ENTREGA — App Android: melhorias do autor no M1/M2 (DEC-029) — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `a590fa5` + docs locais da revisão Codex (commitados em `bbc650d`); lista de melhorias do autor após teste no Pixel 8a.
 Realizado e arquivos alterados: `ui/navigation/GenkiApp.kt` (sem transições); `ui/form/FormScreen.kt` (horário repetido e término); `domain/ActiveAlert.kt`, `reminders/AlertStore.kt` (novos), `AppContainer`, `ReminderScheduler`, `ReminderReceiver`, `BootReceiver`, `ui/home/HomeScreen.kt`; teste `ActiveAlertTest` (5). Docs: `DECISOES` (DEC-029), `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
