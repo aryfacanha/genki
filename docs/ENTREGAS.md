@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão independente do app Android M0/M1/M2 — 26/10/2026 — Codex (GPT-6)
+Partida: genki `main` em `42a0d16`; `git pull` atualizado; M1 `f2ff130`, M2 `f111670`; ESPEC, handoff, decisões e originais atuais da proposta/requisitos no Drive; protótipo local `295212e`.
+Realizado e arquivos alterados: revisão do código e verificação no Pixel_6_2 API 35; relatório `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`; atualizados `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Nenhum código do app/configuração alterado. Dados de teste removidos; fonte restaurada.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: corrigir RV-M2-01/02 (dois S2): última ocorrência cancela seu próprio aviso/repetição e reagendamento perde horário no minuto seguinte; correções descritas no relatório.
+Verificado: build/testes passam (37 existentes, tarefas `UP-TO-DATE`, XMLs sem falhas); cadastro, validação por etapa, revisão/Alterar, persistência, detalhes, edição/descarte, exclusão, liga/desliga, Hoje/Ajustes; fonte 1,5× em detalhes/edição; boot reagenda alarmes futuros antes de abrir a Activity; dois defeitos reproduzidos no horário real do emulador. | Não verificado: aparelho físico, Doze/fuso/TalkBack, permissões inicialmente negadas, lista vazia e ciclo completo de repetição/Adiar/Entendi nesta revisão independente, voz/câmera (não implementadas). | Limitações: sem achados novos em M0/M1 dentro da cobertura; M2 não aprovado enquanto os S2 estiverem abertos; um `FrameTracker` no log, sem crash.
+Próxima tarefa e bloqueios: correção dos dois S2 por pedido do autor e nova revisão de M2; aceite no aparelho físico continua pendente.
+Links/commits: `docs/revisoes/REVISAO_M0_M1_M2_CODEX.md`; alterações documentais locais, sem commit/push nesta sessão.
+
 ENTREGA — App Android: M2 Lembretes — 26/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `6d34c89`; genki-prototype `295212e` (`GenkiHome.tsx`, `AjustesScreen.tsx`, `reminders.ts`).
 Realizado e arquivos alterados: `domain/OccurrenceCalculator`; `data/Settings` (repetição e intervalo em SharedPreferences), consultas novas no `MedicationDao`, `MedicationRepository` reagenda a cada mutação; `reminders/` (`ReminderScheduler`, `ReminderReceiver`, `BootReceiver`, `Notifications`); `GenkiApplication` (canal e `syncAll` na abertura); `ui/home` (próximo lembrete + lista do dia), `ui/settings` (repetição, intervalo, permissões, Sobre); pedido de notificação ao salvar em `GenkiApp`; manifest e `ic_notification`. Testes: `OccurrenceCalculatorTest`, `longDate`. Docs: DEC-028 em `DECISOES`, `DIVERGENCIAS_PROTOTIPO`, `HANDOFF_APP`, `ESTADO`, `REGISTRO_IA`.
