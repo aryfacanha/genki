@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão de M3/M4 e melhorias de M1/M2 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`7fd7c89`; `git pull` atualizado; alvo `a590fa5..9a235fc`, roteiro atual, handoff/ESPEC/decisões, proposta e células dos requisitos oficiais reabertas no Drive.
+Realizado e arquivos alterados: revisão do diff e testes independentes no Pixel_6_2 API 35; relatório `docs/revisoes/REVISAO_M3_M4_CODEX.md` (seis S2 e dois S3 abertos). Atualizados `HANDOFF_APP` §2/3/7 e Diário, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. Sem mudança permanente em código/configuração; ajustes de texto/foto e teste adicionais temporários removidos; APK original reinstalado. Alterações locais preexistentes do autor preservadas.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: correções da tabela do relatório; confirmar o padrão visível “Todos os dias” na transferência de rascunho sem dias.
+Verificado: build e 87 testes existentes (zero falhas/erros); reprodutores adicionais demonstram concentração virando dose, perda de dias e de frequência; fluxo de voz/câmera com entradas injetadas, revisão/correção/remoção/salvamento/exclusão; calendário/relógio com restrições; retorno de Adiar, três repetições, Entendi/deslizar; atualização de APK com aviso pendente; manifest final sem rede/telemetria; rótulo em 1,5×/2,0×. | Não verificado: voz real, TTS audível, aparelho físico, embalagens reais, TalkBack, Doze, reinício novamente; RV-M2B-01 confirmado por inspeção, ainda sem reprodução de virada do dia. | Limitações: cobertura exata no relatório; OCR pode sugerir laboratório/volume, conforme heurística aceita.
+Próxima tarefa e bloqueios: corrigir/revisar S2; depois aceite do autor no aparelho com reconhecedor pt-BR e embalagens reais. Dados de teste removidos; Metformina 08:00/Losartana 19:30 preservadas; relógio/fonte restaurados.
+Links/commits: `docs/revisoes/REVISAO_M3_M4_CODEX.md`; nenhum commit/push nesta sessão.
+
 ENTREGA — App Android: M4 câmera e ajustes — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `bbc9608`; ESPEC §8, `REQUISITOS_MAPA` (RF20–RF23), protótipo `CadastrarMedicamento.tsx`/`UsarCameraMedicamento.tsx`.
 Realizado e arquivos alterados: `camera/OcrParser.kt`, `camera/ui/CameraViewModel.kt`, `camera/ui/CameraScreen.kt` (novos); `AddChoiceScreen` (Usar câmera), `GenkiApp` (`CameraRoute`, `VoiceRoute(fromSession)`), `VoiceViewModel`/`VoiceScreen`, `Components` (`CameraIcon`), `libs.versions.toml` e `app/build.gradle.kts` (CameraX 1.4.2, ML Kit text-recognition 16.0.1), manifest (`CAMERA`); `OcrParserTest` (6). Ajustes `f214691`: "(adiado)" nas repetições, erro de voz único, rótulo da barra até 2,0×. Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
