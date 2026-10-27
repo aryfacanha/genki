@@ -15,6 +15,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — App Android: conferência de fechamento do M3 — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`5e5abe2f503e55435a605b0bc2cf3cfe1ed97c12`; `git pull` atualizado; alvo `0cef3f1`, roteiro `ROTEIRO_CONFERENCIA_M3_CODEX.md`.
+Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_M3_CODEX.md`, `HANDOFF_APP` (§2/3/7 e Diário), `ESTADO`, `ENTREGAS`, `REGISTRO_IA`. **RV-M3-02 (resto)/E-01 fechados; texto do cartão “N lembretes” conferido; M3 revisado na cobertura técnica executada.**
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: nenhuma nova.
+Verificado: build/112 testes existentes passam antes e após remoção dos temporários; 43/43 reprodutores locais passam, incluindo probes observacionais; inspeção das três mudanças do alvo. | Não verificado: telas opcionais, voz/TTS reais e aceite completo no A31 nesta sessão. | Limitações: anteriores preservadas; sem revisão ampla. Seis arquivos temporários removidos; `app/src` sem mudanças; sem instalação/operação em aparelho ou emulador.
+Próxima tarefa e bloqueios: continuar aceite completo e verificações técnicas previstas no A31.
+Links/commits: `docs/revisoes/CONFERENCIA_M3_CODEX.md`; sem commit/push nesta sessão.
+
 ENTREGA — App Android: últimos itens da revisão de M3 — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: genki `main` em `10b4cc2`; `docs/revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`.
 Realizado e arquivos alterados: `voice/VoiceParser.kt`, `ui/home/HomeScreen.kt`; `VoiceParserTest` (+2); roteiro `revisoes/ROTEIRO_CONFERENCIA_M3_CODEX.md`. Docs: `HANDOFF_APP`, `ESTADO`, `ENTREGAS`, `REGISTRO_IA`.
