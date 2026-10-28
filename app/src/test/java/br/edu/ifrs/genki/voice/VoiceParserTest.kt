@@ -506,6 +506,14 @@ class VoiceParserTest {
     }
 
     @Test
+    fun clockOpensOnAFreeTime() {
+        assertEquals(LocalTime.of(8, 0), VoiceQuestions.nextClockTime(emptyList()))
+        assertEquals(LocalTime.of(19, 30), VoiceQuestions.nextClockTime(listOf(LocalTime.of(7, 30))))
+        // 08:00 e 20:00 escolhidos: 12 h depois de 20:00 é 08:00, já na lista; abre às 09:00.
+        assertEquals(LocalTime.of(9, 0), VoiceQuestions.nextClockTime(listOf(LocalTime.of(8, 0), LocalTime.of(20, 0))))
+    }
+
+    @Test
     fun answerToQuestionNeverCreatesMedication() {
         // Respostas direcionadas: durante uma pergunta, tudo vale para o medicamento perguntado.
         val l = voice("Losartana")

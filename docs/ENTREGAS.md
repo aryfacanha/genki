@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: teste do roteiro no A31 e reparos A31-01…06 — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`b80303d`; pedido do autor (rodar o roteiro pelo ADB; depois "corrige os seis e reinstala").
+Realizado e arquivos alterados: `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`; `voice/ui/VoiceScreen.kt`, `voice/VoiceQuestions.kt`, `ui/form/FormScreen.kt`, `ui/components/Components.kt`, `VoiceParserTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: autorização para operar o A31, salvar/excluir "Teste" e corrigir os seis achados.
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (133); A31: roteiro (ver resultado) e A31-02…05 após o reparo. | Não verificado: A31-01/06 em tela; G06/G10; TalkBack; voz audível.
+Próxima tarefa e bloqueios: sessão de voz com o autor; revisão do Codex.
+Links/commits: este commit e `d84b55b`.
+```
+
+```text
 ENTREGA — App Android: "Outra" com − e + e relógio nos horários da voz — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`be24b9d`; pedidos do autor ("remover o máximo de digitação"; "selecionar o horário pelo relógio").
 Realizado e arquivos alterados: `ui/form/DoseUnit.kt`, `ui/form/FormScreen.kt`, `ui/components/TimeDialog.kt` (novo, movido do formulário), `voice/VoiceQuestions.kt`, `voice/ui/VoiceScreen.kt`, testes; roteiro e docs.

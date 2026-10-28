@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -46,6 +47,7 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 // Peças repetidas nas telas, com as medidas do protótipo (barra de 56 dp, botões de 56 dp, cantos de 16 dp).
@@ -116,9 +118,17 @@ fun GenkiTopBar(
                 }
                 Spacer(Modifier.width(4.dp))
             }
+            // Com fonte ampliada e "Cancelar" ao lado, "Novo medicamento" quebrava no meio da palavra (A31-04):
+            // até duas linhas, encolhendo só o necessário.
             Text(
                 title,
                 style = MaterialTheme.typography.headlineSmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                autoSize = TextAutoSize.StepBased(
+                    minFontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    maxFontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                ),
                 modifier = Modifier.weight(1f).semantics { heading() },
             )
             if (actionLabel != null && onAction != null) {
@@ -176,10 +186,10 @@ fun SecondaryButton(
 
 /** Mensagem de erro do campo, anunciada pelo leitor de tela quando aparece. */
 @Composable
-fun FieldError(message: String?) {
+fun FieldError(message: String?, modifier: Modifier = Modifier) {
     if (message == null) return
     Row(
-        Modifier.padding(top = 6.dp).semantics { liveRegion = LiveRegionMode.Polite },
+        modifier.padding(top = 6.dp).semantics { liveRegion = LiveRegionMode.Polite },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(Icons.Filled.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))

@@ -52,6 +52,17 @@ voz descartados. Nenhum crash do app no log.
 | A31-05 | S4 | `FormScreen.kt` (`AmountStepper`) | Em 2,0×, o rótulo "Outra quantidade" quebra em duas linhas sobre a borda do campo. Novo (DEC-038) | Rótulo curto ("Quantidade") ou fora do campo |
 | A31-06 | S4 | `VoiceScreen.kt` (`TimesPicker`) | Com 08:00 e 20:00 escolhidos, o próximo relógio abre em 08:00, já com o aviso de repetido. Novo (DEC-038) | Abrir num horário livre |
 
+## Reparos (Claude Code, 28/10, instalados no A31 às 12:51)
+
+| ID | Reparo | Conferido |
+|---|---|---|
+| A31-01 | `typing`/`typed`/`picking` da voz guardados por pergunta (`rememberSaveable(draftId, field)`) | Não em tela (precisa de fala); conferir com o autor |
+| A31-02 | Cada mensagem de erro do formulário tem um `BringIntoViewRequester`; nas etapas, o Continuar leva a primeira até a tela | A31 1,5×: "Informe quanto você toma por vez." visível após Continuar |
+| A31-03 | Tocar em Outra rola até o − número + (não rola ao abrir uma edição já em Outra) | A31 1,5×: contador à vista |
+| A31-04 | Título da barra do topo em até 2 linhas, encolhendo só o necessário (como a barra inferior) | A31 2,0×: "Novo / medicamento"; 1,5×: uma linha |
+| A31-05 | Rótulo do contador "Quantidade", uma linha | A31 2,0×: inteiro |
+| A31-06 | `VoiceQuestions.nextClockTime`: pula horário já escolhido (teste) | Teste unitário; em tela com o autor |
+
 ## Falta (autor)
 
 G06 e G10 com "Metformina duas vezes ao dia"; grades da voz em 2,0×; perguntas faladas em voz alta; TalkBack (L01–L02).

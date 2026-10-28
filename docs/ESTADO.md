@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude Code (Opus 5.5):** achados A31-01…06 reparados e instalados no A31 (12:51); A31-02…05 conferidos na tela, A31-01/06 ficam para a sessão de voz com o autor. 133 testes. Pendente: voz com o autor (G06, G10, A31-01/06, TalkBack); revisão do Codex.
+
 **28/10/2026, Claude Code (Opus 5.5):** roteiro da dose/grades rodado no A31 pelo ADB, com autorização do autor: quase tudo ok; 1 S2 (seletor de horários da voz fica na pergunta seguinte), 3 S3 e 2 S4. Resultado: `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Pendente: autor decidir os reparos; G06/G10 (voz) e TalkBack com o autor.
 
 **28/10/2026, Claude Code (Opus 5.5):** DEC-038 (pedidos do autor): "Outra" quantidade com − e + (comprimido e ml de meio em meio, "1 comprimido e meio") e "Escolher no relógio" na pergunta dos horários da voz. 132 testes; conferido no emulador. Instalado no A31 às 12:09. Roteiro atualizado: `docs/ROTEIRO_TESTE_DOSE_GRADES.md`. Pendente: revisão do Codex; teste do autor.

@@ -25,6 +25,13 @@ object VoiceQuestions {
      * Horários escolhidos no relógio da voz (pedido do autor, 28/10) como frase para o mesmo interpretador:
      * "às 08:00", "às 08:00 e às 20:00", "às 08:00, às 14:30 e às 20:00".
      */
+    /** Onde o relógio abre: 08:00, depois 12 h após o último, pulando horário já escolhido (A31-06). */
+    fun nextClockTime(chosen: List<LocalTime>): LocalTime {
+        var time = chosen.maxOrNull()?.plusHours(12) ?: LocalTime.of(8, 0)
+        repeat(24) { if (time in chosen) time = time.plusHours(1) }
+        return time
+    }
+
     fun timesAnswer(times: List<LocalTime>): String {
         val each = times.sorted().map { "às %02d:%02d".format(it.hour, it.minute) }
         return if (each.size <= 1) each.joinToString() else each.dropLast(1).joinToString(", ") + " e " + each.last()

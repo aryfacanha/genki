@@ -14,7 +14,8 @@ F04) e **relógio na pergunta dos horários da voz** (G07–G10). Conferidos pel
 no A31 às 12:09 (`011d4e8`).
 
 **Executado pelo Claude no A31 em 28/10 (12:13–12:45):** resultado e achados A31-01…06 em
-`docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Falta o autor: G06, G10 (Metformina), voz em 2,0×, voz audível, TalkBack.
+`docs/RESULTADO_TESTE_DOSE_GRADES_A31.md` (reparados e reinstalados às 12:51; o rótulo do contador agora é
+"Quantidade"). Falta o autor: A31-01/06 na voz, G06, G10 (Metformina), voz em 2,0×, voz audível, TalkBack.
 
 ## Como usar
 

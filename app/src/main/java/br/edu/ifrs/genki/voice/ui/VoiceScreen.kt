@@ -279,10 +279,11 @@ private fun ColumnScope.Asking(
     onUndo: () -> Unit,
 ) {
     val question = state.question ?: return
-    var typing by rememberSaveable { mutableStateOf(false) }
-    var typed by rememberSaveable { mutableStateOf("") }
+    // Por pergunta: respondida por botão ou fala, o campo, os dias ou o relógio abertos não passam para a seguinte (A31-01).
+    var typing by rememberSaveable(question.draftId, question.field) { mutableStateOf(false) }
+    var typed by rememberSaveable(question.draftId, question.field) { mutableStateOf("") }
     // Horários pelo relógio, em vez de digitar (pedido do autor, 28/10).
-    var picking by rememberSaveable { mutableStateOf(false) }
+    var picking by rememberSaveable(question.draftId, question.field) { mutableStateOf(false) }
     // Com o teclado aberto, rola até o fim para o campo e o "Enviar" ficarem à vista.
     val scroll = rememberScrollState()
     val imeVisible = WindowInsets.isImeVisible
@@ -613,7 +614,7 @@ private fun TimesPicker(onDone: (String) -> Unit) {
     }
     if (open) {
         TimeDialog(
-            initial = chosen.maxOrNull()?.plusHours(12)?.takeIf { it !in chosen } ?: LocalTime.of(8, 0),
+            initial = VoiceQuestions.nextClockTime(chosen),
             taken = chosen.toSet(),
             onDismiss = { open = false },
             onConfirm = { chosen = chosen + it; open = false },

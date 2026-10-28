@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -50,6 +51,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -59,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -122,7 +125,10 @@ fun MedicationFormScreen(
                 onCancel = handleCancel,
             )
         } else {
-            FormContent(state, viewModel, onBack = handleBack, onCancel = handleCancel)
+            val errorViews = remember { Field.entries.associateWith { BringIntoViewRequester() } }
+            CompositionLocalProvider(LocalErrorViews provides errorViews) {
+                FormContent(state, viewModel, onBack = handleBack, onCancel = handleCancel)
+            }
         }
     }
 
@@ -169,10 +175,13 @@ private fun ColumnScope.FormContent(
     // Cada etapa nova começa do topo.
     key(step) {
         val sections = remember { List(3) { BringIntoViewRequester() } }
-        // Na edição (página única), leva até a primeira seção com erro.
+        val errorViews = LocalErrorViews.current
+        // Na edição (página única), leva até a primeira seção com erro; nas etapas, até a própria mensagem, que com
+        // fonte grande ficava fora da tela e o Continuar parecia não fazer nada (A31-02).
         LaunchedEffect(state.errors) {
-            val first = state.errors.keys.minByOrNull { field -> STEP_FIELDS.indexOfFirst { field in it } }
-            if (isEdit && first != null) sections[STEP_FIELDS.indexOfFirst { first in it }].bringIntoView()
+            val first = state.errors.keys.minByOrNull { field -> STEP_FIELDS.indexOfFirst { field in it } } ?: return@LaunchedEffect
+            if (isEdit) sections[STEP_FIELDS.indexOfFirst { first in it }].bringIntoView()
+            else errorViews[first]?.bringIntoView()
         }
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp).padding(bottom = 24.dp),
@@ -228,6 +237,13 @@ private fun ColumnScope.FormContent(
     }
 }
 
+/** Mensagem de erro de cada campo, para a etapa levar a primeira até a tela (A31-02). */
+private val LocalErrorViews = staticCompositionLocalOf<Map<Field, BringIntoViewRequester>> { emptyMap() }
+
+@Composable
+private fun errorView(field: Field?): Modifier =
+    field?.let { LocalErrorViews.current[it] }?.let { Modifier.bringIntoViewRequester(it) } ?: Modifier
+
 @Composable
 private fun StepHeading(title: String, stepIndex: Int?) {
     Column(Modifier.padding(top = 24.dp, bottom = 8.dp)) {
@@ -249,6 +265,7 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
         example = "Exemplo: Losartana",
         value = fields.name,
         error = state.errors[Field.NAME]?.let { MedicationText.error(Field.NAME, it) },
+        errorField = Field.NAME,
         onChange = { value -> viewModel.edit(Field.NAME) { it.copy(name = value) } },
     )
     Spacer(Modifier.height(16.dp))
@@ -279,6 +296,9 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
     var amount by rememberSaveable { mutableStateOf(initial?.takeIf { it.second != DoseUnit.OTHER }?.first.orEmpty()) }
     // "Outra": quantidade fora dos botões, digitada.
     var typing by rememberSaveable { mutableStateOf(unit != null && amount.isNotEmpty() && amount !in unit!!.amounts) }
+    // Tocou em Outra: rola até o − e + (com fonte grande ele aparecia abaixo da borda, A31-03); ao abrir uma edição
+    // já em Outra, não rola.
+    var reveal by remember { mutableStateOf(false) }
     Column {
         Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
         ChoiceGrid(
@@ -328,13 +348,18 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                     onClick = { value ->
                         if (value != null) { typing = false; amount = value; onChange(chosen.dose(value)) }
                         // Começa na quantidade marcada, ou em 1 (DEC-038).
-                        else { typing = true; if (chosen.value(amount) == null) amount = "1"; onChange(chosen.dose(amount)) }
+                        else {
+                            typing = true; reveal = true
+                            if (chosen.value(amount) == null) amount = "1"
+                            onChange(chosen.dose(amount))
+                        }
                     },
                     modifier = Modifier.padding(top = 8.dp),
                 )
                 if (typing) {
                     AmountStepper(
                         amount,
+                        reveal = reveal,
                         isError = error != null,
                         canMinus = chosen.canMinus(amount),
                         onMinus = { amount = chosen.minus(amount); onChange(chosen.dose(amount)) },
@@ -344,7 +369,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                 }
             }
         }
-        FieldError(error)
+        FieldError(error, errorView(Field.DOSE))
     }
 }
 
@@ -355,14 +380,17 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
 @Composable
 private fun AmountStepper(
     amount: String,
+    reveal: Boolean,
     isError: Boolean,
     canMinus: Boolean,
     onMinus: () -> Unit,
     onPlus: () -> Unit,
     onType: (String) -> Unit,
 ) {
+    val view = remember { BringIntoViewRequester() }
+    LaunchedEffect(reveal) { if (reveal) view.bringIntoView() }
     Row(
-        Modifier.fillMaxWidth().padding(top = 8.dp),
+        Modifier.fillMaxWidth().padding(top = 8.dp).bringIntoViewRequester(view),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -370,7 +398,8 @@ private fun AmountStepper(
         OutlinedTextField(
             value = amount,
             onValueChange = onType,
-            label = { Text("Outra quantidade") },
+            // Rótulo curto: "Outra quantidade" quebrava sobre a borda com fonte 2,0× (A31-05).
+            label = { Text("Quantidade", maxLines = 1, overflow = TextOverflow.Ellipsis) },
             isError = isError,
             singleLine = true,
             textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
@@ -400,6 +429,7 @@ private fun TextInput(
     value: String,
     error: String?,
     onChange: (String) -> Unit,
+    errorField: Field? = null,
 ) {
     Column {
         OutlinedTextField(
@@ -417,7 +447,7 @@ private fun TextInput(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
         )
-        FieldError(error)
+        FieldError(error, errorView(errorField))
     }
 }
 
@@ -432,7 +462,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
         }
     }
     // Nenhuma opção marcada (veio da voz/câmera sem dias): o erro aparece aqui.
-    if (fields.daysMode == null) FieldError(state.errors[Field.DAYS]?.let { MedicationText.error(Field.DAYS, it) })
+    if (fields.daysMode == null) FieldError(state.errors[Field.DAYS]?.let { MedicationText.error(Field.DAYS, it) }, errorView(Field.DAYS))
     if (fields.daysMode == DaysMode.SPECIFIC) {
         ChoiceGrid(
             MedicationText.WEEK,
@@ -456,7 +486,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
                 modifier = Modifier.padding(top = 4.dp),
             )
         }
-        FieldError(error?.let { MedicationText.error(Field.DAYS, it) })
+        FieldError(error?.let { MedicationText.error(Field.DAYS, it) }, errorView(Field.DAYS))
     }
 
     Text(
@@ -508,7 +538,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
                 }
             }
         }
-        FieldError(state.errors[Field.TIMES]?.let { MedicationText.error(Field.TIMES, it) })
+        FieldError(state.errors[Field.TIMES]?.let { MedicationText.error(Field.TIMES, it) }, errorView(Field.TIMES))
         OutlinedButton(
             onClick = { editing = -1 },
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
@@ -578,7 +608,7 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
             }
         }
     }
-    FieldError(state.errors[Field.TREATMENT]?.let { MedicationText.error(Field.TREATMENT, it) })
+    FieldError(state.errors[Field.TREATMENT]?.let { MedicationText.error(Field.TREATMENT, it) }, errorView(Field.TREATMENT))
     if (fields.treatment == TreatmentType.UNDEFINED) {
         Text(
             MedicationText.UNKNOWN_DURATION_HELP,
@@ -600,7 +630,7 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
         ) { date ->
             viewModel.edit(Field.END_DATE) { it.copy(endDate = date) }
         }
-        FieldError(state.errors[Field.END_DATE]?.let { MedicationText.error(Field.END_DATE, it) })
+        FieldError(state.errors[Field.END_DATE]?.let { MedicationText.error(Field.END_DATE, it) }, errorView(Field.END_DATE))
     }
 }
 
