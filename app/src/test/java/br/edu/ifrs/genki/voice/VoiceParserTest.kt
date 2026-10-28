@@ -501,6 +501,9 @@ class VoiceParserTest {
         assertEquals(listOf(LocalTime.of(9, 5)), single.drafts.single().times)
         // Pergunta do primeiro horário ("duas vezes ao dia").
         val twice = one("metformina duas vezes ao dia")
+        // O relógio dessa pergunta escolhe um horário só (RV-DVC-03).
+        assertEquals(12, VoiceQuestions.ask(twice, Field.TIMES).everyHours)
+        assertEquals(null, VoiceQuestions.ask(base, Field.TIMES).everyHours)
         val first = parse(VoiceQuestions.timesAnswer(listOf(LocalTime.of(7, 30))), listOf(twice), twice.localId, Field.TIMES)
         assertEquals(listOf(LocalTime.of(7, 30), LocalTime.of(19, 30)), first.drafts.single().times)
     }

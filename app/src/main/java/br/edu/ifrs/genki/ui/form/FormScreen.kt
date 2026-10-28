@@ -366,6 +366,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                 reveal = reveal,
                 isError = error != null,
                 canMinus = chosen.canMinus(amount),
+                canPlus = chosen.canPlus(amount),
                 onMinus = { amount = chosen.minus(amount); onChange(chosen.dose(amount)) },
                 onPlus = { amount = chosen.plus(amount); onChange(chosen.dose(amount)) },
                 onType = { amount = it; onChange(chosen.dose(it)) },
@@ -387,6 +388,7 @@ private fun AmountStepper(
     reveal: Boolean,
     isError: Boolean,
     canMinus: Boolean,
+    canPlus: Boolean,
     onMinus: () -> Unit,
     onPlus: () -> Unit,
     onType: (String) -> Unit,
@@ -412,7 +414,7 @@ private fun AmountStepper(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.weight(1f),
         )
-        StepButton("+", "Aumentar", enabled = true, onClick = onPlus)
+        StepButton("+", "Aumentar", enabled = canPlus, onClick = onPlus)
     }
 }
 

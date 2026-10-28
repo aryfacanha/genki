@@ -29,34 +29,47 @@ enum class DoseUnit(val singular: String, val plural: String, val amounts: List<
         return "$a ${if (isSingular(a)) singular else plural}"
     }
 
-    /** Quantidade como número: "meio" = 0,5, "1 e meio" = 1,5, "2,5" = 2,5; `null` se não for número. */
+    /** Quantidade como número: "meio" e "1/2" = 0,5, "1 e meio" = 1,5, "2,5" = 2,5; `null` se não for número. */
     fun value(amount: String): Double? {
         val a = amount.trim().lowercase()
         return when {
-            a == "meio" || a == "meia" -> 0.5
+            a in HALVES -> 0.5
             a.endsWith(HALF) -> a.removeSuffix(HALF).toIntOrNull()?.let { it + 0.5 }
             else -> a.replace(',', '.').toDoubleOrNull()
         }
     }
 
-    /** Texto da quantidade: comprimido "meio", "1 e meio", "2"; as outras "2,5", "3". */
+    /**
+     * Texto da quantidade: comprimido "meio", "1 e meio", "2"; as outras "2,5", "3". Outras frações digitadas
+     * continuam ("0,75"), até milésimos, para o − e + não arredondarem a dose (RV-DVC-02).
+     */
     fun amountOf(value: Double): String {
-        val whole = value.toInt()
-        val half = value - whole >= 0.5
+        val thousandths = Math.round(value * 1000)
+        val whole = thousandths / 1000
+        val rest = thousandths % 1000
         return when {
-            !half -> "$whole"
-            this == TABLET -> if (whole == 0) "meio" else "$whole$HALF"
-            else -> "$whole,5"
+            rest == 0L -> "$whole"
+            rest == 500L && this == TABLET -> if (whole == 0L) "meio" else "$whole$HALF"
+            else -> "$whole," + "%03d".format(rest).trimEnd('0')
         }
     }
 
-    /** Um toque no + (DEC-038); quantidade que não é número recomeça em um passo. */
-    fun plus(amount: String): String = amountOf(minOf(MAX, (value(amount) ?: 0.0) + step))
+    /** Um toque no + (DEC-038); quantidade que não é número recomeça em um passo. Acima de [MAX] fica como está. */
+    fun plus(amount: String): String {
+        val next = (value(amount) ?: 0.0) + step
+        return if (canPlus(amount)) amountOf(next) else amount
+    }
 
-    /** Um toque no −, sem passar de um passo. */
-    fun minus(amount: String): String = amountOf(maxOf(step, (value(amount) ?: step) - step))
+    /** Um toque no −, sem chegar a zero. */
+    fun minus(amount: String): String {
+        val current = value(amount) ?: return amountOf(step)
+        return if (canMinus(amount)) amountOf(current - step) else amount
+    }
 
-    fun canMinus(amount: String): Boolean = (value(amount) ?: 0.0) > step
+    fun canMinus(amount: String): Boolean = (value(amount) ?: 0.0) - step > EPSILON
+
+    /** O + nunca diminui a quantidade: 120 gotas digitadas não viram 100 (RV-DVC-01). */
+    fun canPlus(amount: String): Boolean = (value(amount) ?: 0.0) + step <= MAX + EPSILON
 
     /**
      * Quantidade que continua ao trocar para esta unidade (decisão do autor, 28/10): só se for um botão dela
@@ -69,6 +82,8 @@ enum class DoseUnit(val singular: String, val plural: String, val amounts: List<
 
         private const val HALF = " e meio"
         private const val MAX = 100.0
+        private const val EPSILON = 1e-9
+        private val HALVES = setOf("meio", "meia", "1/2", "½")
 
         private val SINGULAR_AMOUNTS = setOf("1", "um", "uma", "meio", "meia", "1/2", "½", "0,5", "0.5")
         private val TABLET_AND_HALF = Regex("""(\d+) comprimidos? e meio""")

@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+```text
+ENTREGA — App Android: reparo dos achados RV-DVC-01…05 — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`7ffddeb`; pedido do autor ("sim, corrige os cinco e reinstala no A31").
+Realizado e arquivos alterados: `ui/form/DoseUnit.kt` (canPlus, amountOf em milésimos, minus sem zerar, "1/2"/"½"), `ui/form/FormScreen.kt` (+ apagado), `voice/VoiceQuestions.kt` (everyHours na pergunta do primeiro horário), `voice/ui/VoiceScreen.kt` (TimesPicker de um horário com "Horários do dia"; relógio fecha na correção); testes; bateria (E12, E13, G5–G7); docs.
+Decisões aceitas pelo autor nesta sessão: reparar os cinco achados.
+Sugestões pendentes: desfazer exclusão; levantar outras caixas.
+Verificado: `assembleDebug test` (134); A31 1,5×: G5 e G6 na tela, sem crash. | Não verificado: E12/E13 (voz) e G7 em tela; TalkBack; 2,0×.
+Próxima tarefa e bloqueios: conferência do Codex; bateria do autor.
+Links/commits: este commit.
+```
+
 ENTREGA — Revisão de dose, voz e contraste — 28/10/2026 — Codex (GPT-6)
 Partida: `main`/`4b455e7`; alvo `be24b9d..61d4c22`; roteiro do Claude seguido; proposta/requisitos atuais reabertos no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas/registro. RV-DVC-01/02/03 S2 e RV-DVC-04/05 S3 abertos. Merge do pull com registros de monografia preserva os dois lados em ENTREGAS/ESTADO/REGISTRO_IA; índice veio do merge automático; commit de merge pendente por instrução do roteiro.

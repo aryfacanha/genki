@@ -17,14 +17,12 @@ data class VoiceQuestion(
     val example: String,
     /** Respostas por toque (voz principal, toque para agilizar; pedido do autor, 27/10). */
     val quickAnswers: List<QuickAnswer> = emptyList(),
+    /** Pergunta do primeiro horário ("de 8 em 8 horas"): o relógio escolhe só um e mostra os outros (RV-DVC-03). */
+    val everyHours: Int? = null,
 )
 
 object VoiceQuestions {
 
-    /**
-     * Horários escolhidos no relógio da voz (pedido do autor, 28/10) como frase para o mesmo interpretador:
-     * "às 08:00", "às 08:00 e às 20:00", "às 08:00, às 14:30 e às 20:00".
-     */
     /** Onde o relógio abre: 08:00, depois 12 h após o último, pulando horário já escolhido (A31-06). */
     fun nextClockTime(chosen: List<LocalTime>): LocalTime {
         var time = chosen.maxOrNull()?.plusHours(12) ?: LocalTime.of(8, 0)
@@ -32,6 +30,10 @@ object VoiceQuestions {
         return time
     }
 
+    /**
+     * Horários escolhidos no relógio da voz (pedido do autor, 28/10) como frase para o mesmo interpretador:
+     * "às 08:00", "às 08:00 e às 20:00", "às 08:00, às 14:30 e às 20:00".
+     */
     fun timesAnswer(times: List<LocalTime>): String {
         val each = times.sorted().map { "às %02d:%02d".format(it.hour, it.minute) }
         return if (each.size <= 1) each.joinToString() else each.dropLast(1).joinToString(", ") + " e " + each.last()
@@ -62,6 +64,7 @@ object VoiceQuestions {
                 VoiceQuestion(
                     draft.localId, field, "Qual é o primeiro horário de $name no dia?", "Exemplo: às 8",
                     quickAnswers = listOf(6, 7, 8).map { QuickAnswer("%02d:00".format(it), "às $it") },
+                    everyHours = draft.everyHours,
                 )
             } else {
                 VoiceQuestion(

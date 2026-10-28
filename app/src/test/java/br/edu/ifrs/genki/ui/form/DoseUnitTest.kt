@@ -14,7 +14,8 @@ class DoseUnitTest {
         assertEquals("1 comprimido", DoseUnit.TABLET.dose("1"))
         assertEquals("2 comprimidos", DoseUnit.TABLET.dose(" 2 "))
         assertEquals("meio comprimido", DoseUnit.TABLET.dose("meio"))
-        assertEquals("1/2 comprimido", DoseUnit.TABLET.dose("1/2"))
+        // "1/2" digitado sai como o − e + escrevem (RV-DVC-04).
+        assertEquals("meio comprimido", DoseUnit.TABLET.dose("1/2"))
         assertEquals("10 gotas", DoseUnit.DROP.dose("10"))
         assertEquals("1 gota", DoseUnit.DROP.dose("1"))
         assertEquals("5 ml", DoseUnit.ML.dose("5"))
@@ -84,6 +85,26 @@ class DoseUnitTest {
         // O que não é número (digitado) recomeça em um passo.
         assertEquals("meio", DoseUnit.TABLET.plus("abc"))
         assertEquals("100", DoseUnit.DROP.plus("100"))
+    }
+
+    @Test
+    fun stepperNeverLosesWhatWasTyped() {
+        // RV-DVC-01: o + não diminui o que foi digitado acima do limite; fica parado.
+        assertEquals("120", DoseUnit.DROP.plus("120"))
+        assertFalse(DoseUnit.DROP.canPlus("120"))
+        assertTrue(DoseUnit.DROP.canPlus("99"))
+        assertEquals("119", DoseUnit.DROP.minus("120"))
+        // RV-DVC-02: fração que não é meio continua.
+        assertEquals("0,75", DoseUnit.ML.plus("0,25"))
+        assertEquals("1,75", DoseUnit.ML.plus("1,25"))
+        assertEquals("0,25", DoseUnit.ML.minus("0,75"))
+        assertFalse(DoseUnit.ML.canMinus("0,25"))
+        assertEquals("1,3", DoseUnit.DROP.plus("0,3"))
+        assertEquals("0,75 ml", DoseUnit.ML.dose(DoseUnit.ML.plus("0,25")))
+        // RV-DVC-04: "1/2 comprimido" de antes ou da voz anda para 1.
+        assertEquals("1", DoseUnit.TABLET.plus("1/2"))
+        assertEquals("1", DoseUnit.TABLET.plus("½"))
+        assertEquals("1", DoseUnit.TABLET.plus(DoseUnit.parse("1/2 comprimido")!!.first))
     }
 
     @Test

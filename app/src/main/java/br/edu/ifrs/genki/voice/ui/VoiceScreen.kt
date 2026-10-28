@@ -67,6 +67,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
+import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
@@ -285,6 +286,8 @@ private fun ColumnScope.Asking(
     var typed by rememberSaveable(question.draftId, question.field) { mutableStateOf("") }
     // Horários pelo relógio, em vez de digitar (pedido do autor, 28/10).
     var picking by rememberSaveable(question.draftId, question.field) { mutableStateOf(false) }
+    // "Corrigir por voz" fecha o relógio; voltar ou Desfazer reabre a pergunta sem ele (RV-DVC-05).
+    LaunchedEffect(state.correcting) { if (state.correcting) picking = false }
     // Com o teclado aberto, rola até o fim para o campo e o "Enviar" ficarem à vista.
     val scroll = rememberScrollState()
     val imeVisible = WindowInsets.isImeVisible
@@ -348,8 +351,8 @@ private fun ColumnScope.Asking(
         if (!state.correctionPending) {
             if (typing && question.field == Field.DAYS && !state.correcting) {
                 DayPicker(onDone = { onAnswer(it); typing = false })
-            } else if (picking) {
-                TimesPicker(onDone = { onAnswer(it); picking = false })
+            } else if (picking && !state.correcting) {
+                TimesPicker(question.everyHours, onDone = { onAnswer(it); picking = false })
             } else if (typing) {
                 // Abre já com o teclado no campo.
                 val focus = remember { FocusRequester() }
@@ -580,13 +583,22 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
 /**
  * Horários escolhidos no relógio na pergunta dos horários (pedido do autor, 28/10): o relógio abre logo; cada
  * horário escolhido vira uma caixa marcada (tocar tira). Vira a frase "às 08:00 e às 20:00" e passa pelo mesmo
- * interpretador das outras respostas.
+ * interpretador das outras respostas. Na pergunta do primeiro horário ([everyHours]), escolhe um só e mostra os
+ * horários do dia que saem dele, para nenhum horário escolhido sumir (RV-DVC-03).
  */
 @Composable
-private fun TimesPicker(onDone: (String) -> Unit) {
+private fun TimesPicker(everyHours: Int?, onDone: (String) -> Unit) {
     var chosen by rememberSaveable { mutableStateOf(listOf<LocalTime>()) }
     var open by rememberSaveable { mutableStateOf(true) }
-    if (chosen.isNotEmpty()) {
+    if (everyHours != null) {
+        chosen.firstOrNull()?.let { first ->
+            Text(
+                "Horários do dia: ${MedicationText.times(Frequency.fill(first, everyHours))}",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 16.dp).semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        }
+    } else if (chosen.isNotEmpty()) {
         Text(
             "Toque num horário para tirar.",
             style = MaterialTheme.typography.bodyMedium,
@@ -603,7 +615,11 @@ private fun TimesPicker(onDone: (String) -> Unit) {
         )
     }
     SecondaryButton(
-        if (chosen.isEmpty()) "Escolher horário" else "Adicionar outro horário",
+        when {
+            chosen.isEmpty() -> "Escolher horário"
+            everyHours != null -> "Trocar horário"
+            else -> "Adicionar outro horário"
+        },
         onClick = { open = true },
         modifier = Modifier.padding(top = 16.dp),
     )
@@ -616,10 +632,10 @@ private fun TimesPicker(onDone: (String) -> Unit) {
     }
     if (open) {
         TimeDialog(
-            initial = VoiceQuestions.nextClockTime(chosen),
-            taken = chosen.toSet(),
+            initial = if (everyHours != null) chosen.firstOrNull() ?: LocalTime.of(8, 0) else VoiceQuestions.nextClockTime(chosen),
+            taken = if (everyHours != null) emptySet() else chosen.toSet(),
             onDismiss = { open = false },
-            onConfirm = { chosen = chosen + it; open = false },
+            onConfirm = { chosen = if (everyHours != null) listOf(it) else chosen + it; open = false },
         )
     }
 }

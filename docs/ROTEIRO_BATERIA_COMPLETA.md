@@ -13,7 +13,7 @@ grades, volume) e `ROTEIRO_TESTE_VOZ.md` (frases da voz).
 - Para os lembretes (seção D), use um horário **3 a 5 minutos à frente** do relógio: no relógio do app, toque nos
   minutos e arraste o ponteiro até o minuto exato; confira na revisão antes de salvar.
 - Por caso, anote **ok** ou **problema** (o que apareceu + print). Exclua no fim tudo o que for de teste (seção J).
-- Achados já conhecidos e ainda abertos estão marcados **[aberto]**: anote se aparecerem, mas não são novidade.
+- Os achados RV-DVC-01…05 da revisão do Codex foram corrigidos em 28/10 (casos E12, E13, G5–G7 marcados "corrigido"); se algum deles falhar, anote como achado.
 
 ## A. Abertura e navegação (M0)
 
@@ -84,8 +84,8 @@ Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
 | E9 | **Prefiro digitar** numa pergunta | Formulário com o que já foi entendido |
 | E10 | Voltar com algo já entendido | "Descartar cadastro?" |
 | E11 | Mídia em 2 ao entrar na voz | Aviso "O volume está baixo…" no meio da tela, some em ~4 s |
-| E12 | "Metformina duas vezes ao dia" → na pergunta do primeiro horário, escolher no relógio **só um** horário (07:30) | "07:30 e 19:30". **[aberto RV-DVC-03]** o relógio deixa escolher mais de um; com "três vezes ao dia", um segundo horário escolhido some sem aviso |
-| E13 | Abrir o relógio na pergunta dos horários e tocar "Algo errado? Corrigir por voz" | Esperado: o seletor some na correção. **[aberto RV-DVC-05]** hoje ele continua na tela |
+| E12 | "Metformina três vezes ao dia" → na pergunta do primeiro horário, "Escolher no relógio" → 07:30 | Aparece "Horários do dia: 07:30, 15:30 e 23:30"; o botão vira "Trocar horário" (não dá para escolher um segundo). Confirmar → os três horários. (RV-DVC-03, corrigido) |
+| E13 | Abrir o relógio na pergunta dos horários e tocar "Algo errado? Corrigir por voz" | O seletor some e aparece "Diga a correção"; depois de Desfazer ou voltar, a pergunta volta sem o seletor aberto. (RV-DVC-05, corrigido) |
 
 ## F. Cadastro pela câmera (M4, RF20–RF23)
 
@@ -106,9 +106,9 @@ Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
 | G2 | ml → + várias vezes | 1, 1,5, 2…; revisão "2,5 ml" etc. |
 | G3 | Comprimido 2 → Cápsula; Comprimido meio → Cápsula | 2 continua; meio fica vazio |
 | G4 | Outro → "1 colher de sopa" | Revisão "1 colher de sopa" |
-| G5 | Gota → tocar no número → 120 → **+** | **[aberto RV-DVC-01]** vira 100 em vez de 121 |
-| G6 | ml → tocar no número → 0,25 → **+** | **[aberto RV-DVC-02]** vira 0,5 em vez de 0,75 |
-| G7 | Medicamento antigo com "1/2 comprimido" → editar → **+** | **[aberto RV-DVC-04]** fica "meio" em vez de 1 |
+| G5 | Gota → tocar no número → 120 → **+** | Continua 120 e o + fica apagado (o limite do + é 100; nada diminui). − vai a 119. (RV-DVC-01, corrigido) |
+| G6 | ml → tocar no número → 0,25 → **+**, depois **−** | 0,75 e de volta 0,25; com 0,25 o − fica apagado. (RV-DVC-02, corrigido) |
+| G7 | Medicamento antigo com "1/2 comprimido" → editar → **+** | Vira 1 ("1 comprimido"). (RV-DVC-04, corrigido) |
 
 ## H. Acessibilidade e legibilidade (RNF01–RNF04)
 

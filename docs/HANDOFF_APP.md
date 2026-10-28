@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**Reparo mais recente, 28/10/2026, Claude Code (Opus 5.5): RV-DVC-01…05 corrigidos** (+ não reduz nem arredonda, "1/2" anda para 1, relógio do primeiro horário escolhe um só e mostra os horários do dia, seletor fecha na correção). 134 testes; G5/G6 conferidos no A31. Falta a conferência do Codex.
+
 **Revisão mais recente, 28/10/2026, Codex (GPT-6), partida `main`/`4b455e7`, alvo `be24b9d..61d4c22`: três S2 e dois S3 abertos (RV-DVC-01…05).** Contador: limite 100 reduz quantidade e conversão perde decimais; relógio/frequência pode trocar horário escolhido; fração 1/2 não incrementa; seletor permanece durante correção. Build final/133 testes executados passam; quatro reprodutores falham nos achados. T01–T10/F01–F04, fontes/menu, erros e voz simulada na cobertura do relatório; 13 pares opacos de contraste conferem. `revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`. Código original restaurado/reinstalado só no emulador; registro temporário excluído e fonte 1,0× restaurada. Pull conciliado com registros da monografia, merge sem commit conforme roteiro. A31 não operado. Registros abaixo são históricos.
 
 **Conferência mais recente, 28/10/2026, Codex (GPT-6), `main`/`be24b9d`: RV-UN-01 fechado, sem achado novo no diff.** T08/T09, bloqueio sem quantidade, ida/volta sem editar, T01 e títulos conferidos no emulador API 35. Build passa; 128 testes sem falhas reutilizados (`UP-TO-DATE`). `revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md`. Rascunho descartado, medicamentos preservados; sem código/configuração alterados, commit/push ou A31 operado. Aceite do autor no A31 continua pendente. Resultados anteriores abaixo são históricos.
@@ -18,6 +20,8 @@ neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se m
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
+
+**28/10, Claude Code (último):** RV-DVC-01…05 corrigidos e instalados no A31. Próximo: conferência do Codex (pontual, nos cinco achados) e bateria do autor `docs/ROTEIRO_BATERIA_COMPLETA.md` no A31.
 
 **Atualização atual, Codex, 28/10:** reparar/conferir RV-DVC-01…05 (`revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`), mantendo a revisão pontual; o pacote DEC-038/039 ainda tem três S2/dois S3. Build/133 testes existentes passam. Registros da monografia vindos de `5bbacac` conciliados sem perda; merge preparado, commit pendente (roteiro da revisão proíbe commit/push). O roteiro manual do A31 foi atualizado pelo Claude para o menu; listas antigas abaixo são históricas.
 
@@ -80,6 +84,7 @@ mesma primeira instalação e mesmos tamanhos/datas do banco e WAL antes/depois,
 
 | Item | Situação |
 | --- | --- |
+| Reparo RV-DVC-01…05, Claude Code, 28/10 | `DoseUnit`: `canPlus` (+ apagado acima de 100, nunca reduz), `amountOf` em milésimos (0,25 + 0,5 = 0,75), − não chega a zero, "1/2"/"½" = 0,5; `VoiceQuestion.everyHours` e `TimesPicker` de um horário só com "Horários do dia"; relógio fecha em `state.correcting`. 134 testes. A31: G5 (120 gotas, + apagado) e G6 (0,25 → 0,75 → 0,25 ml) conferidos; E12/E13 (voz) e G7 não conferidos em tela. Falta conferência do Codex |
 | Dose/voz/contraste, Codex, 28/10 (`4b455e7`) | Três S2/dois S3 (RV-DVC-01…05); build final/133 testes executados passam, quatro reprodutores adicionais falham nos achados. T01–T10, quatro doses persistidas/reabertas, erros de dias/horários/término, fontes 1,0×/1,5×/2,0× e voz simulada conforme relatório. Registro `RevisaoDVC` excluído; original reinstalado, fonte 1,0× restaurada, `app/src` sem diff. A31/TalkBack/voz audível/câmera/ciclo temporal não conferidos. Relatório `revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md` |
 | Correção RV-UN-01, Codex, 28/10 (`be24b9d`) | Fechado: editar/apagar Outro não recupera quantidade antiga (T08/T09); Continuar bloqueia sem quantidade. T01, ida/volta sem editar, quatro títulos e avanço válido à etapa 2 passam no emulador API 35. Build passa; 128 testes sem falhas reutilizados. Abas/descarte/lista conferidos; sem crash AndroidRuntime observado. Sem código/configuração alterados ou medicamento gravado; A31 não operado. Limites em `revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md` |
 | Troca de unidade/DEC-037, Codex, 28/10 (`277361e`) | T01–T06 e transferência para Outro conferidos no emulador API 35. RV-UN-01 S2 preexistente: texto livre editado não invalida quantidade antiga; voltar à Cápsula recupera 2 e permite etapa 2. Build/128 testes executados passam. APK instalado só no emulador, rascunho descartado; sem escrita de medicamentos, alteração de código/configuração ou A31 operado. Fonte ampliada, edição persistida, TalkBack, voz/câmera e ciclo de lembretes fora da cobertura desta rodada. Relatório `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md` |
@@ -228,6 +233,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — reparo RV-DVC-01…05 (`DoseUnit.kt`, `FormScreen.kt`, `VoiceQuestions.kt`, `VoiceScreen.kt`; testes em `DoseUnitTest`/`VoiceParserTest`); "1/2" digitado no contador agora sai "meio comprimido"; bateria atualizada (E12, E13, G5–G7) — 134 testes; A31 G5/G6 ok, sem crash — pendente: conferência do Codex; E12/E13/G7 em tela. Observação: no A31 o tempo de tela foi posto em 10 min (`screen_off_timeout` 600000) sem anotar o valor anterior; o autor ajusta em Configurações.
 
 - 2026-10-28 — Claude Code — lida a revisão do Codex (`revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`: RV-DVC-01/02/03 S2, 04/05 S3, abertos); merge da monografia que o Codex deixou preparado concluído (`7cecebd`, sem marcadores, os dois lados preservados); bateria manual completa `docs/ROTEIRO_BATERIA_COMPLETA.md` (A–J, achados abertos marcados) — E8 conferido por teste temporário (removido) — pendente: reparo de RV-DVC-01…05 se o autor pedir; bateria pelo autor.
 
