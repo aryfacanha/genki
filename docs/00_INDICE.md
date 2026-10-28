@@ -15,9 +15,13 @@ Pasta: https://drive.google.com/drive/folders/1JZBdXTuPRvPtcUwVDdbKvA7g7SA3__XG
 | Checklist do CEP e justificativa das personas (26/10, sugestão) | Avaliação/Genki — Checklist do CEP e justificativa das personas | https://docs.google.com/document/d/1aW9eouZRjAX7T9xXBCE98hrYwOZuAM0rhV-O_D3MRAs/edit |
 | Justificativa formal da avaliação com personas (26/10, rascunho) | Avaliação/Genki — Justificativa formal da avaliação com personas | https://docs.google.com/document/d/1lSLVGNz5Seh2XSHxtqZFvpY4IVQOTYlgfeJhZ_mfy5c/edit |
 | Protótipo publicado (orientador) | Netlify | https://joyful-biscuit-677f74.netlify.app |
-| Monografia | — | ainda não está no Drive |
-| Manual IFRS / modelo do curso | — | ainda não está no Drive |
-| Artigos e referências | — | ainda não estão no Drive (há um `.bib` no Projeto do Claude) |
+| **Handoff da monografia** (fluxo GPT → Claude → GPT → autor, 28/10) | Handoff/Genki — Handoff da monografia — fluxo GPT e Claude | https://docs.google.com/document/d/1sL2hcIESDuo7DHfkeWqeEHHLBcA4ZES-UKENap4naDM/edit |
+| Pacote de escrita da fundamentação (28/10, rascunho) | Handoff/Genki — Pacote de escrita da fundamentação — v0.1 | https://docs.google.com/document/d/1iCXmRbtqZA5Uclo9VPZhT0w3iZrzdtRgfa8JVU0kc7I/edit |
+| Matriz de evidências da monografia | Handoff/Genki — Matriz de evidências da monografia | https://docs.google.com/spreadsheets/d/1mabFCyINIEjwSzlmARNO8bpiFn5Q-fu4lvXSokwdbuE/edit |
+| Monografia (manuscrito) | — | ainda não criado; aguarda validação do sumário |
+| Manual SiBIFRS de trabalhos acadêmicos (2019) | Referencias/manual_trabalhos_academicos_ifrs.pdf | https://drive.google.com/file/d/1dWfNOEzHRb6uWNBWCTEdTBpt4JA70bAm/view |
+| Modelo do curso para a monografia | — | não localizado no Drive |
+| Artigos e referências | Referencias/referencias_zotero_todas.zip (38 MB, acima do limite do conector) | `.bib` no Projeto do Claude |
 | Devolutivas do orientador | — | — |
 
 Cronograma institucional 2026/2: monografia em PDF até 16/11/2026; bancas de 23/11 a 04/12; versão corrigida até 16/12.

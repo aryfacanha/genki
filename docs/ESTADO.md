@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude (Opus 5.5, chat do Projeto), partida `main`/`a1701d0`: monografia iniciada pelo fluxo do handoff do GPT (Drive, pasta Handoff).** Criados no Drive o pacote de escrita da fundamentação v0.1 (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, rascunho da subseção 2.2) e a matriz de evidências (EVID-001 a 024, inventário do `.bib`). Texto proposto, não revisado nem integrado. Nenhum PDF aberto: Gomez-Hernandez (2023) e Nimmanterdwong (2022) lidos no HTML do JMIR; páginas pendentes. Próximo: auditoria do GPT no handoff; o autor decide o acesso aos PDFs do Zotero e valida o sumário.
+
 **Fim de 27/10/2026, Claude Code (Opus 5.5):** para a próxima sessão do app, começar por `docs/HANDOFF_APP.md` → "Retomar aqui" (teste manual do autor no A31 e a pergunta em aberto sobre "meio cápsula").
 
 **27/10/2026, Codex (GPT-6), partida `main`/`a96184b`: `33a33ab` (quantidade) e `a96184b` (grades) revisados, sem achado S1–S4 confirmado na cobertura executada.** Build/127 testes executados passam; após retirar entrada temporária, build final passa (testes `UP-TO-DATE`). Outra/4 preservado ao voltar, validação ao limpar, Meio, dias e grades conferidos; formulário e dias/horários/duração da voz em 2,0×; fluxo de voz chega à revisão com dados corretos. Aviso central legível em 2,0× e expiração conferidos no APK original. Rascunhos descartados, original reinstalado só no emulador; fonte 1,0×/mídia 8/15 restauradas, dados/relógio/permissões preservados. Sem código permanente alterado pelo revisor ou A31 operado. Relatório: `docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`. Próximo: aceite no A31 e verificações técnicas; TalkBack e voz/TTS audíveis não verificados nesta rodada. Registros abaixo são históricos.
@@ -86,7 +88,7 @@ Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — M2 (lembretes) implemen
 | Código Android | **M0–M4 implementados; M3 revisado na cobertura técnica executada em 27/10.** RV-M3-02 (resto)/E-01 fechados na conferência de `0cef3f1`; texto do grupo corrigido para “N lembretes”. Sem achado novo no escopo restrito. Aceite completo no A31 pendente | `app/`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
 | Handoff do app | `docs/HANDOFF_APP.md` (DEC-026): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
 | Testes | **126 testes existentes executados, zero falhas/erros**, após retirar os temporários da conferência de `d4d6350`. Nove reprodutores adicionais passam (9/9), incluindo os três antes falhos de RV-VZ-02. `app/src` sem mudanças; reprodutores históricos 43/43 não repetidos nesta rodada | `app/src/test/`, `docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
-| Monografia pós-proposta | Não está no Drive | — |
+| Monografia pós-proposta | **Iniciada em 28/10 (pacote de escrita e rascunho da 2.2, texto proposto)**; manuscrito ainda não criado | Drive, Handoff/ |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
 ## Prazos

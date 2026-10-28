@@ -2,6 +2,25 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Monografia: pacote de escrita da fundamentação e rascunho da 2.2 — 28/10/2026 — Claude (Opus 5.5, chat do Projeto)
+Partida: `main`/`a1701d0`; handoff da monografia do GPT no Drive (Handoff/, v0.1, 28/10); proposta final; planilha (RF01–RF25, RNF01–RNF11); plano de 26/10; manual SiBIFRS (2019); `.bib` do Zotero (Projeto do Claude).
+Realizado e arquivos alterados: no Drive, pasta Handoff: "Genki — Pacote de escrita da fundamentação — v0.1 — 28-10-2026" (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, normalização a confirmar, rascunho da subseção 2.2, pedido de auditoria ao GPT) e "Genki — Matriz de evidências da monografia" (EVID-001 a 024; inventário das 33 entradas do `.bib`); seção 12 acrescentada ao handoff. No repositório: `docs/00_INDICE.md`, `docs/ESTADO.md`, este bloco, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: estrutura do sumário; Google Docs como manuscrito (sugestão do GPT); padrão NBR 10520 e posição do Anexo I (confirmar com o orientador).
+Verificado: releitura do pacote no Drive após criar; atribuições do 1º parágrafo da 2.2 corrigidas. | Não verificado: nenhum PDF aberto; páginas impressas de todas as referências; trechos lidos no HTML do JMIR por ferramenta de extração (paráfrases), não conferidos literalmente; template do curso não localizado.
+Próxima tarefa e bloqueios: auditoria do GPT no handoff; depois, revisão da 2.2 e 2.1/2.3. Bloqueios: acesso à pasta Zotero negado; ZIP do Drive (38 MB) acima do limite de 10 MB do conector; download do JMIR bloqueado no ambiente do Claude.
+Links/commits: este commit; https://docs.google.com/document/d/1iCXmRbtqZA5Uclo9VPZhT0w3iZrzdtRgfa8JVU0kc7I/edit ; https://docs.google.com/spreadsheets/d/1mabFCyINIEjwSzlmARNO8bpiFn5Q-fu4lvXSokwdbuE/edit
+
+ENTREGA — Fluxo de escrita da monografia — 28/10/2026 — GPT (GPT-6) [espelhada do Drive pelo Claude; o GPT não tem acesso ao repositório]
+Partida: proposta final, requisitos, plano e revisão GPT de 26/10 no Drive; pedido do autor.
+Realizado: pesquisa das integrações (Drive, Docs, Zotero); recomendação de ferramentas; protocolo bibliográfico; separação da parte estável e variável; primeira ordem de trabalho para o Claude; criação do handoff "Genki — Handoff da monografia — fluxo GPT e Claude" (Drive, pasta Handoff).
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: Google Docs como manuscrito principal; fluxo GPT → Claude → GPT → autor.
+Verificado/Não verificado: ver seção 11 do handoff (Zotero local bloqueado; GitHub 404 no ChatGPT).
+Links: https://docs.google.com/document/d/1sL2hcIESDuo7DHfkeWqeEHHLBcA4ZES-UKENap4naDM/edit
+
+---
+
 ENTREGA — Revisão da quantidade por toque e grades — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`a96184b`; pull atualizado; alvos `33a33ab` e `a96184b`; originais atuais da proposta/requisitos reabertos no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`, nota na revisão anterior, estado/handoff (§2/3/7 e Diário)/entregas/registro. Sem achado S1–S4 confirmado na cobertura executada.
