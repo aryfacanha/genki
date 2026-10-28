@@ -21,7 +21,7 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**28/10, Claude Code (último):** RV-DVC-01…05 corrigidos e instalados no A31. Próximo: conferência do Codex (pontual, nos cinco achados) e bateria do autor `docs/ROTEIRO_BATERIA_COMPLETA.md` no A31.
+**28/10, Claude Code (último):** RV-DVC-01…05 corrigidos e instalados no A31. Próximo: conferência do Codex com `revisoes/ROTEIRO_CONFERENCIA_RV_DVC_CODEX.md` (pontual, nos cinco achados) e bateria do autor `docs/ROTEIRO_BATERIA_COMPLETA.md` no A31.
 
 **Atualização atual, Codex, 28/10:** reparar/conferir RV-DVC-01…05 (`revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`), mantendo a revisão pontual; o pacote DEC-038/039 ainda tem três S2/dois S3. Build/133 testes existentes passam. Registros da monografia vindos de `5bbacac` conciliados sem perda; merge preparado, commit pendente (roteiro da revisão proíbe commit/push). O roteiro manual do A31 foi atualizado pelo Claude para o menu; listas antigas abaixo são históricas.
 
