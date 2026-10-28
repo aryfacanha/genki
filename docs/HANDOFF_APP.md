@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**Mais recente, 28/10/2026, Claude Code (Opus 5.5): DEC-041 introdução** (4 telas na primeira abertura; som como alarme, repetição e escuta automática; "Ver a introdução de novo" em Ajustes). 137 testes; emulador 1,0× e 2,0×. Falta revisão do Codex de `9ee4def..HEAD` e A31.
+
 **Mais recente, 28/10/2026, Claude Code (Opus 5.5): DEC-040 parte 2** (microfone abre sozinho depois da pergunta, confirmação falada "Anotei …", horários do dia ajustáveis na pergunta do primeiro horário). 137 testes; emulador ok. Falta revisão do Codex (partes 1 e 2) e A31.
 
 **Mais recente, 28/10/2026, Claude Code (Opus 5.5): DEC-040 parte 1** (avisos vazios na mesma altura, cartão adiado verde-claro, X na voz, dose da voz com menu e − +, "use contínuo"). 135 testes; conferido no emulador. Falta revisão do Codex; partes 2 (voz) e 3 (introdução) em seguida.
@@ -27,7 +29,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**28/10, Claude Code (mais recente):** DEC-040 partes 1 e 2 feitas; próximo: roteiro da tela de introdução (parte 3) para o autor aprovar; revisão do Codex de `9ee4def..HEAD`; instalar no A31 quando conectado.
+**28/10, Claude Code (último):** DEC-040 (partes 1 e 2) e DEC-041 (introdução) implementadas. Próximo: revisão do Codex de `9ee4def..HEAD`; instalar no A31 quando conectado (a introdução aparecerá uma vez também para quem já usava o app).
+
+**28/10, Claude Code:** DEC-040 partes 1 e 2 feitas; próximo: roteiro da tela de introdução (parte 3) para o autor aprovar; revisão do Codex de `9ee4def..HEAD`; instalar no A31 quando conectado.
 
 **28/10, Claude Code:** DEC-040 parte 1 feita (bateria do autor: `docs/RESULTADO_BATERIA_COMPLETA_A31.md`). Próximo: parte 2 (microfone automático, confirmação falada, E12) e parte 3 (roteiro da introdução para o autor aprovar); revisão do Codex de cada parte. A31 estava desconectado: parte 1 ainda não instalada nele.
 
@@ -96,6 +100,7 @@ mesma primeira instalação e mesmos tamanhos/datas do banco e WAL antes/depois,
 
 | Item | Situação |
 | --- | --- |
+| DEC-041 introdução, Claude Code, 28/10 | `ui/intro/IntroScreen.kt` (4 páginas, Pular, Voltar volta página); `IntroRoute` como início quando `Settings.introDone` é falso; `Settings`: `alarmSound` (em `ReminderSettings`), `autoListen`, `introDone`; `Notifications`: canal `lembretes_alarme` (som de alarme, `USAGE_ALARM`), canal em uso conforme o ajuste (também em `canNotify` e no atalho do sistema); `ui/settings/SettingsControls.kt` com os controles comuns a Ajustes e introdução; Ajustes com Som do lembrete, Voz e "Ver a introdução de novo"; `VoiceScreen` respeita `autoListen`. 137 testes (sem teste novo: lógica em SharedPreferences/Android). Emulador: introdução completa, não volta ao reabrir, Ajustes refletem as escolhas, lembrete real postado em `lembretes_alarme`, 2,0× sem corte. Não verificados: som de alarme audível no silencioso, Não perturbe, TalkBack, A31 |
 | DEC-040 parte 2, Claude Code, 28/10 | `Speaker.speak(text, onDone)` (UtteranceProgressListener; só a última fala conta; sem voz pt, fim imediato); `Prompt.listen` no `VoiceViewModel` (perguntas sim; revisão, correção e erros não; "Não entendi" ouve de novo uma vez só, `misses`); `VoiceScreen` abre o microfone ao fim da fala só com permissão já dada, tela em RESUMED e fase ASKING; toque em resposta/Escolher/Corrigir cancela a escuta (`SpeechInput.cancel`); `VoiceQuestions.confirmation` ("Anotei …") antes da próxima pergunta, da revisão e da correção; `TimesPicker` do primeiro horário gera os horários do dia e deixa trocar cada um (o parser mantém lista com todos os horários do dia). 137 testes (`confirmationSaysWhatWasJustUnderstood`, `adjustedTimesOfEveryHoursAreKept`). Emulador com fila de falas injetada (removida): escuta automática depois de cada pergunta, para no silêncio; E12 com 00:00 → 22:00 chega à revisão. Não conferidos: fala real/TTS audível no A31, ruído ambiente, TalkBack junto com a escuta automática |
 | DEC-040 parte 1, Claude Code, 28/10 | `EmptyMessage` comum (Hoje/Medicamentos, centralizado na área acima do botão, na frente da rolagem); `AlertColors`/`AlertSurface`/`AcknowledgeButton` na Hoje (adiado verde-claro com borda); `SoFarCard` com X + diálogo "Tirar …?"; `DosePicker` na voz reutiliza `DoseInput` (agora `internal`, `title = false`) e `VoiceViewModel.chooseDose` grava a dose no rascunho sem o interpretador; `VoiceParser`: "use/usa contínuo" e "use"/"usa" fora dos nomes. 135 testes. Emulador 1,0× (fala injetada, removida; banco do emulador guardado e devolvido): avisos vazios no mesmo y (1014 px), E1 sem "Use", dose 2 ml, X tira só a Metformina, adiado verde-claro após Adiar real. Não visto no A31, 2,0× nem TalkBack |
 | Conferência RV-DVC-01…05, Codex, 28/10 (`51a8d19`, código `a57c591`) | **Cinco fechados**, sem achado novo S1–S4 no diff. Build final/134 testes executados passam; quatro reprodutores adequados passam (dois originais exigiam regra antiga incompatível). Emulador API 35, fonte 1,0×: 120/+ apagado/−119; 0,25 ↔ 0,75 e 1,25 → 1,75, revisão 0,75 ml; 1/2 salvo preservado sem editar, + chega a 1; frequência 07:30/15:30/23:30, substituir, horários comuns múltiplos; correção/Voltar/Desfazer sem seletor. Original restaurado/reinstalado, `app/src` sem diff, registro temporário excluído e medicamentos anteriores preservados. Pull bloqueado por permissão Git; sem A31/voz real/TalkBack/fonte ampliada/câmera/ciclo de alarmes. `revisoes/CONFERENCIA_RV_DVC_CODEX.md` |
@@ -248,6 +253,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — DEC-041 introdução (IntroScreen, IntroRoute, Settings alarmSound/autoListen/introDone, canal de notificação novo `lembretes_alarme`, SettingsControls, Ajustes) — 137 testes; emulador 1,0×/2,0× e lembrete real no canal de alarme (fala injetada removida; teste excluído; som devolvido a notificação; permissão de microfone revogada; System UI do emulador travou na troca de fonte e foi reiniciada pelo aviso do sistema) — pendente: Codex, A31. Configuração: canal de notificação novo (não é permissão nova; manifest inalterado).
 
 - 2026-10-28 — Claude Code — DEC-040 parte 2 (`Speaker`, `SpeechInput.cancel`, `VoiceQuestions.confirmation`, `VoiceViewModel` listen/misses, `VoiceScreen` escuta automática e `TimesPicker` E12; testes; bateria E12, E17–E19) — 137 testes, emulador ok (injeção temporária removida; permissão de microfone do emulador concedida e revogada) — pendente: A31, revisão do Codex, parte 3. Limitação: com TalkBack ligado a escuta automática pode captar a leitura do próprio TalkBack (não testado).
 

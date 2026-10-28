@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude Code (Opus 5.5):** DEC-041 (introdução com A, B e C, aprovada pelo autor) implementada; 137 testes; emulador. Próximo: revisão do Codex de `9ee4def..HEAD` (DEC-040 e DEC-041); A31; registrar na monografia a introdução como acréscimo fora da proposta.
+
 **28/10/2026, Claude Code (Opus 5.5):** DEC-040 parte 2 implementada (microfone automático, confirmação falada, horários ajustáveis na pergunta do primeiro horário); 137 testes; emulador. Próximo: roteiro da introdução (parte 3) para o autor; revisão do Codex; A31.
 
 **28/10/2026, Claude Code (Opus 5.5):** bateria do autor no A31 registrada (`docs/RESULTADO_BATERIA_COMPLETA_A31.md`); DEC-040 aceita (ordem: ajustes pequenos, voz, introdução no app). Parte 1 implementada (135 testes, conferida no emulador). Próximo: parte 2 (voz), parte 3 (roteiro da introdução para aprovação), revisões do Codex; instalar no A31 quando conectado.

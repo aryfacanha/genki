@@ -19,6 +19,7 @@ grades, volume) e `ROTEIRO_TESTE_VOZ.md` (frases da voz).
 
 | # | Faça | Deve acontecer |
 |---|---|---|
+| A0 | Primeira abertura depois de instalar esta versão | Introdução "1 de 4": Boas-vindas → Como cadastrar → Do seu jeito (som, avisar de novo, tempo, ouvir sozinho) → Permitir avisos → **Começar** leva à Hoje. Ao reabrir, não aparece de novo; Ajustes → "Ver a introdução de novo" mostra outra vez (DEC-041) |
 | A1 | Abrir o Genki | Abre na **Hoje**, com a data por extenso; barra inferior Hoje, Medicamentos, Ajustes |
 | A2 | Tocar nas três abas | Cada uma abre sua tela; a aba ativa tem fundo verde-claro atrás do ícone e rótulo em negrito |
 | A3 | Medicamentos sem nenhum cadastro (se for o caso) | "Nenhum medicamento cadastrado."; o aviso fica na mesma altura do "Você ainda não possui lembretes." da Hoje (DEC-040) |
@@ -66,6 +67,7 @@ Crie "Teste B", 1 comprimido, todos os dias, um horário H = agora + 3 a 5 min, 
 | D8 | Ajustes: desligar a categoria "Lembretes de medicamentos" nas notificações do Android | A Hoje mostra o aviso de notificações bloqueadas com **Resolver em Ajustes**, que leva ao ajuste certo; religar faz o aviso sumir |
 | D9 | Ajustes do app | Repetição ("Avisar de novo se eu não responder"), "Tempo para avisar de novo" 10/20/30 e o estado das permissões ("Permitidas") |
 | D10 | Opcional: reiniciar o A31 com um horário futuro cadastrado | O lembrete seguinte ainda chega (alarmes reagendados ao ligar) |
+| D11 | Ajustes → Som do lembrete **Como alarme**; celular no silencioso; lembrete 3–5 min à frente | Toca com o som de alarme mesmo no silencioso (Não perturbe pode bloquear). Voltar para **Como notificação** depois (DEC-041) |
 
 ## E. Cadastro por voz (M3, RF12–RF19)
 
@@ -92,6 +94,7 @@ Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
 | E17 | Responder uma pergunta da voz e **não tocar no microfone** | Ao terminar de falar a pergunta seguinte, o app começa a ouvir sozinho ("Ouvindo…"). Se ninguém falar, aparece "Não ouvi nada…" e ele **não** volta a ouvir sozinho (DEC-040) |
 | E18 | Durante a escuta automática, tocar num botão de resposta ou em "Escolher…" | A escuta para; a resposta tocada vale e nada é ouvido para a pergunta seguinte (DEC-040) |
 | E19 | Ouvir as perguntas com atenção (volume alto) | Antes de cada pergunta, o app fala o que acabou de anotar: "Anotei 2 comprimidos. Em quais dias…"; na revisão, "Anotei … Confira antes de salvar." (DEC-040) |
+| E20 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" e cadastrar por voz | O microfone só abre com toque (DEC-041) |
 
 ## F. Cadastro pela câmera (M4, RF20–RF23)
 

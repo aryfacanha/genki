@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: tela de introdução (DEC-041) — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`afd3d09`; pedido do autor ("aprovo A, B e C, pode implementar").
+Realizado e arquivos alterados: `ui/intro/IntroScreen.kt` (novo), `ui/settings/SettingsControls.kt` (novo), `ui/settings/SettingsScreen.kt`, `ui/navigation/GenkiApp.kt`, `data/Settings.kt`, `reminders/Notifications.kt` (canal de alarme), `voice/ui/VoiceScreen.kt`; DECISOES (DEC-041), proposta, bateria (A0, D11, E20), docs.
+Decisões aceitas pelo autor nesta sessão: DEC-041.
+Sugestões pendentes: D (horário do primeiro remédio); desfazer exclusão; outras caixas.
+Verificado: `assembleDebug test` (137); emulador 1,0× e 2,0×; lembrete real no canal de alarme. | Não verificado: som de alarme no silencioso, Não perturbe, TalkBack, A31.
+Próxima tarefa e bloqueios: revisão do Codex; A31 desconectado.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: DEC-040 parte 2 (voz) — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`352527e`; pedido do autor ("sim, pode seguir nessa ordem").
 Realizado e arquivos alterados: `voice/Speaker.kt` (fim da fala), `voice/SpeechInput.kt` (cancel), `voice/VoiceQuestions.kt` (confirmation), `voice/ui/VoiceViewModel.kt` (Prompt.listen, misses, confirmação), `voice/ui/VoiceScreen.kt` (escuta automática, cancelar ao tocar, horários do dia ajustáveis); testes; bateria (E12, E17–E19); docs.

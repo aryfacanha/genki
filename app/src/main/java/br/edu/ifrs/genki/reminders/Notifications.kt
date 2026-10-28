@@ -7,11 +7,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.MainActivity
 import br.edu.ifrs.genki.R
 import br.edu.ifrs.genki.domain.Medication
@@ -21,14 +24,30 @@ import java.time.LocalTime
 /** Notificação do lembrete. Reconhecer não é ingestão: nunca "Tomado" (DEC-004). */
 object Notifications {
     private const val CHANNEL = "lembretes"
+    /** Som de alarme (DEC-032): o Android não deixa trocar o som de um canal depois de criado, por isso outro canal. */
+    private const val ALARM_CHANNEL = "lembretes_alarme"
 
     fun createChannel(context: Context) {
         val channel = NotificationChannel(CHANNEL, "Lembretes de medicamentos", NotificationManager.IMPORTANCE_HIGH)
             .apply { description = "Avisos nos horários cadastrados." }
-        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        val alarm = NotificationChannel(ALARM_CHANNEL, "Lembretes como alarme", NotificationManager.IMPORTANCE_HIGH).apply {
+            description = "Avisos nos horários cadastrados, com som de alarme, mesmo no modo silencioso."
+            setSound(
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build(),
+            )
+        }
+        context.getSystemService(NotificationManager::class.java).createNotificationChannels(listOf(channel, alarm))
     }
 
-    /** Permissão, notificações do app e a categoria "Lembretes de medicamentos" (o único canal) ligadas (RV-HOJE-01). */
+    /** Canal em uso: o de alarme se a pessoa escolheu "Como alarme". */
+    private fun channel(context: Context): String =
+        if ((context.applicationContext as GenkiApplication).container.settings.reminders.value.alarmSound) ALARM_CHANNEL else CHANNEL
+
+    /** Permissão, notificações do app e a categoria em uso ligadas (RV-HOJE-01). */
     fun canNotify(context: Context): Boolean =
         NotificationManagerCompat.from(context).areNotificationsEnabled() &&
             hasPermission(context) &&
@@ -39,7 +58,7 @@ object Notifications {
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
     private fun channelBlocked(context: Context): Boolean =
-        context.getSystemService(NotificationManager::class.java).getNotificationChannel(CHANNEL)?.importance ==
+        context.getSystemService(NotificationManager::class.java).getNotificationChannel(channel(context))?.importance ==
             NotificationManager.IMPORTANCE_NONE
 
     /** Ajuste do sistema que resolve: a categoria, se só ela estiver desligada; senão, as notificações do app. */
@@ -47,7 +66,7 @@ object Notifications {
         if (NotificationManagerCompat.from(context).areNotificationsEnabled() && channelBlocked(context)) {
             Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
                 .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                .putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL)
+                .putExtra(Settings.EXTRA_CHANNEL_ID, channel(context))
         } else {
             Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
         }
@@ -66,7 +85,7 @@ object Notifications {
             PendingIntent.FLAG_IMMUTABLE,
         )
         val ack = ReminderScheduler.pendingIntent(context, ReminderAction.ACK, timeId)
-        val notification = NotificationCompat.Builder(context, CHANNEL)
+        val notification = NotificationCompat.Builder(context, channel(context))
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(text)

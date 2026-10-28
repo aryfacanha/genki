@@ -1,7 +1,7 @@
 # Tela de introdução — proposta para aprovação do autor
 
-28/10/2026, Claude Code (Opus 5.5). Parte 3 da DEC-040. **Sugestão pendente:** nada aqui está aceito nem implementado
-até o autor aprovar. Origem: pedido do autor na bateria do A31 ("tela de introdução na primeira instalação, instruindo
+28/10/2026, Claude Code (Opus 5.5). Parte 3 da DEC-040. **Aprovada pelo autor em 28/10 com A, B e C (DEC-041) e
+implementada no mesmo dia; D fica para depois.** Origem: pedido do autor na bateria do A31 ("tela de introdução na primeira instalação, instruindo
 como ele funciona, e logo de cara com uma personalização"), DEC-032 (som como alarme e estilo de pop-up) e DEC-034
 (horário do primeiro remédio, anotado como sugestão).
 

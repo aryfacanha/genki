@@ -50,9 +50,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.R
 import br.edu.ifrs.genki.camera.ui.CameraScreen
 import br.edu.ifrs.genki.reminders.Notifications
+import br.edu.ifrs.genki.ui.intro.IntroScreen
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.add.AddChoiceScreen
 import br.edu.ifrs.genki.ui.details.DetailScreen
@@ -66,6 +68,7 @@ import br.edu.ifrs.genki.voice.ui.VoiceScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
+@Serializable object IntroRoute
 @Serializable object HomeRoute
 @Serializable object MedicationsRoute
 @Serializable object SettingsRoute
@@ -123,6 +126,9 @@ fun GenkiApp(openHomeRequests: Int = 0) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.canNotify(context)) {
             explainNotifications = true
         }
+    }
+    val start: Any = remember {
+        if ((context.applicationContext as GenkiApplication).container.settings.introDone) HomeRoute else IntroRoute
     }
     // Barra inferior só nas três abas; detalhes e formulários ocupam a tela inteira.
     val onTopLevel = TopLevelTab.entries.any { tab -> currentDestination?.hasRoute(tab.route::class) == true }
@@ -183,7 +189,8 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = HomeRoute,
+            // Primeira abertura: introdução (DEC-040); depois, sempre a Hoje.
+            startDestination = start,
             modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
             // Troca de tela sem esmaecer (pedido do autor, 27/10).
             enterTransition = { EnterTransition.None },
@@ -244,7 +251,15 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                     onSaved = { navController.popBackStack() },
                 )
             }
-            composable<SettingsRoute> { SettingsScreen() }
+            composable<IntroRoute> {
+                IntroScreen(onDone = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                })
+            }
+            composable<SettingsRoute> { SettingsScreen(onIntro = { navController.navigate(IntroRoute) }) }
             composable<DetailRoute> { entry ->
                 val route = entry.toRoute<DetailRoute>()
                 val id = route.id

@@ -71,6 +71,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.MedicationDraft
@@ -139,11 +140,13 @@ fun VoiceScreen(
     // Depois de falar a pergunta, o microfone abre sozinho (DEC-040: sem tocar a cada pergunta). Só com a permissão já
     // dada, com a tela à vista e numa pergunta; se ninguém falar, o reconhecedor para e espera o toque.
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    // Pode ser desligado na introdução ou em Ajustes.
+    val autoListen = remember { (context.applicationContext as GenkiApplication).container.settings.autoListen }
     val current by rememberUpdatedState(state)
     LaunchedEffect(state.prompt) {
         val prompt = state.prompt ?: return@LaunchedEffect
         speaker.speak(prompt.text) {
-            val ready = prompt.listen && current.phase == VoicePhase.ASKING && !current.listening &&
+            val ready = prompt.listen && autoListen && current.phase == VoicePhase.ASKING && !current.listening &&
                 !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
                 ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
             if (ready && current.prompt?.id == prompt.id && input.isAvailable()) input.start()
