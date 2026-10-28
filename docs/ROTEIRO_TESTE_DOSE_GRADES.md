@@ -10,8 +10,8 @@ por ele no emulador; acrescentados T08–T09, do achado RV-UN-01, **corrigido no
 Claude no emulador; A31 atualizado às 11:09).
 
 Atualizado de novo em 28/10 com dois pedidos do autor: **"Outra" com − e +** (DEC-038; Q06–Q07 e Q10–Q12, F01 e
-F04) e **relógio na pergunta dos horários da voz** (G07–G10). Conferidos pelo Claude no emulador; A31 ainda com a
-versão das 11:09 até ser reinstalado.
+F04) e **relógio na pergunta dos horários da voz** (G07–G10). Conferidos pelo Claude no emulador; versão instalada
+no A31 às 12:09 (`011d4e8`).
 
 ## Como usar
 

@@ -19,7 +19,7 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 **28/10, Codex:** conferência de `be24b9d` concluída, RV-UN-01 fechado; nenhum reparo adicional indicado no diff. Seguir com teste manual do autor no A31 e verificações técnicas previstas. Não confundir os registros históricos de achado aberto abaixo com o estado atual.
 
-**28/10, Claude Code (mais tarde):** DEC-038 implementada (− e + em "Outra"; relógio na pergunta dos horários da voz), conferida no emulador; **A31 desconectou na instalação** (continua com a versão das 11:09). Roteiro atualizado (Q06–Q12, G07–G10, F04). Falta reinstalar no A31, conferência do Codex e teste do autor.
+**28/10, Claude Code (mais tarde):** DEC-038 implementada (− e + em "Outra"; relógio na pergunta dos horários da voz), conferida no emulador; **instalada no A31 às 12:09** (`011d4e8`). Roteiro atualizado (Q06–Q12, G07–G10, F04). Falta conferência do Codex e teste do autor.
 
 **28/10, Claude Code:** RV-UN-01 corrigido (T08/T09 conferidos no emulador), A31 atualizado às 11:09; falta a conferência do Codex e o teste do autor com `docs/ROTEIRO_TESTE_DOSE_GRADES.md`.
 
@@ -55,7 +55,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
-| "Outra" com − e + e relógio na voz (DEC-038) | Implementado em 28/10; 132 testes (+4: passos, metades, ida e volta do texto, horários do relógio pelo interpretador). Emulador: contador 1 → 3 e meio; relógio da voz 07:30 + 19:30 → "Entendi até agora" e pergunta da duração. Não instalado no A31 (desconectou); revisão do Codex pendente | este commit |
+| "Outra" com − e + e relógio na voz (DEC-038) | Implementado em 28/10; 132 testes (+4: passos, metades, ida e volta do texto, horários do relógio pelo interpretador). Emulador: contador 1 → 3 e meio; relógio da voz 07:30 + 19:30 → "Entendi até agora" e pergunta da duração. Instalado no A31 (28/10, 12:09); revisão do Codex pendente | `011d4e8` |
 | Quantidade ao trocar a unidade (DEC-037) | Revisado pelo Codex; **RV-UN-01 fechado em 28/10 na conferência de `be24b9d`**, T08/T09 e preservação sem editar passam no emulador; sem achado novo no diff. Build passa, 128 testes reutilizados sem falhas. Instalado no A31 pelo Claude (28/10, 11:09); aceite do autor pendente | `a2680da`, `be24b9d`; `revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md` |
 | Quantidade por toque e grades | Revisados pelo Codex em 27/10, sem achados na cobertura executada. Build/127 testes executados passam; Outra/4 preservado, quantidade vazia bloqueia, Meio/dias/voz corretos; formulário e dias/horários/duração da voz em 2,0×. Original reinstalado só no emulador. Aceite no A31 pendente | `33a33ab`, `a96184b`; `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Chips e aviso temporário de volume | Diff de `ee23734` sem defeito confirmado; `CheckSlot` substituído por `ChoiceGrid` em `a96184b`. Aviso complementado pelo Codex no APK original: entrada com mídia 2/15, legível em 2,0×, some sozinho; demais transições e TalkBack não repetidos nesta conferência | `ee23734`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; conferência posterior em `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
@@ -221,6 +221,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — `011d4e8` instalado no A31 (`install -r` Success, 12:09, APK arm64-v8a) — tela não conferida — pendente: teste do autor; revisão do Codex.
 
 - 2026-10-28 — Claude Code — DEC-038: `DoseUnit.step/value/amountOf/plus/minus/canMinus`, "N comprimido(s) e meio" em `dose`/`parse`; `FormScreen.AmountStepper` (− campo decimal +, 56 dp, "Diminuir"/"Aumentar" no TalkBack) no lugar do campo de "Outra"; `TimeDialog` movido de `FormScreen` para `ui/components/TimeDialog.kt` (público) e usado no novo `VoiceScreen.TimesPicker` ("Escolher no relógio" só na pergunta dos horários, fora da correção); `VoiceQuestions.timesAnswer` — 132 testes (+4); emulador: contador e relógio da voz (fala injetada por ajuste temporário em `SpeechInput.start`, removido; arquivo idêntico ao original), rascunho descartado — não verificado: A31 (desconectou na instalação), Q11/Q12 e G09 em tela, fonte 2,0×, TalkBack — pendente: reinstalar no A31; revisão do Codex; teste do autor.
 
