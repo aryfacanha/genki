@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-**28/10/2026, Claude Code (Opus 5.5):** pergunta do "meio cápsula" decidida pelo autor (DEC-037): ao trocar a unidade da dose, a quantidade continua só se existir como botão na nova unidade; senão fica vazia. 128 testes. Não conferido em tela (emulador fechado; A31 conectado, não instalado). Pendente: teste manual do autor no A31 (`HANDOFF_APP.md` → "Retomar aqui"); revisão do Codex.
+**28/10/2026, Claude Code (Opus 5.5):** pergunta do "meio cápsula" decidida pelo autor (DEC-037): ao trocar a unidade da dose, a quantidade continua só se existir como botão na nova unidade; senão fica vazia. 128 testes. Instalado no A31 (10:25), não conferido em tela. Roteiro do teste manual: `docs/ROTEIRO_TESTE_DOSE_GRADES.md`. Pendente: teste do autor; revisão do Codex.
 
 **Fim de 27/10/2026, Claude Code (Opus 5.5):** para a próxima sessão do app, começar por `docs/HANDOFF_APP.md` → "Retomar aqui" (teste manual do autor no A31 e a pergunta em aberto sobre "meio cápsula").
 

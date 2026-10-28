@@ -17,7 +17,8 @@ Situação no fim de 27/10: `main` com tudo commitado (exceto `.idea/`, do autor
 `a96184b` (grades). Nenhum achado aberto: `33a33ab` e `a96184b` revisados pelo Codex sem achados
 (`revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`). O autor começou o teste manual e pediu as grades; o resto não testou.
 
-1. **Teste manual do autor no A31** (só ele confirma; registrar o resultado aqui e no `ESTADO.md`):
+1. **Teste manual do autor no A31** com o roteiro `docs/ROTEIRO_TESTE_DOSE_GRADES.md` (A31 com `a2680da`, 28/10 10:25;
+   só o autor confirma; registrar o resultado aqui e no `ESTADO.md`). Resumo:
    - Formulário: unidade, quantidade (Meio/1/2/3/Outra) e dias específicos em grade, caixas iguais e alinhadas, ✓ só
      na marcada; "Meio comprimido" e "Outra" = 4 salvam certo; trocar de unidade mantém a quantidade (2 comprimidos →
      2 cápsulas); editar um medicamento com "4 comprimidos" abre com "Outra" marcada; unidade "Outro" = texto livre.
@@ -42,7 +43,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
-| Quantidade ao trocar a unidade (DEC-037) | Implementado em 28/10; 128 testes. Não conferido em tela nem instalado; revisão do Codex pendente | este commit |
+| Quantidade ao trocar a unidade (DEC-037) | Implementado em 28/10; 128 testes. Instalado no A31 (28/10, 10:25), não conferido em tela; revisão do Codex pendente | este commit |
 | Quantidade por toque e grades | Revisados pelo Codex em 27/10, sem achados na cobertura executada. Build/127 testes executados passam; Outra/4 preservado, quantidade vazia bloqueia, Meio/dias/voz corretos; formulário e dias/horários/duração da voz em 2,0×. Original reinstalado só no emulador. Aceite no A31 pendente | `33a33ab`, `a96184b`; `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Chips e aviso temporário de volume | Diff de `ee23734` sem defeito confirmado; `CheckSlot` substituído por `ChoiceGrid` em `a96184b`. Aviso complementado pelo Codex no APK original: entrada com mídia 2/15, legível em 2,0×, some sozinho; demais transições e TalkBack não repetidos nesta conferência | `ee23734`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; conferência posterior em `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Ajustes após roteiro de voz e DEC-036 | Implementados e revisados pelo Codex em 27/10. **RV-VZ-01/02 fechados** na conferência de `d4d6350`, sem achado novo no escopo. Cadastro recebido confirma Cancelar/voltar; correções repetidas mantêm só os horários esperados nos casos reproduzidos. Build/126 testes e nove reprodutores passam; instalação no A31 registrada pelo Claude, aceite completo pendente | `fa75715`, `0ea0da7`, `d4d6350`; `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
@@ -202,6 +203,7 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-28 — Claude Code — roteiro `docs/ROTEIRO_TESTE_DOSE_GRADES.md` (quantidade, troca de unidade, grades, aviso de volume, edição, fonte 2,0×, TalkBack opcional); `a2680da` instalado no A31 (`install -r` Success, 10:25) — só documentação; roteiro não executado — pendente: teste do autor.
 - 2026-10-28 — Claude Code — DEC-037: `DoseUnit.keep` (quantidade continua ao trocar de unidade só se for botão dela) usado no `DoseInput`; tocar na unidade já marcada é ignorado (não apaga "Outra") — 128 testes (+1) — não verificado: tela (emulador fechado), A31 não instalado — pendente: teste do autor; revisão do Codex.
 
 - 2026-10-27 — Claude Code — bloco "Retomar aqui" no topo deste arquivo (teste manual pendente do autor e pergunta "meio cápsula"); commit dos docs locais da revisão do Codex (`REVISAO_QUANTIDADE_GRADE_CODEX.md`) — só documentação — pendente: teste do autor no A31.

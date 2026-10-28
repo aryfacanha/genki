@@ -1,0 +1,106 @@
+# Roteiro de teste manual — quantidade da dose, grades e aviso de volume (A31)
+
+Criado em 28/10/2026 por Claude Code (Opus 5.5), a pedido do autor, para as mudanças de 27–28/10: quantidade em um
+toque (`33a33ab`), opções em grade (`a96184b`), aviso de volume no meio da tela (`ee23734`) e quantidade ao trocar a
+unidade (DEC-037, `a2680da`). Versão instalada no A31 em 28/10, 10:25. Os resultados esperados vêm do código e dos
+testes; **não foi executado no aparelho.**
+
+## Como usar
+
+- Formulário: **Hoje → Adicionar medicamento → Digitar**. Voz: **→ Usar voz**.
+- Nada precisa ser salvo, exceto em F01–F03 (edição). Para sair sem salvar: **Cancelar → Descartar**.
+- Anotar por caso: **ok** ou **problema** (o que apareceu + print).
+- "Grade" = caixas do mesmo tamanho, alinhadas em colunas, com ✓ só na marcada. Marcar ou desmarcar não pode
+  mudar o tamanho nem a posição de nenhuma caixa.
+
+## A. Unidade e quantidade (etapa 1 do formulário)
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| Q01 | Olhar "Quanto você toma por vez" antes de tocar | Grade com Comprimido, Cápsula, Gota, ml, Outro; nenhuma marcada; ainda não aparece "Quantos…" |
+| Q02 | Tocar **Comprimido** | ✓ só em Comprimido; aparece "Quantos comprimidos" com Meio, 1, 2, 3, Outra (nenhuma marcada) |
+| Q03 | Nome "Teste", sem quantidade → **Continuar** | Não avança: "Informe quanto você toma por vez." |
+| Q04 | Tocar **Meio** → Continuar → … até a revisão | Revisão mostra dose **"meio comprimido"** |
+| Q05 | Comprimido → **2** | Revisão: "2 comprimidos" (plural) |
+| Q06 | Comprimido → **Outra** → digitar "4" | Campo "Outra quantidade" aparece; ✓ em Outra; revisão "4 comprimidos" |
+| Q07 | Em Q06, tocar **1** e depois **Outra** de novo | Ao tocar 1, o campo some e o ✓ passa para 1; ao voltar para Outra, o campo vem vazio |
+| Q08 | Tocar **Cápsula**, **Gota** e **ml** (um de cada vez) | Quantidades: Cápsula 1/2/3/Outra; Gota 5/10/15/20/Outra; ml 5/10/15/Outra |
+| Q09 | Tocar **Outro** e digitar "1 colher de sopa" | Campo "Como você toma"; revisão "1 colher de sopa" |
+
+## B. Trocar de unidade (DEC-037)
+
+A quantidade só continua se a nova unidade tiver o mesmo botão; se não tiver, fica sem marcação e é preciso
+escolher de novo.
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| T01 | Comprimido + **2** → tocar Cápsula | "2" continua marcado; revisão "2 cápsulas" |
+| T02 | Comprimido + **Meio** → tocar Cápsula | **Nenhuma quantidade marcada** (sem "meio cápsula"); Continuar → "Informe quanto você toma por vez." |
+| T03 | Gota + **20** → tocar ml | Nenhuma quantidade marcada (sem "20 ml") |
+| T04 | ml + **5** → tocar Gota | "5" continua; "5 gotas" |
+| T05 | Comprimido + Outra "4" → tocar Cápsula | Nenhuma quantidade marcada, sem o campo "Outra quantidade" |
+| T06 | Comprimido + Outra "4" → tocar **Comprimido** de novo | Nada muda: "4" continua no campo |
+| T07 | Comprimido + 2 → tocar **Outro** | Campo livre já com "2 comprimidos" |
+
+## C. Dias específicos (etapa 2 do formulário)
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| D01 | Tocar **Dias específicos** | Grade com Dom, Seg, Ter, Qua, Qui, Sex, Sáb (até 4 por linha), nenhum marcado |
+| D02 | Marcar Seg, Qua e Sex e depois desmarcar Qua | ✓ só nos marcados; as caixas não mudam de lugar nem de tamanho |
+| D03 | Dias específicos sem nenhum dia → Continuar | "Selecione pelo menos um dia." |
+| D04 | Na voz, "Escolher os dias" (G03) | Mesma grade, mas com os nomes inteiros (Segunda, Terça…) |
+
+## D. Voz: respostas em grade
+
+Diga só **"Losartana"** e responda pelos botões.
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| G01 | Pergunta da dose | Grade: 1 comprimido, 2 comprimidos, meio comprimido, 1 cápsula, 10 gotas. Tocar **meio comprimido** → revisão "meio comprimido" |
+| G02 | Pergunta dos dias | Grade: Todos os dias, Segunda a sexta, Fim de semana + "Escolher os dias" |
+| G03 | **Escolher os dias** → Segunda e Sexta → **Confirmar dias** | "Confirmar dias" só aparece depois de marcar um dia; revisão "segunda e sexta" |
+| G04 | Pergunta dos horários | Grade: 08:00, 12:00, 20:00, 08:00 e 20:00 |
+| G05 | Pergunta da duração | Grade: Uso contínuo, Ainda não sei, Por 7 dias, Por 10 dias |
+| G06 | **Prefiro digitar** na pergunta dos horários (com dose "meio comprimido" já entendida) | Formulário com Comprimido + **Meio** marcados |
+
+## E. Aviso de volume (tela da voz)
+
+O aviso aparece quando o volume de **mídia** está abaixo de 30 % (no A31, 4 de 15 ou menos). Para ver a barra de
+mídia: botão de volume → abrir o painel (⋯) → barra com ♪.
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| A01 | Mídia em 2 → entrar em Usar voz | Aviso no meio da tela: "O volume está baixo. Aumente para ouvir as perguntas."; some sozinho em ~4 s |
+| A02 | Depois de A01, sem mexer no volume | O aviso não volta |
+| A03 | Subir a mídia para 8 e baixar para 2 | O aviso volta e some de novo em ~4 s |
+| A04 | Com o aviso na tela, subir a mídia para 8 | O aviso some na hora |
+| A05 | Mídia em 8 → entrar em Usar voz | Nenhum aviso |
+
+## F. Edição
+
+Salve antes, pelo formulário, "Teste" com estas doses e depois abra **Medicamentos → Teste → Editar**.
+
+| # | Dose salva | Ao editar, deve abrir com |
+|---|---|---|
+| F01 | 4 comprimidos | Comprimido + **Outra** marcados, campo "4" |
+| F02 | meio comprimido | Comprimido + **Meio** |
+| F03 | 1 colher de sopa | **Outro**, campo "1 colher de sopa" |
+
+Ao terminar, excluir "Teste".
+
+## G. Fonte 2,0× (Configurações → Tela → Tamanho e estilo da fonte, no máximo)
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| X01 | Repetir Q02, Q08 e D01 | Rótulos inteiros (sem cortar "Comprimido" nem os dias); menos colunas é aceitável |
+| X02 | Repetir G01–G05 | Botões legíveis, nenhum texto cortado |
+| X03 | Repetir A01 | Aviso inteiro e legível |
+| X04 | Voltar a fonte ao normal. Em 1,0×, olhar Q01 | Comprimido/Cápsula/Gota em 3 colunas. Se cair para 2, anotar: decidir rótulo menor ou aceitar |
+
+## H. Opcional — TalkBack (ninguém conferiu ainda)
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| L01 | Passar o dedo nas caixas de unidade e de dias | Lê o nome e se está marcada ou não marcada |
+| L02 | Repetir A01 | Lê o aviso de volume |
