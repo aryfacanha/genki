@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+```text
+ENTREGA — App Android: APK release V1 para teste informal — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`0930dfd`; pedido do autor (gerar APK instalável para teste informal, fora da pesquisa, com pessoa de confiança).
+Realizado e arquivos alterados: `app/build.gradle.kts` (signingConfig release lido de `local.properties`); ícone adaptativo novo em `res/drawable` e `res/mipmap-anydpi` (monocromático incluído, `.webp` antigos removidos); docs.
+Decisões aceitas pelo autor nesta sessão: gerar e distribuir o APK de teste informal (28/10/2026); teste não entra na pesquisa.
+Sugestões pendentes: definir no `ESTADO.md` se e como resultados informais serão citados (por ora, não serão).
+Verificado: `assembleDebug test` (137); `assembleRelease` assinado, `apksigner verify` com o certificado do autor. | Não verificado: instalação do release em aparelho físico; ícone no launcher do A31.
+Próxima tarefa e bloqueios: bateria do autor no A31; versões seguintes com a mesma chave e versionCode maior.
+Links/commits: este commit. Chave e senhas fora do Git (`local.properties`, `D:/dev/genki-chave/`).
+```
+
 ENTREGA — Conferência pontual do reparo RV-4041-01…04 — 28/10/2026 — Codex (GPT-6.1)
 Partida: `main`/`5a7ce9e`; alvo `f4a3dff`, mesmo código do app. Pull bloqueado por escrita em `.git/FETCH_HEAD`; atualização remota não confirmada.
 Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_RV4041_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro. Quatro achados fechados na cobertura executada; nenhum achado novo S1–S4 confirmado no reparo.

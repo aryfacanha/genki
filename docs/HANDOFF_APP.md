@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**28/10, Claude Code (último):** APK release V1 assinado para teste informal (fora da pesquisa); ícone adaptativo novo. Próximo: bateria do autor no A31.
+
 **28/10, Codex (atual):** conferência pontual de `f4a3dff` concluída: **RV-4041-01…04 fechados** nos limites de `revisoes/CONFERENCIA_RV4041_CODEX.md`; build/137 testes executados passam, sem achado novo no reparo. Seguir com bateria do autor no A31 e verificações técnicas previstas, sem revisão ampla do interpretador. Toque real em notificação na introdução, voz/TTS audíveis e TalkBack não conferidos nesta rodada. Pull bloqueado por permissão Git; ajustes/permissões/canais restaurados, aviso pendente inicial não preservado (relatório). Registros de revisão pendente abaixo são históricos.
 
 **28/10, Claude Code (último):** RV-4041-01…04 reparados. Próximo: conferência pontual do Codex (repetir os passos do relatório); A31 com a bateria A0, A3, D4, D11, E1, E12, E14–E20.
@@ -165,6 +167,7 @@ mesma primeira instalação e mesmos tamanhos/datas do banco e WAL antes/depois,
 
 - Build e testes (PowerShell, na raiz): `.\gradlew.bat assembleDebug test`.
 - Instalar: `.\gradlew.bat installDebug` com um aparelho em `adb devices`.
+- APK de distribuição: `.\gradlew.bat assembleRelease` gera `app/build/outputs/apk/release/app-release.apk`, assinado se `local.properties` tiver `genki.release.storeFile/storePassword/keyAlias/keyPassword` (chave fora do Git). Conferir com `apksigner verify --print-certs`. Versão nova: mesma chave e `versionCode` maior.
 - Versões: AGP 9.4.1 (Kotlin 2.2.10 embutido), Gradle 9.6.0, compileSdk/targetSdk 37, minSdk 26 (DEC-011).
 - Codex CLI (forma que funcionou nas revisões do protótipo): `codex.cmd exec -m gpt-6.1-sol -s workspace-write - < roteiro.md`
   (roteiro via stdin). Ajuste o modelo se o CLI recusar.
@@ -273,6 +276,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — configuração: `app/build.gradle.kts` com signingConfig release via `local.properties`; ícone adaptativo novo (cápsula + ondas, monocromático), `.webp` antigos removidos; APK release V1 para teste informal fora da pesquisa — 137 testes; `apksigner verify` com o certificado do autor — pendente: instalação do release em aparelho físico.
 
 - 2026-10-28 — Codex (GPT-6.1) — conferência pontual do reparo `f4a3dff`, partida `main`/`5a7ce9e`; relatório `revisoes/CONFERENCIA_RV4041_CODEX.md` e estado/handoff §2/3/7/entregas/registro — RV-4041-01…04 fechados, sem achado novo no reparo; build final/137 testes executados passam; emulador: diálogos/TTS/escuta, E16/E17, canal bloqueado, recusa e navegação conferidos. Instrumentação retirada (SHA-256 originais), `app` sem diff, original reinstalado só no emulador; ajustes/permissões/canais restaurados e medicamentos preservados; aviso de Losartana já pendente na partida não preservado (limite no relatório). Pull bloqueado por escrita em `.git/FETCH_HEAD`; sem commit/push/A31 — pendente: toque real em notificação durante introdução, aceite no A31, verificações técnicas e integração acadêmica da introdução.
 

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -25,8 +27,24 @@ android {
         providers.gradleProperty("genki.abi").orNull?.let { abi -> ndk { abiFilters += abi } }
     }
 
+    // Chave do APK de distribuição (V1 para teste informal): fica fora do Git e é lida de `local.properties`
+    // (genki.release.storeFile/storePassword/keyAlias/keyPassword). Sem ela, o release sai sem assinatura.
+    val localProps = Properties().apply {
+        rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+    }
+    val releaseStoreFile = localProps.getProperty("genki.release.storeFile")
+    if (releaseStoreFile != null) {
+        signingConfigs.create("release") {
+            storeFile = file(releaseStoreFile)
+            storePassword = localProps.getProperty("genki.release.storePassword")
+            keyAlias = localProps.getProperty("genki.release.keyAlias")
+            keyPassword = localProps.getProperty("genki.release.keyPassword")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfigs.findByName("release")?.let { signingConfig = it }
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
