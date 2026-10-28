@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**27/10/2026, Codex (GPT-6), revisão de `ee23734` (chips/volume): nenhum achado S1–S4 confirmado no diff; build passa, 126 testes sem falhas nos resultados reutilizados (`UP-TO-DATE`).** Conferência de interface parcial: unidades com posições iguais ao marcar e aviso central observado em 2/15, depois ausente. Trabalho simultâneo alterou código e reinstalou outra interface no emulador; dias/fonte ampliada não foram validados de forma isolada. Fonte 1,0× e mídia 8/15 restauradas; sem código alterado pelo revisor ou operação no A31. Relatório: `docs/revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`. **`33a33ab`, criado durante esta sessão, permanece pendente de revisão própria**, assim como a conferência visual exclusiva e o aceite completo no A31.
+
 **27/10/2026, Claude Code (Opus 5.5):** quantidade da dose em um toque (pedido do autor): Comprimido Meio/1/2/3, Cápsula 1/2/3, Gota 5/10/15/20, ml 5/10/15 e "Outra" para digitar; "Outro" (unidade) continua texto livre. 127 testes; emulador: botões e "Meio" conferidos, "Outra" não conferida (o emulador estava sendo usado por outra sessão ao mesmo tempo); instalado no A31. Pendente: teste do autor; revisão do Codex.
 
 **27/10/2026, Claude Code (Opus 5.5):** segunda rodada do autor no A31: V32b e V46b ok. Pedidos aplicados: botões com ✓ (unidade da dose, dias no formulário e na voz) não mudam mais de tamanho ao marcar (`CheckSlot`); aviso de volume baixo na voz passa a ser um aviso no meio da tela que some sozinho (4 s ou ao aumentar o volume). 126 testes; conferido no emulador. **Não instalado no A31 (desconectado).** Pendente: instalar no A31; revisão do Codex.
@@ -120,6 +122,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App:** RV-VZ-01/02 fechados na conferência de `d4d6350` (`docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`); RV-HOJE-01/02/03 permanecem fechados. Continuar aceite completo no A31, onde o Claude registrou a instalação, e as verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, sem reabrir um ciclo amplo do interpretador.
+- **App:** revisar `33a33ab` (quantidade por toque) e concluir conferência visual de chips/volume em sessão exclusiva no emulador; `ee23734` sem defeito confirmado no diff, com build passando e interface parcialmente conferida (`docs/revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`). RV-VZ-01/02 e RV-HOJE-01/02/03 seguem fechados. Continuar aceite completo no A31 e verificações técnicas previstas de voz/TTS, câmera/embalagens e lembretes, sem reabrir um ciclo amplo do interpretador.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.

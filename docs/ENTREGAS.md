@@ -33,6 +33,15 @@ Links/commits: <...>
 
 ---
 
+ENTREGA — Revisão de chips e aviso de volume — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`ee23734`; pull atualizado; alvo `15dc9ef..ee23734`; proposta/requisitos atuais consultados no Drive.
+Realizado e arquivos alterados: relatório `docs/revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`, estado/handoff (§2/3/7 e Diário)/entregas/registro. Nenhum achado S1–S4 confirmado no diff.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: nenhuma nova.
+Verificado: build passa; resultados reutilizados de 126 testes sem falhas (`UP-TO-DATE`); interface parcial de unidades e aviso. | Não verificado: dias/fonte ampliada de forma isolada, TalkBack, voz/TTS audíveis, câmera, lembretes e A31. | Limitações: outra sessão alterou código/instalou interface posterior durante a checagem; fonte 1,0× e mídia 8/15 restauradas; pode restar rascunho manual não salvo; sem medicamento salvo/editado/excluído pelo revisor.
+Próxima tarefa e bloqueios: revisar `33a33ab` (criado durante a sessão) e concluir conferência visual em sessão exclusiva; aceite no A31.
+Links/commits: `docs/revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; alvo `ee23734`; sem código/configuração do app alterados pelo revisor, commit ou push.
+
 ENTREGA — Conferência da correção dos ajustes de voz/DEC-036 — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`d4d6350`; pull já atualizado; alvo `d4d6350`, após `1cc5f31`; originais atuais consultados no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`, nota no relatório anterior, estado/handoff (§2/3/7 e Diário)/entregas/registro. **RV-VZ-01/02 fechados**, sem achado novo no escopo.
