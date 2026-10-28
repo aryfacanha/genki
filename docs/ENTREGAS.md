@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: dose com menu de unidade e − número + (DEC-039) — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`14a80b5`; melhorias coladas pelo autor (menos caixas; select na dose).
+Realizado e arquivos alterados: `ui/form/FormScreen.kt` (`DoseInput`); roteiro (A, B, F, G06, X) e docs.
+Decisões aceitas pelo autor nesta sessão: DEC-039 (28/10).
+Sugestões pendentes: desfazer exclusão; levantar outras caixas (autor não escolheu para agora).
+Verificado: `assembleDebug test` (133); A31 1,5×: menu, contador, trocas. | Não verificado: 2,0×; edição salva; TalkBack.
+Próxima tarefa e bloqueios: contraste WCAG 2.2 AA; revisão do Codex.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: teste do roteiro no A31 e reparos A31-01…06 — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`b80303d`; pedido do autor (rodar o roteiro pelo ADB; depois "corrige os seis e reinstala").
 Realizado e arquivos alterados: `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`; `voice/ui/VoiceScreen.kt`, `voice/VoiceQuestions.kt`, `ui/form/FormScreen.kt`, `ui/components/Components.kt`, `VoiceParserTest.kt`; docs.

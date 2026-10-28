@@ -222,6 +222,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-28 — Claude Code — DEC-039: `DoseInput` com `ExposedDropdownMenuBox` (unidade) e `AmountStepper` sempre visível; saem `ChoiceGrid` da dose, "Quantos…" e o estado `typing`; `unitLabel`. Autor confirmou que as perguntas da voz foram faladas em voz alta no A31 — 133 testes; A31 1,5×: menu, primeira escolha em 1, + "1 e meio", trocas da DEC-037 (Cápsula vazia, 2 ↔ 2, Outro e volta, Gota vazia) — não verificado: 2,0×, edição salva, TalkBack no menu — pendente: revisão do Codex; contraste (próximo commit).
+
 - 2026-10-28 — Claude Code — sessão de voz no A31 com o autor falando (`f5188a0`): A31-01 e A31-06 fechados em tela; G06, G10 (Metformina, 07:30 → 07:30 e 19:30) e respostas da voz em 2,0× ok; fonte 1,5× restaurada — pendente: autor dizer se as perguntas foram faladas e testar TalkBack; revisão do Codex de `011d4e8`/`f5188a0`.
 
 - 2026-10-28 — Claude Code — reparos A31-01…06: `VoiceScreen.Asking` com estado por pergunta; `VoiceQuestions.nextClockTime` (+1 teste); `FieldError(message, modifier)` e `LocalErrorViews` no formulário (rolagem até o erro nas etapas); `AmountStepper` com `reveal` e rótulo "Quantidade"; `GenkiTopBar` com título em até 2 linhas e `TextAutoSize` — 133 testes; A31 (12:51): A31-02/03 em 1,5×, A31-04/05 em 2,0×; fonte 1,5× restaurada — não verificado: A31-01/06 em tela (precisam de fala) — pendente: voz com o autor; revisão do Codex.

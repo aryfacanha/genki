@@ -30,7 +30,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -286,35 +290,59 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
 }
 
 /**
- * Quanto toma: unidade para tocar e a quantidade (pedido do autor, 27/10, comparando com o MyTherapy); "Outro" é o
- * texto livre de antes. O resultado é o mesmo texto ("2 comprimidos") que o formulário já gravava.
+ * Quanto toma (DEC-039, pedido do autor para poluir menos a tela): unidade num menu e a quantidade no − número + logo
+ * abaixo; "Outro" no menu é o texto livre de antes. O resultado é o mesmo texto ("2 comprimidos") que o formulário já
+ * gravava.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) {
     val initial = remember { DoseUnit.parse(dose) }
     var unit by rememberSaveable { mutableStateOf(initial?.second) }
     var amount by rememberSaveable { mutableStateOf(initial?.takeIf { it.second != DoseUnit.OTHER }?.first.orEmpty()) }
-    // "Outra": quantidade fora dos botões, digitada.
-    var typing by rememberSaveable { mutableStateOf(unit != null && amount.isNotEmpty() && amount !in unit!!.amounts) }
-    // Tocou em Outra: rola até o − e + (com fonte grande ele aparecia abaixo da borda, A31-03); ao abrir uma edição
-    // já em Outra, não rola.
+    var open by remember { mutableStateOf(false) }
+    // Escolheu a unidade: rola até o − e + (com fonte grande ficava abaixo da borda, A31-03); ao abrir uma edição, não.
     var reveal by remember { mutableStateOf(false) }
+    val choose = { choice: DoseUnit ->
+        open = false
+        val previous = unit
+        if (choice != previous) {
+            when {
+                // Para "Outro", leva o que já estava montado para o texto livre.
+                choice == DoseUnit.OTHER -> if (previous != null) onChange(previous.dose(amount))
+                // A primeira escolha começa em 1 (DEC-038); na troca, a quantidade só continua se existir na nova
+                // unidade (DEC-037: nada de "meio cápsula" nem "20 ml" vindo de gotas).
+                previous == null -> { amount = "1"; onChange(choice.dose(amount)) }
+                else -> { amount = choice.keep(amount); onChange(choice.dose(amount)) }
+            }
+            unit = choice
+            reveal = choice != DoseUnit.OTHER
+        }
+    }
     Column {
         Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
-        ChoiceGrid(
-            DoseUnit.CHOICES,
-            label = { if (it == DoseUnit.ML) "ml" else it.singular.replaceFirstChar { c -> c.uppercase() } },
-            selected = { unit == it },
-            onClick = onClick@{ choice ->
-                if (choice == unit) return@onClick
-                // Para "Outro", leva o que já estava montado para o texto livre.
-                if (choice != DoseUnit.OTHER) { amount = choice.keep(amount); onChange(choice.dose(amount)) }
-                else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
-                unit = choice
-                typing = false
-            },
-            modifier = Modifier.padding(top = 8.dp),
-        )
+        ExposedDropdownMenuBox(expanded = open, onExpandedChange = { open = it }, modifier = Modifier.padding(top = 8.dp)) {
+            OutlinedTextField(
+                value = unit?.let(::unitLabel).orEmpty(),
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Unidade") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = open) },
+                isError = error != null && unit == null,
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+            )
+            ExposedDropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+                DoseUnit.CHOICES.forEach { choice ->
+                    DropdownMenuItem(
+                        text = { Text(unitLabel(choice), style = MaterialTheme.typography.bodyLarge) },
+                        onClick = { choose(choice) },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
         when (val chosen = unit) {
             null -> Unit
             DoseUnit.OTHER -> OutlinedTextField(
@@ -329,53 +357,25 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
-            else -> {
-                // Quantidade em um toque (pedido do autor, 27/10); "Outra" abre o − e + (DEC-038), ex.: 4 ou 1 e meio.
-                Text(
-                    when (chosen) {
-                        DoseUnit.ML -> "Quantos ml"
-                        DoseUnit.CAPSULE, DoseUnit.DROP -> "Quantas ${chosen.plural}"
-                        else -> "Quantos ${chosen.plural}"
-                    },
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
-                // `null` é "Outra".
-                ChoiceGrid(
-                    chosen.amounts + listOf(null),
-                    label = { value -> value?.let { if (it == "meio") "Meio" else it } ?: "Outra" },
-                    selected = { value -> if (value == null) typing else !typing && amount == value },
-                    onClick = { value ->
-                        if (value != null) { typing = false; amount = value; onChange(chosen.dose(value)) }
-                        // Começa na quantidade marcada, ou em 1 (DEC-038).
-                        else {
-                            typing = true; reveal = true
-                            if (chosen.value(amount) == null) amount = "1"
-                            onChange(chosen.dose(amount))
-                        }
-                    },
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-                if (typing) {
-                    AmountStepper(
-                        amount,
-                        reveal = reveal,
-                        isError = error != null,
-                        canMinus = chosen.canMinus(amount),
-                        onMinus = { amount = chosen.minus(amount); onChange(chosen.dose(amount)) },
-                        onPlus = { amount = chosen.plus(amount); onChange(chosen.dose(amount)) },
-                        onType = { amount = it; onChange(chosen.dose(it)) },
-                    )
-                }
-            }
+            else -> AmountStepper(
+                amount,
+                reveal = reveal,
+                isError = error != null,
+                canMinus = chosen.canMinus(amount),
+                onMinus = { amount = chosen.minus(amount); onChange(chosen.dose(amount)) },
+                onPlus = { amount = chosen.plus(amount); onChange(chosen.dose(amount)) },
+                onType = { amount = it; onChange(chosen.dose(it)) },
+            )
         }
         FieldError(error, errorView(Field.DOSE))
     }
 }
 
+private fun unitLabel(unit: DoseUnit) = if (unit == DoseUnit.ML) "ml" else unit.singular.replaceFirstChar { it.uppercase() }
+
 /**
- * "Outra" quantidade sem digitar (pedido do autor, DEC-038): − e + andam de um passo da unidade; tocar no número abre
- * o teclado numérico para casos raros (40 gotas).
+ * Quantidade sem digitar (DEC-038/039): − e + andam de um passo da unidade; tocar no número abre o teclado numérico
+ * para casos raros (40 gotas).
  */
 @Composable
 private fun AmountStepper(

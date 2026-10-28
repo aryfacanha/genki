@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude Code (Opus 5.5):** autor confirmou que as perguntas da voz são faladas em voz alta no A31. DEC-039: dose com unidade em menu e − número + (sem grades), conferida no A31 em 1,5×. Próximo: auditoria de contraste WCAG 2.2 AA (pedido do autor); depois revisão do Codex. Sugestões do autor ainda não pedidas para agora: desfazer exclusão; levantar outras caixas.
+
 **28/10/2026, Claude Code (Opus 5.5):** achados A31-01…06 reparados e instalados no A31 (12:51); A31-02…05 conferidos na tela, A31-01/06 ficam para a sessão de voz com o autor. 133 testes. Sessão de voz com o autor (12:56–13:02): A31-01/06, G06, G10 e voz em 2,0× ok. Pendente: TalkBack e confirmação da fala em voz alta pelo autor; revisão do Codex.
 
 **28/10/2026, Claude Code (Opus 5.5):** roteiro da dose/grades rodado no A31 pelo ADB, com autorização do autor: quase tudo ok; 1 S2 (seletor de horários da voz fica na pergunta seguinte), 3 S3 e 2 S4. Resultado: `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Pendente: autor decidir os reparos; G06/G10 (voz) e TalkBack com o autor.

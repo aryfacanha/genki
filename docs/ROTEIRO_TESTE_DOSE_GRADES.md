@@ -17,6 +17,9 @@ no A31 às 12:09 (`011d4e8`).
 `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md` (reparados e reinstalados às 12:51; o rótulo do contador agora é
 "Quantidade"). Sessão de voz (12:56–13:02) fechou A31-01/06, G06, G10 e X02. Falta o autor: G06, G10 (Metformina), voz em 2,0×, voz audível, TalkBack.
 
+**28/10, DEC-039:** a grade de unidades e os botões Meio/1/2/3/Outra saíram; a unidade fica num menu e a quantidade
+no − número + logo abaixo. Seções A, B e F reescritas; G06 agora mostra Comprimido com quantidade "meio".
+
 ## Como usar
 
 - Formulário: **Hoje → Adicionar medicamento → Digitar**. Voz: **→ Usar voz**.
@@ -25,39 +28,40 @@ no A31 às 12:09 (`011d4e8`).
 - "Grade" = caixas do mesmo tamanho, alinhadas em colunas, com ✓ só na marcada. Marcar ou desmarcar não pode
   mudar o tamanho nem a posição de nenhuma caixa.
 
-## A. Unidade e quantidade (etapa 1 do formulário)
+## A. Unidade e quantidade (etapa 1 do formulário) — DEC-039: menu + − número +
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| Q01 | Olhar "Quanto você toma por vez" antes de tocar | Grade com Comprimido, Cápsula, Gota, ml, Outro; nenhuma marcada; ainda não aparece "Quantos…" |
-| Q02 | Tocar **Comprimido** | ✓ só em Comprimido; aparece "Quantos comprimidos" com Meio, 1, 2, 3, Outra (nenhuma marcada) |
-| Q03 | Nome "Teste", sem quantidade → **Continuar** | Não avança: "Informe quanto você toma por vez." |
-| Q04 | Tocar **Meio** → Continuar → … até a revisão | Revisão mostra dose **"meio comprimido"** |
-| Q05 | Comprimido → **2** | Revisão: "2 comprimidos" (plural) |
-| Q06 | Comprimido (nada marcado) → **Outra** | ✓ em Outra; aparece **− 1 +** ("Outra quantidade"). Tocar + seis vezes: 1 e meio, 2, 2 e meio, 3, 3 e meio, 4; revisão "4 comprimidos" |
-| Q07 | Comprimido → marcar **1** → **Outra** → **+** uma vez | O contador começa em 1 (a marcada) e vai para "1 e meio"; revisão **"1 comprimido e meio"** |
-| Q10 | Comprimido → Meio → Outra; Cápsula → 1 → Outra | O **−** fica apagado (não desce de meio comprimido nem de 1 cápsula) |
-| Q11 | ml → **5** → Outra → **−** | "4,5"; revisão "4,5 ml". Gota → 20 → Outra → + → "21"; revisão "21 gotas" |
-| Q12 | Gota → Outra → **tocar no número**, apagar e digitar "40" | Abre o teclado numérico; revisão "40 gotas" |
-| Q08 | Tocar **Cápsula**, **Gota** e **ml** (um de cada vez) | Títulos "Quantas cápsulas", "Quantas gotas", "Quantos ml". Quantidades: Cápsula 1/2/3/Outra; Gota 5/10/15/20/Outra; ml 5/10/15/Outra |
-| Q09 | Tocar **Outro** e digitar "1 colher de sopa" | Campo "Como você toma"; revisão "1 colher de sopa" |
+| Q01 | Olhar "Quanto você toma por vez" antes de tocar | Campo "Unidade" vazio com seta; ainda sem quantidade |
+| Q02 | Tocar **Unidade** → **Comprimido** | Menu com Comprimido, Cápsula, Gota, ml, Outro; depois "Comprimido" no campo e **− 1 +** ("Quantidade") logo abaixo, à vista |
+| Q03 | Nome "Teste", sem unidade → **Continuar** | Não avança; a tela rola até "Informe quanto você toma por vez." |
+| Q04 | Comprimido → **−** → … até a revisão | "meio"; revisão **"meio comprimido"** |
+| Q05 | Comprimido → **+** duas vezes | "2"; revisão "2 comprimidos" |
+| Q06 | Comprimido → **+** seis vezes | 1 e meio, 2, 2 e meio, 3, 3 e meio, 4; revisão "4 comprimidos" |
+| Q07 | Comprimido → **+** uma vez | "1 e meio"; revisão **"1 comprimido e meio"** |
+| Q08 | Escolher Cápsula, Gota e ml num cadastro novo (um de cada vez) | Começam em 1; + anda de 1 em 1 (cápsula, gota) e de 0,5 em 0,5 (ml) |
+| Q09 | Unidade **Outro** e escrever "1 colher de sopa" | Campo "Como você toma"; revisão "1 colher de sopa" |
+| Q10 | Meio comprimido; 1 cápsula; 1 gota; 0,5 ml | O **−** fica apagado |
+| Q11 | ml → tocar no número → "5" → **−** | "4,5"; revisão "4,5 ml". Gota → "20" → + → "21 gotas" |
+| Q12 | Gota → tocar no número, apagar e digitar "40" | Teclado numérico; revisão "40 gotas" |
 
 ## B. Trocar de unidade (DEC-037)
 
-A quantidade só continua se a nova unidade tiver o mesmo botão; se não tiver, fica sem marcação e é preciso
-escolher de novo. T01–T07 já passaram no emulador (Codex, 28/10); no A31, ainda não.
+A quantidade só continua se for uma das comuns das duas unidades (1, 2 ou 3 entre comprimido e cápsula; 5, 10 ou 15
+entre gota e ml); senão o campo fica vazio e é preciso escolher de novo (+ começa em um passo).
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| T01 | Comprimido + **2** → tocar Cápsula | "2" continua marcado; revisão "2 cápsulas" |
-| T02 | Comprimido + **Meio** → tocar Cápsula | **Nenhuma quantidade marcada** (sem "meio cápsula"); Continuar → "Informe quanto você toma por vez." |
-| T03 | Gota + **20** → tocar ml | Nenhuma quantidade marcada (sem "20 ml") |
-| T04 | ml + **5** → tocar Gota | "5" continua; "5 gotas" |
-| T05 | Comprimido + Outra "4" → tocar Cápsula | Nenhuma quantidade marcada, sem o campo "Outra quantidade" |
-| T06 | Comprimido + Outra "4" → tocar **Comprimido** de novo | Nada muda: "4" continua no contador |
-| T07 | Comprimido + 2 → tocar **Outro** | Campo livre já com "2 comprimidos" |
-| T08 | Comprimido + 2 → Cápsula → **Outro** → trocar o texto por "1 colher de sopa" → fechar o teclado → tocar **Cápsula** | Nenhuma quantidade marcada; Continuar → "Informe quanto você toma por vez." (antes do reparo de RV-UN-01, o "2" voltava e a dose virava "2 cápsulas") |
-| T09 | Comprimido + 2 → **Outro** → **apagar** todo o texto → tocar **Comprimido** | Nenhuma quantidade marcada (antes do reparo, o "2" voltava) |
+| T01 | Comprimido **2** → Cápsula | "2" continua; revisão "2 cápsulas" |
+| T02 | Comprimido **meio** → Cápsula | Quantidade vazia (sem "meio cápsula"); Continuar → "Informe quanto você toma por vez." |
+| T03 | Gota **20** → ml | Vazia (sem "20 ml") |
+| T04 | ml **5** → Gota | "5" continua; "5 gotas" |
+| T05 | Comprimido **4** → Cápsula | Vazia |
+| T06 | Comprimido 4 → escolher **Comprimido** de novo no menu | Nada muda: "4" |
+| T07 | Comprimido 2 → **Outro** | Campo livre já com "2 comprimidos" |
+| T08 | Comprimido 2 → Cápsula → **Outro** → trocar o texto por "1 colher de sopa" → **Cápsula** | Quantidade vazia; Continuar → "Informe quanto você toma por vez." |
+| T09 | Comprimido 2 → **Outro** → **apagar** todo o texto → **Comprimido** | Quantidade vazia |
+| T10 | Comprimido 2 → Outro (sem mexer no texto) → Comprimido | "2" continua |
 
 ## C. Dias específicos (etapa 2 do formulário)
 
@@ -79,7 +83,7 @@ Diga só **"Losartana"** e responda pelos botões.
 | G03 | **Escolher os dias** → Segunda e Sexta → **Confirmar dias** | "Confirmar dias" só aparece depois de marcar um dia; revisão "segunda e sexta" |
 | G04 | Pergunta dos horários | Grade: 08:00, 12:00, 20:00, 08:00 e 20:00 |
 | G05 | Pergunta da duração | Grade: Uso contínuo, Ainda não sei, Por 7 dias, Por 10 dias |
-| G06 | **Prefiro digitar** na pergunta dos horários (com dose "meio comprimido" já entendida) | Formulário com Comprimido + **Meio** marcados |
+| G06 | **Prefiro digitar** na pergunta dos horários (com dose "meio comprimido" já entendida) | Formulário com Comprimido e quantidade "meio" |
 | G07 | Pergunta dos horários → **Escolher no relógio** | Abre o relógio de 24 h em 08:00. Escolher 07:30 → OK: aparece a caixa "✓ 07:30", "Adicionar outro horário" e "Confirmar horário" |
 | G08 | Em G07, **Adicionar outro horário** | O relógio já abre em 19:30 (12 h depois); OK → caixas 07:30 e 19:30; tocar numa delas a tira |
 | G09 | Em G08, escolher de novo 07:30 no relógio | "Este horário já foi adicionado." e OK apagado |
@@ -104,10 +108,10 @@ Salve antes, pelo formulário, "Teste" com estas doses e depois abra **Medicamen
 
 | # | Dose salva | Ao editar, deve abrir com |
 |---|---|---|
-| F01 | 4 comprimidos | Comprimido + **Outra** marcados, contador em "4" |
-| F02 | meio comprimido | Comprimido + **Meio** |
+| F01 | 4 comprimidos | Comprimido no menu, quantidade "4" |
+| F02 | meio comprimido | Comprimido, quantidade "meio" |
 | F03 | 1 colher de sopa | **Outro**, campo "1 colher de sopa" |
-| F04 | 1 comprimido e meio (Q07) | Comprimido + **Outra**, contador em "1 e meio" (antes abria em Outro, texto livre) |
+| F04 | 1 comprimido e meio (Q07) | Comprimido, quantidade "1 e meio" |
 
 Ao terminar, excluir "Teste".
 
@@ -115,10 +119,10 @@ Ao terminar, excluir "Teste".
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| X01 | Repetir Q02, Q08 e D01 | Rótulos inteiros (sem cortar "Comprimido" nem os dias); menos colunas é aceitável |
+| X01 | Repetir Q02 (menu aberto) e D01 | Menu e rótulos inteiros; título "Novo / medicamento" sem quebrar palavra |
 | X02 | Repetir G01–G05, G07 e Q06 | Botões legíveis, nenhum texto cortado; relógio e − número + cabem na tela |
 | X03 | Repetir A01 | Aviso inteiro e legível |
-| X04 | Voltar a fonte ao normal. Em 1,0×, olhar Q01 | Comprimido/Cápsula/Gota em 3 colunas. Se cair para 2, anotar: decidir rótulo menor ou aceitar |
+| X04 | Voltar a fonte ao normal. Em 1,0×, olhar Q02 | Menu e − número + inteiros |
 
 ## H. Opcional — TalkBack (ninguém conferiu ainda)
 
