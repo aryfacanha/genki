@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisão da quantidade por toque e grades — 27/10/2026 — Codex (GPT-6)
+Partida: `main`/`a96184b`; pull atualizado; alvos `33a33ab` e `a96184b`; originais atuais da proposta/requisitos reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`, nota na revisão anterior, estado/handoff (§2/3/7 e Diário)/entregas/registro. Sem achado S1–S4 confirmado na cobertura executada.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: nenhuma nova.
+Verificado: build/127 testes executados passam; Outra/4 preservado ao voltar, validação após limpar, Meio, dias/caixas estáveis e voz por toque até revisão correta; formulário e dias/horários/duração da voz em 2,0×. Entrada temporária retirada, build final passa (testes `UP-TO-DATE`), fonte original com hash idêntico e APK original reinstalado só no emulador; aviso em 2,0×/2 de 15 e expiração, abas/lista final conferidos. Rascunhos descartados, fonte 1,0×/mídia 8/15 restauradas, sem gravação de medicamentos ou mudança de relógio/permissões. | Não verificado: A31, TalkBack/voz audíveis, câmera, ciclo de lembretes e demais combinações/transições detalhadas no relatório.
+Próxima tarefa e bloqueios: aceite do autor no A31 e verificações técnicas previstas; nenhum reparo novo indicado.
+Links/commits: `docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`; alvos `33a33ab`/`a96184b`; sem código/configuração permanente, commit/push ou operação no A31 pelo revisor.
+
+---
+
 ```text
 ENTREGA — App Android: opções de toque em grade com caixas iguais — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`095296f`; pedido do autor ("as caixinhas têm tamanhos diferentes").

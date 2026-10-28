@@ -1,5 +1,7 @@
 # Revisão — chips e aviso de volume — Codex
 
+**Atualização posterior em 27/10/2026:** `33a33ab` e `a96184b` revisados pelo Codex, sem achados na cobertura executada: `REVISAO_QUANTIDADE_GRADE_CODEX.md`. Grades e fonte ampliada conferidas nos grupos registrados; aviso ao entrar baixo e expirar observado em 2,0× no APK original. Os limites desta primeira rodada abaixo são históricos; TalkBack e demais transições de volume não foram inferidos como verificados.
+
 Data: 27/10/2026. Assistente: Codex (GPT-6).
 Partida e alvo: `main` / `ee237343c19b1d40564fb80377181fde743cc75f`.
 Comparação: `15dc9ef..ee23734`. `git pull`: Already up to date; branch com três commits locais à frente.

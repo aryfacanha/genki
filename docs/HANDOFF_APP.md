@@ -1,13 +1,36 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+Revisão mais recente: **27/10/2026, Codex (GPT-6), partida `main`/`a96184b`, alvos `33a33ab` e `a96184b`: sem achados S1–S4 na cobertura executada.** Build/127 testes executados passam; Outra/4, validação, Meio e grades conferidos; formulário e dias/horários/duração da voz em 2,0×; voz com texto temporário chega à revisão correta. Original restaurado/reinstalado e aviso em 2,0× conferido; fonte/mídia restauradas, rascunhos descartados. `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`. Aceite no A31 e TalkBack/voz audível permanecem separados. Registros anteriores abaixo são históricos.
+
 Revisão de chips/volume em **27/10/2026, Codex (GPT-6), alvo `ee23734`: nenhum achado S1–S4 confirmado no diff**, build passa (126 testes nos resultados `UP-TO-DATE`); conferência de interface parcial por trabalho/instalação simultâneos. Ver `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`. O commit posterior `33a33ab` **não está aprovado por esta revisão**. Registros de fechamento dos reparos anteriores abaixo permanecem válidos.
 
-Revisão mais recente: **27/10/2026, Codex (GPT-6), correção dos ajustes de voz/DEC-036 em `d4d6350`: RV-VZ-01/02 fechados**, sem achado novo no escopo (`revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`). Build/126 testes e nove reprodutores passam; Cancelar/voltar, manter/descartar, cadastro vazio e edição sem mudanças conferidos no emulador. Sem correção permanente pelo revisor. RV-HOJE-01/02/03 seguem fechados; instalação no A31 registrada pelo Claude, aceite completo pendente.
+Conferência anterior: **27/10/2026, Codex (GPT-6), correção dos ajustes de voz/DEC-036 em `d4d6350`: RV-VZ-01/02 fechados**, sem achado novo no escopo (`revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`). Build/126 testes e nove reprodutores passam; Cancelar/voltar, manter/descartar, cadastro vazio e edição sem mudanças conferidos no emulador. Sem correção permanente pelo revisor. RV-HOJE-01/02/03 seguem fechados; instalação no A31 registrada pelo Claude, aceite completo pendente.
 
 Atualizado em: 27/10/2026, por Codex (GPT-6) — conferência de `0cef3f1` (`revisoes/CONFERENCIA_M3_CODEX.md`): RV-M3-02/E-01 fechados, M3 revisado na cobertura técnica executada; antes: 27/10/2026, por Codex (GPT-6) — terceira revisão (`revisoes/REVISAO_CORRECAO3_M3_M4_CODEX.md`): datas fechadas, RV-M3-02 S2 residual e RV-M3E-01 S3; antes: 27/10/2026, por Codex (GPT-6) — segunda revisão (`revisoes/REVISAO_CORRECAO2_M3_M4_CODEX.md`): três achados fechados, dois parciais e um novo S2; antes: 27/10, Codex — revisão dos reparos (`revisoes/REVISAO_CORRECAO_M3_M4_CODEX.md`): seis fechados, dois parcialmente corrigidos e três novos S2; antes: 27/10/2026, Codex — revisão de M3/M4 e melhorias, seis S2/dois S3 abertos (`revisoes/REVISAO_M3_M4_CODEX.md`); antes: 27/10/2026, por Claude Code (Opus 5.5) — melhorias do autor (DEC-029); antes: 26/10, Codex (GPT-6) — revisão de `a590fa5`: RV-M2-01/02 fechados; antes: Claude Code (Opus 5.5) — correção dos achados; antes: Codex — revisão M0/M1/M2; antes: Claude Code — M2, M1 e criação deste arquivo (DEC-026).
 Quem assumir: leia `AGENTS.md`, `docs/ESTADO.md` e este arquivo, confira o estado real (`git log`, build) e não confie só
 neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se mudaram) e acrescente uma linha no Diário**.
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
+
+## Retomar aqui (próxima sessão, a partir de 28/10/2026)
+
+Situação no fim de 27/10: `main` com tudo commitado (exceto `.idea/`, do autor); app instalado no A31 e no emulador com
+`a96184b` (grades). Nenhum achado aberto: `33a33ab` e `a96184b` revisados pelo Codex sem achados
+(`revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`). O autor começou o teste manual e pediu as grades; o resto não testou.
+
+1. **Teste manual do autor no A31** (só ele confirma; registrar o resultado aqui e no `ESTADO.md`):
+   - Formulário: unidade, quantidade (Meio/1/2/3/Outra) e dias específicos em grade, caixas iguais e alinhadas, ✓ só
+     na marcada; "Meio comprimido" e "Outra" = 4 salvam certo; trocar de unidade mantém a quantidade (2 comprimidos →
+     2 cápsulas); editar um medicamento com "4 comprimidos" abre com "Outra" marcada; unidade "Outro" = texto livre.
+   - Voz: botões de resposta (dose, dias, horários, duração) e seletor de dias em grade; aviso de volume baixo no meio
+     da tela, some em ~4 s, não volta enquanto o volume continuar baixo, volta após subir e baixar de novo.
+   - Fonte 2,0× no A31 (o Codex conferiu só no emulador). No A31 em 1,0×, "Comprimido" cabe em 3 colunas por pouco;
+     se cair para 2 colunas, decidir com o autor (rótulo menor ou aceitar).
+2. **Pergunta em aberto ao autor (não decidida):** Comprimido + **Meio** → trocar para Cápsula (que não tem Meio)
+   abre "Outra" com "meio" no campo e gera "meio cápsula". Opções: limpar a quantidade ao trocar ou manter.
+3. Depois do aceite: seguir o `ESTADO.md` → "Próximo passo" (verificações técnicas de voz/TTS, TalkBack, câmera e
+   lembretes; nada de ciclo novo no interpretador).
+
+Não verificado por ninguém até agora: TalkBack anunciando estados das caixas e o aviso de volume; voz/TTS audível no A31.
 
 ## 1. O que é
 
@@ -19,7 +42,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
-| Chips e aviso temporário de volume | Diff revisado pelo Codex em 27/10, sem defeito confirmado; build/126 testes com resultados reutilizados passam. Interface parcialmente observada; dias/fonte ampliada e demais casos do aviso exigem sessão exclusiva. Quantidade por toque posterior pendente de revisão própria | `ee23734`; posterior `33a33ab`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md` |
+| Quantidade por toque e grades | Revisados pelo Codex em 27/10, sem achados na cobertura executada. Build/127 testes executados passam; Outra/4 preservado, quantidade vazia bloqueia, Meio/dias/voz corretos; formulário e dias/horários/duração da voz em 2,0×. Original reinstalado só no emulador. Aceite no A31 pendente | `33a33ab`, `a96184b`; `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
+| Chips e aviso temporário de volume | Diff de `ee23734` sem defeito confirmado; `CheckSlot` substituído por `ChoiceGrid` em `a96184b`. Aviso complementado pelo Codex no APK original: entrada com mídia 2/15, legível em 2,0×, some sozinho; demais transições e TalkBack não repetidos nesta conferência | `ee23734`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; conferência posterior em `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Ajustes após roteiro de voz e DEC-036 | Implementados e revisados pelo Codex em 27/10. **RV-VZ-01/02 fechados** na conferência de `d4d6350`, sem achado novo no escopo. Cadastro recebido confirma Cancelar/voltar; correções repetidas mantêm só os horários esperados nos casos reproduzidos. Build/126 testes e nove reprodutores passam; instalação no A31 registrada pelo Claude, aceite completo pendente | `fa75715`, `0ea0da7`, `d4d6350`; `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
 | Hoje — resposta imediata e DEC-034/035 | Implementado e revisado pelo Codex em 27/10. **RV-HOJE-01/02/03 fechados** na conferência de `0b65a53`, sem achado novo no escopo: aviso detecta categoria bloqueada e permite resolver; Agora antes/entre/depois; nome/dose legíveis em 2,0×. Build/116 testes passam. Versão revisada reinstalada no A31 pelo Codex às 17:43, Hoje aberta com dados e aviso pendente preservados. Aceite completo no A31 pendente | `f79feb9`, `2d3b4d9`, `4706c3a`, `0b65a53`; `revisoes/REVISAO_CORRECAO_HOJE_CODEX.md` |
 | M0 Base | Implementado, compilado e aberto no emulador (Pixel_6_2, API 35) em 26/10: regressão da seção 7 passa. Tema e barra inferior alinhados ao protótipo `295212e`. Aceite manual do autor no aparelho (ESPEC §9) pendente | `c1f2b7e`, `cec21ab`, `53fe97a`, correção do rótulo (ver Diário) |
@@ -37,6 +61,7 @@ mesma primeira instalação e mesmos tamanhos/datas do banco e WAL antes/depois,
 
 | Item | Situação |
 | --- | --- |
+| Quantidade/grades, Codex, 27/10 (`a96184b`) | Sem achados no escopo. Build/127 testes executados passam; build final sem entrada temporária passa (testes reutilizados). Emulador: Outra/4 e retorno; limpar quantidade exige preenchimento; Meio; dias e caixas estáveis; formulário e dias/horários/duração da voz em 2,0×; confirmação por toque chega à revisão correta. Original recompilado/reinstalado; voz sem injeção e aviso central em 2,0×/2 de 15, depois ausente; abas/lista final conferidas. Fonte 1,0×/mídia 8/15 restauradas; rascunhos descartados, sem gravação de medicamentos, A31 ou código permanente alterado pelo revisor. Sem erro E/crash no processo final observado; TalkBack/voz audível/câmera/ciclo de lembretes não repetidos. Relatório `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Chips/volume, Codex, 27/10 (`ee23734`) | Nenhum achado confirmado no diff; build passa, XMLs 126 testes sem falhas/erros (`UP-TO-DATE`). Unidades antes/depois com posições iguais e aviso central em 2/15, depois ausente, observados. Outra sessão alterou `DoseUnit`/formulário/testes e instalou interface posterior; conferência isolada dos dias/fonte 2,0× não concluída. Fonte 1,0× e mídia 8/15 restauradas; sem gravação de medicamentos pelo revisor, código/configuração alterados pelo revisor ou A31 operado. Pode restar rascunho manual não salvo. `33a33ab` não revisado neste relatório |
 | Conferência RV-VZ-01/02, Codex, 27/10 (`d4d6350`) | **Dois achados fechados, nenhum novo no escopo.** Build/126 testes executados e 9/9 reprodutores passam após correção; final sem temporários. No emulador: Prefiro digitar com nome/dose → Cancelar e voltar da barra/Android pedem confirmação; Continuar editando mantém e Descartar sai. Cadastro vazio e edição sem alteração saem sem diálogo indevido; detalhes/lista/abas conferidos. Instrumentação temporária da fala e teste adicional removidos, original reinstalado só no emulador; medicamentos, fonte, relógio e permissões preservados. Sem crash AndroidRuntime observado; A31 não operado. Relatório `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`; aceite completo no aparelho pendente |
 | Revisão dos ajustes de voz/DEC-036, Codex, 27/10 (`0ea0da7`) | **Dois S2 abertos, nenhum S1 observado.** Cancelar após Prefiro digitar sem confirmação reproduzido no emulador; correções repetidas de horário falham em três probes, já falhavam antes de `fa75715`. Build/125 testes existentes passam após retirar temporários; seis dos nove probes passam e comparação observacional confirma preexistência. Dias Segunda/Quarta, Enviar acima do teclado com 08:00, dose Comprimido/2 e retorno correto do aviso em volume 2/15 → 7/15 conferidos. Instrumentação temporária de fala e dois arquivos de testes/cópia removidos, original reinstalado só no emulador; medicamentos e aviso pendente preservados, volume restaurado, fonte/relógio mantidos. A31 não operado; sem código/configuração permanente, commit/push. Relatório `revisoes/REVISAO_AJUSTES_VOZ_DEC036_CODEX.md` |
@@ -131,6 +156,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Quantidade e grades (Codex, 27/10, `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`):** `33a33ab`/`a96184b` revisados sem achados na cobertura executada. Outra/4 e retorno, validação após limpar, Meio, dias/caixas estáveis, fluxo de voz por toque até revisão e fonte 2,0× nos grupos registrados passam. Aviso ao entrar baixo e expiração conferidos em 2,0× no original. 127 testes executados passam; entrada temporária removida e original reinstalado. A conferência abaixo é histórica; TalkBack e demais transições de volume continuam fora da cobertura desta rodada.
+
 **Chips/volume (Codex, 27/10, `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`):** `ee23734` sem defeito confirmado no diff; build passa, interface parcial por concorrência. Em sessão exclusiva, comparar posições ao marcar/desmarcar os sete dias no formulário/voz, inclusive fonte 2,0×; aviso ao entrar baixo, baixar/subir e nova queda após expirar, TalkBack e teclado. Revisar separadamente `33a33ab` (quantidade e Outra). Não atribuir as árvores/capturas posteriores desta sessão ao APK original.
 
 **Conferência de RV-VZ-01/02 (Codex, 27/10, `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md`):** ambos fechados em `d4d6350`. Cancelar/voltar de rascunho recebido, manter/descartar, cadastro vazio e edição sem mudanças passam no emulador; 126 testes existentes e 9/9 reprodutores passam. Casos de horários repetidamente corrigidos cobertos também pelo teste permanente. Escopo restrito; aceite completo no A31 permanece separado. O registro abaixo é histórico.
@@ -173,6 +200,10 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-27 — Claude Code — bloco "Retomar aqui" no topo deste arquivo (teste manual pendente do autor e pergunta "meio cápsula"); commit dos docs locais da revisão do Codex (`REVISAO_QUANTIDADE_GRADE_CODEX.md`) — só documentação — pendente: teste do autor no A31.
+
+- 2026-10-27 — Codex (GPT-6) — revisão de `33a33ab`/`a96184b`, partida `main`/`a96184b`, pull atualizado; relatório `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`, nota na revisão anterior e atualização de §2/3/7, estado/entregas/registro — sem achado S1–S4 na cobertura executada; build/127 testes executados passam; Outra/4, validação, Meio, dias e voz por toque conferidos, formulário e dias/horários/duração da voz em 2,0×. Entrada temporária retirada (hash da fonte restaurado), build final passa, original reinstalado só no emulador; aviso central em 2,0×/2 de 15 e expiração, abas/lista final conferidos. Rascunhos descartados, fonte 1,0×/mídia 8/15 restauradas, dados/relógio/permissões preservados; sem código/configuração permanente, commit/push ou A31 — pendente: aceite no A31 e verificações técnicas, TalkBack/voz audíveis não conferidos nesta rodada.
 
 - 2026-10-27 — Claude Code — opções de toque em grade (pedido do autor): `ui/components/ChoiceGrid` (linhas de `Row` com `weight(1f)` e `IntrinsicSize.Min`; colunas = maior rótulo medido por `rememberTextMeasurer` vs. largura, limitadas a `maxColumns`; caixa `Surface` com borda, ✓ 16 dp só na marcada, papel Checkbox/Button) substitui `FilterChip`/`AssistChip`/`CheckSlot` em unidade, quantidade e dias do formulário e em respostas rápidas e `DayPicker` da voz — 127 testes; emulador (Pixel_6_2): unidades/quantidade 3 colunas, dias 4, caixas iguais — não verificado: voz, fonte 2,0×, TalkBack; instalado no A31 — pendente: teste do autor; revisão do Codex.
 
