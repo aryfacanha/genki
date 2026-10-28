@@ -283,12 +283,13 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
             DoseUnit.CHOICES,
             label = { if (it == DoseUnit.ML) "ml" else it.singular.replaceFirstChar { c -> c.uppercase() } },
             selected = { unit == it },
-            onClick = { choice ->
+            onClick = onClick@{ choice ->
+                if (choice == unit) return@onClick
                 // Para "Outro", leva o que já estava montado para o texto livre.
-                if (choice != DoseUnit.OTHER) onChange(choice.dose(amount))
+                if (choice != DoseUnit.OTHER) { amount = choice.keep(amount); onChange(choice.dose(amount)) }
                 else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
                 unit = choice
-                typing = amount.isNotEmpty() && amount !in choice.amounts
+                typing = false
             },
             modifier = Modifier.padding(top = 8.dp),
         )

@@ -45,6 +45,15 @@ class DoseUnitTest {
     }
 
     @Test
+    fun changingUnitKeepsOnlyAmountsItHas() {
+        assertEquals("2", DoseUnit.CAPSULE.keep("2"))
+        assertEquals("", DoseUnit.CAPSULE.keep("meio"))
+        assertEquals("", DoseUnit.ML.keep("20"))
+        assertEquals("", DoseUnit.CAPSULE.keep("4"))
+        assertEquals("", DoseUnit.TABLET.keep(""))
+    }
+
+    @Test
     fun everyQuickAmountComesBackTheSame() {
         DoseUnit.CHOICES.forEach { unit ->
             unit.amounts.forEach { amount -> assertEquals(amount to unit, DoseUnit.parse(unit.dose(amount))) }

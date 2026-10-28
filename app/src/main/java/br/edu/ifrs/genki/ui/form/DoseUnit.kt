@@ -20,6 +20,12 @@ enum class DoseUnit(val singular: String, val plural: String, val amounts: List<
         return "$a ${if (isSingular(a)) singular else plural}"
     }
 
+    /**
+     * Quantidade que continua ao trocar para esta unidade (decisão do autor, 28/10): só se for um botão dela
+     * (2 comprimidos → 2 cápsulas); senão fica vazia, para não gerar "meio cápsula" nem "20 ml" vindo de gotas.
+     */
+    fun keep(amount: String): String = amount.takeIf { it in amounts }.orEmpty()
+
     companion object {
         val CHOICES = entries.toList()
 

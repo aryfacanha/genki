@@ -25,8 +25,8 @@ Situação no fim de 27/10: `main` com tudo commitado (exceto `.idea/`, do autor
      da tela, some em ~4 s, não volta enquanto o volume continuar baixo, volta após subir e baixar de novo.
    - Fonte 2,0× no A31 (o Codex conferiu só no emulador). No A31 em 1,0×, "Comprimido" cabe em 3 colunas por pouco;
      se cair para 2 colunas, decidir com o autor (rótulo menor ou aceitar).
-2. **Pergunta em aberto ao autor (não decidida):** Comprimido + **Meio** → trocar para Cápsula (que não tem Meio)
-   abre "Outra" com "meio" no campo e gera "meio cápsula". Opções: limpar a quantidade ao trocar ou manter.
+2. **Decidido em 28/10 (DEC-037):** ao trocar a unidade, a quantidade continua só se for botão da nova unidade
+   (2 comprimidos → 2 cápsulas); Meio → Cápsula, 20 gotas → ml e "Outra" digitada ficam vazias. Incluir no teste do A31.
 3. Depois do aceite: seguir o `ESTADO.md` → "Próximo passo" (verificações técnicas de voz/TTS, TalkBack, câmera e
    lembretes; nada de ciclo novo no interpretador).
 
@@ -42,6 +42,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
+| Quantidade ao trocar a unidade (DEC-037) | Implementado em 28/10; 128 testes. Não conferido em tela nem instalado; revisão do Codex pendente | este commit |
 | Quantidade por toque e grades | Revisados pelo Codex em 27/10, sem achados na cobertura executada. Build/127 testes executados passam; Outra/4 preservado, quantidade vazia bloqueia, Meio/dias/voz corretos; formulário e dias/horários/duração da voz em 2,0×. Original reinstalado só no emulador. Aceite no A31 pendente | `33a33ab`, `a96184b`; `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Chips e aviso temporário de volume | Diff de `ee23734` sem defeito confirmado; `CheckSlot` substituído por `ChoiceGrid` em `a96184b`. Aviso complementado pelo Codex no APK original: entrada com mídia 2/15, legível em 2,0×, some sozinho; demais transições e TalkBack não repetidos nesta conferência | `ee23734`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; conferência posterior em `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Ajustes após roteiro de voz e DEC-036 | Implementados e revisados pelo Codex em 27/10. **RV-VZ-01/02 fechados** na conferência de `d4d6350`, sem achado novo no escopo. Cadastro recebido confirma Cancelar/voltar; correções repetidas mantêm só os horários esperados nos casos reproduzidos. Build/126 testes e nove reprodutores passam; instalação no A31 registrada pelo Claude, aceite completo pendente | `fa75715`, `0ea0da7`, `d4d6350`; `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
@@ -200,6 +201,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — DEC-037: `DoseUnit.keep` (quantidade continua ao trocar de unidade só se for botão dela) usado no `DoseInput`; tocar na unidade já marcada é ignorado (não apaga "Outra") — 128 testes (+1) — não verificado: tela (emulador fechado), A31 não instalado — pendente: teste do autor; revisão do Codex.
 
 - 2026-10-27 — Claude Code — bloco "Retomar aqui" no topo deste arquivo (teste manual pendente do autor e pergunta "meio cápsula"); commit dos docs locais da revisão do Codex (`REVISAO_QUANTIDADE_GRADE_CODEX.md`) — só documentação — pendente: teste do autor no A31.
 

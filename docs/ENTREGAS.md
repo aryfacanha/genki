@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+```text
+ENTREGA — App Android: quantidade ao trocar a unidade da dose — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`a1701d0`; pergunta em aberto do handoff ("meio cápsula").
+Realizado e arquivos alterados: `ui/form/DoseUnit.kt` (`keep`), `ui/form/FormScreen.kt` (`DoseInput`), `DoseUnitTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-037 (28/10).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (128, sem falhas). | Não verificado: tela (emulador fechado; não instalado no A31); TalkBack.
+Próxima tarefa e bloqueios: teste manual do autor no A31; revisão do Codex.
+Links/commits: este commit.
+```
+
 ENTREGA — Revisão da quantidade por toque e grades — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`a96184b`; pull atualizado; alvos `33a33ab` e `a96184b`; originais atuais da proposta/requisitos reabertos no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`, nota na revisão anterior, estado/handoff (§2/3/7 e Diário)/entregas/registro. Sem achado S1–S4 confirmado na cobertura executada.
