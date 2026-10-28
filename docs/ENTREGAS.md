@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Conferência pontual RV-DVC-01…05 — 28/10/2026 — Codex (GPT-6)
+Partida: `main`/`51a8d19`; alvo `7ffddeb..a57c591`, código do app idêntico na partida. Pull tentado, bloqueado por escrita em `.git/FETCH_HEAD`; alvo local disponível.
+Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_RV_DVC_CODEX.md`, handoff (§2/3/7, retomada e Diário), estado, entregas e registro de IA. Cinco achados fechados; nenhum achado novo S1–S4 no diff.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; conferência dos reparos já pedidos.
+Sugestões pendentes: nenhuma nova; mantidas as anteriores, fora deste escopo.
+Verificado: build final/134 testes executados passam; quatro reprodutores adequados passam (originais: duas expectativas antigas incompatíveis, explicadas no relatório). Emulador API 35, fonte 1,0×: contador/limite/decimais/revisão, dose 1/2 salva e reaberta sem alteração, incremento para 1, ida/volta por Outro, relógio de frequência/substituição, horários comuns múltiplos, correção/Voltar/Desfazer. | Não verificado: A31, voz/TTS reais, TalkBack, fonte ampliada, câmera, ciclo temporal de lembretes, morte do processo nos estados do seletor.
+Próxima tarefa e bloqueios: bateria do autor no A31 e verificações técnicas previstas; atualização remota não confirmada nesta sessão.
+Links/commits: `docs/revisoes/CONFERENCIA_RV_DVC_CODEX.md`; HEAD preservado. Temporários retirados, `app/src` sem diff, original reinstalado só no emulador, registro temporário excluído e medicamentos anteriores preservados. Sem código/configuração permanente, commit/push ou A31 operado.
+```
+
+```text
 ENTREGA — App Android: reparo dos achados RV-DVC-01…05 — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`7ffddeb`; pedido do autor ("sim, corrige os cinco e reinstala no A31").
 Realizado e arquivos alterados: `ui/form/DoseUnit.kt` (canPlus, amountOf em milésimos, minus sem zerar, "1/2"/"½"), `ui/form/FormScreen.kt` (+ apagado), `voice/VoiceQuestions.kt` (everyHours na pergunta do primeiro horário), `voice/ui/VoiceScreen.kt` (TimesPicker de um horário com "Horários do dia"; relógio fecha na correção); testes; bateria (E12, E13, G5–G7); docs.

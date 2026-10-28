@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Codex (GPT-6), partida `main`/`51a8d19`, alvo `7ffddeb..a57c591`: RV-DVC-01…05 fechados na conferência pontual.** Nenhum achado novo S1–S4 no diff. Build final/134 testes executados passam; quatro reprodutores adequados à regra reparada passam (os originais têm duas expectativas incompatíveis, documentadas). Emulador API 35: 120 gotas/+ apagado/−119; decimais e revisão 0,75 ml; fração antiga preservada sem editar e + chega a 1; frequência/relógio/substituição, horários múltiplos comuns e correção/Voltar/Desfazer passam. Temporários retirados, código original restaurado e reinstalado só no emulador, registro de teste excluído, medicamentos anteriores preservados; fonte 1,0× mantida. `git pull` bloqueado por escrita em `.git/FETCH_HEAD`; alvo local conferido, HEAD sem alteração. Sem código/configuração permanente, commit/push ou A31 operado. Relatório: `docs/revisoes/CONFERENCIA_RV_DVC_CODEX.md`. Próximo: bateria do autor no A31 e verificações técnicas previstas; aceite no aparelho, voz/TTS reais e TalkBack permanecem separados. Registros abaixo são históricos.
+
 **28/10/2026, Claude Code (Opus 5.5):** RV-DVC-01…05 corrigidos a pedido do autor (contador da dose e relógio da voz); 134 testes; instalado no A31, G5/G6 conferidos na tela. Bateria atualizada. Próximo: conferência do Codex; bateria do autor no A31.
 
 **28/10/2026, Claude Code (Opus 5.5):** revisão do Codex lida (RV-DVC-01/02/03 S2 e 04/05 S3 abertos); merge da monografia concluído; bateria manual completa pronta em `docs/ROTEIRO_BATERIA_COMPLETA.md`. Pendente: autor decidir o reparo dos RV-DVC antes da bateria; bateria no A31.
@@ -156,6 +158,6 @@ Verificação complementar do protótipo em 21/10/2026 pelo Codex: revisão inde
 ## Próximo passo
 
 Duas frentes em paralelo (DEC-023/024):
-- **App:** `33a33ab` e `a96184b` revisados sem achados na cobertura executada (`docs/revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md`); grades/Outra/dias e fonte ampliada conferidos no emulador, além do aviso ao entrar baixo e expirar. Continuar aceite completo no A31 e verificações técnicas previstas de voz/TTS, TalkBack, câmera/embalagens e lembretes. RV-VZ-01/02 e RV-HOJE-01/02/03 seguem fechados; nenhum novo reparo indicado por esta revisão.
+- **App:** reparos de `a57c591` conferidos pelo Codex em 28/10 (`docs/revisoes/CONFERENCIA_RV_DVC_CODEX.md`): **RV-DVC-01…05 fechados**, sem achado novo no diff, build/134 testes executados passam. Continuar com `docs/ROTEIRO_BATERIA_COMPLETA.md` pelo autor no A31 e verificações técnicas previstas de voz/TTS, TalkBack, câmera/embalagens e lembretes. RV-UN-01, RV-VZ-01/02 e RV-HOJE-01/02/03 seguem fechados; aceite completo no aparelho permanece separado. Pull desta conferência bloqueado por permissão em `.git/FETCH_HEAD`; atualização remota não confirmada.
 - **Metodologia (chat do Projeto no Claude):** e-mail à coordenação/CEP, resposta ao orientador, rascunhos do protocolo CEP.
 Plano completo: Drive, Avaliação/Genki — Plano de etapas e cronograma até a entrega.
