@@ -80,10 +80,13 @@ import br.edu.ifrs.genki.ui.components.MicIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
+import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.voice.Speaker
 import br.edu.ifrs.genki.voice.SpeechInput
+import br.edu.ifrs.genki.voice.VoiceQuestions
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
 import kotlinx.coroutines.delay
 
 /**
@@ -278,6 +281,8 @@ private fun ColumnScope.Asking(
     val question = state.question ?: return
     var typing by rememberSaveable { mutableStateOf(false) }
     var typed by rememberSaveable { mutableStateOf("") }
+    // Horários pelo relógio, em vez de digitar (pedido do autor, 28/10).
+    var picking by rememberSaveable { mutableStateOf(false) }
     // Com o teclado aberto, rola até o fim para o campo e o "Enviar" ficarem à vista.
     val scroll = rememberScrollState()
     val imeVisible = WindowInsets.isImeVisible
@@ -341,6 +346,8 @@ private fun ColumnScope.Asking(
         if (!state.correctionPending) {
             if (typing && question.field == Field.DAYS && !state.correcting) {
                 DayPicker(onDone = { onAnswer(it); typing = false })
+            } else if (picking) {
+                TimesPicker(onDone = { onAnswer(it); picking = false })
             } else if (typing) {
                 // Abre já com o teclado no campo.
                 val focus = remember { FocusRequester() }
@@ -363,6 +370,11 @@ private fun ColumnScope.Asking(
                     modifier = Modifier.padding(top = 8.dp),
                 )
             } else {
+                if (question.field == Field.TIMES && !state.correcting) {
+                    TextButton(onClick = { picking = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
+                        Text("Escolher no relógio", textDecoration = TextDecoration.Underline)
+                    }
+                }
                 TextButton(onClick = { typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
                     Text(
                         if (question.field == Field.DAYS && !state.correcting) "Escolher os dias" else "Digitar a resposta",
@@ -559,6 +571,53 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
                 }
             }
         }
+    }
+}
+
+/**
+ * Horários escolhidos no relógio na pergunta dos horários (pedido do autor, 28/10): o relógio abre logo; cada
+ * horário escolhido vira uma caixa marcada (tocar tira). Vira a frase "às 08:00 e às 20:00" e passa pelo mesmo
+ * interpretador das outras respostas.
+ */
+@Composable
+private fun TimesPicker(onDone: (String) -> Unit) {
+    var chosen by rememberSaveable { mutableStateOf(listOf<LocalTime>()) }
+    var open by rememberSaveable { mutableStateOf(true) }
+    if (chosen.isNotEmpty()) {
+        Text(
+            "Toque num horário para tirar.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 16.dp),
+        )
+        ChoiceGrid(
+            chosen.sorted(),
+            label = MedicationText::time,
+            selected = { true },
+            onClick = { time -> chosen = chosen - time },
+            maxColumns = 4,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+    }
+    SecondaryButton(
+        if (chosen.isEmpty()) "Escolher horário" else "Adicionar outro horário",
+        onClick = { open = true },
+        modifier = Modifier.padding(top = 16.dp),
+    )
+    if (chosen.isNotEmpty()) {
+        PrimaryButton(
+            if (chosen.size > 1) "Confirmar horários" else "Confirmar horário",
+            onClick = { onDone(VoiceQuestions.timesAnswer(chosen)) },
+            modifier = Modifier.padding(top = 8.dp),
+        )
+    }
+    if (open) {
+        TimeDialog(
+            initial = chosen.maxOrNull()?.plusHours(12)?.takeIf { it !in chosen } ?: LocalTime.of(8, 0),
+            taken = chosen.toSet(),
+            onDismiss = { open = false },
+            onConfirm = { chosen = chosen + it; open = false },
+        )
     }
 }
 

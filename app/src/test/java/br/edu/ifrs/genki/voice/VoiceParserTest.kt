@@ -490,6 +490,22 @@ class VoiceParserTest {
     }
 
     @Test
+    fun timesFromClockAreUnderstood() {
+        // Relógio na pergunta dos horários (pedido do autor, 28/10): a frase montada volta aos mesmos horários.
+        val base = voice("Losartana").copy(dose = "1 comprimido", days = all)
+        val chosen = listOf(LocalTime.of(20, 0), LocalTime.of(8, 0), LocalTime.of(14, 30))
+        assertEquals("às 08:00, às 14:30 e às 20:00", VoiceQuestions.timesAnswer(chosen))
+        val answered = parse(VoiceQuestions.timesAnswer(chosen), listOf(base), base.localId, Field.TIMES).drafts.single()
+        assertEquals(chosen.sorted(), answered.times)
+        val single = parse(VoiceQuestions.timesAnswer(listOf(LocalTime.of(9, 5))), listOf(base), base.localId, Field.TIMES)
+        assertEquals(listOf(LocalTime.of(9, 5)), single.drafts.single().times)
+        // Pergunta do primeiro horário ("duas vezes ao dia").
+        val twice = one("metformina duas vezes ao dia")
+        val first = parse(VoiceQuestions.timesAnswer(listOf(LocalTime.of(7, 30))), listOf(twice), twice.localId, Field.TIMES)
+        assertEquals(listOf(LocalTime.of(7, 30), LocalTime.of(19, 30)), first.drafts.single().times)
+    }
+
+    @Test
     fun answerToQuestionNeverCreatesMedication() {
         // Respostas direcionadas: durante uma pergunta, tudo vale para o medicamento perguntado.
         val l = voice("Losartana")

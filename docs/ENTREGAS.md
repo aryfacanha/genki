@@ -3,6 +3,26 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: "Outra" com − e + e relógio nos horários da voz — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`be24b9d`; pedidos do autor ("remover o máximo de digitação"; "selecionar o horário pelo relógio").
+Realizado e arquivos alterados: `ui/form/DoseUnit.kt`, `ui/form/FormScreen.kt`, `ui/components/TimeDialog.kt` (novo, movido do formulário), `voice/VoiceQuestions.kt`, `voice/ui/VoiceScreen.kt`, testes; roteiro e docs.
+Decisões aceitas pelo autor nesta sessão: DEC-038 (28/10).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (132); emulador: contador de comprimido e relógio da voz até a pergunta da duração. | Não verificado: A31 (desconectou); fonte 2,0×; TalkBack; Q11/Q12/G09 em tela.
+Próxima tarefa e bloqueios: reinstalar no A31 (reconectar o cabo); revisão do Codex; teste do autor.
+Links/commits: este commit.
+```
+
+ENTREGA — Conferência da correção de RV-UN-01 — 28/10/2026 — Codex (GPT-6)
+Partida: `main`/`be24b9d`; pull atualizado; alvo `be24b9d`, com roteiro de `d3e09ef`/`be24b9d`; proposta e requisitos oficiais reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md`, nota no relatório anterior, estado/handoff (§2/3/7 e Diário), entregas/registro. RV-UN-01 fechado, sem novo achado S1–S4 no diff.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: nenhuma nova.
+Verificado: build passa; 128 testes sem falhas nos resultados `UP-TO-DATE`; T08/T09, bloqueio sem quantidade, T01, ida/volta sem editar, quatro títulos e avanço após escolher quantidade válida no emulador API 35. Abas/descarte/lista anterior conferidos. | Não verificado: A31, edição persistida, fonte ampliada, TalkBack, voz/TTS audíveis, câmera e ciclo de lembretes.
+Próxima tarefa e bloqueios: teste manual do autor no A31 e verificações técnicas previstas.
+Links/commits: `docs/revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md`; sem código/configuração alterados, teste temporário, commit/push ou A31 operado. Rascunho descartado, medicamentos preservados.
+
+```text
 ENTREGA — App Android: correção de RV-UN-01 (quantidade antiga depois de editar "Outro") — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`d3e09ef`; achado da revisão `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`.
 Realizado e arquivos alterados: `ui/form/FormScreen.kt` (`DoseInput`: texto livre editado apaga a quantidade; "Quantas cápsulas/gotas"); roteiro e docs.

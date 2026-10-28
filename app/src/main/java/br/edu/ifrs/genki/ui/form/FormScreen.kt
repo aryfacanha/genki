@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,9 +41,7 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,6 +58,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,6 +74,7 @@ import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.InfoRow
+import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
@@ -308,7 +310,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
             else -> {
-                // Quantidade em um toque (pedido do autor, 27/10); "Outra" para digitar, ex.: "4".
+                // Quantidade em um toque (pedido do autor, 27/10); "Outra" abre o − e + (DEC-038), ex.: 4 ou 1 e meio.
                 Text(
                     when (chosen) {
                         DoseUnit.ML -> "Quantos ml"
@@ -325,27 +327,70 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                     selected = { value -> if (value == null) typing else !typing && amount == value },
                     onClick = { value ->
                         if (value != null) { typing = false; amount = value; onChange(chosen.dose(value)) }
-                        else { typing = true; if (amount in chosen.amounts) { amount = ""; onChange("") } }
+                        // Começa na quantidade marcada, ou em 1 (DEC-038).
+                        else { typing = true; if (chosen.value(amount) == null) amount = "1"; onChange(chosen.dose(amount)) }
                     },
                     modifier = Modifier.padding(top = 8.dp),
                 )
                 if (typing) {
-                    OutlinedTextField(
-                        value = amount,
-                        onValueChange = { amount = it; onChange(chosen.dose(it)) },
-                        label = { Text("Outra quantidade") },
-                        supportingText = { Text("Exemplo: 4", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    AmountStepper(
+                        amount,
                         isError = error != null,
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        canMinus = chosen.canMinus(amount),
+                        onMinus = { amount = chosen.minus(amount); onChange(chosen.dose(amount)) },
+                        onPlus = { amount = chosen.plus(amount); onChange(chosen.dose(amount)) },
+                        onType = { amount = it; onChange(chosen.dose(it)) },
                     )
                 }
             }
         }
         FieldError(error)
     }
+}
+
+/**
+ * "Outra" quantidade sem digitar (pedido do autor, DEC-038): − e + andam de um passo da unidade; tocar no número abre
+ * o teclado numérico para casos raros (40 gotas).
+ */
+@Composable
+private fun AmountStepper(
+    amount: String,
+    isError: Boolean,
+    canMinus: Boolean,
+    onMinus: () -> Unit,
+    onPlus: () -> Unit,
+    onType: (String) -> Unit,
+) {
+    Row(
+        Modifier.fillMaxWidth().padding(top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        StepButton("−", "Diminuir", enabled = canMinus, onClick = onMinus)
+        OutlinedTextField(
+            value = amount,
+            onValueChange = onType,
+            label = { Text("Outra quantidade") },
+            isError = isError,
+            singleLine = true,
+            textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.weight(1f),
+        )
+        StepButton("+", "Aumentar", enabled = true, onClick = onPlus)
+    }
+}
+
+@Composable
+private fun StepButton(symbol: String, description: String, enabled: Boolean, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        enabled = enabled,
+        shape = RoundedCornerShape(12.dp),
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier.size(56.dp).semantics { contentDescription = description },
+    ) { Text(symbol, style = MaterialTheme.typography.headlineMedium) }
 }
 
 @Composable
@@ -584,28 +629,6 @@ private fun DateField(
         )
     }
     if (open) DateDialog(date, notBefore, onDismiss = { open = false }) { open = false; onPick(it) }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
-    val state = rememberTimePickerState(initialHour = initial.hour, initialMinute = initial.minute, is24Hour = true)
-    // Horário já da lista: avisa no próprio relógio e não deixa confirmar (o validador continua checando).
-    val repeated = LocalTime.of(state.hour, state.minute) in taken
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Escolha o horário") },
-        text = {
-            Column {
-                TimePicker(state)
-                FieldError(if (repeated) MedicationText.error(Field.TIMES, Problem.DUPLICATE_TIME) else null)
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }, enabled = !repeated) { Text("OK") }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } },
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

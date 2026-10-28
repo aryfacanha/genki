@@ -4,6 +4,7 @@ import br.edu.ifrs.genki.domain.DraftValidator
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import java.time.LocalDate
+import java.time.LocalTime
 
 /** Botão de resposta: [label] na tela, [text] vai para o [VoiceParser] como se fosse falado. */
 data class QuickAnswer(val label: String, val text: String = label)
@@ -19,6 +20,15 @@ data class VoiceQuestion(
 )
 
 object VoiceQuestions {
+
+    /**
+     * Horários escolhidos no relógio da voz (pedido do autor, 28/10) como frase para o mesmo interpretador:
+     * "às 08:00", "às 08:00 e às 20:00", "às 08:00, às 14:30 e às 20:00".
+     */
+    fun timesAnswer(times: List<LocalTime>): String {
+        val each = times.sorted().map { "às %02d:%02d".format(it.hour, it.minute) }
+        return if (each.size <= 1) each.joinToString() else each.dropLast(1).joinToString(", ") + " e " + each.last()
+    }
 
     /** Primeiro campo que falta, rascunho por rascunho, na ordem do validador; `null` = tudo pronto para a revisão. */
     fun next(drafts: List<MedicationDraft>, today: LocalDate): VoiceQuestion? {

@@ -1,5 +1,7 @@
 # Revisão — troca de unidade da dose (DEC-037)
 
+**Conferência posterior, 28/10/2026, Codex:** RV-UN-01 fechado em `be24b9d`; T08/T09 e ida/volta sem editar conferidos no emulador. Sem novo achado no diff. Ver `REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md`. O resultado aberto abaixo é histórico.
+
 28/10/2026 — Codex (GPT-6). Partida: `main`/`277361e7341471d5e53fcae2128237c1d7f13032`; `git pull`: atualizado.
 Alvos: implementação `a2680da` e roteiro/documentação `277361e`, desde `a1701d0`.
 
