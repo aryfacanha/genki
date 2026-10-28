@@ -53,6 +53,14 @@ class SpeechInput(private val context: Context, private val events: Events) {
         recognizer?.stopListening()
     }
 
+    /** Para de ouvir sem resultado (abriu o relógio, a quantidade ou o campo enquanto ouvia sozinho). */
+    fun cancel() {
+        if (!active) return
+        active = false
+        recognizer?.cancel()
+        events.listening(false)
+    }
+
     fun destroy() {
         recognizer?.destroy()
         recognizer = null

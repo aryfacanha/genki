@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: DEC-040 parte 2 (voz) — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`352527e`; pedido do autor ("sim, pode seguir nessa ordem").
+Realizado e arquivos alterados: `voice/Speaker.kt` (fim da fala), `voice/SpeechInput.kt` (cancel), `voice/VoiceQuestions.kt` (confirmation), `voice/ui/VoiceViewModel.kt` (Prompt.listen, misses, confirmação), `voice/ui/VoiceScreen.kt` (escuta automática, cancelar ao tocar, horários do dia ajustáveis); testes; bateria (E12, E17–E19); docs.
+Decisões aceitas pelo autor nesta sessão: DEC-040.
+Sugestões pendentes: desligar a escuta automática nos Ajustes ou na introdução (não pedido); desfazer exclusão; outras caixas.
+Verificado: `assembleDebug test` (137); emulador com fala simulada. | Não verificado: fala real e TTS no A31, ruído, TalkBack com escuta automática.
+Próxima tarefa e bloqueios: parte 3 (roteiro da introdução); revisão do Codex; A31 desconectado.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: DEC-040 parte 1 (ajustes da bateria do autor) — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`9ee4def`; pedido do autor (bateria no A31 e "sim, pode seguir nessa ordem").
 Realizado e arquivos alterados: `ui/components/Components.kt` (EmptyMessage), `ui/home/HomeScreen.kt` (aviso vazio, cartão adiado verde-claro), `ui/medications/MedicationsScreen.kt`, `ui/form/FormScreen.kt` (DoseInput internal), `voice/ui/VoiceScreen.kt` (X com confirmação, DosePicker), `voice/ui/VoiceViewModel.kt` (chooseDose), `voice/VoiceParser.kt` ("use contínuo"); teste; DECISOES (DEC-040), bateria, contraste, resultado da bateria.

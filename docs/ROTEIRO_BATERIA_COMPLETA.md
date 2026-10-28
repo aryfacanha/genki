@@ -84,11 +84,14 @@ Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
 | E9 | **Prefiro digitar** numa pergunta | Formulário com o que já foi entendido |
 | E10 | Voltar com algo já entendido | "Descartar cadastro?" |
 | E11 | Mídia em 2 ao entrar na voz | Aviso "O volume está baixo…" no meio da tela, some em ~4 s |
-| E12 | "Metformina três vezes ao dia" → na pergunta do primeiro horário, "Escolher no relógio" → 07:30 | Aparece "Horários do dia: 07:30, 15:30 e 23:30"; o botão vira "Trocar horário" (não dá para escolher um segundo). Confirmar → os três horários. (RV-DVC-03, corrigido) |
+| E12 | "Metformina três vezes ao dia" → na pergunta do primeiro horário, "Escolher no relógio" → 07:30 | Aparece "Horários do dia: 07:30, 15:30 e 23:30" com os três horários em caixas; tocar num deles (23:30) e escolher 22:00 troca só esse; "Escolher outro primeiro horário" recomeça. Confirmar → a revisão mostra os três como ficaram. (RV-DVC-03; DEC-040) |
 | E13 | Abrir o relógio na pergunta dos horários e tocar "Algo errado? Corrigir por voz" | O seletor some e aparece "Diga a correção"; depois de Desfazer ou voltar, a pergunta volta sem o seletor aberto. (RV-DVC-05, corrigido) |
 | E14 | "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, **use** contínuo" | Um medicamento só, com Uso contínuo (não cria "Use"). (DEC-040) |
 | E15 | Na pergunta da dose, **Escolher a quantidade** → Unidade ml → + → Confirmar quantidade | Menu e − número + como no formulário; o cartão mostra "1,5 ml" e segue para os dias (DEC-040) |
 | E16 | Com dois medicamentos entendidos, tocar no **X** de um deles | "Tirar …?" com Tirar/Cancelar; Tirar remove só esse (DEC-040) |
+| E17 | Responder uma pergunta da voz e **não tocar no microfone** | Ao terminar de falar a pergunta seguinte, o app começa a ouvir sozinho ("Ouvindo…"). Se ninguém falar, aparece "Não ouvi nada…" e ele **não** volta a ouvir sozinho (DEC-040) |
+| E18 | Durante a escuta automática, tocar num botão de resposta ou em "Escolher…" | A escuta para; a resposta tocada vale e nada é ouvido para a pergunta seguinte (DEC-040) |
+| E19 | Ouvir as perguntas com atenção (volume alto) | Antes de cada pergunta, o app fala o que acabou de anotar: "Anotei 2 comprimidos. Em quais dias…"; na revisão, "Anotei … Confira antes de salvar." (DEC-040) |
 
 ## F. Cadastro pela câmera (M4, RF20–RF23)
 

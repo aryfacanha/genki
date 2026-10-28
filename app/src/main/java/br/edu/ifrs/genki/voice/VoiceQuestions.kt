@@ -3,8 +3,12 @@ package br.edu.ifrs.genki.voice
 import br.edu.ifrs.genki.domain.DraftValidator
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
+import br.edu.ifrs.genki.domain.TreatmentType
+import br.edu.ifrs.genki.ui.MedicationText
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /** Botão de resposta: [label] na tela, [text] vai para o [VoiceParser] como se fosse falado. */
 data class QuickAnswer(val label: String, val text: String = label)
@@ -37,6 +41,39 @@ object VoiceQuestions {
     fun timesAnswer(times: List<LocalTime>): String {
         val each = times.sorted().map { "às %02d:%02d".format(it.hour, it.minute) }
         return if (each.size <= 1) each.joinToString() else each.dropLast(1).joinToString(", ") + " e " + each.last()
+    }
+
+    /**
+     * O que mudou nos rascunhos, para falar antes da próxima pergunta (DEC-040: quem acompanha só pelo som percebe um
+     * erro na hora): "Anotei 1 comprimido.", "Anotei Losartana, 50 mg, todos os dias, às 08:00 e uso contínuo.".
+     * `null` se nada mudou.
+     */
+    fun confirmation(before: List<MedicationDraft>, after: List<MedicationDraft>): String? {
+        val parts = after.mapNotNull { draft ->
+            val old = before.firstOrNull { it.localId == draft.localId }
+            val changes = buildList {
+                if (draft.name != null && draft.name != old?.name) add(draft.name)
+                if (draft.concentration != null && draft.concentration != old?.concentration) add(draft.concentration)
+                if (draft.dose != null && draft.dose != old?.dose) add(draft.dose)
+                draft.days?.takeIf { it != old?.days }?.let { add(MedicationText.days(it).lowercase()) }
+                if (draft.times.isNotEmpty() && draft.times != old?.times) add("às " + MedicationText.times(draft.times))
+                draft.everyHours?.takeIf { draft.times.isEmpty() && it != old?.everyHours }?.let { add("de $it em $it horas") }
+                spokenTreatment(draft)?.takeIf { it != old?.let(::spokenTreatment) }?.let(::add)
+            }
+            if (changes.isEmpty()) null
+            else changes.dropLast(1).joinToString(", ").let { if (it.isEmpty()) changes.last() else "$it e ${changes.last()}" }
+        }
+        return if (parts.isEmpty()) null else "Anotei ${parts.joinToString("; ")}."
+    }
+
+    private val spokenDate = DateTimeFormatter.ofPattern("d 'de' MMMM", Locale.forLanguageTag("pt-BR"))
+
+    private fun spokenTreatment(draft: MedicationDraft): String? = when {
+        draft.durationDays != null -> "por ${draft.durationDays} dias"
+        draft.endDate != null -> "até ${draft.endDate.format(spokenDate)}"
+        draft.treatment == TreatmentType.CONTINUOUS -> "uso contínuo"
+        draft.treatment == TreatmentType.UNDEFINED -> "duração ainda não definida"
+        else -> null
     }
 
     /** Primeiro campo que falta, rascunho por rascunho, na ordem do validador; `null` = tudo pronto para a revisão. */

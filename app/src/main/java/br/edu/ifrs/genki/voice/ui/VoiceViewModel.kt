@@ -25,8 +25,11 @@ import java.time.LocalDate
 
 enum class VoicePhase { INTRO, ASKING, REVIEW }
 
-/** Texto para falar; o [id] faz a mesma frase ser falada de novo. */
-data class Prompt(val id: Int, val text: String)
+/**
+ * Texto para falar; o [id] faz a mesma frase ser falada de novo. [listen]: ao terminar de falar, o microfone abre
+ * sozinho (DEC-040, para não tocar no microfone a cada pergunta).
+ */
+data class Prompt(val id: Int, val text: String, val listen: Boolean = false)
 
 data class VoiceUiState(
     val phase: VoicePhase = VoicePhase.INTRO,
@@ -61,6 +64,8 @@ class VoiceViewModel(
     private val _state = MutableStateFlow(VoiceUiState())
     val state: StateFlow<VoiceUiState> = _state.asStateFlow()
     private var promptId = 0
+    /** Escutas automáticas seguidas que não deram resposta entendida; depois de uma, espera o toque no microfone. */
+    private var misses = 0
     private var saving = false
     /** Rascunhos antes da correção por voz feita na revisão; "Desfazer" (ou voltar) os restaura. */
     private var beforeCorrection: List<MedicationDraft>? = null
@@ -77,7 +82,7 @@ class VoiceViewModel(
         if (fromSession && session.drafts.value.isNotEmpty()) advance()
     }
 
-    private fun prompt(text: String) = Prompt(++promptId, text)
+    private fun prompt(text: String, listen: Boolean = false) = Prompt(++promptId, text, listen)
 
     fun listening(active: Boolean) {
         if (active) GenkiEval.log("voz_ouvindo", "pergunta" to _state.value.question?.field)
@@ -112,9 +117,13 @@ class VoiceViewModel(
         GenkiEval.log("voz_interpretado", "entendeu" to result.understood, "rascunhos" to result.drafts.map(::summary))
         if (!result.understood) {
             val retry = "Não entendi. " + (s.question?.let { "${it.text} ${it.example}." } ?: "Diga o nome do medicamento e como você toma.")
-            _state.update { it.copy(heard = heard, partial = "", message = "Não entendi. Tente de novo.", prompt = prompt(retry)) }
+            // Ouve de novo sozinho uma vez só, para ruído não virar um ciclo de perguntas.
+            val again = s.question != null && misses++ < 1
+            _state.update { it.copy(heard = heard, partial = "", message = "Não entendi. Tente de novo.", prompt = prompt(retry, again)) }
             return
         }
+        misses = 0
+        val confirmation = VoiceQuestions.confirmation(session.drafts.value, result.drafts)
         if (s.phase == VoicePhase.REVIEW || s.correcting) {
             // Correção (revisão ou perguntas): mostra o resultado e pede confirmação antes de seguir.
             if (beforeCorrection == null) beforeCorrection = session.drafts.value
@@ -122,14 +131,14 @@ class VoiceViewModel(
             _state.update {
                 it.copy(
                     heard = heard, partial = "", message = null, correctionPending = true, correcting = false,
-                    prompt = prompt("Confira a correção. Toque em Manter correção ou em Desfazer."),
+                    prompt = prompt(listOfNotNull(confirmation, "Confira a correção. Toque em Manter correção ou em Desfazer.").joinToString(" ")),
                 )
             }
             return
         }
         session.set(result.drafts)
         _state.update { it.copy(heard = heard, partial = "", message = null) }
-        advance()
+        advance(confirmation)
     }
 
     /** "Manter correção": segue; se faltar algo, pergunta. */
@@ -148,14 +157,15 @@ class VoiceViewModel(
         _state.update { it.copy(correctionPending = false, correcting = false, heard = null) }
     }
 
-    /** Próxima pergunta ou a revisão. */
-    private fun advance() {
+    /** Próxima pergunta ou a revisão, depois do que foi anotado ([confirmation], falado antes). */
+    private fun advance(confirmation: String? = null) {
         val question = VoiceQuestions.next(session.drafts.value, today())
+        val say = { text: String -> listOfNotNull(confirmation, text).joinToString(" ") }
         _state.update {
             when {
                 session.drafts.value.isEmpty() -> it.copy(phase = VoicePhase.INTRO, question = null)
-                question == null -> it.copy(phase = VoicePhase.REVIEW, question = null, prompt = prompt("Confira antes de salvar."))
-                else -> it.copy(phase = VoicePhase.ASKING, question = question, prompt = prompt(question.text))
+                question == null -> it.copy(phase = VoicePhase.REVIEW, question = null, prompt = prompt(say("Confira antes de salvar.")))
+                else -> it.copy(phase = VoicePhase.ASKING, question = question, prompt = prompt(say(question.text), listen = true))
             }
         }
     }
@@ -172,6 +182,7 @@ class VoiceViewModel(
             SpeechRecognizer.ERROR_CLIENT -> UNAVAILABLE
             else -> "Não consegui ouvir. Toque no microfone e fale de novo."
         }
+        // Silêncio ou erro: não abre o microfone de novo sozinho; espera o toque.
         _state.update { it.copy(message = message, partial = "", prompt = prompt(message)) }
     }
 
@@ -196,9 +207,10 @@ class VoiceViewModel(
      */
     fun chooseDose(dose: String) {
         val id = _state.value.question?.draftId ?: return
-        session.set(session.drafts.value.map { if (it.localId == id) it.copy(dose = dose) else it })
+        val before = session.drafts.value
+        session.set(before.map { if (it.localId == id) it.copy(dose = dose) else it })
         _state.update { it.copy(heard = null, message = null) }
-        advance()
+        advance(VoiceQuestions.confirmation(before, session.drafts.value))
     }
 
     fun remove(localId: String) {

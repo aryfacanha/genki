@@ -1,7 +1,10 @@
 package br.edu.ifrs.genki.voice
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import br.edu.ifrs.genki.GenkiEval
 import java.util.Locale
 
@@ -15,6 +18,12 @@ class Speaker(context: Context) {
     private var ready = false
     private var pending: String? = null
     private var triedGoogle = false
+    /** Leitor iniciado (com ou sem português); sem português, [speak] avisa o fim na hora. */
+    private var settled = false
+    /** Chamado quando a fala atual termina (não quando é interrompida): a voz começa a ouvir sozinha (DEC-040). */
+    private var done: (() -> Unit)? = null
+    private var utterance = 0
+    private val main = Handler(Looper.getMainLooper())
     private lateinit var tts: TextToSpeech
 
     init {
@@ -44,20 +53,44 @@ class Speaker(context: Context) {
             start(GOOGLE)
             return
         }
-        pending?.let(::speak)
+        settled = true
+        if (ready) tts.setOnUtteranceProgressListener(progress)
+        val text = pending
         pending = null
+        if (text != null) speak(text, done) else if (!ready) finish()
     }
 
-    fun speak(text: String) {
+    private val progress = object : UtteranceProgressListener() {
+        override fun onStart(utteranceId: String?) = Unit
+        override fun onDone(utteranceId: String?) = ended(utteranceId)
+        @Deprecated("Deprecated in Java")
+        override fun onError(utteranceId: String?) = ended(utteranceId)
+    }
+
+    /** Só a última fala conta; uma fala trocada por outra ou parada não chama [done]. */
+    private fun ended(utteranceId: String?) {
+        main.post { if (utteranceId == "genki$utterance") finish() }
+    }
+
+    private fun finish() {
+        val callback = done
+        done = null
+        callback?.invoke()
+    }
+
+    fun speak(text: String, onDone: (() -> Unit)? = null) {
+        done = onDone
         if (!ready) {
-            pending = text
+            // Sem voz em português: a pergunta fica só na tela e o fim é imediato.
+            if (settled) finish() else pending = text
             return
         }
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "genki")
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "genki${++utterance}")
     }
 
     fun stop() {
         pending = null
+        done = null
         if (ready) tts.stop()
     }
 

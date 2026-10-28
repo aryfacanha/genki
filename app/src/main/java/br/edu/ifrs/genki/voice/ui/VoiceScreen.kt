@@ -45,6 +45,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,6 +67,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
@@ -124,7 +127,6 @@ fun VoiceScreen(
             speaker.shutdown()
         }
     }
-    LaunchedEffect(state.prompt) { state.prompt?.let { speaker.speak(it.text) } }
     LaunchedEffect(state.savedMessage) { state.savedMessage?.let(onSaved) }
 
     val startListening = {
@@ -134,14 +136,27 @@ fun VoiceScreen(
     val askMic = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         if (granted) startListening() else viewModel.micDenied()
     }
-    val onMic = {
-        when {
-            state.listening -> input.stop()
-            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED ->
-                startListening()
-            else -> askMic.launch(Manifest.permission.RECORD_AUDIO)
+    // Depois de falar a pergunta, o microfone abre sozinho (DEC-040: sem tocar a cada pergunta). Só com a permissão já
+    // dada, com a tela à vista e numa pergunta; se ninguém falar, o reconhecedor para e espera o toque.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val current by rememberUpdatedState(state)
+    LaunchedEffect(state.prompt) {
+        val prompt = state.prompt ?: return@LaunchedEffect
+        speaker.speak(prompt.text) {
+            val ready = prompt.listen && current.phase == VoicePhase.ASKING && !current.listening &&
+                !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+            if (ready && current.prompt?.id == prompt.id && input.isAvailable()) input.start()
         }
     }
+    val listenNow = {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            startListening()
+        } else {
+            askMic.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+    val onMic = { if (state.listening) input.stop() else listenNow() }
     val preferTyping = {
         speaker.stop()
         if (state.listening) input.stop()
@@ -191,12 +206,15 @@ fun VoiceScreen(
                 VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
                 VoicePhase.ASKING -> Asking(
                     state, onMic, preferTyping,
-                    onAnswer = { speaker.stop(); viewModel.tapped(it) },
-                    onCorrect = { viewModel.beginCorrection(); onMic() },
+                    // Resposta por toque enquanto ouvia sozinho: a escuta para, para não responder a pergunta seguinte.
+                    onAnswer = { speaker.stop(); input.cancel(); viewModel.tapped(it) },
+                    onCorrect = { input.cancel(); viewModel.beginCorrection(); listenNow() },
                     onKeep = viewModel::keepCorrection,
                     onUndo = viewModel::undoCorrection,
-                    onDose = { speaker.stop(); viewModel.chooseDose(it) },
-                    onRemove = { speaker.stop(); viewModel.remove(it) },
+                    onDose = { speaker.stop(); input.cancel(); viewModel.chooseDose(it) },
+                    onRemove = { speaker.stop(); input.cancel(); viewModel.remove(it) },
+                    // Abriu o relógio, a quantidade, os dias ou o campo: para de falar e de ouvir sozinho.
+                    onQuiet = { speaker.stop(); input.cancel() },
                 )
                 VoicePhase.REVIEW -> Review(
                     state, onMic, onFix, viewModel::remove, viewModel::save,
@@ -286,6 +304,7 @@ private fun ColumnScope.Asking(
     onUndo: () -> Unit,
     onDose: (String) -> Unit,
     onRemove: (String) -> Unit,
+    onQuiet: () -> Unit,
 ) {
     val question = state.question ?: return
     // Por pergunta: respondida por botão ou fala, o campo, os dias ou o relógio abertos não passam para a seguinte (A31-01).
@@ -386,11 +405,11 @@ private fun ColumnScope.Asking(
                 )
             } else {
                 if (question.field == Field.TIMES && !state.correcting) {
-                    TextButton(onClick = { picking = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
+                    TextButton(onClick = { onQuiet(); picking = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
                         Text("Escolher no relógio", textDecoration = TextDecoration.Underline)
                     }
                 }
-                TextButton(onClick = { typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
+                TextButton(onClick = { onQuiet(); typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
                     Text(
                         when {
                             state.correcting -> "Digitar a resposta"
@@ -636,19 +655,35 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
 /**
  * Horários escolhidos no relógio na pergunta dos horários (pedido do autor, 28/10): o relógio abre logo; cada
  * horário escolhido vira uma caixa marcada (tocar tira). Vira a frase "às 08:00 e às 20:00" e passa pelo mesmo
- * interpretador das outras respostas. Na pergunta do primeiro horário ([everyHours]), escolhe um só e mostra os
- * horários do dia que saem dele, para nenhum horário escolhido sumir (RV-DVC-03).
+ * interpretador das outras respostas. Na pergunta do primeiro horário ([everyHours]), o primeiro escolhido gera os
+ * horários do dia (RV-DVC-03) e cada um pode ser trocado ali mesmo, sem esperar a revisão (E12, DEC-040); com todos
+ * os horários do dia na resposta, o interpretador os mantém como estão.
  */
 @Composable
 private fun TimesPicker(everyHours: Int?, onDone: (String) -> Unit) {
     var chosen by rememberSaveable { mutableStateOf(listOf<LocalTime>()) }
     var open by rememberSaveable { mutableStateOf(true) }
+    // Horário do dia sendo trocado (pergunta do primeiro horário).
+    var editing by rememberSaveable { mutableStateOf<LocalTime?>(null) }
     if (everyHours != null) {
-        chosen.firstOrNull()?.let { first ->
+        if (chosen.isNotEmpty()) {
             Text(
-                "Horários do dia: ${MedicationText.times(Frequency.fill(first, everyHours))}",
+                "Horários do dia: ${MedicationText.times(chosen.sorted())}",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 16.dp).semantics { liveRegion = LiveRegionMode.Polite },
+            )
+            Text(
+                "Se algum não servir, toque nele para mudar.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+            ChoiceGrid(
+                chosen.sorted(),
+                label = MedicationText::time,
+                onClick = { time -> editing = time },
+                maxColumns = 4,
+                modifier = Modifier.padding(top = 8.dp),
             )
         }
     } else if (chosen.isNotEmpty()) {
@@ -670,7 +705,7 @@ private fun TimesPicker(everyHours: Int?, onDone: (String) -> Unit) {
     SecondaryButton(
         when {
             chosen.isEmpty() -> "Escolher horário"
-            everyHours != null -> "Trocar horário"
+            everyHours != null -> "Escolher outro primeiro horário"
             else -> "Adicionar outro horário"
         },
         onClick = { open = true },
@@ -685,10 +720,18 @@ private fun TimesPicker(everyHours: Int?, onDone: (String) -> Unit) {
     }
     if (open) {
         TimeDialog(
-            initial = if (everyHours != null) chosen.firstOrNull() ?: LocalTime.of(8, 0) else VoiceQuestions.nextClockTime(chosen),
+            initial = if (everyHours != null) chosen.minOrNull() ?: LocalTime.of(8, 0) else VoiceQuestions.nextClockTime(chosen),
             taken = if (everyHours != null) emptySet() else chosen.toSet(),
             onDismiss = { open = false },
-            onConfirm = { chosen = if (everyHours != null) listOf(it) else chosen + it; open = false },
+            onConfirm = { chosen = if (everyHours != null) Frequency.fill(it, everyHours) else chosen + it; open = false },
+        )
+    }
+    editing?.let { old ->
+        TimeDialog(
+            initial = old,
+            taken = (chosen - old).toSet(),
+            onDismiss = { editing = null },
+            onConfirm = { chosen = chosen - old + it; editing = null },
         )
     }
 }
