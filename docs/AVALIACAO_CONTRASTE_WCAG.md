@@ -27,6 +27,9 @@ foram compostas sobre o fundo real antes do cálculo.
 | `7A857E` / `F6FAF7` | Borda de campos e caixas | 3,64 | 3 | ok |
 | `7A857E` / `FFFFFF` | Borda dos campos (fundo branco, abaixo) | 3,83 | 3 | ok |
 | branco 65 % / `1B6B4A` | Borda dos botões do cartão "Agora" | 3,74 | 3 | ok |
+| `00210F` / `B7F0D4` | Cartão "Lembrete adiado" (DEC-040), texto | 13,42 | 4,5 | ok |
+| `0F3D2A` / `B7F0D4` | Cartão adiado, textos secundários | 9,54 | 4,5 | ok |
+| `1B6B4A` / `F6FAF7` | Borda do cartão adiado | 6,14 | 3 | ok |
 | `BFC9C2` / `F6FAF7` | Linhas divisórias | 1,61 | — | decorativo, dispensado |
 | branco 18 % / `1B6B4A` | Fundo do ícone no cartão verde | 1,49 | — | decorativo, dispensado |
 

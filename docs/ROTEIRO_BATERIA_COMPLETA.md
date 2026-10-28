@@ -21,7 +21,7 @@ grades, volume) e `ROTEIRO_TESTE_VOZ.md` (frases da voz).
 |---|---|---|
 | A1 | Abrir o Genki | Abre na **Hoje**, com a data por extenso; barra inferior Hoje, Medicamentos, Ajustes |
 | A2 | Tocar nas três abas | Cada uma abre sua tela; a aba ativa tem fundo verde-claro atrás do ícone e rótulo em negrito |
-| A3 | Medicamentos sem nenhum cadastro (se for o caso) | "Nenhum medicamento cadastrado." |
+| A3 | Medicamentos sem nenhum cadastro (se for o caso) | "Nenhum medicamento cadastrado."; o aviso fica na mesma altura do "Você ainda não possui lembretes." da Hoje (DEC-040) |
 
 ## B. Cadastro digitando (M1, RF01–RF03)
 
@@ -59,7 +59,7 @@ Crie "Teste B", 1 comprimido, todos os dias, um horário H = agora + 3 a 5 min, 
 | D1 | Esperar até H com o app fechado | Notificação "Lembrete das H" / "Teste B · 1 comprimido" com **Entendi** e **Adiar N min**; som de notificação comum |
 | D2 | Abrir a Hoje durante o aviso | Cartão **Agora** com Entendi e Adiar; abaixo, o próximo horário |
 | D3 | Não responder por N min (Ajustes: 10 min por padrão) | O aviso repete, até 3 vezes |
-| D4 | **Adiar** (na notificação ou no cartão) | Cartão "Lembrete adiado" / "Novo alerta às …" / "Horário original: H"; o aviso volta no horário novo com "(adiado)" |
+| D4 | **Adiar** (na notificação ou no cartão) | Cartão "Lembrete adiado" / "Novo alerta às …" / "Horário original: H"; o aviso volta no horário novo com "(adiado)"; o cartão adiado é **verde-claro com borda**, diferente do verde-escuro do que está tocando (DEC-040) |
 | D5 | **Entendi** | Notificação e cartão somem; nada de "Tomado" nem histórico de tomada |
 | D6 | Tocar numa notificação de lembrete | Abre a Hoje (se estiver no meio de um cadastro, ele é preservado) |
 | D7 | Hoje depois de H | H aparece como "Passou"; linha "Agora · HH:MM" separa passados e próximos; tocar num horário abre os Detalhes |
@@ -86,6 +86,9 @@ Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
 | E11 | Mídia em 2 ao entrar na voz | Aviso "O volume está baixo…" no meio da tela, some em ~4 s |
 | E12 | "Metformina três vezes ao dia" → na pergunta do primeiro horário, "Escolher no relógio" → 07:30 | Aparece "Horários do dia: 07:30, 15:30 e 23:30"; o botão vira "Trocar horário" (não dá para escolher um segundo). Confirmar → os três horários. (RV-DVC-03, corrigido) |
 | E13 | Abrir o relógio na pergunta dos horários e tocar "Algo errado? Corrigir por voz" | O seletor some e aparece "Diga a correção"; depois de Desfazer ou voltar, a pergunta volta sem o seletor aberto. (RV-DVC-05, corrigido) |
+| E14 | "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, **use** contínuo" | Um medicamento só, com Uso contínuo (não cria "Use"). (DEC-040) |
+| E15 | Na pergunta da dose, **Escolher a quantidade** → Unidade ml → + → Confirmar quantidade | Menu e − número + como no formulário; o cartão mostra "1,5 ml" e segue para os dias (DEC-040) |
+| E16 | Com dois medicamentos entendidos, tocar no **X** de um deles | "Tirar …?" com Tirar/Cancelar; Tirar remove só esse (DEC-040) |
 
 ## F. Cadastro pela câmera (M4, RF20–RF23)
 

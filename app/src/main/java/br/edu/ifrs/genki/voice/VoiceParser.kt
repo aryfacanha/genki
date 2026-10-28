@@ -83,7 +83,7 @@ object VoiceParser {
 
     /** Palavras que nunca viram nome de medicamento. */
     private val COMMON = setOf(
-        "eu", "tomo", "tomar", "toma", "tomando", "tome", "uso", "usar", "usando", "bebo", "pingo", "passo", "aplico",
+        "eu", "tomo", "tomar", "toma", "tomando", "tome", "uso", "use", "usa", "usar", "usando", "bebo", "pingo", "passo", "aplico",
         "o", "a", "os", "as", "de", "do", "da", "dos", "das", "e", "em", "no", "na", "nos", "nas", "ao", "aos", "pela",
         "pelo", "pelas", "pelos", "por", "para", "pra", "com", "sem", "que", "tambem", "mais", "remedio", "remedios",
         "medicamento", "medicamentos", "medicacao", "preciso", "tenho", "vezes", "vez", "dia", "dias", "hora", "horas",
@@ -411,7 +411,8 @@ object VoiceParser {
                 apply { it.copy(treatment = type, endDate = end, durationDays = duration) }
             val askedAboutTime = expecting == Field.TREATMENT || expecting == Field.END_DATE
             when {
-                isAny(i, "uso") && isAny(i + 1, "continuo") -> { set(TreatmentType.CONTINUOUS); return i + 2 }
+                // "Use contínuo": o reconhecedor às vezes ouve "use" no lugar de "uso" (bateria do autor no A31, 28/10).
+                isAny(i, "uso", "use", "usa") && isAny(i + 1, "continuo") -> { set(TreatmentType.CONTINUOUS); return i + 2 }
                 isAny(i, "continuo", "continua") -> { set(TreatmentType.CONTINUOUS); return i + 1 }
                 isAny(i, "para", "pra") && isAny(i + 1, "sempre") -> { set(TreatmentType.CONTINUOUS); return i + 2 }
                 isAny(i, "sem") && isAny(i + 1, "data") -> { set(TreatmentType.CONTINUOUS); return i + 2 }

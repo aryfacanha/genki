@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: DEC-040 parte 1 (ajustes da bateria do autor) — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`9ee4def`; pedido do autor (bateria no A31 e "sim, pode seguir nessa ordem").
+Realizado e arquivos alterados: `ui/components/Components.kt` (EmptyMessage), `ui/home/HomeScreen.kt` (aviso vazio, cartão adiado verde-claro), `ui/medications/MedicationsScreen.kt`, `ui/form/FormScreen.kt` (DoseInput internal), `voice/ui/VoiceScreen.kt` (X com confirmação, DosePicker), `voice/ui/VoiceViewModel.kt` (chooseDose), `voice/VoiceParser.kt` ("use contínuo"); teste; DECISOES (DEC-040), bateria, contraste, resultado da bateria.
+Decisões aceitas pelo autor nesta sessão: DEC-040.
+Sugestões pendentes: desfazer exclusão; levantar outras caixas.
+Verificado: `assembleDebug test` (135); emulador 1,0×: avisos vazios na mesma altura, "use contínuo", dose da voz, X, cartão adiado com lembrete real. | Não verificado: A31 (desconectado), 2,0×, TalkBack.
+Próxima tarefa e bloqueios: parte 2 (voz); parte 3 (introdução); revisão do Codex.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — Conferência pontual RV-DVC-01…05 — 28/10/2026 — Codex (GPT-6)
 Partida: `main`/`51a8d19`; alvo `7ffddeb..a57c591`, código do app idêntico na partida. Pull tentado, bloqueado por escrita em `.git/FETCH_HEAD`; alvo local disponível.
 Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_RV_DVC_CODEX.md`, handoff (§2/3/7, retomada e Diário), estado, entregas e registro de IA. Cinco achados fechados; nenhum achado novo S1–S4 no diff.

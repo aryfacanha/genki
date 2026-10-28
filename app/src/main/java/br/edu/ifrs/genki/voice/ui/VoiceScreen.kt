@@ -33,8 +33,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -71,6 +73,7 @@ import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
+import br.edu.ifrs.genki.ui.form.DoseInput
 import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.ChoiceGrid
 import br.edu.ifrs.genki.ui.components.FieldError
@@ -192,6 +195,8 @@ fun VoiceScreen(
                     onCorrect = { viewModel.beginCorrection(); onMic() },
                     onKeep = viewModel::keepCorrection,
                     onUndo = viewModel::undoCorrection,
+                    onDose = { speaker.stop(); viewModel.chooseDose(it) },
+                    onRemove = { speaker.stop(); viewModel.remove(it) },
                 )
                 VoicePhase.REVIEW -> Review(
                     state, onMic, onFix, viewModel::remove, viewModel::save,
@@ -279,6 +284,8 @@ private fun ColumnScope.Asking(
     onCorrect: () -> Unit,
     onKeep: () -> Unit,
     onUndo: () -> Unit,
+    onDose: (String) -> Unit,
+    onRemove: (String) -> Unit,
 ) {
     val question = state.question ?: return
     // Por pergunta: respondida por botão ou fala, o campo, os dias ou o relógio abertos não passam para a seguinte (A31-01).
@@ -297,7 +304,7 @@ private fun ColumnScope.Asking(
         SectionTitle(if (state.correctionPending) "Confira a correção" else "Entendi até agora")
         Spacer(Modifier.height(8.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            state.drafts.forEach { SoFarCard(it, current = it.localId == question.draftId) }
+            state.drafts.forEach { SoFarCard(it, current = it.localId == question.draftId, onRemove = { onRemove(it.localId) }) }
         }
         state.heard?.let {
             Text(
@@ -351,6 +358,8 @@ private fun ColumnScope.Asking(
         if (!state.correctionPending) {
             if (typing && question.field == Field.DAYS && !state.correcting) {
                 DayPicker(onDone = { onAnswer(it); typing = false })
+            } else if (typing && question.field == Field.DOSE && !state.correcting) {
+                DosePicker(onDone = { onDose(it); typing = false })
             } else if (picking && !state.correcting) {
                 TimesPicker(question.everyHours, onDone = { onAnswer(it); picking = false })
             } else if (typing) {
@@ -383,7 +392,12 @@ private fun ColumnScope.Asking(
                 }
                 TextButton(onClick = { typing = true }, modifier = Modifier.padding(top = 8.dp).heightIn(min = 48.dp)) {
                     Text(
-                        if (question.field == Field.DAYS && !state.correcting) "Escolher os dias" else "Digitar a resposta",
+                        when {
+                            state.correcting -> "Digitar a resposta"
+                            question.field == Field.DAYS -> "Escolher os dias"
+                            question.field == Field.DOSE -> "Escolher a quantidade"
+                            else -> "Digitar a resposta"
+                        },
                         textDecoration = TextDecoration.Underline,
                     )
                 }
@@ -519,14 +533,27 @@ private fun TypeLink(onType: () -> Unit, modifier: Modifier = Modifier) {
 
 /** Resumo do que já foi entendido de um medicamento; o da pergunta atual fica destacado. */
 @Composable
-private fun SoFarCard(draft: MedicationDraft, current: Boolean) {
+private fun SoFarCard(draft: MedicationDraft, current: Boolean, onRemove: () -> Unit) {
+    val name = draft.name ?: "Medicamento sem nome"
+    var confirm by rememberSaveable(draft.localId) { mutableStateOf(false) }
     GenkiCard {
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Text(
-                draft.name ?: "Medicamento sem nome",
-                style = MaterialTheme.typography.titleMedium,
-                color = if (current) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-            )
+        Column(Modifier.padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (current) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f).padding(top = 8.dp),
+                )
+                // X discreto para tirar um medicamento entendido por engano ("Use" virou "Uso"; bateria do autor, 28/10).
+                IconButton(onClick = { confirm = true }, modifier = Modifier.size(48.dp)) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "Tirar $name",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             val lines = listOfNotNull(
                 draft.concentration,
                 draft.dose,
@@ -535,8 +562,34 @@ private fun SoFarCard(draft: MedicationDraft, current: Boolean) {
                 draft.treatment?.let(MedicationText::treatment),
             )
             if (lines.isNotEmpty()) {
-                Text(lines.joinToString(" · "), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(lines.joinToString(" · "), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(end = 12.dp))
             }
+        }
+    }
+    if (confirm) {
+        AlertDialog(
+            onDismissRequest = { confirm = false },
+            title = { Text("Tirar $name?") },
+            text = { Text("O que foi entendido sobre ele não será cadastrado.") },
+            confirmButton = {
+                TextButton(onClick = { confirm = false; onRemove() }) { Text("Tirar", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = { TextButton(onClick = { confirm = false }) { Text("Cancelar") } },
+        )
+    }
+}
+
+/**
+ * Quantidade na pergunta da dose com o mesmo menu e − número + do formulário (DEC-039), em vez de digitar (bateria do
+ * autor no A31, 28/10).
+ */
+@Composable
+private fun DosePicker(onDone: (String) -> Unit) {
+    var dose by rememberSaveable { mutableStateOf("") }
+    Column(Modifier.padding(top = 16.dp)) {
+        DoseInput(dose = dose, error = null, onChange = { dose = it }, title = false)
+        if (dose.isNotBlank()) {
+            PrimaryButton("Confirmar quantidade", onClick = { onDone(dose.trim()) }, modifier = Modifier.padding(top = 12.dp))
         }
     }
 }

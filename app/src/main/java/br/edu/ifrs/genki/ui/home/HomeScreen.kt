@@ -36,11 +36,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -62,11 +62,15 @@ import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.reminders.ReminderScheduler
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
+import br.edu.ifrs.genki.ui.components.EmptyMessage
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.genkiContainer
 import br.edu.ifrs.genki.ui.theme.GenkiCardSubtext
+import br.edu.ifrs.genki.ui.theme.GenkiOnIconBackground
+import br.edu.ifrs.genki.ui.theme.GenkiOnPrimaryContainer
+import br.edu.ifrs.genki.ui.theme.GenkiPrimaryContainer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -172,81 +176,91 @@ fun HomeScreen(
     }
     Column(Modifier.fillMaxSize()) {
         val s = state
-        Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp),
-        ) {
-            Column(Modifier.padding(top = 14.dp, bottom = 10.dp)) {
-                Text("Genki", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.semantics { heading() })
-                Text(
-                    MedicationText.longDate(s?.date ?: LocalDate.now()),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (s?.hasMedications == true && (!notificationsAllowed || !exactAllowed)) {
-                PermissionWarning(notificationsAllowed, onOpenSettings)
-            }
-            when {
-                s == null -> Unit
-                !s.hasMedications -> EmptyState()
-                // Avisos pendentes vêm antes de "Nenhum lembrete para hoje": um adiado pode passar da meia-noite
-                // depois do último dia do tratamento (RV-M2B-01).
-                s.today.isEmpty() && s.alerts.isEmpty() -> {
+        // O aviso sem medicamentos fica no centro da área toda acima do botão, como em Medicamentos (mesma altura).
+        Box(Modifier.weight(1f)) {
+            Column(
+                Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp),
+            ) {
+                Column(Modifier.padding(top = 14.dp, bottom = 10.dp)) {
+                    Text("Genki", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.semantics { heading() })
                     Text(
-                        "Nenhum lembrete para hoje.",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
+                        MedicationText.longDate(s?.date ?: LocalDate.now()),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    s.upcoming?.let { UpcomingCard(it, s.date) }
                 }
-                else -> {
-                    // Vários avisos ao mesmo tempo: um cartão só, com "Ver um por um" (pedido do autor, 27/10).
-                    val (ringing, snoozed) = s.alerts.partition { it.first.snoozedUntil == null }
-                    listOf(ringing, snoozed).filter { it.isNotEmpty() }.forEach { group ->
-                        AlertGroup(
-                            group = group,
-                            intervalMinutes = s.intervalMinutes,
-                            onAcknowledge = viewModel::acknowledge,
-                            onSnooze = viewModel::snooze,
-                            onAcknowledgeAll = viewModel::acknowledgeAll,
-                            onSnoozeAll = viewModel::snoozeAll,
+                if (s?.hasMedications == true && (!notificationsAllowed || !exactAllowed)) {
+                    PermissionWarning(notificationsAllowed, onOpenSettings)
+                }
+                when {
+                    s == null || !s.hasMedications -> Unit
+                    // Avisos pendentes vêm antes de "Nenhum lembrete para hoje": um adiado pode passar da meia-noite
+                    // depois do último dia do tratamento (RV-M2B-01).
+                    s.today.isEmpty() && s.alerts.isEmpty() -> {
+                        Text(
+                            "Nenhum lembrete para hoje.",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
                         )
+                        s.upcoming?.let { UpcomingCard(it, s.date) }
                     }
-                    if (s.alerts.isEmpty()) {
-                        NextCard(s.next, s.upcoming, s.date)
-                    } else {
-                        val after = s.next?.let { "${MedicationText.time(it.time)} · ${it.medication.name}" }
-                            ?: s.upcoming?.let { (date, occurrence) ->
-                                "${MedicationText.upcomingDay(date, s.date).lowercase()}, " +
-                                    "${MedicationText.time(occurrence.time)} · ${occurrence.medication.name}"
-                            }
-                        after?.let {
-                            Text(
-                                "Depois: $it",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 12.dp),
+                    else -> {
+                        // Vários avisos ao mesmo tempo: um cartão só, com "Ver um por um" (pedido do autor, 27/10).
+                        val (ringing, snoozed) = s.alerts.partition { it.first.snoozedUntil == null }
+                        listOf(ringing, snoozed).filter { it.isNotEmpty() }.forEach { group ->
+                            AlertGroup(
+                                group = group,
+                                intervalMinutes = s.intervalMinutes,
+                                onAcknowledge = viewModel::acknowledge,
+                                onSnooze = viewModel::snooze,
+                                onAcknowledgeAll = viewModel::acknowledgeAll,
+                                onSnoozeAll = viewModel::snoozeAll,
                             )
                         }
-                    }
-                    if (s.today.isEmpty()) {
-                        Text("Nenhum outro lembrete para hoje.", modifier = Modifier.padding(top = 16.dp))
-                    } else {
-                        Text(
-                            "Horários de hoje",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
-                        )
-                        // Linha "Agora" entre os horários que já passaram e os que faltam; não diz se foi tomado (DEC-004).
-                        val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            s.today.forEachIndexed { index, occurrence ->
-                                if (index == firstAhead) NowMarker(s.minute)
-                                TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
+                        if (s.alerts.isEmpty()) {
+                            NextCard(s.next, s.upcoming, s.date)
+                        } else {
+                            val after = s.next?.let { "${MedicationText.time(it.time)} · ${it.medication.name}" }
+                                ?: s.upcoming?.let { (date, occurrence) ->
+                                    "${MedicationText.upcomingDay(date, s.date).lowercase()}, " +
+                                        "${MedicationText.time(occurrence.time)} · ${occurrence.medication.name}"
+                                }
+                            after?.let {
+                                Text(
+                                    "Depois: $it",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 12.dp),
+                                )
                             }
-                            if (firstAhead == s.today.size) NowMarker(s.minute)
                         }
+                        if (s.today.isEmpty()) {
+                            Text("Nenhum outro lembrete para hoje.", modifier = Modifier.padding(top = 16.dp))
+                        } else {
+                            Text(
+                                "Horários de hoje",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
+                            )
+                            // Linha "Agora" entre os horários que já passaram e os que faltam; não diz se foi tomado (DEC-004).
+                            val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                s.today.forEachIndexed { index, occurrence ->
+                                    if (index == firstAhead) NowMarker(s.minute)
+                                    TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
+                                }
+                                if (firstAhead == s.today.size) NowMarker(s.minute)
+                            }
+                        }
+                        Spacer(Modifier.height(16.dp))
                     }
-                    Spacer(Modifier.height(16.dp))
                 }
+            }
+            // Na frente da coluna (vazia neste caso), para o leitor de tela também encontrar o aviso.
+            if (s?.hasMedications == false) {
+                EmptyMessage(
+                    "Você ainda não possui lembretes.",
+                    "Cadastre um medicamento e seus horários para receber lembretes.",
+                    Modifier.align(Alignment.Center),
+                )
             }
         }
         BottomActions {
@@ -317,14 +331,10 @@ private fun AlertGroup(
     }
     val ids = group.map { it.first.timeId }
     val snoozed = group.first().first.snoozedUntil != null
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-    ) {
+    val colors = alertColors(snoozed)
+    AlertSurface(colors) {
         Column(Modifier.padding(20.dp)) {
-            Text(if (snoozed) "Lembretes adiados" else "Agora", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+            Text(if (snoozed) "Lembretes adiados" else "Agora", color = colors.subtext, fontWeight = FontWeight.Bold)
             // Conta avisos (um remédio com dois horários são dois), por isso "lembretes".
             Text("${group.size} lembretes", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(8.dp))
@@ -338,18 +348,11 @@ private fun AlertGroup(
                 Text(
                     MedicationText.doseLine(medication.concentration, medication.dose) +
                         (time?.let { " · novo alerta às ${MedicationText.time(it)}" } ?: ""),
-                    color = GenkiCardSubtext,
+                    color = colors.subtext,
                 )
             }
             Spacer(Modifier.height(16.dp))
-            Button(
-                onClick = { onAcknowledgeAll(ids) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-            ) { Text("Entendi", fontWeight = FontWeight.SemiBold) }
+            AcknowledgeButton(colors, onClick = { onAcknowledgeAll(ids) })
             if (!snoozed) {
                 Spacer(Modifier.height(8.dp))
                 OutlinedButton(
@@ -361,7 +364,7 @@ private fun AlertGroup(
             }
             TextButton(
                 onClick = { oneByOne = true },
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.content),
                 modifier = Modifier.align(Alignment.CenterHorizontally).heightIn(min = 48.dp),
             ) { Text("Ver um por um") }
         }
@@ -370,7 +373,8 @@ private fun AlertGroup(
 
 /**
  * Cartão verde "Agora" (aviso tocando: "Entendi" e "Adiar N min") ou "Lembrete adiado" (só "Entendi"),
- * como no protótipo. Os botões fazem o mesmo que os da notificação.
+ * como no protótipo. Os botões fazem o mesmo que os da notificação. O adiado é verde-claro com borda, para não se
+ * confundir com o que está tocando (bateria do autor no A31, 28/10); o título também diz "adiado".
  */
 @Composable
 private fun AlertCard(
@@ -381,32 +385,21 @@ private fun AlertCard(
     onSnooze: () -> Unit,
 ) {
     val snoozedUntil = alert.snoozedUntil?.atZone(ZoneId.systemDefault())?.toLocalTime()
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-    ) {
+    val colors = alertColors(snoozedUntil != null)
+    AlertSurface(colors) {
         Column(Modifier.padding(20.dp)) {
             if (snoozedUntil == null) {
-                Text("Agora", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+                Text("Agora", color = colors.subtext, fontWeight = FontWeight.Bold)
                 Text(MedicationText.time(alert.time), style = MaterialTheme.typography.displayLarge)
             } else {
-                Text("Lembrete adiado", color = GenkiCardSubtext, fontWeight = FontWeight.Bold)
+                Text("Lembrete adiado", color = colors.subtext, fontWeight = FontWeight.Bold)
                 Text("Novo alerta às ${MedicationText.time(snoozedUntil)}", style = MaterialTheme.typography.titleLarge)
-                Text("Horário original: ${MedicationText.time(alert.time)}", color = GenkiCardSubtext)
+                Text("Horário original: ${MedicationText.time(alert.time)}", color = colors.subtext)
             }
             Spacer(Modifier.height(8.dp))
-            MedicationLine(medication)
+            MedicationLine(medication, colors)
             Spacer(Modifier.height(16.dp))
-            Button(
-                onClick = onAcknowledge,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-            ) { Text("Entendi", fontWeight = FontWeight.SemiBold) }
+            AcknowledgeButton(colors, onClick = onAcknowledge)
             if (snoozedUntil == null) {
                 Spacer(Modifier.height(8.dp))
                 OutlinedButton(
@@ -420,19 +413,57 @@ private fun AlertCard(
     }
 }
 
+/** Cores do cartão de aviso: verde-escuro tocando; verde-claro com borda verde adiado (contraste 9,5:1 e 13,4:1). */
+private data class AlertColors(val container: Color, val content: Color, val subtext: Color, val border: Color?)
+
 @Composable
-private fun MedicationLine(medication: Medication) {
+private fun alertColors(snoozed: Boolean) = if (snoozed) {
+    AlertColors(GenkiPrimaryContainer, GenkiOnPrimaryContainer, GenkiOnIconBackground, MaterialTheme.colorScheme.primary)
+} else {
+    AlertColors(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary, GenkiCardSubtext, null)
+}
+
+@Composable
+private fun AlertSurface(colors: AlertColors, content: @Composable () -> Unit) {
+    Surface(
+        color = colors.container,
+        contentColor = colors.content,
+        shape = RoundedCornerShape(20.dp),
+        border = colors.border?.let { BorderStroke(1.5.dp, it) },
+        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+        content = content,
+    )
+}
+
+/** "Entendi" com contraste no cartão: branco no verde-escuro, verde no verde-claro. */
+@Composable
+private fun AcknowledgeButton(colors: AlertColors, onClick: () -> Unit) {
+    val green = MaterialTheme.colorScheme.primary
+    val white = MaterialTheme.colorScheme.onPrimary
+    val light = colors.border != null
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (light) green else white,
+            contentColor = if (light) white else green,
+        ),
+        modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+    ) { Text("Entendi", fontWeight = FontWeight.SemiBold) }
+}
+
+@Composable
+private fun MedicationLine(medication: Medication, colors: AlertColors = alertColors(snoozed = false)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
-            Modifier.size(40.dp).background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f), RoundedCornerShape(12.dp)),
+            Modifier.size(40.dp).background(colors.content.copy(alpha = 0.18f), RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(PillsIcon, contentDescription = null, tint = GenkiCardSubtext, modifier = Modifier.size(20.dp))
+            Icon(PillsIcon, contentDescription = null, tint = colors.subtext, modifier = Modifier.size(20.dp))
         }
         Spacer(Modifier.width(12.dp))
         Column {
             Text(medication.name, style = MaterialTheme.typography.titleLarge)
-            Text(MedicationText.doseLine(medication.concentration, medication.dose), color = GenkiCardSubtext)
+            Text(MedicationText.doseLine(medication.concentration, medication.dose), color = colors.subtext)
         }
     }
 }
@@ -540,25 +571,3 @@ private fun TodayRow(occurrence: Occurrence, past: Boolean, onOpen: () -> Unit) 
     }
 }
 
-@Composable
-private fun EmptyState() {
-    Column(
-        Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(
-            Modifier.size(56.dp).background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(PillsIcon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(28.dp))
-        }
-        Spacer(Modifier.height(16.dp))
-        Text("Você ainda não possui lembretes.", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Cadastre um medicamento e seus horários para receber lembretes.",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-        )
-    }
-}

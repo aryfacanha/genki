@@ -591,4 +591,12 @@ class VoiceParserTest {
         assertEquals(setOf(MONDAY, WEDNESDAY, FRIDAY), parse("segunda, quarta e sexta", listOf(l), l.localId, Field.DAYS).drafts.single().days)
         assertEquals(setOf(SATURDAY, SUNDAY), parse("domingo e sábado", listOf(l), l.localId, Field.DAYS).drafts.single().days)
     }
+
+    @Test
+    fun useContinuoIsContinuousNotAMedication() {
+        // "Use" no lugar de "uso" (reconhecedor, bateria do autor no A31, 28/10) não cria o medicamento "Use".
+        val all = parse("Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, use contínuo").drafts
+        assertEquals(listOf("Losartana"), all.map { it.name })
+        assertEquals(TreatmentType.CONTINUOUS, all.single().treatment)
+    }
 }

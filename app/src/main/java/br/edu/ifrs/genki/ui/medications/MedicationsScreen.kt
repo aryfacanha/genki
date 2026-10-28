@@ -1,20 +1,15 @@
 package br.edu.ifrs.genki.ui.medications
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
@@ -26,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,9 +32,9 @@ import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
+import br.edu.ifrs.genki.ui.components.EmptyMessage
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
-import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.genkiContainer
 import kotlinx.coroutines.flow.SharingStarted
@@ -69,20 +63,28 @@ fun MedicationsScreen(
     val medications by viewModel.medications.collectAsStateWithLifecycle()
 
     Column(Modifier.fillMaxSize()) {
-        GenkiTopBar("Medicamentos")
+        // O aviso de lista vazia fica no centro da área toda acima do botão, como na Hoje (mesma altura).
         Box(Modifier.weight(1f)) {
             val list = medications
-            when {
-                list == null -> Unit
-                list.isEmpty() -> EmptyState()
-                else -> LazyColumn(
-                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(list, key = { it.id }) { medication ->
-                        MedicationCard(medication, onClick = { onOpen(medication.id) })
+            Column(Modifier.fillMaxSize()) {
+                GenkiTopBar("Medicamentos")
+                if (!list.isNullOrEmpty()) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items(list, key = { it.id }) { medication ->
+                            MedicationCard(medication, onClick = { onOpen(medication.id) })
+                        }
                     }
                 }
+            }
+            if (list?.isEmpty() == true) {
+                EmptyMessage(
+                    "Nenhum medicamento cadastrado.",
+                    "Adicione um medicamento para começar a organizar seus lembretes.",
+                    Modifier.align(Alignment.Center),
+                )
             }
         }
         BottomActions {
@@ -121,26 +123,3 @@ private fun MedicationCard(medication: Medication, onClick: () -> Unit) {
     }
 }
 
-@Composable
-private fun EmptyState() {
-    Column(
-        Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Box(
-            Modifier.size(56.dp).background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(PillsIcon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(28.dp))
-        }
-        Spacer(Modifier.height(16.dp))
-        Text("Nenhum medicamento cadastrado.", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Adicione um medicamento para começar a organizar seus lembretes.",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-        )
-    }
-}

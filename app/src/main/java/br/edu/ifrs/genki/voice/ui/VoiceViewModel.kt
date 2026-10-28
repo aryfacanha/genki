@@ -190,6 +190,17 @@ class VoiceViewModel(
         return false
     }
 
+    /**
+     * Dose escolhida no menu e no − número + da pergunta da dose (bateria do autor no A31, 28/10): vai para o rascunho
+     * como o formulário faria, sem passar pelo interpretador; a gravação continua pelo validador.
+     */
+    fun chooseDose(dose: String) {
+        val id = _state.value.question?.draftId ?: return
+        session.set(session.drafts.value.map { if (it.localId == id) it.copy(dose = dose) else it })
+        _state.update { it.copy(heard = null, message = null) }
+        advance()
+    }
+
     fun remove(localId: String) {
         session.remove(localId)
         advance()

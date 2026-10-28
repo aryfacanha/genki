@@ -297,7 +297,7 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) {
+internal fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit, title: Boolean = true) {
     val initial = remember { DoseUnit.parse(dose) }
     var unit by rememberSaveable { mutableStateOf(initial?.second) }
     var amount by rememberSaveable { mutableStateOf(initial?.takeIf { it.second != DoseUnit.OTHER }?.first.orEmpty()) }
@@ -321,8 +321,9 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
         }
     }
     Column {
-        // Pergunta em destaque, diferente do texto digitado nos campos (pedido do autor, 28/10).
-        Text("Quanto você toma por vez", style = MaterialTheme.typography.titleLarge)
+        // Pergunta em destaque, diferente do texto digitado nos campos (pedido do autor, 28/10). Na voz, a pergunta
+        // já está na tela.
+        if (title) Text("Quanto você toma por vez", style = MaterialTheme.typography.titleLarge)
         ExposedDropdownMenuBox(expanded = open, onExpandedChange = { open = it }, modifier = Modifier.padding(top = 8.dp)) {
             OutlinedTextField(
                 colors = genkiFieldColors(),
