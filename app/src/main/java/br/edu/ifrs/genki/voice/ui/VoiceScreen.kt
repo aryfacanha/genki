@@ -81,6 +81,7 @@ import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
+import br.edu.ifrs.genki.ui.components.genkiFieldColors
 import br.edu.ifrs.genki.voice.Speaker
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.VoiceQuestions
@@ -354,6 +355,7 @@ private fun ColumnScope.Asking(
                 val focus = remember { FocusRequester() }
                 LaunchedEffect(Unit) { focus.requestFocus() }
                 OutlinedTextField(
+                    colors = genkiFieldColors(),
                     value = typed,
                     onValueChange = { typed = it },
                     label = { Text(if (state.correcting) "Digite a correção" else "Digite a resposta") },

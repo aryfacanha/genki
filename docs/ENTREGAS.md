@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: avaliação de contraste WCAG 2.2 AA e campos destacados — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`ce1aad7`; pedido do autor (contraste entre campos e títulos; avaliação W3C).
+Realizado e arquivos alterados: `docs/AVALIACAO_CONTRASTE_WCAG.md`; `ui/components/Components.kt` (`genkiFieldColors`), `ui/form/FormScreen.kt`, `voice/ui/VoiceScreen.kt`, `camera/ui/CameraScreen.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: pedido do autor (escopo "Contraste (WCAG 2.2 AA)").
+Sugestões pendentes: desfazer exclusão; levantar outras caixas.
+Verificado: `assembleDebug test` (133); razões de contraste calculadas; A31 1,5× com campos brancos. | Não verificado: 2,0×; câmera e voz digitada em tela; TalkBack.
+Próxima tarefa e bloqueios: revisão do Codex; teste do autor.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: dose com menu de unidade e − número + (DEC-039) — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`14a80b5`; melhorias coladas pelo autor (menos caixas; select na dose).
 Realizado e arquivos alterados: `ui/form/FormScreen.kt` (`DoseInput`); roteiro (A, B, F, G06, X) e docs.

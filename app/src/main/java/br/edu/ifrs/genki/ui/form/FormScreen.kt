@@ -81,10 +81,11 @@ import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.InfoRow
-import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
+import br.edu.ifrs.genki.ui.components.TimeDialog
+import br.edu.ifrs.genki.ui.components.genkiFieldColors
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -320,9 +321,11 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
         }
     }
     Column {
-        Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
+        // Pergunta em destaque, diferente do texto digitado nos campos (pedido do autor, 28/10).
+        Text("Quanto você toma por vez", style = MaterialTheme.typography.titleLarge)
         ExposedDropdownMenuBox(expanded = open, onExpandedChange = { open = it }, modifier = Modifier.padding(top = 8.dp)) {
             OutlinedTextField(
+                colors = genkiFieldColors(),
                 value = unit?.let(::unitLabel).orEmpty(),
                 onValueChange = {},
                 readOnly = true,
@@ -346,6 +349,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
         when (val chosen = unit) {
             null -> Unit
             DoseUnit.OTHER -> OutlinedTextField(
+                colors = genkiFieldColors(),
                 value = dose,
                 // Texto mexido não guarda mais a quantidade de antes: voltar a uma unidade pede quantidade nova (RV-UN-01).
                 onValueChange = { amount = ""; onChange(it) },
@@ -396,6 +400,7 @@ private fun AmountStepper(
     ) {
         StepButton("−", "Diminuir", enabled = canMinus, onClick = onMinus)
         OutlinedTextField(
+            colors = genkiFieldColors(),
             value = amount,
             onValueChange = onType,
             // Rótulo curto: "Outra quantidade" quebrava sobre a borda com fonte 2,0× (A31-05).
@@ -433,6 +438,7 @@ private fun TextInput(
 ) {
     Column {
         OutlinedTextField(
+            colors = genkiFieldColors(),
             value = value,
             onValueChange = onChange,
             label = { Text(label) },
@@ -491,7 +497,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
 
     Text(
         "Horários",
-        style = MaterialTheme.typography.titleSmall,
+        style = MaterialTheme.typography.titleLarge,
         modifier = Modifier.padding(top = 20.dp, bottom = 8.dp),
     )
     fields.everyHours?.let { every ->

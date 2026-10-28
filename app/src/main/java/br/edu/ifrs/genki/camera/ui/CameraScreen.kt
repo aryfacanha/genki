@@ -54,6 +54,7 @@ import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
+import br.edu.ifrs.genki.ui.components.genkiFieldColors
 
 /**
  * Usar câmera (`UsarCameraMedicamento.tsx`, ESPEC §8): foto da embalagem, sugestões de nome e concentração
@@ -202,6 +203,7 @@ private fun ColumnScope.Result(state: CameraUiState, viewModel: CameraViewModel,
 @Composable
 private fun Field(label: String, value: String, onChange: (String) -> Unit) {
     OutlinedTextField(
+        colors = genkiFieldColors(),
         value = value,
         onValueChange = onChange,
         label = { Text(label) },

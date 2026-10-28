@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -197,6 +198,17 @@ fun FieldError(message: String?, modifier: Modifier = Modifier) {
         Text(message, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
     }
 }
+
+/**
+ * Campo para preencher em branco sobre o fundo esverdeado da tela, para não se confundir com títulos e textos
+ * (pedido do autor, 28/10; contraste da borda 3,8:1, WCAG 1.4.11).
+ */
+@Composable
+fun genkiFieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+    errorContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+)
 
 /** Cartão branco com borda, como os do protótipo. */
 @Composable
