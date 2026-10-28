@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude Code (Opus 5.5):** roteiro da dose/grades rodado no A31 pelo ADB, com autorização do autor: quase tudo ok; 1 S2 (seletor de horários da voz fica na pergunta seguinte), 3 S3 e 2 S4. Resultado: `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Pendente: autor decidir os reparos; G06/G10 (voz) e TalkBack com o autor.
+
 **28/10/2026, Claude Code (Opus 5.5):** DEC-038 (pedidos do autor): "Outra" quantidade com − e + (comprimido e ml de meio em meio, "1 comprimido e meio") e "Escolher no relógio" na pergunta dos horários da voz. 132 testes; conferido no emulador. Instalado no A31 às 12:09. Roteiro atualizado: `docs/ROTEIRO_TESTE_DOSE_GRADES.md`. Pendente: revisão do Codex; teste do autor.
 
 **28/10/2026, Codex (GPT-6), partida `main`/`be24b9d`: RV-UN-01 fechado.** Editar ou apagar o texto de Outro exige quantidade nova; ida/volta sem editar preserva 2. T08/T09, bloqueio de Continuar e títulos conferidos no emulador API 35. Build passa; 128 testes sem falhas nos resultados reutilizados (`UP-TO-DATE`). Sem achado novo no diff. Relatório: `docs/revisoes/REVISAO_CORRECAO_TROCA_UNIDADE_CODEX.md`. Rascunho descartado, medicamentos preservados; sem código/configuração alterados, commit/push ou A31 operado. Próximo: teste manual do autor no A31 e verificações técnicas previstas; TalkBack, voz/câmera, fonte ampliada e ciclo de lembretes não repetidos. Registros abaixo são históricos.

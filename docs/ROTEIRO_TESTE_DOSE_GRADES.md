@@ -13,6 +13,9 @@ Atualizado de novo em 28/10 com dois pedidos do autor: **"Outra" com − e +** (
 F04) e **relógio na pergunta dos horários da voz** (G07–G10). Conferidos pelo Claude no emulador; versão instalada
 no A31 às 12:09 (`011d4e8`).
 
+**Executado pelo Claude no A31 em 28/10 (12:13–12:45):** resultado e achados A31-01…06 em
+`docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Falta o autor: G06, G10 (Metformina), voz em 2,0×, voz audível, TalkBack.
+
 ## Como usar
 
 - Formulário: **Hoje → Adicionar medicamento → Digitar**. Voz: **→ Usar voz**.
