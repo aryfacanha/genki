@@ -2,11 +2,15 @@ package br.edu.ifrs.genki.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,15 +32,20 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.addPathNodes
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 // Peças repetidas nas telas, com as medidas do protótipo (barra de 56 dp, botões de 56 dp, cantos de 16 dp).
@@ -218,12 +227,95 @@ fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     )
 }
 
-/** ✓ do chip marcado; desmarcado, o espaço fica reservado para o chip não mudar de tamanho (pedido do autor, 27/10). */
+private val ChoiceGap = 8.dp
+
+/**
+ * Opções de toque em grade: no mesmo grupo, todas as caixas têm a mesma largura e altura e ficam alinhadas em
+ * colunas (pedido do autor, 27/10). As colunas saem do maior rótulo e da largura da tela, até [maxColumns], e
+ * diminuem sozinhas com fonte grande. Com [selected], a caixa marcada mostra ✓; sem ele, são respostas rápidas.
+ */
 @Composable
-fun CheckSlot(checked: Boolean) {
-    Icon(
-        Icons.Filled.Check,
-        contentDescription = null,
-        modifier = Modifier.size(18.dp).alpha(if (checked) 1f else 0f),
-    )
+fun <T> ChoiceGrid(
+    items: List<T>,
+    label: (T) -> String,
+    onClick: (T) -> Unit,
+    modifier: Modifier = Modifier,
+    selected: ((T) -> Boolean)? = null,
+    description: ((T) -> String)? = null,
+    maxColumns: Int = 3,
+) {
+    val style = MaterialTheme.typography.labelLarge
+    val measurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        val widest = items.maxOfOrNull { measurer.measure(label(it), style).size.width } ?: 0
+        // Rótulo + 4 dp de cada lado + espaço do ✓ (16 dp e 2 dp de folga).
+        val cell = with(density) { widest.toDp() } + 8.dp + if (selected != null) 18.dp else 0.dp
+        val columns = ((maxWidth + ChoiceGap) / (cell + ChoiceGap)).toInt().coerceIn(1, maxColumns)
+        Column(verticalArrangement = Arrangement.spacedBy(ChoiceGap)) {
+            items.chunked(columns).forEach { row ->
+                Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(ChoiceGap)) {
+                    row.forEach { item ->
+                        ChoiceCell(
+                            text = label(item),
+                            checked = selected?.invoke(item),
+                            description = description?.invoke(item),
+                            onClick = { onClick(item) },
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                        )
+                    }
+                    // Linha incompleta: as caixas mantêm a largura das de cima.
+                    repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChoiceCell(text: String, checked: Boolean?, description: String?, onClick: () -> Unit, modifier: Modifier) {
+    val on = checked == true
+    val colors = MaterialTheme.colorScheme
+    val semantics = Modifier.heightIn(min = 48.dp).semantics {
+        description?.let { contentDescription = it }
+        role = if (checked != null) Role.Checkbox else Role.Button
+    }
+    val content: @Composable () -> Unit = {
+        Row(
+            Modifier.padding(horizontal = 4.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // ✓ só na marcada; a caixa tem largura fixa, então não muda de tamanho, e o texto das outras fica centrado.
+            if (on) {
+                Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(2.dp))
+            }
+            Text(text, style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center, modifier = Modifier.weight(1f, fill = false))
+        }
+    }
+    val shape = RoundedCornerShape(8.dp)
+    val border = if (on) null else BorderStroke(1.dp, colors.outline)
+    if (checked != null) {
+        Surface(
+            selected = on,
+            onClick = onClick,
+            shape = shape,
+            color = if (on) colors.secondaryContainer else colors.surface,
+            contentColor = if (on) colors.onSecondaryContainer else colors.onSurfaceVariant,
+            border = border,
+            modifier = modifier.then(semantics),
+            content = content,
+        )
+    } else {
+        Surface(
+            onClick = onClick,
+            shape = shape,
+            color = colors.surface,
+            contentColor = colors.onSurfaceVariant,
+            border = border,
+            modifier = modifier.then(semantics),
+            content = content,
+        )
+    }
 }

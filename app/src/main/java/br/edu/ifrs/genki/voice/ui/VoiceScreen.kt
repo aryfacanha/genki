@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -35,8 +34,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -74,7 +71,7 @@ import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
-import br.edu.ifrs.genki.ui.components.CheckSlot
+import br.edu.ifrs.genki.ui.components.ChoiceGrid
 import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
@@ -331,18 +328,12 @@ private fun ColumnScope.Asking(
                 )
                 Text(question.example, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                 if (question.quickAnswers.isNotEmpty()) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ChoiceGrid(
+                        question.quickAnswers,
+                        label = { it.label },
+                        onClick = { onAnswer(it.text) },
                         modifier = Modifier.padding(top = 12.dp),
-                    ) {
-                        question.quickAnswers.forEach { answer ->
-                            AssistChip(
-                                onClick = { onAnswer(answer.text) },
-                                label = { Text(answer.label) },
-                                modifier = Modifier.heightIn(min = 48.dp),
-                            )
-                        }
-                    }
+                    )
                 }
             }
         }
@@ -575,22 +566,18 @@ private fun ReviewCard(draft: MedicationDraft, onFix: () -> Unit, onRemove: (() 
  * Dias escolhidos por toque na pergunta dos dias, em vez de digitar (teste do autor no A31, 27/10). Vira a frase
  * "segunda, quarta e sexta" e passa pelo mesmo interpretador das outras respostas.
  */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DayPicker(onDone: (String) -> Unit) {
     var chosen by rememberSaveable { mutableStateOf(listOf<DayOfWeek>()) }
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 16.dp)) {
-        MedicationText.WEEK.forEach { day ->
-            FilterChip(
-                selected = day in chosen,
-                onClick = { chosen = if (day in chosen) chosen - day else chosen + day },
-                label = { Text(MedicationText.dayName(day).replaceFirstChar { it.uppercase() }) },
-                // Marcado com ✓, não só pela cor.
-                leadingIcon = { CheckSlot(day in chosen) },
-                modifier = Modifier.heightIn(min = 48.dp),
-            )
-        }
-    }
+    // Marcado com ✓, não só pela cor.
+    ChoiceGrid(
+        MedicationText.WEEK,
+        label = { MedicationText.dayName(it).replaceFirstChar { c -> c.uppercase() } },
+        selected = { it in chosen },
+        onClick = { day -> chosen = if (day in chosen) chosen - day else chosen + day },
+        maxColumns = 4,
+        modifier = Modifier.padding(top = 16.dp),
+    )
     if (chosen.isNotEmpty()) {
         PrimaryButton(
             "Confirmar dias",

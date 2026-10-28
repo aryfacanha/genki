@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: opções de toque em grade com caixas iguais — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`095296f`; pedido do autor ("as caixinhas têm tamanhos diferentes").
+Realizado e arquivos alterados: `ui/components/Components.kt` (`ChoiceGrid`, substitui `CheckSlot`), `ui/form/FormScreen.kt` (unidade, quantidade, dias), `voice/ui/VoiceScreen.kt` (respostas rápidas, inclusive horários, e seletor de dias); docs.
+Decisões aceitas pelo autor nesta sessão: pedido do autor (ajuste visual).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (127); emulador: unidades e quantidade em 3 colunas, dias em 4, caixas iguais, ✓ só na marcada. | Não verificado: telas da voz; fonte 2,0×; TalkBack.
+Próxima tarefa e bloqueios: teste do autor no A31; revisão do Codex (junto com `33a33ab`).
+Links/commits: este commit.
+
 ENTREGA — App Android: quantidade da dose em um toque — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`ee23734`; pedido do autor após teste no A31.
 Realizado e arquivos alterados: `ui/form/DoseUnit.kt`, `ui/form/FormScreen.kt`, `DoseUnitTest.kt`; docs.

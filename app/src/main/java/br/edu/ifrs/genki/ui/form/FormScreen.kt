@@ -5,8 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +30,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -71,7 +68,7 @@ import br.edu.ifrs.genki.domain.Problem
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
-import br.edu.ifrs.genki.ui.components.CheckSlot
+import br.edu.ifrs.genki.ui.components.ChoiceGrid
 import br.edu.ifrs.genki.ui.components.FieldError
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
@@ -273,7 +270,6 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
  * Quanto toma: unidade para tocar e a quantidade (pedido do autor, 27/10, comparando com o MyTherapy); "Outro" é o
  * texto livre de antes. O resultado é o mesmo texto ("2 comprimidos") que o formulário já gravava.
  */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) {
     val initial = remember { DoseUnit.parse(dose) }
@@ -283,24 +279,19 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
     var typing by rememberSaveable { mutableStateOf(unit != null && amount.isNotEmpty() && amount !in unit!!.amounts) }
     Column {
         Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
-            DoseUnit.CHOICES.forEach { choice ->
-                val selected = unit == choice
-                FilterChip(
-                    selected = selected,
-                    onClick = {
-                        // Para "Outro", leva o que já estava montado para o texto livre.
-                        if (choice != DoseUnit.OTHER) onChange(choice.dose(amount))
-                        else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
-                        unit = choice
-                        typing = amount.isNotEmpty() && amount !in choice.amounts
-                    },
-                    label = { Text(if (choice == DoseUnit.ML) "ml" else choice.singular.replaceFirstChar { it.uppercase() }) },
-                    leadingIcon = { CheckSlot(selected) },
-                    modifier = Modifier.heightIn(min = 48.dp),
-                )
-            }
-        }
+        ChoiceGrid(
+            DoseUnit.CHOICES,
+            label = { if (it == DoseUnit.ML) "ml" else it.singular.replaceFirstChar { c -> c.uppercase() } },
+            selected = { unit == it },
+            onClick = { choice ->
+                // Para "Outro", leva o que já estava montado para o texto livre.
+                if (choice != DoseUnit.OTHER) onChange(choice.dose(amount))
+                else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
+                unit = choice
+                typing = amount.isNotEmpty() && amount !in choice.amounts
+            },
+            modifier = Modifier.padding(top = 8.dp),
+        )
         when (val chosen = unit) {
             null -> Unit
             DoseUnit.OTHER -> OutlinedTextField(
@@ -321,25 +312,17 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(top = 16.dp),
                 )
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
-                    chosen.amounts.forEach { value ->
-                        val selected = !typing && amount == value
-                        FilterChip(
-                            selected = selected,
-                            onClick = { typing = false; amount = value; onChange(chosen.dose(value)) },
-                            label = { Text(if (value == "meio") "Meio" else value) },
-                            leadingIcon = { CheckSlot(selected) },
-                            modifier = Modifier.heightIn(min = 48.dp),
-                        )
-                    }
-                    FilterChip(
-                        selected = typing,
-                        onClick = { typing = true; if (amount in chosen.amounts) { amount = ""; onChange("") } },
-                        label = { Text("Outra") },
-                        leadingIcon = { CheckSlot(typing) },
-                        modifier = Modifier.heightIn(min = 48.dp),
-                    )
-                }
+                // `null` é "Outra".
+                ChoiceGrid(
+                    chosen.amounts + listOf(null),
+                    label = { value -> value?.let { if (it == "meio") "Meio" else it } ?: "Outra" },
+                    selected = { value -> if (value == null) typing else !typing && amount == value },
+                    onClick = { value ->
+                        if (value != null) { typing = false; amount = value; onChange(chosen.dose(value)) }
+                        else { typing = true; if (amount in chosen.amounts) { amount = ""; onChange("") } }
+                    },
+                    modifier = Modifier.padding(top = 8.dp),
+                )
                 if (typing) {
                     OutlinedTextField(
                         value = amount,
@@ -387,7 +370,6 @@ private fun TextInput(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
     val fields = state.fields
@@ -401,26 +383,19 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
     // Nenhuma opção marcada (veio da voz/câmera sem dias): o erro aparece aqui.
     if (fields.daysMode == null) FieldError(state.errors[Field.DAYS]?.let { MedicationText.error(Field.DAYS, it) })
     if (fields.daysMode == DaysMode.SPECIFIC) {
-        FlowRow(
-            Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            MedicationText.WEEK.forEach { day ->
-                val selected = day in fields.specificDays
-                FilterChip(
-                    selected = selected,
-                    onClick = {
-                        viewModel.edit(Field.DAYS) {
-                            it.copy(specificDays = if (selected) it.specificDays - day else it.specificDays + day)
-                        }
-                    },
-                    label = { Text(MedicationText.dayShort(day)) },
-                    leadingIcon = { CheckSlot(selected) },
-                    modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = MedicationText.dayName(day) },
-                )
-            }
-        }
+        ChoiceGrid(
+            MedicationText.WEEK,
+            label = MedicationText::dayShort,
+            selected = { it in fields.specificDays },
+            onClick = { day ->
+                viewModel.edit(Field.DAYS) {
+                    it.copy(specificDays = if (day in it.specificDays) it.specificDays - day else it.specificDays + day)
+                }
+            },
+            description = MedicationText::dayName,
+            maxColumns = 4,
+            modifier = Modifier.padding(top = 8.dp),
+        )
         val error = state.errors[Field.DAYS]
         if (error == null) {
             Text(
