@@ -29,7 +29,7 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**28/10, Claude Code (último):** DEC-040 (partes 1 e 2) e DEC-041 (introdução) implementadas. Próximo: revisão do Codex de `9ee4def..HEAD`; instalar no A31 quando conectado (a introdução aparecerá uma vez também para quem já usava o app).
+**28/10, Claude Code (último):** DEC-040 (partes 1 e 2) e DEC-041 (introdução) implementadas. Instalado no A31 (introdução abriu sem crash). Próximo: revisão do Codex com `revisoes/ROTEIRO_REVISAO_DEC040_041_CODEX.md`; bateria do autor (A0, A3, D4, D11, E1, E12, E14–E20).
 
 **28/10, Claude Code:** DEC-040 partes 1 e 2 feitas; próximo: roteiro da tela de introdução (parte 3) para o autor aprovar; revisão do Codex de `9ee4def..HEAD`; instalar no A31 quando conectado.
 
