@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Conferência pontual do reparo RV-4041-01…04 — 28/10/2026 — Codex (GPT-6.1)
+Partida: `main`/`5a7ce9e`; alvo `f4a3dff`, mesmo código do app. Pull bloqueado por escrita em `.git/FETCH_HEAD`; atualização remota não confirmada.
+Realizado e arquivos alterados: `docs/revisoes/CONFERENCIA_RV4041_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro. Quatro achados fechados na cobertura executada; nenhum achado novo S1–S4 confirmado no reparo.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; DEC-040/041 já aceitas, introdução fora da proposta ainda depende de integração à monografia.
+Sugestões pendentes: nenhuma expansão de escopo; mantidas as pendências anteriores.
+Verificado: build final e 137 testes executados sem falhas; emulador API 35: X/Voltar durante TTS, X durante escuta, cancelar/manual, E16/E17, canal bloqueado/troca/status/atalho, recusa/segundo toque, Pular/Começar/rever/abas/Voltar e atalho de Ajustes da Hoje. | Não verificado: toque real em notificação na introdução, A31, fala/TTS audíveis, TalkBack, fonte ampliada/câmera/ciclo de lembretes nesta rodada.
+Próxima tarefa e bloqueios: bateria do autor no A31 e verificações técnicas previstas; não abrir revisão ampla. Ajustes/permissões/canais restaurados e medicamentos preservados; aviso pendente inicial de Losartana deixou de aparecer durante paradas/reaberturas e não foi reconstituído, conforme limite no relatório.
+Links/commits: `docs/revisoes/CONFERENCIA_RV4041_CODEX.md`; instrumentação retirada, hashes originais, `app` sem diff e original reinstalado só no emulador; sem commit/push ou A31 operado.
+
 ```text
 ENTREGA — App Android: reparo RV-4041-01…04 — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`04b2aac`; pedido do autor ("atualiza no a31 e ve a analise do codex").
