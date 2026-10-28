@@ -1,6 +1,6 @@
 # Genki — estado atual
 
-**28/10/2026, Claude (Opus 5.5, chat do Projeto), partida `main`/`a1701d0`: monografia iniciada pelo fluxo do handoff do GPT (Drive, pasta Handoff).** Criados no Drive o pacote de escrita da fundamentação v0.1 (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, rascunho da subseção 2.2) e a matriz de evidências (EVID-001 a 024, inventário do `.bib`). Texto proposto, não revisado nem integrado. Nenhum PDF aberto: Gomez-Hernandez (2023) e Nimmanterdwong (2022) lidos no HTML do JMIR; páginas pendentes. Próximo: auditoria do GPT no handoff; o autor decide o acesso aos PDFs do Zotero e valida o sumário.
+**28/10/2026, Claude (Opus 5.5, chat do Projeto), partida `main`/`a1701d0`: monografia iniciada pelo fluxo do handoff do GPT (Drive, pasta Handoff).** Criados no Drive o pacote de escrita da fundamentação v0.1 (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, rascunho da subseção 2.2) e a matriz de evidências (EVID-001 a 024, inventário do `.bib`). Texto proposto, não revisado nem integrado. Fontes da 2.2 (Gomez-Hernandez 2023, Nimmanterdwong 2022, Pratiwi 2023, Yang 2025) conferidas nos PDFs do Zotero, com páginas. Próximo: auditoria do GPT no handoff; o autor revisa a 2.2 e valida o sumário.
 
 **Fim de 27/10/2026, Claude Code (Opus 5.5):** para a próxima sessão do app, começar por `docs/HANDOFF_APP.md` → "Retomar aqui" (teste manual do autor no A31 e a pergunta em aberto sobre "meio cápsula").
 
