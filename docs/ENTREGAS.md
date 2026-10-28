@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisão de dose, voz e contraste — 28/10/2026 — Codex (GPT-6)
+Partida: `main`/`4b455e7`; alvo `be24b9d..61d4c22`; roteiro do Claude seguido; proposta/requisitos atuais reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas/registro. RV-DVC-01/02/03 S2 e RV-DVC-04/05 S3 abertos. Merge do pull com registros de monografia preserva os dois lados em ENTREGAS/ESTADO/REGISTRO_IA; índice veio do merge automático; commit de merge pendente por instrução do roteiro.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: reparos pontuais descritos no relatório; nenhuma ampliação de produto.
+Verificado: build final e 133 testes executados passam após remover temporários; quatro reprodutores de lógica falham nos achados; seletor em modo de correção e falhas numéricas conferidos na interface. T01–T10, F01–F04, erros/fontes/menu e fluxo de voz simulado conferidos na cobertura do relatório; 13 pares opacos de contraste recalculados. | Não verificado: A31, voz/TTS reais, TalkBack, câmera/OCR em tela, ciclo de M2, todas as combinações e títulos em todas as fontes.
+Próxima tarefa e bloqueios: reparos dos cinco achados e conferência; concluir merge documental por commit quando autorizado; aceite do autor separado.
+Links/commits: `docs/revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`; sem código/configuração permanente, commit/push ou A31 operado; registro de teste excluído, fonte 1,0× e original restaurados no emulador.
+
 ```text
 ENTREGA — App Android: avaliação de contraste WCAG 2.2 AA e campos destacados — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`ce1aad7`; pedido do autor (contraste entre campos e títulos; avaliação W3C).
@@ -85,6 +94,25 @@ Verificado: `assembleDebug test` (128, sem falhas). | Não verificado: tela (emu
 Próxima tarefa e bloqueios: teste manual do autor no A31; revisão do Codex.
 Links/commits: este commit.
 ```
+
+ENTREGA — Monografia: pacote de escrita da fundamentação e rascunho da 2.2 — 28/10/2026 — Claude (Opus 5.5, chat do Projeto)
+Partida: `main`/`a1701d0`; handoff da monografia do GPT no Drive (Handoff/, v0.1, 28/10); proposta final; planilha (RF01–RF25, RNF01–RNF11); plano de 26/10; manual SiBIFRS (2019); `.bib` do Zotero (Projeto do Claude).
+Realizado e arquivos alterados: no Drive, pasta Handoff: "Genki — Pacote de escrita da fundamentação — v0.1 — 28-10-2026" (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, normalização a confirmar, rascunho da subseção 2.2, pedido de auditoria ao GPT) e "Genki — Matriz de evidências da monografia" (EVID-001 a 024; inventário das 33 entradas do `.bib`); seção 12 acrescentada ao handoff. No repositório: `docs/00_INDICE.md`, `docs/ESTADO.md`, este bloco, `docs/REGISTRO_IA.md`.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: estrutura do sumário; Google Docs como manuscrito (sugestão do GPT); padrão NBR 10520 e posição do Anexo I (confirmar com o orientador).
+Verificado: releitura do pacote no Drive após criar. Após o autor liberar a pasta Zotero (13:05, só leitura), Gomez-Hernandez (2023), Nimmanterdwong (2022), Pratiwi (2023, p. 2) e Yang (2025, p. 1-2) conferidos nos PDFs; páginas nos marcadores e na matriz (status 3); três frases da 2.2 corrigidas por fidelidade. | Não verificado: demais referências (status 1); template do curso não localizado; revisão do autor.
+Próxima tarefa e bloqueios: auditoria do GPT no handoff; depois, revisão da 2.2 e 2.1/2.3. Observação: anexo NQ9LI7JN (Nimmanterdwong) no Zotero é PDF incompleto de 2 páginas; usar YSR2XAGM.
+Links/commits: este commit; https://docs.google.com/document/d/1iCXmRbtqZA5Uclo9VPZhT0w3iZrzdtRgfa8JVU0kc7I/edit ; https://docs.google.com/spreadsheets/d/1mabFCyINIEjwSzlmARNO8bpiFn5Q-fu4lvXSokwdbuE/edit
+
+ENTREGA — Fluxo de escrita da monografia — 28/10/2026 — GPT (GPT-6) [espelhada do Drive pelo Claude; o GPT não tem acesso ao repositório]
+Partida: proposta final, requisitos, plano e revisão GPT de 26/10 no Drive; pedido do autor.
+Realizado: pesquisa das integrações (Drive, Docs, Zotero); recomendação de ferramentas; protocolo bibliográfico; separação da parte estável e variável; primeira ordem de trabalho para o Claude; criação do handoff "Genki — Handoff da monografia — fluxo GPT e Claude" (Drive, pasta Handoff).
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: Google Docs como manuscrito principal; fluxo GPT → Claude → GPT → autor.
+Verificado/Não verificado: ver seção 11 do handoff (Zotero local bloqueado; GitHub 404 no ChatGPT).
+Links: https://docs.google.com/document/d/1sL2hcIESDuo7DHfkeWqeEHHLBcA4ZES-UKENap4naDM/edit
+
+---
 
 ENTREGA — Revisão da quantidade por toque e grades — 27/10/2026 — Codex (GPT-6)
 Partida: `main`/`a96184b`; pull atualizado; alvos `33a33ab` e `a96184b`; originais atuais da proposta/requisitos reabertos no Drive.

@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Codex (GPT-6), partida `main`/`4b455e7`, revisão `be24b9d..61d4c22`: três S2 e dois S3 abertos.** S2: + reduz 120 para 100; contador arredonda decimal aceito; relógio com frequência pendente pode substituir horário escolhido. S3: fração 1/2 não incrementa no primeiro toque; seletor fica aberto ao entrar em correção por voz. Build final/133 testes executados passam; quatro reprodutores adicionais confirmam as falhas de lógica. Menu/contador/fontes, T01–T10, edição das quatro doses e erros de dias/horários/término conferidos no emulador; sem achado de contraste nos 13 pares opacos recalculados. Relatório: `docs/revisoes/REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md`. Temporários retirados, original reinstalado só no emulador, registro de teste excluído, fonte 1,0× restaurada; `app/src` sem diff, A31 não operado. Pull trouxe registros da monografia (`5bbacac`): conflitos documentais conciliados preservando ambos, merge sem commit por instrução do roteiro. Próximo: reparos pontuais/conferência; aceite no A31 e TalkBack seguem separados. Registros abaixo são históricos.
+
 **28/10/2026, Claude Code (Opus 5.5):** roteiro de revisão para o Codex pronto: `docs/revisoes/ROTEIRO_REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md` (intervalo `be24b9d..61d4c22`). Próximo: revisão do Codex.
 
 **28/10/2026, Claude Code (Opus 5.5):** avaliação de contraste WCAG 2.2 AA (`docs/AVALIACAO_CONTRASTE_WCAG.md`): todas as cores passam; ajuste de hierarquia (campos brancos, perguntas do formulário maiores) conferido no A31. Pendente: revisão do Codex (DEC-038, reparos A31, DEC-039, contraste); sugestões ainda não pedidas: desfazer exclusão, outras caixas.
@@ -19,6 +21,8 @@
 **28/10/2026, Codex (GPT-6), partida `main`/`277361e`: revisão de `a2680da`/DEC-037 concluída.** Casos diretos T01–T06 passam no emulador API 35; build passa e 128 testes executados passam. **RV-UN-01 S2 preexistente aberto:** editar o texto de Outro e depois escolher Cápsula pode recuperar quantidade antiga ("1 colher de sopa" → "2 cápsulas"). Não é regressão introduzida por `a2680da`; comparação com `a1701d0` confirma a causa anterior. Relatório: `docs/revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`. Sem código/configuração alterados, commit/push ou A31 operado; rascunho descartado, medicamentos preservados. Próximo: reparo pontual e conferência; aceite do autor no A31 continua pendente. Registros abaixo são históricos.
 
 **28/10/2026, Claude Code (Opus 5.5):** pergunta do "meio cápsula" decidida pelo autor (DEC-037): ao trocar a unidade da dose, a quantidade continua só se existir como botão na nova unidade; senão fica vazia. 128 testes. Instalado no A31 (10:25), não conferido em tela. Roteiro do teste manual: `docs/ROTEIRO_TESTE_DOSE_GRADES.md`. Pendente: teste do autor; revisão do Codex.
+
+**28/10/2026, Claude (Opus 5.5, chat do Projeto), partida `main`/`a1701d0`: monografia iniciada pelo fluxo do handoff do GPT (Drive, pasta Handoff).** Criados no Drive o pacote de escrita da fundamentação v0.1 (sumário comentado, mapa de argumentos, diferenças D1–D8 proposta × requisitos/decisões, rascunho da subseção 2.2) e a matriz de evidências (EVID-001 a 024, inventário do `.bib`). Texto proposto, não revisado nem integrado. Fontes da 2.2 (Gomez-Hernandez 2023, Nimmanterdwong 2022, Pratiwi 2023, Yang 2025) conferidas nos PDFs do Zotero, com páginas. Próximo: auditoria do GPT no handoff; o autor revisa a 2.2 e valida o sumário.
 
 **Fim de 27/10/2026, Claude Code (Opus 5.5):** para a próxima sessão do app, começar por `docs/HANDOFF_APP.md` → "Retomar aqui" (teste manual do autor no A31 e a pergunta em aberto sobre "meio cápsula").
 
@@ -106,7 +110,7 @@ Atualizado em 26/10/2026, por Claude Code (Opus 5.5) — M2 (lembretes) implemen
 | Código Android | **M0–M4 implementados; M3 revisado na cobertura técnica executada em 27/10.** RV-M3-02 (resto)/E-01 fechados na conferência de `0cef3f1`; texto do grupo corrigido para “N lembretes”. Sem achado novo no escopo restrito. Aceite completo no A31 pendente | `app/`, `docs/revisoes/CONFERENCIA_M3_CODEX.md` |
 | Handoff do app | `docs/HANDOFF_APP.md` (DEC-026): estado por marco, verificado/não verificado, checagem no emulador, roteiro de revisão, Diário; Claude Code implementa, Codex revisa | `docs/HANDOFF_APP.md`, `AGENTS.md` |
 | Testes | **126 testes existentes executados, zero falhas/erros**, após retirar os temporários da conferência de `d4d6350`. Nove reprodutores adicionais passam (9/9), incluindo os três antes falhos de RV-VZ-02. `app/src` sem mudanças; reprodutores históricos 43/43 não repetidos nesta rodada | `app/src/test/`, `docs/revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
-| Monografia pós-proposta | Não está no Drive | — |
+| Monografia pós-proposta | **Iniciada em 28/10 (pacote de escrita e rascunho da 2.2, texto proposto)**; manuscrito ainda não criado | Drive, Handoff/ |
 | Autorização ética | **Desconhecida — caminho crítico** para o objetivo i (SUS) | — |
 
 ## Prazos
