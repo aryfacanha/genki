@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisões das DEC-040 e DEC-041 — 28/10/2026 — Codex (GPT-6)
+Partida: `main`/`8aab297`; pull atualizado; alvo `9ee4def..a030860` conforme roteiro; proposta/requisitos oficiais reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_DEC040_041_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro. RV-4041-01/02 S2 e 03/04 S3 confirmados; RV-DVC anteriores continuam fechados.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; DEC-040/041 já aceitas, introdução fora da proposta já registrada como acréscimo.
+Sugestões pendentes: reparos pontuais descritos no relatório; nenhuma expansão de escopo.
+Verificado: build e 137 testes executados passam; introdução/recusa/permissões/fontes, escuta simulada/dose/X/confirmação/horários e regressão de dose; disparo real no emulador 18:57 pelo canal de alarme, após som trocado com lembrete agendado, Adiar/Entendi e cartão verde-claro. | Não verificado: A31, fala/TTS audíveis, TalkBack, ruído/segunda tentativa e todas as corridas de lifecycle, câmera, vazio visual A3 e ciclo completo de lembretes; limites detalhados no relatório.
+Próxima tarefa e bloqueios: reparar/conferir RV-4041-01…04; manter aceite do autor e verificações técnicas separados.
+Links/commits: `docs/revisoes/REVISAO_DEC040_041_CODEX.md`; sem código/configuração permanente, commit/push ou A31 operado. Instrumentação retirada, fontes originais e APK restaurados; rascunhos descartados, medicamento temporário excluído e ajustes/permissões/fonte do emulador restaurados.
+
 ```text
 ENTREGA — App Android: tela de introdução (DEC-041) — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`afd3d09`; pedido do autor ("aprovo A, B e C, pode implementar").
