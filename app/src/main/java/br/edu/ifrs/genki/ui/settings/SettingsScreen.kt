@@ -50,7 +50,8 @@ fun SettingsScreen(onIntro: () -> Unit) {
     // Permissões mudam fora do app; relê ao voltar para a tela.
     var resumes by remember { mutableIntStateOf(0) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
-    val notificationsAllowed = remember(resumes) { Notifications.canNotify(context) }
+    // O canal verificado depende do som escolhido (RV-4041-02).
+    val notificationsAllowed = remember(resumes, settings.alarmSound) { Notifications.canNotify(context) }
     val exactAllowed = remember(resumes) { container.reminderScheduler.canScheduleExact() }
     // Depois de duas recusas o sistema não pergunta mais; aí, ou com a categoria desligada, abre o ajuste do sistema.
     val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {

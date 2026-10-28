@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -101,7 +100,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             EditMedicationRoute::class, FixDraftRoute::class).any { current?.hasRoute(it) == true }
         if (!inForm) {
             navController.navigate(HomeRoute) {
-                popUpTo(navController.graph.findStartDestination().id)
+                popUpTo<HomeRoute>()
                 launchSingleTop = true
             }
         }
@@ -154,7 +153,8 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                             selected = selected,
                             onClick = {
                                 navController.navigate(tab.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    // A Hoje é a raiz das abas, também quando o app começou pela introdução (RV-4041-04).
+                                    popUpTo<HomeRoute> { saveState = true }
                                     launchSingleTop = true
                                     restoreState = true
                                 }
@@ -205,7 +205,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                     // Como o toque na aba Ajustes.
                     onOpenSettings = {
                         navController.navigate(SettingsRoute) {
-                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            popUpTo<HomeRoute> { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }

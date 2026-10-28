@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+```text
+ENTREGA — App Android: reparo RV-4041-01…04 — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`04b2aac`; pedido do autor ("atualiza no a31 e ve a analise do codex").
+Realizado e arquivos alterados: `voice/ui/VoiceScreen.kt` (X e sair param fala/escuta), `ui/settings/SettingsScreen.kt` (permissão relida ao trocar o som), `ui/intro/IntroScreen.kt` (recusa respeitada), `ui/navigation/GenkiApp.kt` (abas ancoradas na Hoje); docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: D (horário do primeiro remédio); desfazer exclusão; outras caixas.
+Verificado: `assembleDebug test` (137); emulador 03 e 04. | Não verificado: 01 e 02 no aparelho; A31 além da instalação.
+Próxima tarefa e bloqueios: conferência pontual do Codex; bateria do autor no A31.
+Links/commits: este commit.
+```
+
 ENTREGA — Revisões das DEC-040 e DEC-041 — 28/10/2026 — Codex (GPT-6)
 Partida: `main`/`8aab297`; pull atualizado; alvo `9ee4def..a030860` conforme roteiro; proposta/requisitos oficiais reabertos no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_DEC040_041_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro. RV-4041-01/02 S2 e 03/04 S3 confirmados; RV-DVC anteriores continuam fechados.

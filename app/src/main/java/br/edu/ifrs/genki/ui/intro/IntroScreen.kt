@@ -189,10 +189,9 @@ private fun Notices() {
     var resumes by remember { mutableIntStateOf(0) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
     val allowed = remember(resumes) { Notifications.canNotify(context) }
-    val request = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-        if (!Notifications.canNotify(context)) context.startActivity(Notifications.settingsIntent(context))
-        resumes++
-    }
+    // Recusou o pedido do Android: fica aqui; só um novo toque leva às configurações do celular (RV-4041-03).
+    var asked by rememberSaveable { mutableStateOf(false) }
+    val request = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { resumes++ }
     Title("Permitir avisos")
     Paragraph("Para avisar na hora, o Genki precisa mostrar notificações.")
     if (allowed) {
@@ -206,7 +205,8 @@ private fun Notices() {
         SecondaryButton(
             "Permitir notificações",
             onClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.hasPermission(context)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.hasPermission(context) && !asked) {
+                    asked = true
                     request.launch(Manifest.permission.POST_NOTIFICATIONS)
                 } else {
                     context.startActivity(Notifications.settingsIntent(context))

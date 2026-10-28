@@ -173,7 +173,8 @@ fun VoiceScreen(
             // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
             state.correctionPending -> viewModel.undoCorrection()
             state.correcting -> viewModel.cancelCorrection()
-            state.drafts.isNotEmpty() -> askDiscard = true
+            // Com a pergunta de sair aberta, nada de falar nem de ouvir sozinho (RV-4041-01).
+            state.drafts.isNotEmpty() -> { speaker.stop(); input.cancel(); askDiscard = true }
             else -> { viewModel.discard(); onClose() }
         }
     }
@@ -326,7 +327,7 @@ private fun ColumnScope.Asking(
         SectionTitle(if (state.correctionPending) "Confira a correção" else "Entendi até agora")
         Spacer(Modifier.height(8.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            state.drafts.forEach { SoFarCard(it, current = it.localId == question.draftId, onRemove = { onRemove(it.localId) }) }
+            state.drafts.forEach { SoFarCard(it, current = it.localId == question.draftId, onAsk = onQuiet, onRemove = { onRemove(it.localId) }) }
         }
         state.heard?.let {
             Text(
@@ -555,7 +556,7 @@ private fun TypeLink(onType: () -> Unit, modifier: Modifier = Modifier) {
 
 /** Resumo do que já foi entendido de um medicamento; o da pergunta atual fica destacado. */
 @Composable
-private fun SoFarCard(draft: MedicationDraft, current: Boolean, onRemove: () -> Unit) {
+private fun SoFarCard(draft: MedicationDraft, current: Boolean, onAsk: () -> Unit, onRemove: () -> Unit) {
     val name = draft.name ?: "Medicamento sem nome"
     var confirm by rememberSaveable(draft.localId) { mutableStateOf(false) }
     GenkiCard {
@@ -568,7 +569,8 @@ private fun SoFarCard(draft: MedicationDraft, current: Boolean, onRemove: () -> 
                     modifier = Modifier.weight(1f).padding(top = 8.dp),
                 )
                 // X discreto para tirar um medicamento entendido por engano ("Use" virou "Uso"; bateria do autor, 28/10).
-                IconButton(onClick = { confirm = true }, modifier = Modifier.size(48.dp)) {
+                // Com "Tirar …?" aberto, a pergunta para de ser falada e o microfone não abre sozinho (RV-4041-01).
+                IconButton(onClick = { onAsk(); confirm = true }, modifier = Modifier.size(48.dp)) {
                     Icon(
                         Icons.Filled.Close,
                         contentDescription = "Tirar $name",
