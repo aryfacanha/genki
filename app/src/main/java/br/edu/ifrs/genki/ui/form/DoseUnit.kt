@@ -5,12 +5,13 @@ package br.edu.ifrs.genki.ui.form
  * o mesmo texto livre de antes ("2 comprimidos"); nada muda no banco nem no `DraftValidator`. O que não cabe numa
  * unidade da lista ("1 colher de sopa", "1 envelope") fica em [OTHER], com o texto inteiro.
  */
-enum class DoseUnit(val singular: String, val plural: String) {
-    TABLET("comprimido", "comprimidos"),
-    CAPSULE("cápsula", "cápsulas"),
-    DROP("gota", "gotas"),
-    ML("ml", "ml"),
-    OTHER("Outro", "Outro");
+enum class DoseUnit(val singular: String, val plural: String, val amounts: List<String>) {
+    // Quantidades mais comuns para tocar, sem digitar (pedido do autor, 27/10); "Outra" no formulário abre o campo.
+    TABLET("comprimido", "comprimidos", listOf("meio", "1", "2", "3")),
+    CAPSULE("cápsula", "cápsulas", listOf("1", "2", "3")),
+    DROP("gota", "gotas", listOf("5", "10", "15", "20")),
+    ML("ml", "ml", listOf("5", "10", "15")),
+    OTHER("Outro", "Outro", emptyList());
 
     /** "1 comprimido", "meio comprimido", "2 comprimidos"; vazio se faltar a quantidade. */
     fun dose(amount: String): String {

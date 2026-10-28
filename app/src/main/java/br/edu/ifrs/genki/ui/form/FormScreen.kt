@@ -279,6 +279,8 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
     val initial = remember { DoseUnit.parse(dose) }
     var unit by rememberSaveable { mutableStateOf(initial?.second) }
     var amount by rememberSaveable { mutableStateOf(initial?.takeIf { it.second != DoseUnit.OTHER }?.first.orEmpty()) }
+    // "Outra": quantidade fora dos botões, digitada.
+    var typing by rememberSaveable { mutableStateOf(unit != null && amount.isNotEmpty() && amount !in unit!!.amounts) }
     Column {
         Text("Quanto você toma por vez", style = MaterialTheme.typography.titleSmall)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
@@ -291,6 +293,7 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                         if (choice != DoseUnit.OTHER) onChange(choice.dose(amount))
                         else if (unit != DoseUnit.OTHER) onChange(unit?.dose(amount).orEmpty())
                         unit = choice
+                        typing = amount.isNotEmpty() && amount !in choice.amounts
                     },
                     label = { Text(if (choice == DoseUnit.ML) "ml" else choice.singular.replaceFirstChar { it.uppercase() }) },
                     leadingIcon = { CheckSlot(selected) },
@@ -311,17 +314,46 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
-            else -> OutlinedTextField(
-                value = amount,
-                onValueChange = { amount = it; onChange(chosen.dose(it)) },
-                label = { Text("Quantos ${if (chosen == DoseUnit.ML) "ml" else chosen.plural}") },
-                supportingText = { Text("Exemplo: 1, 2 ou meio", color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                isError = error != null,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-            )
+            else -> {
+                // Quantidade em um toque (pedido do autor, 27/10); "Outra" para digitar, ex.: "4".
+                Text(
+                    "Quantos ${if (chosen == DoseUnit.ML) "ml" else chosen.plural}",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(top = 16.dp),
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
+                    chosen.amounts.forEach { value ->
+                        val selected = !typing && amount == value
+                        FilterChip(
+                            selected = selected,
+                            onClick = { typing = false; amount = value; onChange(chosen.dose(value)) },
+                            label = { Text(if (value == "meio") "Meio" else value) },
+                            leadingIcon = { CheckSlot(selected) },
+                            modifier = Modifier.heightIn(min = 48.dp),
+                        )
+                    }
+                    FilterChip(
+                        selected = typing,
+                        onClick = { typing = true; if (amount in chosen.amounts) { amount = ""; onChange("") } },
+                        label = { Text("Outra") },
+                        leadingIcon = { CheckSlot(typing) },
+                        modifier = Modifier.heightIn(min = 48.dp),
+                    )
+                }
+                if (typing) {
+                    OutlinedTextField(
+                        value = amount,
+                        onValueChange = { amount = it; onChange(chosen.dose(it)) },
+                        label = { Text("Outra quantidade") },
+                        supportingText = { Text("Exemplo: 4", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                        isError = error != null,
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    )
+                }
+            }
         }
         FieldError(error)
     }

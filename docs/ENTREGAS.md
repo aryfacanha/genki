@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: quantidade da dose em um toque — 27/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`ee23734`; pedido do autor após teste no A31.
+Realizado e arquivos alterados: `ui/form/DoseUnit.kt`, `ui/form/FormScreen.kt`, `DoseUnitTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: pedido do autor (complementa a DEC-036).
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (127); emulador parcial (ver Diário). | Não verificado: "Outra" no emulador; TalkBack; fonte ampliada.
+Próxima tarefa e bloqueios: teste do autor no A31; revisão do Codex.
+Links/commits: este commit.
+
 ENTREGA — App Android: chips estáticos e aviso de volume no meio da tela — 27/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`15dc9ef`; segunda rodada do autor com o roteiro da voz no A31 (V32b e V46b ok).
 Realizado e arquivos alterados: `ui/components/Components.kt` (`CheckSlot`), `ui/form/FormScreen.kt`, `voice/ui/VoiceScreen.kt`; docs.

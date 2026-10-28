@@ -43,4 +43,12 @@ class DoseUnitTest {
         assertEquals("2 jatos" to DoseUnit.OTHER, DoseUnit.parse("2 jatos"))
         assertEquals("comprimido" to DoseUnit.OTHER, DoseUnit.parse("comprimido"))
     }
+
+    @Test
+    fun everyQuickAmountComesBackTheSame() {
+        DoseUnit.CHOICES.forEach { unit ->
+            unit.amounts.forEach { amount -> assertEquals(amount to unit, DoseUnit.parse(unit.dose(amount))) }
+        }
+        assertEquals("meio comprimido", DoseUnit.TABLET.dose("meio"))
+    }
 }
