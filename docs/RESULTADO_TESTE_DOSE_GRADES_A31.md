@@ -63,6 +63,21 @@ voz descartados. Nenhum crash do app no log.
 | A31-05 | Rótulo do contador "Quantidade", uma linha | A31 2,0×: inteiro |
 | A31-06 | `VoiceQuestions.nextClockTime`: pula horário já escolhido (teste) | Teste unitário; em tela com o autor |
 
+## Sessão de voz com o autor (28/10, 12:56–13:02, versão `f5188a0`)
+
+O autor falou; o Claude conduziu os toques. Reconhecedor do aparelho: "Losartana" e "metformina duas vezes ao dia"
+entendidos (latência ~110 ms).
+
+| Caso | Resultado | Observação |
+|---|---|---|
+| A31-06 | **fechado** | Com 08:00 e 20:00 escolhidos, o terceiro relógio abre às 09:00, sem aviso |
+| A31-01 | **fechado** | Relógio aberto + botão rápido "12:00": a voz passa à duração sem o seletor de horários |
+| G10 (Metformina) | ok | Em 2,0×: pergunta do primeiro horário → relógio 07:30 → "07:30 e 19:30" |
+| G06 | ok | "Prefiro digitar" → formulário com Comprimido + Meio |
+| X02 (voz) | ok | Em 2,0×: dose, primeiro horário e duração em uma coluna (horários em 3), legíveis; é preciso rolar para "Confirmar horário" e para parte das respostas |
+
+Fonte 1,5×, mídia 10/15 e tela restaurados; rascunhos descartados; sem crash.
+
 ## Falta (autor)
 
-G06 e G10 com "Metformina duas vezes ao dia"; grades da voz em 2,0×; perguntas faladas em voz alta; TalkBack (L01–L02).
+Perguntas faladas em voz alta (o autor responde); TalkBack (L01–L02).

@@ -222,6 +222,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-28 — Claude Code — sessão de voz no A31 com o autor falando (`f5188a0`): A31-01 e A31-06 fechados em tela; G06, G10 (Metformina, 07:30 → 07:30 e 19:30) e respostas da voz em 2,0× ok; fonte 1,5× restaurada — pendente: autor dizer se as perguntas foram faladas e testar TalkBack; revisão do Codex de `011d4e8`/`f5188a0`.
+
 - 2026-10-28 — Claude Code — reparos A31-01…06: `VoiceScreen.Asking` com estado por pergunta; `VoiceQuestions.nextClockTime` (+1 teste); `FieldError(message, modifier)` e `LocalErrorViews` no formulário (rolagem até o erro nas etapas); `AmountStepper` com `reveal` e rótulo "Quantidade"; `GenkiTopBar` com título em até 2 linhas e `TextAutoSize` — 133 testes; A31 (12:51): A31-02/03 em 1,5×, A31-04/05 em 2,0×; fonte 1,5× restaurada — não verificado: A31-01/06 em tela (precisam de fala) — pendente: voz com o autor; revisão do Codex.
 
 - 2026-10-28 — Claude Code — roteiro da dose/grades executado no A31 pelo ADB (autorizado; autor falou "Losartana"): `docs/RESULTADO_TESTE_DOSE_GRADES_A31.md`. Quase tudo ok em 1,5× (fonte do autor), 2,0× e 1,0×; achados A31-01 (S2, seletor de horários fica na pergunta seguinte), A31-02/03/04 (S3: erro fora da tela no cadastro novo, contador abaixo da borda, título quebrando palavra em 2,0×), A31-05/06 (S4). "Teste" salvo e excluído; fonte 1,5×, mídia 10/15 e tela restaurados; sem crash — pendente: decisão do autor sobre os reparos; G06/G10 e TalkBack com o autor.
