@@ -2,6 +2,17 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+```text
+ENTREGA — App Android: correção de RV-UN-01 (quantidade antiga depois de editar "Outro") — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`d3e09ef`; achado da revisão `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`.
+Realizado e arquivos alterados: `ui/form/FormScreen.kt` (`DoseInput`: texto livre editado apaga a quantidade; "Quantas cápsulas/gotas"); roteiro e docs.
+Decisões aceitas pelo autor nesta sessão: reparo pedido pelo autor ("faz o reparo e instala no A31").
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test` (128); emulador: T01, T07, T08, T09 e títulos. | Não verificado: teste automatizado da transição (Compose); A31 em tela; TalkBack.
+Próxima tarefa e bloqueios: conferência do Codex; teste do autor.
+Links/commits: este commit.
+```
+
 ENTREGA — Revisão da troca de unidade da dose (DEC-037) — 28/10/2026 — Codex (GPT-6)
 Partida: `main`/`277361e`; pull atualizado; alvos `a2680da` e `277361e`; proposta/requisitos oficiais reabertos no Drive.
 Realizado e arquivos alterados: `docs/revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro de IA. Um S2 preexistente confirmado: RV-UN-01, quantidade antiga recuperada depois de editar Outro; sem regressão nova confirmada no commit.

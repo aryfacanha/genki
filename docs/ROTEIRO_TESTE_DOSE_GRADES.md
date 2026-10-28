@@ -6,7 +6,8 @@ unidade (DEC-037, `a2680da`). Versão instalada no A31 em 28/10, 10:25. Os resul
 testes; **não foi executado no aparelho.**
 
 Atualizado em 28/10 a partir da revisão do Codex (`revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`): T01–T07 conferidos
-por ele no emulador; acrescentados T08–T09, do achado **RV-UN-01 (S2, aberto)**.
+por ele no emulador; acrescentados T08–T09, do achado RV-UN-01, **corrigido no mesmo dia** (T08/T09 conferidos pelo
+Claude no emulador; A31 atualizado às 11:09).
 
 ## Como usar
 
@@ -27,7 +28,7 @@ por ele no emulador; acrescentados T08–T09, do achado **RV-UN-01 (S2, aberto)*
 | Q05 | Comprimido → **2** | Revisão: "2 comprimidos" (plural) |
 | Q06 | Comprimido → **Outra** → digitar "4" | Campo "Outra quantidade" aparece; ✓ em Outra; revisão "4 comprimidos" |
 | Q07 | Em Q06, tocar **1** e depois **Outra** de novo | Ao tocar 1, o campo some e o ✓ passa para 1; ao voltar para Outra, o campo vem vazio |
-| Q08 | Tocar **Cápsula**, **Gota** e **ml** (um de cada vez) | Quantidades: Cápsula 1/2/3/Outra; Gota 5/10/15/20/Outra; ml 5/10/15/Outra |
+| Q08 | Tocar **Cápsula**, **Gota** e **ml** (um de cada vez) | Títulos "Quantas cápsulas", "Quantas gotas", "Quantos ml". Quantidades: Cápsula 1/2/3/Outra; Gota 5/10/15/20/Outra; ml 5/10/15/Outra |
 | Q09 | Tocar **Outro** e digitar "1 colher de sopa" | Campo "Como você toma"; revisão "1 colher de sopa" |
 
 ## B. Trocar de unidade (DEC-037)
@@ -44,8 +45,8 @@ escolher de novo. T01–T07 já passaram no emulador (Codex, 28/10); no A31, ain
 | T05 | Comprimido + Outra "4" → tocar Cápsula | Nenhuma quantidade marcada, sem o campo "Outra quantidade" |
 | T06 | Comprimido + Outra "4" → tocar **Comprimido** de novo | Nada muda: "4" continua no campo |
 | T07 | Comprimido + 2 → tocar **Outro** | Campo livre já com "2 comprimidos" |
-| T08 | Comprimido + 2 → Cápsula → **Outro** → trocar o texto por "1 colher de sopa" → fechar o teclado → tocar **Cápsula** | Nenhuma quantidade marcada; Continuar → "Informe quanto você toma por vez." **Hoje falha (RV-UN-01):** o "2" volta marcado e a dose vira "2 cápsulas". Anote como problema conhecido até o reparo |
-| T09 | Comprimido + 2 → **Outro** → **apagar** todo o texto → tocar **Comprimido** | Nenhuma quantidade marcada. **Hoje falha (RV-UN-01):** o "2" volta |
+| T08 | Comprimido + 2 → Cápsula → **Outro** → trocar o texto por "1 colher de sopa" → fechar o teclado → tocar **Cápsula** | Nenhuma quantidade marcada; Continuar → "Informe quanto você toma por vez." (antes do reparo de RV-UN-01, o "2" voltava e a dose virava "2 cápsulas") |
+| T09 | Comprimido + 2 → **Outro** → **apagar** todo o texto → tocar **Comprimido** | Nenhuma quantidade marcada (antes do reparo, o "2" voltava) |
 
 ## C. Dias específicos (etapa 2 do formulário)
 

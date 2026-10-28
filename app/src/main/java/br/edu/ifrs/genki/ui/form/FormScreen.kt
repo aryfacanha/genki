@@ -297,7 +297,8 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
             null -> Unit
             DoseUnit.OTHER -> OutlinedTextField(
                 value = dose,
-                onValueChange = onChange,
+                // Texto mexido não guarda mais a quantidade de antes: voltar a uma unidade pede quantidade nova (RV-UN-01).
+                onValueChange = { amount = ""; onChange(it) },
                 label = { Text("Como você toma") },
                 supportingText = { Text("Exemplo: 1 colher de sopa", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                 isError = error != null,
@@ -309,7 +310,11 @@ private fun DoseInput(dose: String, error: String?, onChange: (String) -> Unit) 
             else -> {
                 // Quantidade em um toque (pedido do autor, 27/10); "Outra" para digitar, ex.: "4".
                 Text(
-                    "Quantos ${if (chosen == DoseUnit.ML) "ml" else chosen.plural}",
+                    when (chosen) {
+                        DoseUnit.ML -> "Quantos ml"
+                        DoseUnit.CAPSULE, DoseUnit.DROP -> "Quantas ${chosen.plural}"
+                        else -> "Quantos ${chosen.plural}"
+                    },
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(top = 16.dp),
                 )

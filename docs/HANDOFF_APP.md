@@ -15,6 +15,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**28/10, Claude Code:** RV-UN-01 corrigido (T08/T09 conferidos no emulador), A31 atualizado às 11:09; falta a conferência do Codex e o teste do autor com `docs/ROTEIRO_TESTE_DOSE_GRADES.md`.
+
 **Atualização de 28/10, Codex:** revisão da DEC-037 concluída, RV-UN-01 S2 preexistente aberto; reparar e conferir a edição de Outro antes de encerrar esse fluxo. Casos T01–T06 passam. A31 permanece com instalação registrada pelo Claude; não operado pelo revisor. O resumo de 27/10 abaixo é histórico.
 
 Situação no fim de 27/10: `main` com tudo commitado (exceto `.idea/`, do autor); app instalado no A31 e no emulador com
@@ -47,7 +49,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
-| Quantidade ao trocar a unidade (DEC-037) | Revisado pelo Codex em 28/10: T01–T06 passam no emulador; build/128 testes executados passam. RV-UN-01 S2 preexistente aberto (Outro editado recupera quantidade antiga). Sem regressão nova confirmada no commit. Instalado no A31 pelo Claude (28/10, 10:25); aceite do autor pendente | `a2680da`; `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md` |
+| Quantidade ao trocar a unidade (DEC-037) | Revisado pelo Codex em 28/10: T01–T06 passam no emulador. **RV-UN-01 corrigido pelo Claude em 28/10** (T08/T09 no emulador); conferência do Codex pendente. Instalado no A31 (28/10, 11:09); aceite do autor pendente | `a2680da`, correção RV-UN-01; `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md` |
 | Quantidade por toque e grades | Revisados pelo Codex em 27/10, sem achados na cobertura executada. Build/127 testes executados passam; Outra/4 preservado, quantidade vazia bloqueia, Meio/dias/voz corretos; formulário e dias/horários/duração da voz em 2,0×. Original reinstalado só no emulador. Aceite no A31 pendente | `33a33ab`, `a96184b`; `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Chips e aviso temporário de volume | Diff de `ee23734` sem defeito confirmado; `CheckSlot` substituído por `ChoiceGrid` em `a96184b`. Aviso complementado pelo Codex no APK original: entrada com mídia 2/15, legível em 2,0×, some sozinho; demais transições e TalkBack não repetidos nesta conferência | `ee23734`; `revisoes/REVISAO_CHIPS_VOLUME_CODEX.md`; conferência posterior em `revisoes/REVISAO_QUANTIDADE_GRADE_CODEX.md` |
 | Ajustes após roteiro de voz e DEC-036 | Implementados e revisados pelo Codex em 27/10. **RV-VZ-01/02 fechados** na conferência de `d4d6350`, sem achado novo no escopo. Cadastro recebido confirma Cancelar/voltar; correções repetidas mantêm só os horários esperados nos casos reproduzidos. Build/126 testes e nove reprodutores passam; instalação no A31 registrada pelo Claude, aceite completo pendente | `fa75715`, `0ea0da7`, `d4d6350`; `revisoes/REVISAO_CORRECAO_AJUSTES_VOZ_DEC036_CODEX.md` |
@@ -209,6 +211,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-28 — Claude Code — correção de RV-UN-01: editar o texto de "Outro" no `DoseInput` apaga a quantidade guardada (voltar a uma unidade pede quantidade nova); título "Quantas cápsulas/gotas" (antes "Quantos"); roteiro com T08/T09 — 128 testes (sem teste novo: a transição está no Compose, sem teste de interface no projeto); emulador: T01, T07 ida/volta sem editar, T08 (só Cápsula marcada, Continuar → "Informe quanto você toma por vez."), T09 e os quatro títulos conferidos, rascunho descartado; instalado no A31 (11:09) — pendente: conferência do Codex; teste do autor.
 
 - 2026-10-28 — Codex (GPT-6) — revisão de `a2680da`/`277361e`, partida `main`/`277361e`, pull atualizado; relatório `revisoes/REVISAO_TROCA_UNIDADE_CODEX.md` e estado/handoff/entregas/registro atualizados — T01–T06 passam no emulador API 35; build/128 testes executados passam; RV-UN-01 S2 preexistente confirmado (Outro editado recupera quantidade antiga; comparação com `a1701d0`), sem regressão nova confirmada. Rascunho descartado, dados e configurações preservados; configurações locais da IDE/Claude já existentes preservadas, sem código/configuração alterados, teste temporário, commit/push ou A31 operado — pendente: reparo pontual/conferência e aceite do autor; edição persistida/fonte ampliada/TalkBack/voz audível/câmera/ciclo temporal não repetidos.
 
