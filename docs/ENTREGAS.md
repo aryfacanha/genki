@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisão da troca de unidade da dose (DEC-037) — 28/10/2026 — Codex (GPT-6)
+Partida: `main`/`277361e`; pull atualizado; alvos `a2680da` e `277361e`; proposta/requisitos oficiais reabertos no Drive.
+Realizado e arquivos alterados: `docs/revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`, estado/handoff (§2/3/7 e Diário), entregas e registro de IA. Um S2 preexistente confirmado: RV-UN-01, quantidade antiga recuperada depois de editar Outro; sem regressão nova confirmada no commit.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; DEC-037 já aceita.
+Sugestões pendentes: invalidar quantidade antiga ao editar Outro e cobrir a transição completa em teste/roteiro, no reparo.
+Verificado: build passa; 128 testes executados sem falhas; T01–T06, transferência para Outro, achado e avanço à etapa 2 reproduzidos no emulador API 35; abas/descarte/lista anterior conferidos. | Não verificado: A31, edição persistida, fonte ampliada, TalkBack, voz/TTS audíveis, câmera e ciclo temporal de lembretes.
+Próxima tarefa e bloqueios: reparo pontual de RV-UN-01 e conferência; aceite do autor no A31.
+Links/commits: `docs/revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`; sem código/configuração alterados, teste temporário, commit/push ou operação no A31. Rascunho descartado e medicamentos preservados.
+
 ```text
 ENTREGA — App Android: quantidade ao trocar a unidade da dose — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`a1701d0`; pergunta em aberto do handoff ("meio cápsula").

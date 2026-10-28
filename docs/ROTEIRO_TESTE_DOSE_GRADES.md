@@ -5,6 +5,9 @@ toque (`33a33ab`), opções em grade (`a96184b`), aviso de volume no meio da tel
 unidade (DEC-037, `a2680da`). Versão instalada no A31 em 28/10, 10:25. Os resultados esperados vêm do código e dos
 testes; **não foi executado no aparelho.**
 
+Atualizado em 28/10 a partir da revisão do Codex (`revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`): T01–T07 conferidos
+por ele no emulador; acrescentados T08–T09, do achado **RV-UN-01 (S2, aberto)**.
+
 ## Como usar
 
 - Formulário: **Hoje → Adicionar medicamento → Digitar**. Voz: **→ Usar voz**.
@@ -30,7 +33,7 @@ testes; **não foi executado no aparelho.**
 ## B. Trocar de unidade (DEC-037)
 
 A quantidade só continua se a nova unidade tiver o mesmo botão; se não tiver, fica sem marcação e é preciso
-escolher de novo.
+escolher de novo. T01–T07 já passaram no emulador (Codex, 28/10); no A31, ainda não.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
@@ -41,6 +44,8 @@ escolher de novo.
 | T05 | Comprimido + Outra "4" → tocar Cápsula | Nenhuma quantidade marcada, sem o campo "Outra quantidade" |
 | T06 | Comprimido + Outra "4" → tocar **Comprimido** de novo | Nada muda: "4" continua no campo |
 | T07 | Comprimido + 2 → tocar **Outro** | Campo livre já com "2 comprimidos" |
+| T08 | Comprimido + 2 → Cápsula → **Outro** → trocar o texto por "1 colher de sopa" → fechar o teclado → tocar **Cápsula** | Nenhuma quantidade marcada; Continuar → "Informe quanto você toma por vez." **Hoje falha (RV-UN-01):** o "2" volta marcado e a dose vira "2 cápsulas". Anote como problema conhecido até o reparo |
+| T09 | Comprimido + 2 → **Outro** → **apagar** todo o texto → tocar **Comprimido** | Nenhuma quantidade marcada. **Hoje falha (RV-UN-01):** o "2" volta |
 
 ## C. Dias específicos (etapa 2 do formulário)
 

@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Codex (GPT-6), partida `main`/`277361e`: revisão de `a2680da`/DEC-037 concluída.** Casos diretos T01–T06 passam no emulador API 35; build passa e 128 testes executados passam. **RV-UN-01 S2 preexistente aberto:** editar o texto de Outro e depois escolher Cápsula pode recuperar quantidade antiga ("1 colher de sopa" → "2 cápsulas"). Não é regressão introduzida por `a2680da`; comparação com `a1701d0` confirma a causa anterior. Relatório: `docs/revisoes/REVISAO_TROCA_UNIDADE_CODEX.md`. Sem código/configuração alterados, commit/push ou A31 operado; rascunho descartado, medicamentos preservados. Próximo: reparo pontual e conferência; aceite do autor no A31 continua pendente. Registros abaixo são históricos.
+
 **28/10/2026, Claude Code (Opus 5.5):** pergunta do "meio cápsula" decidida pelo autor (DEC-037): ao trocar a unidade da dose, a quantidade continua só se existir como botão na nova unidade; senão fica vazia. 128 testes. Instalado no A31 (10:25), não conferido em tela. Roteiro do teste manual: `docs/ROTEIRO_TESTE_DOSE_GRADES.md`. Pendente: teste do autor; revisão do Codex.
 
 **Fim de 27/10/2026, Claude Code (Opus 5.5):** para a próxima sessão do app, começar por `docs/HANDOFF_APP.md` → "Retomar aqui" (teste manual do autor no A31 e a pergunta em aberto sobre "meio cápsula").
