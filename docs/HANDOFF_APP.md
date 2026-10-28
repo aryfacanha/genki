@@ -222,6 +222,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-10-28 — Claude Code — roteiro `revisoes/ROTEIRO_REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md` para a revisão de `be24b9d..61d4c22` (DEC-038, reparos A31, DEC-039, contraste) — só documentação — pendente: revisão do Codex.
+
 - 2026-10-28 — Claude Code — contraste (pedido do autor): `docs/AVALIACAO_CONTRASTE_WCAG.md` (todas as cores passam AA; divisórias e fundo de ícone decorativos); `genkiFieldColors()` em `ui/components` (campos brancos) aplicado aos 6 `OutlinedTextField` do formulário, voz e câmera; "Quanto você toma por vez" e "Horários" em `titleLarge` — 133 testes; A31 1,5× conferido — observação: fundo branco atrás do rótulo flutuante — pendente: revisão do Codex de `011d4e8`…este commit.
 
 - 2026-10-28 — Claude Code — DEC-039: `DoseInput` com `ExposedDropdownMenuBox` (unidade) e `AmountStepper` sempre visível; saem `ChoiceGrid` da dose, "Quantos…" e o estado `typing`; `unitLabel`. Autor confirmou que as perguntas da voz foram faladas em voz alta no A31 — 133 testes; A31 1,5×: menu, primeira escolha em 1, + "1 e meio", trocas da DEC-037 (Cápsula vazia, 2 ↔ 2, Outro e volta, Gota vazia) — não verificado: 2,0×, edição salva, TalkBack no menu — pendente: revisão do Codex; contraste (próximo commit).

@@ -1,5 +1,7 @@
 # Genki — estado atual
 
+**28/10/2026, Claude Code (Opus 5.5):** roteiro de revisão para o Codex pronto: `docs/revisoes/ROTEIRO_REVISAO_DOSE_VOZ_CONTRASTE_CODEX.md` (intervalo `be24b9d..61d4c22`). Próximo: revisão do Codex.
+
 **28/10/2026, Claude Code (Opus 5.5):** avaliação de contraste WCAG 2.2 AA (`docs/AVALIACAO_CONTRASTE_WCAG.md`): todas as cores passam; ajuste de hierarquia (campos brancos, perguntas do formulário maiores) conferido no A31. Pendente: revisão do Codex (DEC-038, reparos A31, DEC-039, contraste); sugestões ainda não pedidas: desfazer exclusão, outras caixas.
 
 **28/10/2026, Claude Code (Opus 5.5):** autor confirmou que as perguntas da voz são faladas em voz alta no A31. DEC-039: dose com unidade em menu e − número + (sem grades), conferida no A31 em 1,5×. Próximo: auditoria de contraste WCAG 2.2 AA (pedido do autor); depois revisão do Codex. Sugestões do autor ainda não pedidas para agora: desfazer exclusão; levantar outras caixas.
