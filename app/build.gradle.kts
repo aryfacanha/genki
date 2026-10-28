@@ -17,8 +17,8 @@ android {
         applicationId = "br.edu.ifrs.genki"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -45,9 +45,10 @@ android {
     buildTypes {
         release {
             signingConfigs.findByName("release")?.let { signingConfig = it }
+            // Otimização (R8) desligada: a parcial do template (`packageScope` androidx/kotlin) gerava
+            // IllegalAccessError ao abrir o app (A31, 28/10/2026). Sem ela, o release roda o mesmo código testado no debug.
             optimization {
-                enable = true
-                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
+                enable = false
             }
         }
     }

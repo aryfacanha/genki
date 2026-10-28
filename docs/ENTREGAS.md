@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: correção do APK release de teste (1.0.1) — 28/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`63e2cc7`; pedido do autor (APK instalado no A31 dava erro ao abrir; GrapheneOS não instalou).
+Realizado e arquivos alterados: `app/build.gradle.kts` (otimização R8 desligada no release; versionCode 2, versionName 1.0.1); docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: reativar R8 completo com regras próprias só se o tamanho do APK (54 MB) virar problema.
+Verificado: crash reproduzido por logcat no A31 (`IllegalAccessError`, `ProcessLifecycleInitializer`); release 1.0.1 instalado no A31 abre na introdução sem crash; `assembleDebug test` (137). | Não verificado: fluxo completo no release; GrapheneOS.
+Próxima tarefa e bloqueios: mensagem de erro do GrapheneOS para diagnóstico; bateria do autor no A31.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: APK release V1 para teste informal — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`0930dfd`; pedido do autor (gerar APK instalável para teste informal, fora da pesquisa, com pessoa de confiança).
 Realizado e arquivos alterados: `app/build.gradle.kts` (signingConfig release lido de `local.properties`); ícone adaptativo novo em `res/drawable` e `res/mipmap-anydpi` (monocromático incluído, `.webp` antigos removidos); docs.
