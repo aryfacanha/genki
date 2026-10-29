@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** roteiro de revisão do Codex para `0930dfd..c52338c` (release, DEC-042 a DEC-046): `revisoes/ROTEIRO_REVISAO_TESTE_INFORMAL_CODEX.md`. Próximo: revisão do Codex; autor testa a voz no A31.
+
 **29/10, Claude Code (último):** DEC-046 conferência dos nomes na voz, 1.0.6 no A31. Próximo: autor testar a voz (conferência, comandos, pausa 1,5 s); revisão do Codex de `5b812b9..HEAD`.
 
 **29/10, Claude Code (último):** 1.0.5 no A31: "Próximo" do tutorial corrigido e pergunta falada antes do tutorial (DEC-045). Próximo: autor testar voz com pausas; revisão do Codex de `5b812b9..HEAD`.
