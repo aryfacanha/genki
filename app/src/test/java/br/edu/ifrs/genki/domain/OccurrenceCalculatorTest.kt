@@ -127,6 +127,20 @@ class OccurrenceCalculatorTest {
     }
 
     @Test
+    fun firstGroupAfterBringsEveryMedicationAtThatTime() {
+        val a = med(name = "Metformina", times = listOf(LocalTime.of(9, 0)))
+        val b = med(name = "Atenolol", times = listOf(LocalTime.of(9, 0)))
+        val off = med(name = "Sinvastatina", times = listOf(LocalTime.of(9, 0)), enabled = false)
+        val (date, group) = OccurrenceCalculator.firstGroupAfter(listOf(a, b, off), monday, zone)!!
+        assertEquals(monday.plusDays(1), date)
+        assertEquals(listOf("Atenolol", "Metformina"), group.map { it.medication.name })
+        // Outro medicamento mais cedo: o grupo é só o do primeiro horário.
+        val early = med(name = "Losartana", times = listOf(LocalTime.of(8, 0)))
+        assertEquals(listOf("Losartana"), OccurrenceCalculator.firstGroupAfter(listOf(a, early), monday, zone)!!.second.map { it.medication.name })
+        assertNull(OccurrenceCalculator.firstGroupAfter(listOf(off), monday, zone))
+    }
+
+    @Test
     fun firstAfterWaitsForStartDate() {
         val later = med(start = monday.plusDays(10))
         assertEquals(monday.plusDays(10), OccurrenceCalculator.firstAfter(listOf(later), monday, zone)!!.first)

@@ -89,10 +89,10 @@ data class HomeState(
     val today: List<Occurrence>,
     /** Minuto atual: na lista, os horários até ele já passaram. */
     val minute: LocalTime,
-    /** Primeiro horário de hoje depois do minuto atual, fora os avisos pendentes; `null` = os de hoje já passaram. */
-    val next: Occurrence?,
-    /** Primeiro horário de outro dia, para quando os de hoje acabaram (`null` = nenhum). */
-    val upcoming: Pair<LocalDate, Occurrence>? = null,
+    /** Medicamentos do primeiro horário de hoje depois do minuto atual, fora os avisos pendentes; vazio = já passaram. */
+    val next: List<Occurrence>,
+    /** Medicamentos do primeiro horário de outro dia, para quando os de hoje acabaram (`null` = nenhum). */
+    val upcoming: Pair<LocalDate, List<Occurrence>>? = null,
     /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
     val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
     val intervalMinutes: Int = 20,
@@ -127,8 +127,8 @@ class HomeViewModel(
             date = now.toLocalDate(),
             today = today,
             minute = minute,
-            next = ActiveAlert.nextOccurrence(today, alerts, minute),
-            upcoming = OccurrenceCalculator.firstAfter(medications, now.toLocalDate(), ZoneId.systemDefault()),
+            next = ActiveAlert.nextGroup(today, alerts, minute),
+            upcoming = OccurrenceCalculator.firstGroupAfter(medications, now.toLocalDate(), ZoneId.systemDefault()),
             alerts = withMedication,
             intervalMinutes = reminderSettings.intervalMinutes,
         )
@@ -219,10 +219,9 @@ fun HomeScreen(
                         if (s.alerts.isEmpty()) {
                             NextCard(s.next, s.upcoming, s.date)
                         } else {
-                            val after = s.next?.let { "${MedicationText.time(it.time)} · ${it.medication.name}" }
-                                ?: s.upcoming?.let { (date, occurrence) ->
-                                    "${MedicationText.upcomingDay(date, s.date).lowercase()}, " +
-                                        "${MedicationText.time(occurrence.time)} · ${occurrence.medication.name}"
+                            val after = s.next.takeIf { it.isNotEmpty() }?.let(::groupLine)
+                                ?: s.upcoming?.let { (date, group) ->
+                                    "${MedicationText.upcomingDay(date, s.date).lowercase()}, ${groupLine(group)}"
                                 }
                             after?.let {
                                 Text(
@@ -271,8 +270,8 @@ fun HomeScreen(
 
 /** Cartão verde do próximo lembrete; só informa. Sem mais horários hoje, mostra o do próximo dia. */
 @Composable
-private fun NextCard(next: Occurrence?, upcoming: Pair<LocalDate, Occurrence>?, today: LocalDate) {
-    if (next == null && upcoming != null) {
+private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occurrence>>?, today: LocalDate) {
+    if (next.isEmpty() && upcoming != null) {
         Text(
             "Os lembretes de hoje já passaram.",
             style = MaterialTheme.typography.titleMedium,
@@ -288,14 +287,14 @@ private fun NextCard(next: Occurrence?, upcoming: Pair<LocalDate, Occurrence>?, 
         modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
     ) {
         Column(Modifier.padding(20.dp)) {
-            if (next == null) {
+            if (next.isEmpty()) {
                 Text("Os lembretes de hoje já passaram.", style = MaterialTheme.typography.titleLarge)
                 return@Column
             }
-            Text("Próximo lembrete", color = GenkiCardSubtext)
-            Text(MedicationText.time(next.time), style = MaterialTheme.typography.displayLarge)
+            Text(nextTitle(next), color = GenkiCardSubtext)
+            Text(MedicationText.time(next.first().time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
-            MedicationLine(next.medication)
+            MedicationGroup(next)
         }
     }
 }
@@ -470,8 +469,8 @@ private fun MedicationLine(medication: Medication, colors: AlertColors = alertCo
 
 /** Próximo lembrete em outro dia ("Amanhã" ou a data), no mesmo cartão verde. */
 @Composable
-private fun UpcomingCard(upcoming: Pair<LocalDate, Occurrence>, today: LocalDate) {
-    val (date, occurrence) = upcoming
+private fun UpcomingCard(upcoming: Pair<LocalDate, List<Occurrence>>, today: LocalDate) {
+    val (date, group) = upcoming
     Surface(
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -479,12 +478,52 @@ private fun UpcomingCard(upcoming: Pair<LocalDate, Occurrence>, today: LocalDate
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.padding(20.dp)) {
-            Text("Próximo lembrete", color = GenkiCardSubtext)
+            Text(nextTitle(group), color = GenkiCardSubtext)
             Text(MedicationText.upcomingDay(date, today), style = MaterialTheme.typography.titleLarge)
-            Text(MedicationText.time(occurrence.time), style = MaterialTheme.typography.displayLarge)
+            Text(MedicationText.time(group.first().time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
-            MedicationLine(occurrence.medication)
+            MedicationGroup(group)
         }
+    }
+}
+
+/** "Próximo lembrete · 3 medicamentos": deixa claro, antes de abrir, que não é um só. */
+private fun nextTitle(group: List<Occurrence>) =
+    if (group.size > 1) "Próximo lembrete · ${group.size} medicamentos" else "Próximo lembrete"
+
+/** "08:00 · Losartana e mais 2", na linha "Depois:" quando há avisos na tela. */
+private fun groupLine(group: List<Occurrence>): String {
+    val first = group.first()
+    val more = if (group.size > 1) " e mais ${group.size - 1}" else ""
+    return "${MedicationText.time(first.time)} · ${first.medication.name}$more"
+}
+
+/**
+ * Medicamentos do mesmo horário no cartão verde: o primeiro sempre aparece; os outros com "Ver mais"
+ * (teste informal, 29/10: com vários remédios, parecia haver um só).
+ */
+@Composable
+private fun MedicationGroup(group: List<Occurrence>) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    MedicationLine(group.first().medication)
+    if (group.size == 1) return
+    if (expanded) {
+        group.drop(1).forEach {
+            Spacer(Modifier.height(12.dp))
+            MedicationLine(it.medication)
+        }
+    }
+    val others = group.size - 1
+    OutlinedButton(
+        onClick = { expanded = !expanded },
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimary),
+        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onPrimary),
+        modifier = Modifier.padding(top = 12.dp).heightIn(min = 48.dp),
+    ) {
+        Text(
+            if (expanded) "Ver menos" else "Ver mais $others ${if (others == 1) "medicamento" else "medicamentos"}",
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

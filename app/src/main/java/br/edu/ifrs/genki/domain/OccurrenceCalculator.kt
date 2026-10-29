@@ -55,4 +55,10 @@ object OccurrenceCalculator {
             }
             .minWithOrNull(compareBy({ it.first }, { it.second.time }, { it.second.medication.name.lowercase() }))
     }
+
+    /** Como [firstAfter], com todos os medicamentos daquele dia e horário. */
+    fun firstGroupAfter(medications: List<Medication>, date: LocalDate, zone: ZoneId): Pair<LocalDate, List<Occurrence>>? {
+        val (day, first) = firstAfter(medications, date, zone) ?: return null
+        return day to today(medications, day).filter { it.time == first.time }
+    }
 }

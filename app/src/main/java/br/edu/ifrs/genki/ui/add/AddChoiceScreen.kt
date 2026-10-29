@@ -39,7 +39,7 @@ import br.edu.ifrs.genki.ui.components.MicIcon
 @Composable
 fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit, onCamera: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
-        GenkiTopBar("Adicionar medicamento", onBack = onBack)
+        GenkiTopBar("Adicionar medicamento", onBack = onBack, actionLabel = "Cancelar", onAction = onBack)
         Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp)) {
             Text(
                 "Como você quer cadastrar?",

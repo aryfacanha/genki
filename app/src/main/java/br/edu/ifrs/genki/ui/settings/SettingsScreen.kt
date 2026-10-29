@@ -105,7 +105,7 @@ fun SettingsScreen(onIntro: () -> Unit) {
                     "Aplicativo para gerenciamento de medicamentos e lembretes.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                SecondaryButton("Ver a introdução de novo", onClick = onIntro, modifier = Modifier.padding(top = 12.dp))
+                SecondaryButton("Ver como o Genki funciona", onClick = onIntro, modifier = Modifier.padding(top = 12.dp))
             }
         }
     }

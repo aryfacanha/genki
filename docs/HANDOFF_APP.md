@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** DEC-043 (retorno do teste informal), versão 1.0.2 no A31. Próximo: autor testar a voz com pausas; revisão do Codex de `54be0ae..HEAD`; GrapheneOS.
+
 **29/10, Claude Code (último):** DEC-042: atualizar o APK preserva os dados; mudar entidade exige `DB_VERSION` + migração (`data/Migrations.kt`). Pendente: GrapheneOS; bateria do autor no A31.
 
 **28/10, Claude Code (último):** release 1.0.1 corrige crash de abertura (R8 desligado). A31 abre. Pendente: diagnóstico do GrapheneOS; bateria do autor no A31.
@@ -280,6 +282,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — DEC-043: (1) Hoje: cartão do próximo lembrete com todos os medicamentos do mesmo horário ("Próximo lembrete · N medicamentos", "Ver mais"/"Ver menos"; "Depois: … e mais N"); (2) "Cancelar" no topo também em Adicionar medicamento, Usar câmera e Cadastrar por voz; (3) voz: ao encerrar com texto, o reconhecimento volta a ouvir e junta os trechos, entregando após 3 s sem fala, no toque no microfone ou em 4 trechos; (4) introdução vira tutorial básico (passo a passo do cadastro e página "As telas do Genki"); (5) introdução só com som do lembrete e permissão; repetição, intervalo e escuta automática só em Ajustes ("Ver como o Genki funciona"); versão 1.0.2 (versionCode 3) — 141 testes; emulador; A31 abre — pendente: voz com pausa real, TalkBack, revisão do Codex.
 
 - 2026-10-29 — Claude Code — configuração Gradle (`ksp room.schemaLocation`) e banco preservado nas atualizações (DEC-042): sem `fallbackToDestructiveMigration`, esquema v1 exportado em `app/schemas`, `data/Migrations.kt` (`DB_VERSION`, `MIGRATIONS` vazio), `MigrationsTest` — 139 testes; emulador manteve os dados ao atualizar — pendente: migração real com `MigrationTestHelper`.
 

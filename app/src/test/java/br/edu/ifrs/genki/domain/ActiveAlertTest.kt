@@ -58,4 +58,14 @@ class ActiveAlertTest {
         // Depois do último horário: nada mais hoje.
         assertNull(ActiveAlert.nextOccurrence(today(1), emptyList(), t2000))
     }
+
+    @Test
+    fun nextGroupBringsEveryMedicationAtTheNextTime() {
+        val both = (today(1) + today(2)).sortedBy { it.time }
+        assertEquals(listOf(1L, 2L), ActiveAlert.nextGroup(both, emptyList(), LocalTime.of(7, 59)).map { it.medication.id })
+        // Os que estão avisando não entram de novo.
+        val early = ActiveAlert.nextGroup(both, listOf(ActiveAlert(1, 1, t0800)), LocalTime.of(7, 59))
+        assertEquals(listOf(2L), early.map { it.medication.id })
+        assertEquals(emptyList<Occurrence>(), ActiveAlert.nextGroup(both, emptyList(), t2000))
+    }
 }

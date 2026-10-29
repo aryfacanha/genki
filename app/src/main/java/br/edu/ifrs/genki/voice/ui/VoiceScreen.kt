@@ -179,6 +179,12 @@ fun VoiceScreen(
         }
     }
     BackHandler(onBack = handleBack)
+    // "Cancelar" no topo sai do cadastro de qualquer ponto, como no formulário (teste informal, 29/10).
+    val handleCancel = {
+        speaker.stop()
+        input.cancel()
+        if (state.drafts.isNotEmpty()) askDiscard = true else { viewModel.discard(); onClose() }
+    }
 
     // A leitura em voz alta segue o volume de mídia do Android. Quando fica abaixo de 30 %, um aviso aparece no meio
     // da tela e some sozinho em alguns segundos ou ao aumentar o volume (teste do autor no A31, 27/10).
@@ -205,6 +211,8 @@ fun VoiceScreen(
             GenkiTopBar(
                 if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
                 onBack = handleBack,
+                actionLabel = "Cancelar",
+                onAction = handleCancel,
             )
             when (state.phase) {
                 VoicePhase.INTRO -> Intro(state, onMic, preferTyping)

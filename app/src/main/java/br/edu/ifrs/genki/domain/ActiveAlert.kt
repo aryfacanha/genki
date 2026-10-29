@@ -36,5 +36,11 @@ data class ActiveAlert(
          */
         fun nextOccurrence(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): Occurrence? =
             today.firstOrNull { occurrence -> occurrence.time > minute && alerts.none { it.matches(occurrence) } }
+
+        /** Todos os medicamentos do próximo horário (vários no mesmo horário é o caso comum); vazio = os de hoje passaram. */
+        fun nextGroup(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): List<Occurrence> {
+            val next = nextOccurrence(today, alerts, minute) ?: return emptyList()
+            return today.filter { occurrence -> occurrence.time == next.time && alerts.none { it.matches(occurrence) } }
+        }
     }
 }

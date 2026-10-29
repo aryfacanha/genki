@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: retorno do teste informal (DEC-043), versão 1.0.2 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`54be0ae`; pedido do autor (lista de cinco ajustes do teste informal).
+Realizado e arquivos alterados: `ui/home/HomeScreen.kt`, `domain/ActiveAlert.kt` (`nextGroup`), `domain/OccurrenceCalculator.kt` (`firstGroupAfter`), `voice/SpeechInput.kt` (continuação), `voice/ui/VoiceScreen.kt`, `camera/ui/CameraScreen.kt`, `ui/add/AddChoiceScreen.kt` (Cancelar), `ui/intro/IntroScreen.kt` (tutorial), `ui/settings/SettingsScreen.kt`, `app/build.gradle.kts` (1.0.2); testes; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-043.
+Sugestões pendentes: ajustar PAUSE_MS (3 s) depois do teste com voz real.
+Verificado: `assembleDebug test` (141); emulador: Ver mais/Ver menos com 3 medicamentos às 19:30 (inseridos e removidos do banco do emulador), tutorial, Cancelar na escolha/câmera/voz sem crash; release 1.0.2 abre no A31. | Não verificado: escuta com pausas e voz real; bipe ao reabrir o reconhecedor; TalkBack; fonte 2,0x.
+Próxima tarefa e bloqueios: autor testar a voz com pausas no A31; GrapheneOS; revisão do Codex.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: banco preservado nas atualizações (DEC-042) — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`332b453`; pedido do autor ("escreve a migração do banco para preservar os dados").
 Realizado e arquivos alterados: `data/GenkiDatabase.kt`, `data/Migrations.kt` (novo), `app/build.gradle.kts` (`room.schemaLocation`), `app/schemas/.../1.json`, `test/.../data/MigrationsTest.kt`; DECISOES, ESPEC §3, docs.

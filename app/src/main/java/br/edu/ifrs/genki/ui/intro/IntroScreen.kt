@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,15 +56,13 @@ import br.edu.ifrs.genki.ui.components.MicIcon
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
-import br.edu.ifrs.genki.ui.settings.AutoListenSwitch
-import br.edu.ifrs.genki.ui.settings.IntervalChoices
-import br.edu.ifrs.genki.ui.settings.RepeatSwitch
 import br.edu.ifrs.genki.ui.settings.SoundChoices
 
 /**
- * Introdução na primeira abertura (DEC-040, pedido do autor; fora da proposta): o que o Genki faz, como cadastrar,
- * personalização (som como alarme, repetição, escuta automática da voz) e a permissão de notificações. "Pular" em
- * todas as telas; os ajustes ficam também em Ajustes, onde a introdução pode ser vista de novo.
+ * Introdução na primeira abertura (DEC-041, pedido do autor; fora da proposta), também tutorial básico (DEC-043):
+ * o que o Genki faz, como cadastrar passo a passo, para que serve cada tela e os avisos (som e permissão).
+ * Repetição e escuta automática da voz ficam só em Ajustes, para a primeira abertura ser mais rápida (teste informal,
+ * 29/10). "Pular" em todas as telas; em Ajustes, "Ver como o Genki funciona" abre de novo.
  */
 @Composable
 fun IntroScreen(onDone: () -> Unit) {
@@ -95,7 +96,7 @@ fun IntroScreen(onDone: () -> Unit) {
             when (page) {
                 0 -> Welcome()
                 1 -> HowToAdd()
-                2 -> Personalize()
+                2 -> Screens()
                 else -> Notices()
             }
         }
@@ -143,11 +144,32 @@ private fun Welcome() {
 
 @Composable
 private fun HowToAdd() {
-    Title("Como cadastrar")
+    Title("Como cadastrar um remédio")
+    Step(1, "Na tela Hoje, toque em \u201cAdicionar medicamento\u201d.")
+    Step(2, "Escolha como quer cadastrar:")
     Way(MicIcon, "Falar", "Diga o nome, quanto toma e os horários. O Genki pergunta o que faltar.")
     Way(Icons.Filled.Edit, "Digitar", "Preencha as informações em três passos.")
     Way(CameraIcon, "Câmera", "Fotografe a caixa: o Genki lê o nome e a concentração.")
-    Paragraph("Você sempre confere tudo antes de salvar.")
+    Step(3, "Confira tudo e toque em \u201cConfirmar e salvar\u201d.")
+    Paragraph("Para desistir, toque em \u201cCancelar\u201d, no alto da tela.")
+}
+
+@Composable
+private fun Step(number: Int, text: String) {
+    Row(Modifier.padding(horizontal = 20.dp, vertical = 8.dp), verticalAlignment = Alignment.Top) {
+        Text("$number.", style = MaterialTheme.typography.titleMedium, modifier = Modifier.widthIn(min = 28.dp))
+        Text(text, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+    }
+}
+
+/** As três abas, na ordem da barra de baixo. */
+@Composable
+private fun Screens() {
+    Title("As telas do Genki")
+    Paragraph("Use a barra de baixo para trocar de tela.")
+    Way(Icons.Filled.Home, "Hoje", "Os horários do dia e o próximo lembrete. Quando for a hora, o aviso aparece aqui, com \u201cEntendi\u201d e \u201cAdiar\u201d.")
+    Way(PillsIcon, "Medicamentos", "Todos os remédios cadastrados. Toque em um para ver os detalhes, editar ou excluir.")
+    Way(Icons.Filled.Settings, "Ajustes", "Som do aviso, repetição, voz e permissões. Lá você também pode ver este tutorial de novo.")
 }
 
 @Composable
@@ -168,23 +190,10 @@ private fun Way(icon: ImageVector, title: String, text: String) {
 }
 
 @Composable
-private fun Personalize() {
-    val settings = (LocalContext.current.applicationContext as GenkiApplication).container.settings
-    val reminders by settings.reminders.collectAsStateWithLifecycle()
-    var autoListen by remember { mutableStateOf(settings.autoListen) }
-    Title("Do seu jeito")
-    Paragraph("Já vem escolhido o mais comum. Você pode mudar depois em Ajustes.")
-    SoundChoices(reminders.alarmSound, settings::setAlarmSound)
-    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-    RepeatSwitch(reminders.repeatEnabled, settings::setRepeatEnabled)
-    IntervalChoices(reminders.intervalMinutes, settings::setIntervalMinutes)
-    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-    AutoListenSwitch(autoListen) { autoListen = it; settings.autoListen = it }
-}
-
-@Composable
 private fun Notices() {
     val context = LocalContext.current
+    val settings = (context.applicationContext as GenkiApplication).container.settings
+    val reminders by settings.reminders.collectAsStateWithLifecycle()
     // Permissão muda fora do app; relê ao voltar.
     var resumes by remember { mutableIntStateOf(0) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
@@ -192,7 +201,9 @@ private fun Notices() {
     // Recusou o pedido do Android: fica aqui; só um novo toque leva às configurações do celular (RV-4041-03).
     var asked by rememberSaveable { mutableStateOf(false) }
     val request = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { resumes++ }
-    Title("Permitir avisos")
+    Title("Avisos")
+    SoundChoices(reminders.alarmSound, settings::setAlarmSound)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     Paragraph("Para avisar na hora, o Genki precisa mostrar notificações.")
     if (allowed) {
         Text(
@@ -218,4 +229,5 @@ private fun Notices() {
     }
     Spacer(Modifier.height(8.dp))
     Paragraph("Se o aviso aparecer pequeno, nas configurações de notificação do Genki escolha mostrar como pop-up.")
+    Paragraph("Repetir o aviso e outros ajustes ficam em Ajustes.")
 }

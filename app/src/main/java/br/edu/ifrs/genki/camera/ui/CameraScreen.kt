@@ -80,7 +80,7 @@ fun CameraScreen(
     LaunchedEffect(Unit) { if (!permitted) askCamera.launch(Manifest.permission.CAMERA) }
 
     Column(Modifier.fillMaxSize()) {
-        GenkiTopBar("Usar câmera", onBack = onClose)
+        GenkiTopBar("Usar câmera", onBack = onClose, actionLabel = "Cancelar", onAction = onClose)
         when {
             denied -> Message(
                 "Sem acesso à câmera. Você pode permitir nas configurações ou digitar.",
