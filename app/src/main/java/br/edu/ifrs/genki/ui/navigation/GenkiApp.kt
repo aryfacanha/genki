@@ -167,7 +167,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     CompositionLocalProvider(LocalTutorial provides tutorial) { Box(Modifier.fillMaxSize()) {
     Scaffold(
         // Durante o tutorial, o leitor de tela fica só no balão.
-        modifier = Modifier.fillMaxSize().then(if (tutorial.step != null) Modifier.clearAndSetSemantics { } else Modifier),
+        modifier = Modifier.fillMaxSize().then(if (tutorial.step != null || tutorial.offering) Modifier.clearAndSetSemantics { } else Modifier),
         snackbarHost = {
             // Na Hoje e na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
             val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true ||
@@ -296,7 +296,8 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                         popUpTo(navController.graph.id) { inclusive = true }
                         launchSingleTop = true
                     }
-                    tutorial.start()
+                    // Pergunta antes, na tela e em voz alta, se a pessoa quer o tutorial.
+                    tutorial.offer()
                 })
             }
             composable<SettingsRoute> { SettingsScreen(onTutorial = startTutorial) }

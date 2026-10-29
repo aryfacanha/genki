@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.ui.tutorial
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,12 +41,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import br.edu.ifrs.genki.voice.Speaker
 
 /** Partes da tela que o tutorial destaca; cada uma marcada com [tutorialTarget] onde é desenhada. */
 enum class TutorialTarget { ADD_BUTTON, NEXT, VOICE, TYPE, CAMERA, TAB_MEDICATIONS, TAB_SETTINGS }
@@ -88,12 +91,17 @@ class TutorialController {
     /** Onde cada parte está na tela, em coordenadas da raiz; some quando a parte sai da tela. */
     val targets = mutableStateMapOf<TutorialTarget, Rect>()
 
+    /** Perguntando, antes de começar, se a pessoa quer o tutorial (primeira abertura). */
+    var offering by mutableStateOf(false)
+        private set
+
     val current: TutorialStep? get() = step?.let(TutorialSteps.all::getOrNull)
 
-    fun start() { step = 0 }
+    fun offer() { offering = true }
+    fun start() { offering = false; step = 0 }
     fun next() { step = step?.let { if (it + 1 < TutorialSteps.all.size) it + 1 else null } }
     fun back() { step = step?.let { if (it > 0) it - 1 else null } }
-    fun close() { step = null }
+    fun close() { offering = false; step = null }
 }
 
 val LocalTutorial = staticCompositionLocalOf<TutorialController?> { null }
@@ -106,9 +114,25 @@ fun Modifier.tutorialTarget(target: TutorialTarget): Modifier {
     return onGloballyPositioned { controller.targets[target] = it.boundsInRoot() }
 }
 
+/**
+ * Bloqueia toques na tela de baixo sem consumir os eventos: consumir também os movimentos fazia o botão do balão
+ * cancelar o clique quando o dedo deslizava um pouco ("Próximo" às vezes não passava no A31, 29/10).
+ */
+private fun Modifier.blockTouches() = pointerInput(Unit) {
+    awaitPointerEventScope { while (true) awaitPointerEvent() }
+}
+
+private const val OFFER_TITLE = "Quer ver um tutorial rápido?"
+private const val OFFER_TEXT =
+    "Em sete passos, o Genki mostra onde cadastrar seus remédios e para que serve cada tela. Você também pode ver depois, em Ajustes."
+
 /** Camada escura com o recorte no alvo e o balão; bloqueia toques na tela de baixo. */
 @Composable
 fun TutorialOverlay(controller: TutorialController) {
+    if (controller.offering) {
+        Offer(controller)
+        return
+    }
     val index = controller.step ?: return
     val step = controller.current ?: return
     val density = LocalDensity.current
@@ -122,9 +146,7 @@ fun TutorialOverlay(controller: TutorialController) {
     Box(
         Modifier.fillMaxSize()
             .onGloballyPositioned { origin = it.boundsInRoot().topLeft; height = it.size.height.toFloat() }
-            .pointerInput(Unit) {
-                awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } }
-            },
+            .blockTouches(),
     ) {
         Canvas(Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)) {
             drawRect(Color.Black.copy(alpha = 0.72f))
@@ -145,6 +167,45 @@ fun TutorialOverlay(controller: TutorialController) {
             else -> Box(
                 Modifier.fillMaxSize().padding(top = with(density) { (target.bottom + margin).toDp() }),
             ) { balloon(Modifier.align(Alignment.TopCenter).padding(top = 12.dp)) }
+        }
+    }
+}
+
+/** Pergunta, na tela e em voz alta, se a pessoa quer o tutorial antes de começar (pedido do autor, 29/10). */
+@Composable
+private fun Offer(controller: TutorialController) {
+    val context = LocalContext.current
+    val speaker = remember { Speaker(context) }
+    DisposableEffect(speaker) {
+        speaker.speak("$OFFER_TITLE $OFFER_TEXT")
+        onDispose { speaker.stop(); speaker.shutdown() }
+    }
+    BackHandler { controller.close() }
+    Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.72f)).blockTouches()) {
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = MaterialTheme.colorScheme.surface,
+            shadowElevation = 8.dp,
+            modifier = Modifier.align(Alignment.Center).padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
+        ) {
+            Column(Modifier.padding(start = 20.dp, end = 12.dp, top = 20.dp, bottom = 8.dp)) {
+                Text(
+                    OFFER_TITLE,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(end = 8.dp).semantics { heading() },
+                )
+                Text(
+                    OFFER_TEXT,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 8.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
+                )
+                Spacer(Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = controller::close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Agora não") }
+                    Spacer(Modifier.weight(1f))
+                    Button(onClick = controller::start, modifier = Modifier.heightIn(min = 48.dp)) { Text("Ver tutorial") }
+                }
+            }
         }
     }
 }

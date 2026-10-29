@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** 1.0.5 no A31: "Próximo" do tutorial corrigido e pergunta falada antes do tutorial (DEC-045). Próximo: autor testar voz com pausas; revisão do Codex de `5b812b9..HEAD`.
+
 **29/10, Claude Code (último):** DEC-044 tutorial guiado, versão 1.0.4 (não instalada no A31). Próximo: autor testar 1.0.4 no A31 (voz com pausas e tutorial); revisão do Codex de `5b812b9..HEAD`.
 
 **29/10, Claude Code (último):** DEC-043 (retorno do teste informal), versão 1.0.2 no A31. Próximo: autor testar a voz com pausas; revisão do Codex de `54be0ae..HEAD`; GrapheneOS.
@@ -284,6 +286,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — tutorial: (1) correção do "Próximo" que às vezes não passava (a camada consumia também os movimentos do dedo e o botão cancelava o clique; agora bloqueia a tela de baixo sem consumir); (2) na primeira abertura, depois da introdução, pergunta "Quer ver um tutorial rápido?" na tela e em voz alta (`Speaker`), com "Agora não"/"Ver tutorial"; em Ajustes abre direto; versão 1.0.5 (versionCode 6) — 146 testes; A31 via ADB (toque com deslize); emulador — pendente: som da pergunta, TalkBack. Dica de teste: `adb shell input swipe x y x+6 y+4 120` imita o dedo real; `input tap` não reproduz a falha.
 
 - 2026-10-29 — Claude Code — DEC-044: tutorial guiado sobre as telas reais (`ui/tutorial/Tutorial.kt`): escurece a tela, recorta e contorna o alvo, balão com "N de 7", "Próximo"/"Concluir" e "Pular tutorial"; 7 passos (Adicionar medicamento, próximo lembrete, Usar voz, Digitar, Usar câmera, aba Medicamentos, aba Ajustes), indo sozinho à tela Adicionar e voltando; Voltar do sistema volta um passo; toques fora do balão ignorados; leitor de tela só no balão. Abre depois da introdução (agora 2 páginas: boas-vindas e avisos; páginas estáticas de cadastro e de telas removidas) e em Ajustes ("Ver o tutorial"); versão 1.0.4 (versionCode 5) — 145 testes; emulador — pendente: A31, TalkBack, fonte 2,0x.
 

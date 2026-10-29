@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: tutorial — Próximo corrigido e pergunta falada (DEC-045), versão 1.0.5 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`c6ba1e4`; pedido do autor (testar pelo ADB o "Próximo" que às vezes não passa; perguntar, também em voz alta, se quer o tutorial).
+Realizado e arquivos alterados: `ui/tutorial/Tutorial.kt`, `ui/navigation/GenkiApp.kt`, `ui/intro/IntroScreen.kt`, `app/build.gradle.kts` (1.0.5), `test/.../ui/TutorialStepsTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-045.
+Sugestões pendentes: ler em voz alta também cada passo do tutorial (não pedido; oferecido ao autor).
+Verificado: `assembleDebug test assembleRelease` (146); A31: causa reproduzida com toque com deslize e corrigida (7 passos), área escura bloqueada; emulador: pergunta, Agora não, Ver tutorial. | Não verificado: som da pergunta; pergunta no A31; TalkBack.
+Próxima tarefa e bloqueios: autor testar voz com pausas e a pergunta; revisão do Codex de `5b812b9..HEAD`.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: tutorial guiado (DEC-044), versão 1.0.4 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`8bf09a2`; pedido do autor ("tira as páginas estáticas e inclui a tela de adicionar").
 Realizado e arquivos alterados: `ui/tutorial/Tutorial.kt` (novo), `ui/navigation/GenkiApp.kt`, `ui/home/HomeScreen.kt`, `ui/add/AddChoiceScreen.kt`, `ui/intro/IntroScreen.kt` (2 páginas), `ui/settings/SettingsScreen.kt`, `app/build.gradle.kts` (1.0.4), `test/.../ui/TutorialStepsTest.kt`; docs.

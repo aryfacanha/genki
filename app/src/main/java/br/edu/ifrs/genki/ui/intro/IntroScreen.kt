@@ -128,7 +128,7 @@ private fun Welcome() {
     Paragraph("Ele não registra se você tomou e não substitui a orientação do médico ou do farmacêutico.")
     Paragraph("Tudo fica só neste celular.")
     Paragraph("Para letras maiores, aumente o tamanho da fonte nas configurações do celular.")
-    Paragraph("Depois, um tutorial rápido mostra como usar.")
+    Paragraph("Depois, você pode ver um tutorial rápido.")
 }
 
 @Composable

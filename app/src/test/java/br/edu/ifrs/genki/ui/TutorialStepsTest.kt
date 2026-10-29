@@ -46,4 +46,20 @@ class TutorialStepsTest {
         repeat(TutorialSteps.all.size) { controller.next() }
         assertNull(controller.step)
     }
+
+    @Test
+    fun offerAsksFirstAndAcceptOrDecline() {
+        val controller = TutorialController()
+        controller.offer()
+        assertTrue(controller.offering)
+        assertNull(controller.step)
+        controller.start()
+        assertFalse(controller.offering)
+        assertEquals(0, controller.step)
+        controller.close()
+        controller.offer()
+        controller.close()
+        assertFalse(controller.offering)
+        assertNull(controller.step)
+    }
 }
