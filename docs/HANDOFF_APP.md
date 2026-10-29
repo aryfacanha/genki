@@ -39,6 +39,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** residual do RV-INF-04 corrigido (1.0.9 no A31). Próximo: conferência pontual do Codex desse percurso; autor testa a voz.
+
 **Atual, 29/10, Codex:** conferência pontual de `7f91441` concluída: RV-INF-01/02/03/05 fechados, RV-INF-04 parcial/S2 (Voltar durante escuta entrega em vez de cancelar). Próximo: autor avaliar/pedir reparo desse residual e conferência só dele. `revisoes/CONFERENCIA_RV_INF_CODEX.md`. Build final/166 testes; emulador restaurado, sem diff no app, commit/push/A31/chave. As notas anteriores de conferência pendente são históricas.
 
 **29/10, Claude Code (último):** RV-INF-01…05 reparados, 1.0.8 no A31. Próximo: conferência pontual do Codex (reprodutores do relatório, Voltar/Cancelar na troca do nome durante TTS e escuta); autor testa a voz.
@@ -309,6 +311,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — residual do RV-INF-04 (`revisoes/CONFERENCIA_RV_INF_CODEX.md`): no Voltar, a troca do nome é verificada antes da escuta, então Voltar ouvindo descarta a fala (`input.cancel`) e fecha a troca, em vez de entregar o texto (`input.stop`). Versão 1.0.9 (versionCode 10) — 166 testes; emulador (fala simulada temporária, removida) — pendente: conferência do Codex.
 
 - 2026-10-29 — Codex (GPT-6.1) — conferência pontual `7f91441`, partida `main`/`a893fe8`: RV-INF-01/02/03/05 fechados; 04 parcial/S2, Voltar durante escuta aplica trecho/callback pendente. Relatório `revisoes/CONFERENCIA_RV_INF_CODEX.md`; §2/3/7 e registros atualizados; sem reparo/configuração permanente — build final/166 testes, oito reprodutores + cinco probes passam, nomes/atalho/fonte 2,0× e cancelamento na tela; injeção só em `SpeechInput.start()` e testes temporários retirados, hash original/`app` sem diff, APK/banco/preferências/fonte/permissão restaurados no emulador — pendente: autor pedir reparo do residual e conferência; pull bloqueado em `.git/FETCH_HEAD`, sem commit/push/A31/chave, voz/TTS audíveis/TalkBack separados.
 

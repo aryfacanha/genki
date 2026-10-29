@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: residual do RV-INF-04, versão 1.0.9 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`b2150f7`; pedido do autor (corrigir os cinco achados; residual apontado na conferência do Codex).
+Realizado e arquivos alterados: `voice/ui/VoiceScreen.kt` (ordem do Voltar), `app/build.gradle.kts` (1.0.9); docs.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova.
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test assembleRelease` (166); emulador com fala simulada temporária: Voltar durante a escuta da troca descarta a resposta; 1.0.9 abre no A31. | Não verificado: Cancelar interno durante a escuta com fala real.
+Próxima tarefa e bloqueios: conferência pontual do Codex do RV-INF-04.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: conferência pontual RV-INF-01…05 — 29/10/2026 — Codex (GPT-6.1)
 Partida: `main`/`a893fe864c95c37a02899ebfc70ac75dc4d163e0`; alvo `7f91441` (1.0.8, versionCode 9), mesmo código do HEAD. Pull bloqueado em `.git/FETCH_HEAD`.
 Realizado e arquivos alterados: relatório `docs/revisoes/CONFERENCIA_RV_INF_CODEX.md`, HANDOFF_APP §2/3/7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. RV-INF-01/02/03/05 fechados; RV-INF-04 parcial, S2 residual (Voltar durante escuta finaliza/aplica a resposta em vez de cancelar). Nenhum achado novo S1–S4; nenhum reparo permanente.

@@ -172,8 +172,9 @@ fun VoiceScreen(
     var askDiscard by rememberSaveable { mutableStateOf(false) }
     val handleBack = {
         when {
-            state.listening -> input.stop()
+            // Trocando o nome, Voltar desiste da troca mesmo ouvindo: descarta a fala, não a entrega (RV-INF-04).
             state.renaming != null -> { speaker.stop(); input.cancel(); viewModel.cancelRename() }
+            state.listening -> input.stop()
             // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
             state.correctionPending -> viewModel.undoCorrection()
             state.correcting -> viewModel.cancelCorrection()
