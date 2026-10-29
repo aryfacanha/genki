@@ -3,6 +3,18 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: conferência pontual RV-INF-01…05 — 29/10/2026 — Codex (GPT-6.1)
+Partida: `main`/`a893fe864c95c37a02899ebfc70ac75dc4d163e0`; alvo `7f91441` (1.0.8, versionCode 9), mesmo código do HEAD. Pull bloqueado em `.git/FETCH_HEAD`.
+Realizado e arquivos alterados: relatório `docs/revisoes/CONFERENCIA_RV_INF_CODEX.md`, HANDOFF_APP §2/3/7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. RV-INF-01/02/03/05 fechados; RV-INF-04 parcial, S2 residual (Voltar durante escuta finaliza/aplica a resposta em vez de cancelar). Nenhum achado novo S1–S4; nenhum reparo permanente.
+Decisões aceitas pelo autor nesta sessão: nenhuma nova; reparo e atalho já autorizados/registrados anteriormente.
+Sugestões pendentes: priorizar cancelamento da troca em Voltar também com escuta ativa; repetir somente esse percurso após reparo.
+Verificado: build final/166 testes sem falhas, oito reprodutores + cinco probes adicionais passam (179 com temporários); emulador: ressalva/ambiguidade/remoção composta, seis variantes de saída da troca, atalho um→formulário/vários→revisão, link em 2,0×. | Não verificado: voz real, TTS audível/TalkBack, aceite no aparelho e bateria ampla; limites no relatório.
+Restauração: fontes/testes temporários retirados, hash original/`app` sem diff, APK original reinstalado só no emulador, backup comparado byte a byte, dois medicamentos/horários iguais após abrir; fonte 1,0× e microfone ausente restaurados. IDE preservada; sem commit/push/A31/chave.
+Próxima tarefa e bloqueios: autor avaliar/pedir reparo só do residual RV-INF-04 e conferência pontual; atualização remota não verificada por permissão Git.
+Links/commits: `revisoes/CONFERENCIA_RV_INF_CODEX.md`; HEAD preservado, sem commit.
+```
+
+```text
 ENTREGA — App Android: reparo RV-INF-01…05, versão 1.0.8 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`a1f2ebe`; pedido do autor ("corrige os cinco e commita o relatório").
 Realizado e arquivos alterados: `voice/NameCommands.kt` (Confirm só puro, ressalva tratada, `NOT_IS` com "é", `Ambiguous`, `Remove` com partes, `Other`), `voice/ui/VoiceViewModel.kt` (remoção composta, ambíguo, `cancelRename` anula a pergunta, `preferTyping` na conferência), `voice/ui/VoiceScreen.kt` (Voltar/Cancelar param fala e escuta; "Prefiro digitar"), testes, `app/build.gradle.kts` (1.0.8); docs.
