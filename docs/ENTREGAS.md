@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: banco preservado nas atualizações (DEC-042) — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`332b453`; pedido do autor ("escreve a migração do banco para preservar os dados").
+Realizado e arquivos alterados: `data/GenkiDatabase.kt`, `data/Migrations.kt` (novo), `app/build.gradle.kts` (`room.schemaLocation`), `app/schemas/.../1.json`, `test/.../data/MigrationsTest.kt`; DECISOES, ESPEC §3, docs.
+Decisões aceitas pelo autor nesta sessão: DEC-042.
+Sugestões pendentes: teste instrumentado com `MigrationTestHelper` quando houver a primeira migração real.
+Verificado: `assembleDebug test` (139); emulador: atualização por cima manteve 2 medicamentos/2 horários, abertura sem crash. | Não verificado: migração real; release no A31 (desconectado).
+Próxima tarefa e bloqueios: diagnóstico do GrapheneOS; bateria do autor no A31.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: correção do APK release de teste (1.0.1) — 28/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`63e2cc7`; pedido do autor (APK instalado no A31 dava erro ao abrir; GrapheneOS não instalou).
 Realizado e arquivos alterados: `app/build.gradle.kts` (otimização R8 desligada no release; versionCode 2, versionName 1.0.1); docs.

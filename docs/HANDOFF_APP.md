@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** DEC-042: atualizar o APK preserva os dados; mudar entidade exige `DB_VERSION` + migração (`data/Migrations.kt`). Pendente: GrapheneOS; bateria do autor no A31.
+
 **28/10, Claude Code (último):** release 1.0.1 corrige crash de abertura (R8 desligado). A31 abre. Pendente: diagnóstico do GrapheneOS; bateria do autor no A31.
 
 **28/10, Claude Code (último):** APK release V1 assinado para teste informal (fora da pesquisa); ícone adaptativo novo. Próximo: bateria do autor no A31.
@@ -278,6 +280,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — configuração Gradle (`ksp room.schemaLocation`) e banco preservado nas atualizações (DEC-042): sem `fallbackToDestructiveMigration`, esquema v1 exportado em `app/schemas`, `data/Migrations.kt` (`DB_VERSION`, `MIGRATIONS` vazio), `MigrationsTest` — 139 testes; emulador manteve os dados ao atualizar — pendente: migração real com `MigrationTestHelper`.
 
 - 2026-10-28 — Claude Code — configuração: R8 (otimização parcial `packageScope` do template) quebrava o release na abertura com `IllegalAccessError` no `ProcessLifecycleInitializer` (A31); otimização desligada no release, versão 1.0.1 (versionCode 2) — logcat do crash no A31; 1.0.1 abre no A31; 137 testes — pendente: GrapheneOS, fluxo completo no release.
 

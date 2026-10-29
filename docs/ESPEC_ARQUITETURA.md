@@ -77,7 +77,7 @@ data class ScheduleTimeEntity(
 )
 ```
 
-- Conversores: `LocalDate` ↔ String ISO. `fallbackToDestructiveMigration()` até o congelamento (02/11).
+- Conversores: `LocalDate` ↔ String ISO. Sem migração destrutiva (DEC-042): esquema exportado em `app/schemas`; mudança de entidade exige `DB_VERSION` + `Migration` em `data/Migrations.kt`.
 - "Duas vezes ao dia" / "a cada X horas" (RF06) **não são persistidos**: viram horários concretos antes da revisão.
 - "Ainda não sei" (DEC-009): agenda como contínuo, sem data final; UI mostra "Ainda não sei" com a ajuda do protótipo (DEC-027).
 - Duplicidade: **sem tratamento** (S1). Mesmo nome pode ser cadastrado duas vezes; limitação registrada.

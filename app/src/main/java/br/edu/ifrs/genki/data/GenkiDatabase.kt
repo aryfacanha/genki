@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [MedicationEntity::class, ScheduleTimeEntity::class], version = 1, exportSchema = false)
+@Database(entities = [MedicationEntity::class, ScheduleTimeEntity::class], version = DB_VERSION, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class GenkiDatabase : RoomDatabase() {
     abstract fun medicationDao(): MedicationDao
@@ -14,8 +14,8 @@ abstract class GenkiDatabase : RoomDatabase() {
     companion object {
         fun create(context: Context): GenkiDatabase =
             Room.databaseBuilder(context, GenkiDatabase::class.java, "genki.db")
-                // Sem migrações até o congelamento (ESPEC §3).
-                .fallbackToDestructiveMigration(dropAllTables = true)
+                // Atualizar o APK preserva os dados: sem apagamento automático; cada versão nova exige migração (`Migrations.kt`).
+                .addMigrations(*MIGRATIONS)
                 .build()
     }
 }
