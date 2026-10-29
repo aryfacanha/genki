@@ -85,21 +85,26 @@ object NameCommands {
     /** Mostrar "Separar": nome de várias palavras sem "de"/"do"/"da" (pode ser dois remédios juntos). */
     fun canSplit(name: String?): Boolean = name != null && split(name).size > 1
 
-    /** Rascunho com o nome dito: igual, começo igual ou parecido (erro do reconhecimento, ex.: simvastatina/sinvastatina). */
+    /**
+     * Rascunho com o nome dito: igual, primeiras palavras iguais ("losartana" acha "Losartana potássica") ou uma letra
+     * de diferença (erro do reconhecimento, ex.: simvastatina/sinvastatina). Remédios diferentes podem ter nomes
+     * próximos (Prednisona × Prednisolona): mais de uma letra não casa e, com dois parecidos na lista, nenhum é escolhido.
+     */
     fun find(drafts: List<MedicationDraft>, spoken: String): MedicationDraft? {
         val s = VoiceParser.normalize(spoken).trim()
         if (s.isEmpty()) return null
         val named = drafts.filter { it.name != null }
-        return named.firstOrNull { VoiceParser.normalize(it.name!!) == s }
-            ?: named.firstOrNull { similar(it.name!!, spoken) }
+        named.firstOrNull { VoiceParser.normalize(it.name!!) == s }?.let { return it }
+        return named.filter { similar(it.name!!, spoken) }.singleOrNull()
     }
 
     private fun similar(a: String, b: String): Boolean {
         val x = VoiceParser.normalize(a).trim()
         val y = VoiceParser.normalize(b).trim()
         if (x == y) return true
-        if (minOf(x.length, y.length) >= 4 && (x.startsWith(y) || y.startsWith(x))) return true
-        return distance(x, y) <= maxOf(1, minOf(x.length, y.length) / 5)
+        val (short, long) = listOf(words(x), words(y)).sortedBy { it.size }
+        if (short.size < long.size && long.take(short.size) == short) return true
+        return minOf(x.length, y.length) >= 5 && distance(x, y) <= 1
     }
 
     private fun distance(a: String, b: String): Int {

@@ -5,7 +5,7 @@ não altera código.
 
 ## Alvo
 
-`main`, intervalo **`0930dfd..c52338c`** (tudo depois da conferência RV-4041). O app foi distribuído como APK release a
+`main`, intervalo **`0930dfd..HEAD`** (até a correção da comparação de nomes, versão 1.0.7) (tudo depois da conferência RV-4041). O app foi distribuído como APK release a
 uma pessoa de confiança para um teste informal **fora da pesquisa**; os retornos do autor e desse teste viraram as
 mudanças abaixo.
 
@@ -18,6 +18,7 @@ mudanças abaixo.
 | `8bf09a2` | 1.0.3 | Pausa da escuta de 3 s para 1,5 s | `SpeechInput.PAUSE_MS` |
 | `c6ba1e4` | DEC-044, 1.0.4 | Tutorial guiado sobre as telas reais (camada escura com recorte, balão, 7 passos, vai à tela Adicionar e volta); introdução com 2 páginas; "Ver o tutorial" em Ajustes | `ui/tutorial/Tutorial.kt`, `GenkiApp`, `HomeScreen`, `AddChoiceScreen`, `IntroScreen`, `SettingsScreen`, `TutorialStepsTest` |
 | `387c308` | DEC-045, 1.0.5 | "Próximo" do tutorial não passava com dedo real (a camada consumia os movimentos); pergunta "Quer ver um tutorial rápido?" na tela e falada antes do tutorial | `Tutorial.kt` (`blockTouches`, `Offer`), `GenkiApp` |
+| (último) | DEC-046, 1.0.7 | Comparação de nomes mais rígida: uma letra de diferença no máximo, primeiras palavras iguais, e nenhum escolhido quando há dois parecidos (Prednisona × Prednisolona não casam) | `NameCommands.find`/`similar`, `NameCommandsTest.closeButDifferentNamesDoNotMatch` |
 | `c52338c` | DEC-046, 1.0.6 | Voz em etapas: "Confira os remédios" (lista de nomes) antes de doses e horários, com correção por toque (trocar, X, Separar) e por voz ("remover X", "trocar X por Y", "não é X, é Y", "separar X", nome novo, "pronto") | `voice/NameCommands.kt`, `VoiceViewModel` (fase `NAMES`, gravação por função), `VoiceScreen` (`Names`, `NameCard`), `NameCommandsTest`, `VoiceNamesFlowTest`, ESPEC §7 |
 
 Decisões: DEC-042 a DEC-046 em `docs/DECISOES.md`. Introdução, tutorial e pergunta estão **fora da proposta** e
@@ -25,7 +26,7 @@ registrados como acréscimo.
 
 ## Execução
 
-1. `git pull`; registrar a partida. `.\gradlew.bat assembleDebug test`: esperado **158 testes, 0 falhas**.
+1. `git pull`; registrar a partida. `.\gradlew.bat assembleDebug test`: esperado **159 testes, 0 falhas**.
    `.\gradlew.bat assembleRelease` deve compilar (sem a chave no `local.properties`, o APK sai sem assinatura: esperado).
 2. Escopo e regras: gravação só pelo `DraftValidator` (a conferência dos nomes só altera rascunhos da sessão);
    concentração ≠ dose; nada de "Tomado"; sem dependência nova; manifest sem permissão nova; RNF07 (nenhum áudio
@@ -45,8 +46,9 @@ registrados como acréscimo.
      deixa o balão no centro sem recorte; toque na notificação do lembrete durante o tutorial; leitor de tela só no
      balão (`clearAndSetSemantics`); `Speaker` da pergunta encerrado ao fechar; balão com fonte 2,0×.
    - **Conferência dos nomes (DEC-046):** falsos positivos de `NameCommands.parse` (palavras de confirmação no começo de
-     uma frase com outro conteúdo; "e" de "não é X e Y"); `similar` com nomes próximos mas diferentes (ex.: Prednisona ×
-     Prednisolona, Losartana × Lorsartana) pode tirar ou trocar o remédio errado; "Separar" não oferecido em nome com
+     uma frase com outro conteúdo; "e" de "não é X e Y"); `similar` já corrigido para nomes próximos mas diferentes (Prednisona ×
+     Prednisolona): conferir se a regra de uma letra ainda casa os erros comuns do reconhecimento e se algum par real
+     de remédios com uma letra de diferença escapa; "Separar" não oferecido em nome com
      "de"; separar ou trocar copia dose, dias e horários para os novos; escuta automática só nas fases `NAMES` e `ASKING`;
      Voltar com `renaming` aberto; "Prefiro digitar" não aparece na fase `NAMES` (avaliar se falta); câmera → voz pula a
      conferência.

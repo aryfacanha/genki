@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: comparação de nomes mais rígida (DEC-046), versão 1.0.7 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`621ee53`; pedido do autor ("corrige a comparação de nomes antes e faz o push").
+Realizado e arquivos alterados: `voice/NameCommands.kt`, `test/.../voice/NameCommandsTest.kt`, `app/build.gradle.kts` (1.0.7); roteiro do Codex e docs.
+Decisões aceitas pelo autor nesta sessão: ajuste da DEC-046.
+Sugestões pendentes: nenhuma.
+Verificado: `assembleDebug test assembleRelease` (159); 1.0.7 abre no A31. | Não verificado: comandos com fala real.
+Próxima tarefa e bloqueios: revisão do Codex (`revisoes/ROTEIRO_REVISAO_TESTE_INFORMAL_CODEX.md`); autor testa a voz.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: conferência dos nomes na voz (DEC-046), versão 1.0.6 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`387c308`; pedido do autor (etapa de confirmação dos remédios antes das doses; corrigir por toque e por voz; separar dois nomes juntos).
 Realizado e arquivos alterados: `voice/NameCommands.kt` (novo), `voice/ui/VoiceViewModel.kt` (fase NAMES; gravação por função), `voice/ui/VoiceScreen.kt` (tela e cartões), `app/build.gradle.kts` (1.0.6; `isReturnDefaultValues`), `test/.../voice/NameCommandsTest.kt`, `test/.../voice/VoiceNamesFlowTest.kt`; ESPEC §7, docs.

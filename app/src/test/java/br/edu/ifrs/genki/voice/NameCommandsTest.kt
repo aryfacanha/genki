@@ -75,4 +75,19 @@ class NameCommandsTest {
         assertEquals("Entendi 3 remédios: Rivaroxabana, Metoprolol e Sinvastatina. Está certo?", NameCommands.summary(list))
         assertEquals("Agora é 1 remédio: Rivaroxabana. Está certo?", NameCommands.summary(listOf(riva), changed = true))
     }
+
+    @Test
+    fun closeButDifferentNamesDoNotMatch() {
+        val predni = draft("Prednisolona")
+        // Duas letras de diferença: outro remédio, não erro do reconhecimento.
+        assertEquals(Command.NotFound("Prednisona"), NameCommands.parse("remover prednisona", listOf(predni)))
+        // Dois parecidos na lista: não escolhe nenhum.
+        val a = draft("Clonazepam")
+        val b = draft("Clonazepan")
+        assertEquals(Command.NotFound("Clonazepam"), NameCommands.parse("remover clonazepam", listOf(b, draft("Clonazepao"))))
+        assertEquals(Command.Remove(listOf(a.localId)), NameCommands.parse("remover clonazepam", listOf(a, b)))
+        // Primeiras palavras iguais continuam valendo.
+        val lp = draft("Losartana potássica")
+        assertEquals(Command.Remove(listOf(lp.localId)), NameCommands.parse("remover losartana", listOf(lp)))
+    }
 }
