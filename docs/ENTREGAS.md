@@ -3,6 +3,18 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: revisão do teste informal e DEC-042–046 — 29/10/2026 — Codex (GPT-6.1)
+Partida: `main`/`a800f5bc7ab61e1973c43713f28b6eb74f59d11e`; alvo `0930dfd..a800f5b` (1.0.7, versionCode 8). Pull bloqueado por escrita em `.git/FETCH_HEAD`.
+Realizado e arquivos alterados: revisão em `docs/revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`; HANDOFF_APP §2/3/7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. Quatro S2/um S3 abertos, RV-INF-01…05; nenhum reparo de código.
+Decisões aceitas pelo autor nesta sessão: nenhuma; DEC-042–046 consultadas, introdução/tutorial/pergunta fora da proposta continuam com integração à monografia pendente.
+Sugestões pendentes: corrigir confirmação por prefixo, “e”/“é”, remoção ambígua por partes, escuta após cancelar troca e remoção composta parcial, mediante pedido do autor.
+Verificado: build final/159 testes executados sem falhas; release sem assinatura (init temporário; chave não usada); probes de nomes 4/8 passam e 4 falham; callbacks de escuta 8/8 passam. Emulador API 35: V1/V2/V3, tutorial/deslize/Voltar/Pular/pergunta, fontes, Hoje/grupo/giro, três disparos reais 14:59 no canal em uso, Adiar/Entendi. | Não verificado: fala/pausas/fallback reais, TTS audível/TalkBack, migração real, assinatura/instalação release, aceite no A31, ciclo completo M2/câmera real; limites no relatório.
+Restauração: fontes/substitutos/testes temporários retirados, `app` sem diff e APK original reinstalado só no emulador; banco/preferências comparados byte a byte, dois medicamentos/horários iguais à partida; fonte/rotação/permissão de microfone restauradas. Sem commit/push, A31 ou chave operados; alterações locais da IDE preservadas.
+Próxima tarefa e bloqueios: autor avaliar/pedir reparos e conferência pontual; atualização remota não verificada por permissão Git.
+Links/commits: `revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`; HEAD preservado, sem commit.
+```
+
+```text
 ENTREGA — App Android: comparação de nomes mais rígida (DEC-046), versão 1.0.7 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`621ee53`; pedido do autor ("corrige a comparação de nomes antes e faz o push").
 Realizado e arquivos alterados: `voice/NameCommands.kt`, `test/.../voice/NameCommandsTest.kt`, `app/build.gradle.kts` (1.0.7); roteiro do Codex e docs.
