@@ -98,6 +98,12 @@ no aparelho/emulador; **C** inferido do código; **I** inconclusivo (precisa de 
 
 Os demais são de consistência e podem ficar como limitações ou trabalho futuro.
 
+**Corrigidos em 29/10 (versão 1.0.10), a pedido do autor:** 1 (adiados reagendados ao abrir o app; no reinício,
+só os avisos que estavam tocando somem — no Android 15 reabrir um app parado à força entrega BOOT_COMPLETED e apagava
+o adiado), 2 (aviso "X já está cadastrado" com "Voltar e conferir"/"Cadastrar mesmo assim" no formulário e na voz) e
+3–4 ("Digitar o horário": campos próprios de hora e minuto, sem pulo automático; a entrada digitada do Material 3 pulava
+de campo e apagava o anterior).
+
 ## Restauração
 
 Medicamento de teste excluído pela interface; fonte do A31 de volta a 1,3×; intervalo do adiamento de volta a 20 min;

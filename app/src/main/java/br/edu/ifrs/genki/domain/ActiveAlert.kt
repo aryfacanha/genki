@@ -37,6 +37,12 @@ data class ActiveAlert(
         fun nextOccurrence(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): Occurrence? =
             today.firstOrNull { occurrence -> occurrence.time > minute && alerts.none { it.matches(occurrence) } }
 
+        /**
+         * Quando o alarme de um adiado deve tocar ao ser reagendado (abertura do app depois de parada forçada ou
+         * atualização, achado 1 da pré-revisão de 29/10): no horário prometido ou, se ele já passou, logo em seguida.
+         */
+        fun snoozeAlarmAt(snoozedUntil: Instant, now: Instant): Instant = maxOf(snoozedUntil, now.plusSeconds(5))
+
         /** Todos os medicamentos do próximo horário (vários no mesmo horário é o caso comum); vazio = os de hoje passaram. */
         fun nextGroup(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): List<Occurrence> {
             val next = nextOccurrence(today, alerts, minute) ?: return emptyList()

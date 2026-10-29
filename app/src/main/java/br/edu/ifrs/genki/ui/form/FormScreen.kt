@@ -137,6 +137,18 @@ fun MedicationFormScreen(
         }
     }
 
+    state.duplicate?.let { name ->
+        AlertDialog(
+            onDismissRequest = viewModel::dismissDuplicate,
+            title = { Text("$name já está cadastrado") },
+            text = { Text("Dois cadastros iguais geram lembretes repetidos. Se for outro horário do mesmo remédio, você pode adicionar o horário no cadastro que já existe.") },
+            confirmButton = { TextButton(onClick = viewModel::dismissDuplicate) { Text("Voltar e conferir") } },
+            dismissButton = {
+                TextButton(onClick = viewModel::confirmDuplicate) { Text(if (viewModel.isEdit) "Salvar mesmo assim" else "Cadastrar mesmo assim") }
+            },
+        )
+    }
+
     if (askDiscard) {
         AlertDialog(
             onDismissRequest = { askDiscard = false },

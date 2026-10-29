@@ -68,4 +68,13 @@ class ActiveAlertTest {
         assertEquals(listOf(2L), early.map { it.medication.id })
         assertEquals(emptyList<Occurrence>(), ActiveAlert.nextGroup(both, emptyList(), t2000))
     }
+
+    @Test
+    fun snoozeRestoredAtPromisedTimeOrRightAway() {
+        // Achado 1: ao reabrir o app, o adiado volta no horário prometido; se ele já passou, logo em seguida.
+        val now = java.time.Instant.parse("2026-10-29T19:20:00Z")
+        val later = now.plusSeconds(600)
+        assertEquals(later, ActiveAlert.snoozeAlarmAt(later, now))
+        assertEquals(now.plusSeconds(5), ActiveAlert.snoozeAlarmAt(now.minusSeconds(60), now))
+    }
 }

@@ -8,6 +8,7 @@ import br.edu.ifrs.genki.GenkiEval
 import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.DraftValidator
+import br.edu.ifrs.genki.domain.DuplicateNames
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.Medication
@@ -113,6 +114,8 @@ data class FormUiState(
     val changed: Boolean = false,
     /** Mensagem do aviso depois de salvar; a tela fecha quando aparece. */
     val savedMessage: String? = null,
+    /** Nome igual a um já cadastrado: pergunta antes de gravar (achado 2 da pré-revisão, 29/10). */
+    val duplicate: String? = null,
 )
 
 const val REVIEW = 3
@@ -256,8 +259,16 @@ class FormViewModel(
         return true
     }
 
+    /** "Cadastrar mesmo assim" no aviso de nome repetido. */
+    fun confirmDuplicate() {
+        _state.update { it.copy(duplicate = null) }
+        save(allowDuplicate = true)
+    }
+
+    fun dismissDuplicate() = _state.update { it.copy(duplicate = null) }
+
     /** "Confirmar e salvar" (cadastro) ou "Salvar alterações" (edição). Sempre pelo validador. */
-    fun save() {
+    fun save(allowDuplicate: Boolean = false) {
         if (saving) return
         val result = validate()
         if (result is DraftValidator.Result.Invalid) {
@@ -278,6 +289,15 @@ class FormViewModel(
         }
         saving = true
         viewModelScope.launch {
+            if (!allowDuplicate) {
+                val others = repository.observeAll().first().filter { it.id != editId }.map { it.name }
+                val repeated = DuplicateNames.find(listOfNotNull(valid.draft.name), others).firstOrNull()
+                if (repeated != null) {
+                    saving = false
+                    _state.update { it.copy(duplicate = repeated) }
+                    return@launch
+                }
+            }
             val message = if (editId == null) {
                 val id = repository.insert(valid)
                 GenkiEval.log("medicamento_salvo", "fonte" to valid.draft.source, "id" to id)

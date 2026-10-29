@@ -44,6 +44,19 @@ class AlertStore(context: Context) {
         _alerts.value = emptyList()
     }
 
+    /**
+     * Reinício: tira só os avisos que estavam tocando (a notificação some com o reinício); os adiados ficam e são
+     * reagendados ([ReminderScheduler.restoreSnoozes]). No Android 15, reabrir um app parado à força também entrega
+     * BOOT_COMPLETED; limpar tudo apagava o adiado (achado 1 da pré-revisão de 29/10).
+     */
+    @Synchronized
+    fun clearRinging() {
+        val ringing = _alerts.value.filter { it.snoozedUntil == null }.map { it.timeId }
+        if (ringing.isEmpty()) return
+        prefs.edit().apply { ringing.forEach { remove(it.toString()) } }.commit()
+        _alerts.value = read()
+    }
+
     private fun put(alert: ActiveAlert) {
         prefs.edit().putString(alert.timeId.toString(), alert.encode()).commit()
         _alerts.value = read()

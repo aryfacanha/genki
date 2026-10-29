@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: achados 1, 2 e 3–4 da pré-revisão (DEC-047), versão 1.0.10 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`ebb6883`; pedido do autor ("corrige o 1, 2 e 3–4").
+Realizado e arquivos alterados: `reminders/ReminderScheduler.kt`, `reminders/AlertStore.kt`, `reminders/BootReceiver.kt`, `data/MedicationRepository.kt`, `domain/ActiveAlert.kt`, `domain/DuplicateNames.kt` (novo), `ui/form/FormViewModel.kt`, `ui/form/FormScreen.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/components/TimeDialog.kt`, testes (`DuplicateNamesTest`, `TypedTimeTest`, `ActiveAlertTest`), `app/build.gradle.kts` (1.0.10); docs.
+Decisões aceitas pelo autor nesta sessão: DEC-047.
+Sugestões pendentes: achados 5–20 da pré-revisão.
+Verificado: `assembleDebug test` (171); emulador: horário digitado, aviso de duplicidade, adiado após parada forçada. | Não verificado: TalkBack, reinício real, A31 com fala.
+Próxima tarefa e bloqueios: conferência do Codex; MET-3 pelo autor.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — Roteiro de ponta a ponta e pré-revisão heurística no A31 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`6c04eb6`; pedido do autor (roteiro de ponta a ponta, análise heurística, celular via ADB, emulador se preciso).
 Realizado e arquivos alterados: `docs/ROTEIRO_REVISAO_PONTA_A_PONTA.md`, `docs/PRE_REVISAO_HEURISTICA_A31.md` (novos); estado/handoff/registro.

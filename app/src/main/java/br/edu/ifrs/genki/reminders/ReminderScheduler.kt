@@ -11,6 +11,7 @@ import br.edu.ifrs.genki.data.MedicationWithTimes
 import br.edu.ifrs.genki.data.Settings
 import br.edu.ifrs.genki.data.minuteOfDayToTime
 import br.edu.ifrs.genki.data.toDomain
+import br.edu.ifrs.genki.domain.ActiveAlert
 import br.edu.ifrs.genki.domain.ReminderPlan
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -75,6 +76,18 @@ class ReminderScheduler(
         cancelFollowUps(timeId)
         alertStore.remove(listOf(timeId))
         GenkiEval.log("lembrete_reconhecido", "timeId" to timeId)
+    }
+
+    /**
+     * Reagenda os adiados ainda pendentes (o Android apaga os alarmes numa parada forçada; o cartão da Hoje continuava
+     * prometendo o novo alerta). Mesmo PendingIntent: chamar de novo só substitui o alarme.
+     */
+    fun restoreSnoozes() {
+        val now = now().toInstant()
+        alertStore.alerts.value.forEach { alert ->
+            val until = alert.snoozedUntil ?: return@forEach
+            set(ReminderAction.FIRE_SNOOZED, alert.timeId, ActiveAlert.snoozeAlarmAt(until, now).toEpochMilli())
+        }
     }
 
     /** "Adiar N min" (RF25): volta a avisar depois do intervalo. */

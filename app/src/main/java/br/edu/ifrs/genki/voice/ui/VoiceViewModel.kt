@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.ifrs.genki.GenkiEval
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.DraftValidator
+import br.edu.ifrs.genki.domain.DuplicateNames
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.RegistrationSession
@@ -19,6 +20,7 @@ import br.edu.ifrs.genki.voice.VoiceQuestions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -51,6 +53,8 @@ data class VoiceUiState(
     val correcting: Boolean = false,
     /** Na conferência dos nomes, o remédio tocado: a próxima fala (ou o texto digitado) é o nome certo dele. */
     val renaming: String? = null,
+    /** Nomes iguais a cadastros existentes: pergunta antes de gravar (achado 2 da pré-revisão, 29/10). */
+    val duplicates: List<String> = emptyList(),
 )
 
 /**
@@ -61,6 +65,8 @@ class VoiceViewModel(
     /** Gravação (o repositório no app; nos testes, uma lista). */
     private val insert: suspend (DraftValidator.Result.Valid) -> Long,
     private val session: RegistrationSession,
+    /** Nomes já cadastrados, para o aviso de repetido. */
+    private val existingNames: suspend () -> List<String> = { emptyList() },
     /** Veio da câmera: começa pelos rascunhos da sessão e pergunta o que falta (ESPEC §8). */
     fromSession: Boolean = false,
     private val today: () -> LocalDate = { LocalDate.now() },
@@ -347,7 +353,15 @@ class VoiceViewModel(
     }
 
     /** "Confirmar e salvar": todos pelo validador; se faltar algo, volta a perguntar. */
-    fun save() {
+    /** "Cadastrar mesmo assim" no aviso de nome repetido. */
+    fun confirmDuplicates() {
+        _state.update { it.copy(duplicates = emptyList()) }
+        save(allowDuplicates = true)
+    }
+
+    fun dismissDuplicates() = _state.update { it.copy(duplicates = emptyList()) }
+
+    fun save(allowDuplicates: Boolean = false) {
         if (saving) return
         val day = today()
         val results = session.drafts.value.map { DraftValidator.normalizeAndValidate(it, day) }
@@ -357,6 +371,14 @@ class VoiceViewModel(
         }
         saving = true
         viewModelScope.launch {
+            if (!allowDuplicates) {
+                val repeated = DuplicateNames.find(session.drafts.value.mapNotNull { it.name }, existingNames())
+                if (repeated.isNotEmpty()) {
+                    saving = false
+                    _state.update { it.copy(duplicates = repeated) }
+                    return@launch
+                }
+            }
             results.forEach { valid ->
                 val id = insert(valid as DraftValidator.Result.Valid)
                 GenkiEval.log("medicamento_salvo", "fonte" to valid.draft.source, "id" to id)
@@ -383,7 +405,12 @@ class VoiceViewModel(
         fun factory(fromSession: Boolean) = viewModelFactory {
             initializer {
                 val container = genkiContainer()
-                VoiceViewModel(container.medicationRepository::insert, container.registrationSession, fromSession = fromSession)
+                val repository = container.medicationRepository
+                VoiceViewModel(
+                    repository::insert, container.registrationSession,
+                    existingNames = { repository.observeAll().first().map { it.name } },
+                    fromSession = fromSession,
+                )
             }
         }
     }

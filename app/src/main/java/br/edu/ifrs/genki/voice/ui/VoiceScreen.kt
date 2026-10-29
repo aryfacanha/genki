@@ -74,6 +74,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.GenkiApplication
+import br.edu.ifrs.genki.domain.DuplicateNames
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Frequency
 import br.edu.ifrs.genki.domain.MedicationDraft
@@ -274,6 +275,17 @@ fun VoiceScreen(
                 )
             }
         }
+    }
+
+    if (state.duplicates.isNotEmpty()) {
+        val names = DuplicateNames.list(state.duplicates)
+        AlertDialog(
+            onDismissRequest = viewModel::dismissDuplicates,
+            title = { Text(if (state.duplicates.size == 1) "$names já está cadastrado" else "$names já estão cadastrados") },
+            text = { Text("Dois cadastros iguais geram lembretes repetidos. Se for outro horário do mesmo remédio, você pode adicionar o horário no cadastro que já existe.") },
+            confirmButton = { TextButton(onClick = viewModel::dismissDuplicates) { Text("Voltar e conferir") } },
+            dismissButton = { TextButton(onClick = viewModel::confirmDuplicates) { Text("Cadastrar mesmo assim") } },
+        )
     }
 
     if (askDiscard) {

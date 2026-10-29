@@ -44,6 +44,9 @@ class MedicationRepository(private val dao: MedicationDao, private val scheduler
     /** Medicamento dono do horário, para o receptor revalidar antes de avisar. */
     suspend fun byTime(timeId: Long): MedicationWithTimes? = dao.findByTime(timeId)
 
-    /** Abertura do app, reinício do aparelho, troca de hora ou de fuso. */
-    suspend fun syncAll() = dao.getAll().forEach(scheduler::sync)
+    /** Abertura do app, reinício do aparelho, troca de hora ou de fuso; também os adiados pendentes. */
+    suspend fun syncAll() {
+        dao.getAll().forEach(scheduler::sync)
+        scheduler.restoreSnoozes()
+    }
 }
