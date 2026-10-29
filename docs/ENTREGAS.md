@@ -3,6 +3,18 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Conferência pontual DEC-047 — 29/10/2026 — Codex (GPT-6.1)
+Partida: main/013c3c2; alvo 260a535 (1.0.10), sobre ebb6883; HEAD só acrescenta o roteiro.
+Realizado e arquivos alterados: docs/revisoes/CONFERENCIA_DEC047_CODEX.md; HANDOFF_APP §2/§3/§7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. Nenhum reparo permanente de código/configuração; sem commit/push/A31.
+Resultado: RV-047-01 S2 (dois disparos do adiado em 5 s quando o alarme inicia o processo); RV-047-02/03/04 S3 (seleção por toque, rotação, rótulo em fonte 2,0×). Duplicidade conferida no cadastro/edição/voz; FixDraft só retorna à revisão.
+Decisões aceitas pelo autor nesta sessão: nenhuma; DEC-047 já aceita. Sugestões pendentes: avaliar/pedir os quatro reparos; demais achados da pré-revisão fora do escopo.
+Verificado: build final passa; 171 testes originais executados sem falhas (reutilizados na última chamada), quatro probes externos passam; emulador API 35, parada forçada/reabrir, reinício real, vencido/antigo, revalidação, nomes e horário. Simulação retirada, hash original, app sem diff, APK final reinstalado só no emulador; banco/preferências (oito arquivos) restaurados byte a byte, mesmos dois medicamentos/horários após abrir; fonte/rotação/hora/microfone restaurados.
+Não verificado: TalkBack/fala e som reais/aparelho físico/Doze; Entendi entre os dois disparos inconclusivo. Falhas transitórias de memória/ANR recuperadas; sem atribuição ao app. Pull bloqueado por falta de escrita em .git/FETCH_HEAD.
+Próxima tarefa e bloqueios: autor avaliar/pedir reparo pontual e nova conferência; aceite no A31 separado. Não é MET-3 nem texto integrado à monografia.
+Links/commits: docs/revisoes/CONFERENCIA_DEC047_CODEX.md; nenhum commit novo.
+```
+
+```text
 ENTREGA — App Android: achados 1, 2 e 3–4 da pré-revisão (DEC-047), versão 1.0.10 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`ebb6883`; pedido do autor ("corrige o 1, 2 e 3–4").
 Realizado e arquivos alterados: `reminders/ReminderScheduler.kt`, `reminders/AlertStore.kt`, `reminders/BootReceiver.kt`, `data/MedicationRepository.kt`, `domain/ActiveAlert.kt`, `domain/DuplicateNames.kt` (novo), `ui/form/FormViewModel.kt`, `ui/form/FormScreen.kt`, `voice/ui/VoiceViewModel.kt`, `voice/ui/VoiceScreen.kt`, `ui/components/TimeDialog.kt`, testes (`DuplicateNamesTest`, `TypedTimeTest`, `ActiveAlertTest`), `app/build.gradle.kts` (1.0.10); docs.
