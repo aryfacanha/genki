@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: pausa da voz 1,5 s, versão 1.0.3 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`5b812b9`; pedido do autor ("o tempo esperando a voz ficou muito longo").
+Realizado e arquivos alterados: `voice/SpeechInput.kt` (PAUSE_MS 1,5 s), `app/build.gradle.kts` (1.0.3); docs.
+Decisões aceitas pelo autor nesta sessão: ajuste da DEC-043 item 3.
+Sugestões pendentes: tutorial guiado (plano para aprovação); troca do reconhecedor de voz (avaliação entregue ao autor, sem decisão).
+Verificado: `assembleDebug test assembleRelease` (141). | Não verificado: A31 (desconectado), voz real.
+Próxima tarefa e bloqueios: autor testar a voz na 1.0.3; aprovar o plano do tutorial guiado.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: retorno do teste informal (DEC-043), versão 1.0.2 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`54be0ae`; pedido do autor (lista de cinco ajustes do teste informal).
 Realizado e arquivos alterados: `ui/home/HomeScreen.kt`, `domain/ActiveAlert.kt` (`nextGroup`), `domain/OccurrenceCalculator.kt` (`firstGroupAfter`), `voice/SpeechInput.kt` (continuação), `voice/ui/VoiceScreen.kt`, `camera/ui/CameraScreen.kt`, `ui/add/AddChoiceScreen.kt` (Cancelar), `ui/intro/IntroScreen.kt` (tutorial), `ui/settings/SettingsScreen.kt`, `app/build.gradle.kts` (1.0.2); testes; docs.

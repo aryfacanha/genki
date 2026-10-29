@@ -191,7 +191,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
         private const val ERROR_LANGUAGE_NOT_SUPPORTED = 12
         private const val ERROR_LANGUAGE_UNAVAILABLE = 13
         /** Pausa para pensar que ainda conta como a mesma resposta. */
-        private const val PAUSE_MS = 3_000L
+        private const val PAUSE_MS = 1_500L
         private const val MAX_PARTS = 4
     }
 }
