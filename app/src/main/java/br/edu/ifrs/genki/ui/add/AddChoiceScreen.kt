@@ -31,6 +31,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import br.edu.ifrs.genki.ui.components.CameraIcon
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
+import br.edu.ifrs.genki.ui.tutorial.TutorialTarget
+import br.edu.ifrs.genki.ui.tutorial.tutorialTarget
 import br.edu.ifrs.genki.ui.components.MicIcon
 
 /**
@@ -53,18 +55,21 @@ fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit,
                     supportingText = "Conte quais medicamentos você usa, quanto toma e em quais horários.",
                     prominent = true,
                     onClick = onVoice,
+                    modifier = Modifier.tutorialTarget(TutorialTarget.VOICE),
                 )
                 OptionCard(
                     icon = Icons.Filled.Edit,
                     label = "Digitar",
                     supportingText = "Preencha as informações manualmente.",
                     onClick = onType,
+                    modifier = Modifier.tutorialTarget(TutorialTarget.TYPE),
                 )
                 OptionCard(
                     icon = CameraIcon,
                     label = "Usar câmera",
                     supportingText = "Use a embalagem para ajudar a preencher os dados.",
                     onClick = onCamera,
+                    modifier = Modifier.tutorialTarget(TutorialTarget.CAMERA),
                 )
             }
         }
@@ -78,6 +83,7 @@ private fun OptionCard(
     supportingText: String,
     onClick: () -> Unit,
     prominent: Boolean = false,
+    modifier: Modifier = Modifier,
 ) {
     val colors = MaterialTheme.colorScheme
     Surface(
@@ -85,7 +91,7 @@ private fun OptionCard(
         shape = RoundedCornerShape(16.dp),
         color = if (prominent) colors.primaryContainer else colors.surfaceContainerLowest,
         border = BorderStroke(1.5.dp, if (prominent) colors.primary else colors.outline),
-        modifier = Modifier.fillMaxWidth().heightIn(min = 72.dp),
+        modifier = modifier.fillMaxWidth().heightIn(min = 72.dp),
     ) {
         Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(

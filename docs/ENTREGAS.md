@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: tutorial guiado (DEC-044), versão 1.0.4 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`8bf09a2`; pedido do autor ("tira as páginas estáticas e inclui a tela de adicionar").
+Realizado e arquivos alterados: `ui/tutorial/Tutorial.kt` (novo), `ui/navigation/GenkiApp.kt`, `ui/home/HomeScreen.kt`, `ui/add/AddChoiceScreen.kt`, `ui/intro/IntroScreen.kt` (2 páginas), `ui/settings/SettingsScreen.kt`, `app/build.gradle.kts` (1.0.4), `test/.../ui/TutorialStepsTest.kt`; docs.
+Decisões aceitas pelo autor nesta sessão: DEC-044.
+Sugestões pendentes: troca do reconhecedor de voz (avaliação entregue; recomendação: depois do congelamento, registrar como limitação/trabalho futuro).
+Verificado: `assembleDebug test assembleRelease` (145); emulador: 7 passos, ida e volta da tela Adicionar, primeira abertura, Pular, Voltar, toque fora ignorado, sem crash. | Não verificado: A31; TalkBack; fonte 2,0x; Hoje sem medicamentos ou com avisos.
+Próxima tarefa e bloqueios: instalar 1.0.4 no A31 e testar voz e tutorial; revisão do Codex de `5b812b9..HEAD`; GrapheneOS.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: pausa da voz 1,5 s, versão 1.0.3 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`5b812b9`; pedido do autor ("o tempo esperando a voz ficou muito longo").
 Realizado e arquivos alterados: `voice/SpeechInput.kt` (PAUSE_MS 1,5 s), `app/build.gradle.kts` (1.0.3); docs.

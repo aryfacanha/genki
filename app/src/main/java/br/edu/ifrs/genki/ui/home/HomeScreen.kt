@@ -71,6 +71,8 @@ import br.edu.ifrs.genki.ui.theme.GenkiCardSubtext
 import br.edu.ifrs.genki.ui.theme.GenkiOnIconBackground
 import br.edu.ifrs.genki.ui.theme.GenkiOnPrimaryContainer
 import br.edu.ifrs.genki.ui.theme.GenkiPrimaryContainer
+import br.edu.ifrs.genki.ui.tutorial.TutorialTarget
+import br.edu.ifrs.genki.ui.tutorial.tutorialTarget
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -258,12 +260,17 @@ fun HomeScreen(
                 EmptyMessage(
                     "Você ainda não possui lembretes.",
                     "Cadastre um medicamento e seus horários para receber lembretes.",
-                    Modifier.align(Alignment.Center),
+                    Modifier.align(Alignment.Center).tutorialTarget(TutorialTarget.NEXT),
                 )
             }
         }
         BottomActions {
-            PrimaryButton("Adicionar medicamento", onClick = onAdd, icon = Icons.Filled.Add)
+            PrimaryButton(
+                "Adicionar medicamento",
+                onClick = onAdd,
+                icon = Icons.Filled.Add,
+                modifier = Modifier.tutorialTarget(TutorialTarget.ADD_BUTTON),
+            )
         }
     }
 }
@@ -284,7 +291,7 @@ private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occu
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 6.dp).tutorialTarget(TutorialTarget.NEXT),
     ) {
         Column(Modifier.padding(20.dp)) {
             if (next.isEmpty()) {
@@ -475,7 +482,7 @@ private fun UpcomingCard(upcoming: Pair<LocalDate, List<Occurrence>>, today: Loc
         color = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().tutorialTarget(TutorialTarget.NEXT),
     ) {
         Column(Modifier.padding(20.dp)) {
             Text(nextTitle(group), color = GenkiCardSubtext)

@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** DEC-044 tutorial guiado, versão 1.0.4 (não instalada no A31). Próximo: autor testar 1.0.4 no A31 (voz com pausas e tutorial); revisão do Codex de `5b812b9..HEAD`.
+
 **29/10, Claude Code (último):** DEC-043 (retorno do teste informal), versão 1.0.2 no A31. Próximo: autor testar a voz com pausas; revisão do Codex de `54be0ae..HEAD`; GrapheneOS.
 
 **29/10, Claude Code (último):** DEC-042: atualizar o APK preserva os dados; mudar entidade exige `DB_VERSION` + migração (`data/Migrations.kt`). Pendente: GrapheneOS; bateria do autor no A31.
@@ -282,6 +284,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — DEC-044: tutorial guiado sobre as telas reais (`ui/tutorial/Tutorial.kt`): escurece a tela, recorta e contorna o alvo, balão com "N de 7", "Próximo"/"Concluir" e "Pular tutorial"; 7 passos (Adicionar medicamento, próximo lembrete, Usar voz, Digitar, Usar câmera, aba Medicamentos, aba Ajustes), indo sozinho à tela Adicionar e voltando; Voltar do sistema volta um passo; toques fora do balão ignorados; leitor de tela só no balão. Abre depois da introdução (agora 2 páginas: boas-vindas e avisos; páginas estáticas de cadastro e de telas removidas) e em Ajustes ("Ver o tutorial"); versão 1.0.4 (versionCode 5) — 145 testes; emulador — pendente: A31, TalkBack, fonte 2,0x.
 
 - 2026-10-29 — Claude Code — pausa da voz reduzida de 3 s para 1,5 s (`SpeechInput.PAUSE_MS`; autor: espera longa demais no A31), versão 1.0.3 (versionCode 4) — 141 testes — pendente: voz real no A31.
 

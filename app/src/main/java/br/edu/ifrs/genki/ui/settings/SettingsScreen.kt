@@ -42,7 +42,7 @@ import br.edu.ifrs.genki.ui.components.SecondaryButton
  * e a situação das permissões de notificação e de alarme exato (ESPEC §6).
  */
 @Composable
-fun SettingsScreen(onIntro: () -> Unit) {
+fun SettingsScreen(onTutorial: () -> Unit) {
     val context = LocalContext.current
     val container = (context.applicationContext as GenkiApplication).container
     val settings by container.settings.reminders.collectAsStateWithLifecycle()
@@ -105,7 +105,7 @@ fun SettingsScreen(onIntro: () -> Unit) {
                     "Aplicativo para gerenciamento de medicamentos e lembretes.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                SecondaryButton("Ver como o Genki funciona", onClick = onIntro, modifier = Modifier.padding(top = 12.dp))
+                SecondaryButton("Ver o tutorial", onClick = onTutorial, modifier = Modifier.padding(top = 12.dp))
             }
         }
     }

@@ -1,0 +1,185 @@
+package br.edu.ifrs.genki.ui.tutorial
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+
+/** Partes da tela que o tutorial destaca; cada uma marcada com [tutorialTarget] onde é desenhada. */
+enum class TutorialTarget { ADD_BUTTON, NEXT, VOICE, TYPE, CAMERA, TAB_MEDICATIONS, TAB_SETTINGS }
+
+/** Tela em que o passo acontece: o tutorial navega sozinho entre a Hoje e "Adicionar medicamento". */
+enum class TutorialScreen { HOME, ADD }
+
+data class TutorialStep(val target: TutorialTarget, val screen: TutorialScreen, val title: String, val text: String)
+
+/**
+ * Tutorial guiado (DEC-044, pedido do autor depois do teste informal; fora da proposta): escurece a tela, deixa acesa
+ * só a parte explicada e mostra um balão com "Próximo" e "Pular tutorial". Abre depois da introdução e em Ajustes.
+ */
+object TutorialSteps {
+    val all = listOf(
+        TutorialStep(TutorialTarget.ADD_BUTTON, TutorialScreen.HOME, "Cadastrar um remédio",
+            "Toque aqui para cadastrar um remédio novo."),
+        TutorialStep(TutorialTarget.NEXT, TutorialScreen.HOME, "Próximo lembrete",
+            "Aqui aparecem o próximo horário e os remédios dele. Na hora, o aviso aparece nesta tela, com “Entendi” e “Adiar”."),
+        TutorialStep(TutorialTarget.VOICE, TutorialScreen.ADD, "Usar voz",
+            "Diga o nome, quanto toma e os horários. O Genki pergunta o que faltar."),
+        TutorialStep(TutorialTarget.TYPE, TutorialScreen.ADD, "Digitar",
+            "Preencha as informações em três passos."),
+        TutorialStep(TutorialTarget.CAMERA, TutorialScreen.ADD, "Usar câmera",
+            "Fotografe a caixa: o Genki lê o nome e a concentração. Você sempre confere tudo antes de salvar; para desistir, toque em “Cancelar”."),
+        TutorialStep(TutorialTarget.TAB_MEDICATIONS, TutorialScreen.HOME, "Medicamentos",
+            "Todos os remédios cadastrados. Toque em um para ver os detalhes, editar ou excluir."),
+        TutorialStep(TutorialTarget.TAB_SETTINGS, TutorialScreen.HOME, "Ajustes",
+            "Som do aviso, repetição, voz e permissões. Lá você também pode ver este tutorial de novo."),
+    )
+
+    /** Balão acima do destaque quando ele está na metade de baixo da tela; senão, abaixo. */
+    fun balloonAbove(target: Rect, screenHeight: Float): Boolean = target.center.y > screenHeight / 2
+}
+
+class TutorialController {
+    /** Passo atual; `null` = tutorial fechado. */
+    var step by mutableStateOf<Int?>(null)
+        private set
+    /** Onde cada parte está na tela, em coordenadas da raiz; some quando a parte sai da tela. */
+    val targets = mutableStateMapOf<TutorialTarget, Rect>()
+
+    val current: TutorialStep? get() = step?.let(TutorialSteps.all::getOrNull)
+
+    fun start() { step = 0 }
+    fun next() { step = step?.let { if (it + 1 < TutorialSteps.all.size) it + 1 else null } }
+    fun back() { step = step?.let { if (it > 0) it - 1 else null } }
+    fun close() { step = null }
+}
+
+val LocalTutorial = staticCompositionLocalOf<TutorialController?> { null }
+
+/** Marca esta parte da tela como alvo do tutorial. */
+@Composable
+fun Modifier.tutorialTarget(target: TutorialTarget): Modifier {
+    val controller = LocalTutorial.current ?: return this
+    DisposableEffect(controller, target) { onDispose { controller.targets.remove(target) } }
+    return onGloballyPositioned { controller.targets[target] = it.boundsInRoot() }
+}
+
+/** Camada escura com o recorte no alvo e o balão; bloqueia toques na tela de baixo. */
+@Composable
+fun TutorialOverlay(controller: TutorialController) {
+    val index = controller.step ?: return
+    val step = controller.current ?: return
+    val density = LocalDensity.current
+    // Posição da própria camada na raiz, para os alvos caírem no lugar certo mesmo com recuos da janela.
+    var origin by remember { mutableStateOf(Offset.Zero) }
+    var height by remember { mutableStateOf(0f) }
+    val target = controller.targets[step.target]?.translate(-origin)
+    val margin = with(density) { 8.dp.toPx() }
+    BackHandler { controller.back() }
+
+    Box(
+        Modifier.fillMaxSize()
+            .onGloballyPositioned { origin = it.boundsInRoot().topLeft; height = it.size.height.toFloat() }
+            .pointerInput(Unit) {
+                awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } }
+            },
+    ) {
+        Canvas(Modifier.fillMaxSize().graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)) {
+            drawRect(Color.Black.copy(alpha = 0.72f))
+            if (target != null) {
+                val topLeft = Offset(target.left - margin, target.top - margin)
+                val size = Size(target.width + 2 * margin, target.height + 2 * margin)
+                val corner = CornerRadius(16.dp.toPx())
+                drawRoundRect(Color.Transparent, topLeft, size, corner, blendMode = BlendMode.Clear)
+                drawRoundRect(Color.White, topLeft, size, corner, style = Stroke(3.dp.toPx()))
+            }
+        }
+        val balloon = @Composable { modifier: Modifier -> Balloon(index, step, controller, modifier) }
+        when {
+            target == null -> balloon(Modifier.align(Alignment.Center))
+            TutorialSteps.balloonAbove(target, height) -> Box(
+                Modifier.fillMaxWidth().height(with(density) { (target.top - margin).coerceAtLeast(0f).toDp() }),
+            ) { balloon(Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp)) }
+            else -> Box(
+                Modifier.fillMaxSize().padding(top = with(density) { (target.bottom + margin).toDp() }),
+            ) { balloon(Modifier.align(Alignment.TopCenter).padding(top = 12.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun Balloon(index: Int, step: TutorialStep, controller: TutorialController, modifier: Modifier) {
+    val last = index == TutorialSteps.all.size - 1
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surface,
+        shadowElevation = 8.dp,
+        modifier = modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(start = 20.dp, end = 12.dp, top = 16.dp, bottom = 8.dp)) {
+            Text("${index + 1} de ${TutorialSteps.all.size}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                step.title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(top = 4.dp, end = 8.dp).semantics { heading() },
+            )
+            Text(
+                step.text,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 6.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!last) {
+                    TextButton(onClick = controller::close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Pular tutorial") }
+                }
+                Spacer(Modifier.weight(1f))
+                Button(onClick = controller::next, modifier = Modifier.heightIn(min = 48.dp)) {
+                    Text(if (last) "Concluir" else "Próximo")
+                }
+            }
+        }
+    }
+}

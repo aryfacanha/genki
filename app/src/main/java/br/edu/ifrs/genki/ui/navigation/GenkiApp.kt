@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -63,6 +66,12 @@ import br.edu.ifrs.genki.ui.home.HomeScreen
 import br.edu.ifrs.genki.ui.medications.MedicationsScreen
 import br.edu.ifrs.genki.ui.settings.SettingsScreen
 import br.edu.ifrs.genki.ui.theme.GenkiNavInactive
+import br.edu.ifrs.genki.ui.tutorial.LocalTutorial
+import br.edu.ifrs.genki.ui.tutorial.TutorialController
+import br.edu.ifrs.genki.ui.tutorial.TutorialOverlay
+import br.edu.ifrs.genki.ui.tutorial.TutorialScreen
+import br.edu.ifrs.genki.ui.tutorial.TutorialTarget
+import br.edu.ifrs.genki.ui.tutorial.tutorialTarget
 import br.edu.ifrs.genki.voice.ui.VoiceScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -132,8 +141,33 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     // Barra inferior só nas três abas; detalhes e formulários ocupam a tela inteira.
     val onTopLevel = TopLevelTab.entries.any { tab -> currentDestination?.hasRoute(tab.route::class) == true }
 
+    // Tutorial guiado (DEC-044): vai sozinho à "Adicionar medicamento" nos passos de lá e volta para a Hoje.
+    val tutorial = remember { TutorialController() }
+    var tutorialOpenedAdd by remember { mutableStateOf(false) }
+    LaunchedEffect(tutorial.step) {
+        val onAdd = navController.currentDestination?.hasRoute(AddChoiceRoute::class) == true
+        if (tutorial.current?.screen == TutorialScreen.ADD) {
+            if (!onAdd) {
+                navController.navigate(AddChoiceRoute) { launchSingleTop = true }
+                tutorialOpenedAdd = true
+            }
+        } else if (tutorialOpenedAdd) {
+            if (onAdd) navController.popBackStack()
+            tutorialOpenedAdd = false
+        }
+    }
+    val startTutorial = {
+        navController.navigate(HomeRoute) {
+            popUpTo<HomeRoute>()
+            launchSingleTop = true
+        }
+        tutorial.start()
+    }
+
+    CompositionLocalProvider(LocalTutorial provides tutorial) { Box(Modifier.fillMaxSize()) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        // Durante o tutorial, o leitor de tela fica só no balão.
+        modifier = Modifier.fillMaxSize().then(if (tutorial.step != null) Modifier.clearAndSetSemantics { } else Modifier),
         snackbarHost = {
             // Na Hoje e na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
             val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true ||
@@ -150,6 +184,11 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                     TopLevelTab.entries.forEach { tab ->
                         val selected = currentDestination?.hierarchy?.any { it.hasRoute(tab.route::class) } == true
                         NavigationBarItem(
+                            modifier = when (tab) {
+                                TopLevelTab.Medications -> Modifier.tutorialTarget(TutorialTarget.TAB_MEDICATIONS)
+                                TopLevelTab.Settings -> Modifier.tutorialTarget(TutorialTarget.TAB_SETTINGS)
+                                TopLevelTab.Home -> Modifier
+                            },
                             selected = selected,
                             onClick = {
                                 navController.navigate(tab.route) {
@@ -257,9 +296,10 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                         popUpTo(navController.graph.id) { inclusive = true }
                         launchSingleTop = true
                     }
+                    tutorial.start()
                 })
             }
-            composable<SettingsRoute> { SettingsScreen(onIntro = { navController.navigate(IntroRoute) }) }
+            composable<SettingsRoute> { SettingsScreen(onTutorial = startTutorial) }
             composable<DetailRoute> { entry ->
                 val route = entry.toRoute<DetailRoute>()
                 val id = route.id
@@ -288,6 +328,9 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             }
         }
     }
+
+    TutorialOverlay(tutorial)
+    } }
 
     if (explainNotifications) {
         AlertDialog(
