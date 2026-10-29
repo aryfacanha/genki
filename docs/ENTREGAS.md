@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Roteiro de ponta a ponta e pré-revisão heurística no A31 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`6c04eb6`; pedido do autor (roteiro de ponta a ponta, análise heurística, celular via ADB, emulador se preciso).
+Realizado e arquivos alterados: `docs/ROTEIRO_REVISAO_PONTA_A_PONTA.md`, `docs/PRE_REVISAO_HEURISTICA_A31.md` (novos); estado/handoff/registro.
+Decisões aceitas pelo autor nesta sessão: nenhuma.
+Sugestões pendentes: correções dos achados 1–20 (prioridade: 1, 2, 3–4, 5–7).
+Verificado: F1 cadastro manual, F3 notificação/Adiar/edição, F4 edição/desativar/excluir no A31; F2 voz no emulador (fala simulada temporária); 2,0× em 6 telas; auditoria de alvos e rótulos. | Não verificado: volta do adiado sem interferência no A31, TalkBack, câmera, som, primeira abertura no A31.
+Próxima tarefa e bloqueios: autor decide achados; MET-3 pelo autor com Galavi et al. (2024).
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: residual do RV-INF-04, versão 1.0.9 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`b2150f7`; pedido do autor (corrigir os cinco achados; residual apontado na conferência do Codex).
 Realizado e arquivos alterados: `voice/ui/VoiceScreen.kt` (ordem do Voltar), `app/build.gradle.kts` (1.0.9); docs.
