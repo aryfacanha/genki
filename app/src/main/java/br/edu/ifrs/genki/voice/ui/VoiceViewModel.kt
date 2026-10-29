@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.ifrs.genki.GenkiEval
-import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.DraftSource
 import br.edu.ifrs.genki.domain.DraftValidator
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.RegistrationSession
 import br.edu.ifrs.genki.ui.genkiContainer
+import br.edu.ifrs.genki.voice.NameCommands
 import br.edu.ifrs.genki.voice.VoiceParser
 import br.edu.ifrs.genki.voice.VoiceQuestion
 import br.edu.ifrs.genki.voice.VoiceQuestions
@@ -22,8 +22,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.UUID
 
-enum class VoicePhase { INTRO, ASKING, REVIEW }
+/** [NAMES]: "Confira os remédios", antes das doses e horários (DEC-046). */
+enum class VoicePhase { INTRO, NAMES, ASKING, REVIEW }
 
 /**
  * Texto para falar; o [id] faz a mesma frase ser falada de novo. [listen]: ao terminar de falar, o microfone abre
@@ -47,6 +49,8 @@ data class VoiceUiState(
     val correctionPending: Boolean = false,
     /** "Algo errado? Corrigir por voz" tocado durante as perguntas: a próxima fala corrige o medicamento da pergunta. */
     val correcting: Boolean = false,
+    /** Na conferência dos nomes, o remédio tocado: a próxima fala (ou o texto digitado) é o nome certo dele. */
+    val renaming: String? = null,
 )
 
 /**
@@ -54,7 +58,8 @@ data class VoiceUiState(
  * O reconhecedor e a fala ficam na tela ([VoiceScreen]); aqui só o fluxo. Toda gravação passa pelo validador.
  */
 class VoiceViewModel(
-    private val repository: MedicationRepository,
+    /** Gravação (o repositório no app; nos testes, uma lista). */
+    private val insert: suspend (DraftValidator.Result.Valid) -> Long,
     private val session: RegistrationSession,
     /** Veio da câmera: começa pelos rascunhos da sessão e pergunta o que falta (ESPEC §8). */
     fromSession: Boolean = false,
@@ -69,6 +74,8 @@ class VoiceViewModel(
     private var saving = false
     /** Rascunhos antes da correção por voz feita na revisão; "Desfazer" (ou voltar) os restaura. */
     private var beforeCorrection: List<MedicationDraft>? = null
+    /** Lista de nomes conferida; da câmera o nome já foi conferido lá. */
+    private var namesConfirmed = fromSession
 
     init {
         if (!fromSession) {
@@ -111,6 +118,10 @@ class VoiceViewModel(
     private fun interpret(text: String, spoken: Boolean) {
         val s = _state.value
         val heard = if (spoken) text else null
+        if (s.phase == VoicePhase.NAMES) {
+            interpretNames(text, heard)
+            return
+        }
         // Corrigindo durante as perguntas: tudo vale para o medicamento da pergunta e um nome dito troca o nome dele.
         val expecting = if (s.correcting) Field.NAME else s.question?.field
         val result = VoiceParser.parse(text, session.drafts.value, today(), s.question?.draftId, expecting)
@@ -157,8 +168,112 @@ class VoiceViewModel(
         _state.update { it.copy(correctionPending = false, correcting = false, heard = null) }
     }
 
+    /** Fala na conferência dos nomes: comando ("remover X", "trocar X por Y"...), nome certo do tocado ou mais remédios. */
+    private fun interpretNames(text: String, heard: String?) {
+        val drafts = session.drafts.value
+        val renaming = _state.value.renaming
+        if (renaming != null) {
+            val names = NameCommands.splitNames(text)
+            if (names.isNotEmpty()) applyRename(renaming, names, heard) else namesMiss(heard)
+            return
+        }
+        val command = NameCommands.parse(text, drafts)
+        GenkiEval.log("voz_nomes_comando", "comando" to command::class.simpleName)
+        when (command) {
+            NameCommands.Command.Confirm -> confirmNames()
+            is NameCommands.Command.Remove -> {
+                command.localIds.forEach(session::remove)
+                showNames(heard, changed = true)
+            }
+            is NameCommands.Command.Rename -> applyRename(command.localId, command.names, heard)
+            is NameCommands.Command.NotFound -> _state.update {
+                val say = "Não encontrei ${command.spoken} na lista. ${NameCommands.summary(drafts)}"
+                it.copy(heard = heard, partial = "", message = "Não encontrei “${command.spoken}” na lista.", prompt = prompt(say, listen = true))
+            }
+            NameCommands.Command.None -> {
+                // Outro remédio ou mais informações: o mesmo interpretador de sempre.
+                val result = VoiceParser.parse(text, drafts, today())
+                if (!result.understood) return namesMiss(heard)
+                session.set(result.drafts)
+                showNames(heard, changed = result.drafts.size != drafts.size)
+            }
+        }
+    }
+
+    private fun namesMiss(heard: String?) {
+        val again = misses++ < 1
+        _state.update {
+            it.copy(heard = heard, partial = "", message = "Não entendi. Tente de novo.",
+                prompt = prompt("Não entendi. ${NameCommands.summary(session.drafts.value)}", again))
+        }
+    }
+
+    /** Lista de nomes na tela e falada; vazia volta ao começo. */
+    private fun showNames(heard: String? = null, changed: Boolean = false) {
+        misses = 0
+        val drafts = session.drafts.value
+        _state.update {
+            if (drafts.isEmpty()) {
+                it.copy(phase = VoicePhase.INTRO, heard = heard, partial = "", message = null, renaming = null, question = null)
+            } else {
+                it.copy(
+                    phase = VoicePhase.NAMES, heard = heard, partial = "", message = null, renaming = null, question = null,
+                    prompt = prompt(NameCommands.summary(drafts, changed), listen = true),
+                )
+            }
+        }
+    }
+
+    /** O primeiro nome troca o do rascunho; os outros viram rascunhos com as mesmas informações (separar dois juntos). */
+    private fun applyRename(localId: String, names: List<String>, heard: String? = null) {
+        val drafts = session.drafts.value
+        val index = drafts.indexOfFirst { it.localId == localId }
+        if (index < 0 || names.isEmpty()) return showNames(heard)
+        val draft = drafts[index]
+        val replaced = listOf(draft.copy(name = names.first())) +
+            names.drop(1).map { draft.copy(localId = UUID.randomUUID().toString(), name = it) }
+        session.set(drafts.take(index) + replaced + drafts.drop(index + 1))
+        showNames(heard, changed = true)
+    }
+
+    /** Toque no nome: espera o nome certo, falado ou digitado. */
+    fun beginRename(localId: String) {
+        val name = session.get(localId)?.name
+        _state.update {
+            it.copy(renaming = localId, message = null,
+                prompt = prompt(if (name != null) "Diga o nome certo de $name." else "Diga o nome do remédio.", listen = true))
+        }
+    }
+
+    fun cancelRename() = _state.update { it.copy(renaming = null) }
+
+    /** Nome digitado na conferência; "A, B" ou "A e B" separa em dois. */
+    fun typedName(localId: String, text: String) {
+        val names = NameCommands.splitNames(text)
+        if (names.isEmpty()) cancelRename() else applyRename(localId, names)
+    }
+
+    fun splitName(localId: String) {
+        val name = session.get(localId)?.name ?: return
+        applyRename(localId, NameCommands.split(name))
+    }
+
+    fun removeName(localId: String) {
+        session.remove(localId)
+        showNames(changed = true)
+    }
+
+    /** "Continuar" (ou "pronto"/"sim" falado): segue para doses, dias e horários de cada um. */
+    fun confirmNames() {
+        GenkiEval.log("voz_nomes_confirmados", "rascunhos" to session.drafts.value.size)
+        namesConfirmed = true
+        _state.update { it.copy(renaming = null, heard = null, message = null) }
+        advance()
+    }
+
     /** Próxima pergunta ou a revisão, depois do que foi anotado ([confirmation], falado antes). */
     private fun advance(confirmation: String? = null) {
+        if (!namesConfirmed && session.drafts.value.isNotEmpty()) return showNames()
         val question = VoiceQuestions.next(session.drafts.value, today())
         val say = { text: String -> listOfNotNull(confirmation, text).joinToString(" ") }
         _state.update {
@@ -230,7 +345,7 @@ class VoiceViewModel(
         saving = true
         viewModelScope.launch {
             results.forEach { valid ->
-                val id = repository.insert(valid as DraftValidator.Result.Valid)
+                val id = insert(valid as DraftValidator.Result.Valid)
                 GenkiEval.log("medicamento_salvo", "fonte" to valid.draft.source, "id" to id)
             }
             session.clear()
@@ -255,7 +370,7 @@ class VoiceViewModel(
         fun factory(fromSession: Boolean) = viewModelFactory {
             initializer {
                 val container = genkiContainer()
-                VoiceViewModel(container.medicationRepository, container.registrationSession, fromSession = fromSession)
+                VoiceViewModel(container.medicationRepository::insert, container.registrationSession, fromSession = fromSession)
             }
         }
     }

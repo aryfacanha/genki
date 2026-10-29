@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -34,6 +35,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -90,6 +92,7 @@ import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.ui.components.genkiFieldColors
+import br.edu.ifrs.genki.voice.NameCommands
 import br.edu.ifrs.genki.voice.Speaker
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.VoiceQuestions
@@ -146,7 +149,7 @@ fun VoiceScreen(
     LaunchedEffect(state.prompt) {
         val prompt = state.prompt ?: return@LaunchedEffect
         speaker.speak(prompt.text) {
-            val ready = prompt.listen && autoListen && current.phase == VoicePhase.ASKING && !current.listening &&
+            val ready = prompt.listen && autoListen && current.phase in setOf(VoicePhase.ASKING, VoicePhase.NAMES) && !current.listening &&
                 !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
                 ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
             if (ready && current.prompt?.id == prompt.id && input.isAvailable()) input.start()
@@ -170,6 +173,7 @@ fun VoiceScreen(
     val handleBack = {
         when {
             state.listening -> input.stop()
+            state.renaming != null -> viewModel.cancelRename()
             // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
             state.correctionPending -> viewModel.undoCorrection()
             state.correcting -> viewModel.cancelCorrection()
@@ -209,13 +213,27 @@ fun VoiceScreen(
         // O teclado empurra a tela, sem cobrir o campo da resposta digitada (teste do autor no A31, 27/10).
         Column(Modifier.fillMaxSize().imePadding()) {
             GenkiTopBar(
-                if (state.phase == VoicePhase.REVIEW) "Confira antes de salvar" else "Cadastrar por voz",
+                when (state.phase) {
+                    VoicePhase.REVIEW -> "Confira antes de salvar"
+                    VoicePhase.NAMES -> "Confira os remédios"
+                    else -> "Cadastrar por voz"
+                },
                 onBack = handleBack,
                 actionLabel = "Cancelar",
                 onAction = handleCancel,
             )
             when (state.phase) {
                 VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
+                VoicePhase.NAMES -> Names(
+                    state, onMic,
+                    // Toque em qualquer ação: para de falar e de ouvir, para não misturar com a fala seguinte.
+                    onRename = { speaker.stop(); input.cancel(); viewModel.beginRename(it) },
+                    onTyped = { id, text -> speaker.stop(); input.cancel(); viewModel.typedName(id, text) },
+                    onCancelRename = { input.cancel(); viewModel.cancelRename() },
+                    onSplit = { speaker.stop(); input.cancel(); viewModel.splitName(it) },
+                    onRemove = { speaker.stop(); input.cancel(); viewModel.removeName(it) },
+                    onConfirm = { speaker.stop(); input.cancel(); viewModel.confirmNames() },
+                )
                 VoicePhase.ASKING -> Asking(
                     state, onMic, preferTyping,
                     // Resposta por toque enquanto ouvia sozinho: a escuta para, para não responder a pergunta seguinte.
@@ -301,6 +319,140 @@ private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: ()
         )
         Spacer(Modifier.height(24.dp))
         TypeLink(onType)
+    }
+}
+
+/**
+ * "Confira os remédios" (DEC-046): a lista de nomes entendidos antes das doses e horários. Cada nome pode ser trocado
+ * (toque e diga ou digite; "A, B" separa em dois), separado em um por palavra ou tirado no X; por voz valem
+ * "remover X", "trocar X por Y" e mais nomes. "Continuar" ou "pronto" segue para as perguntas.
+ */
+@Composable
+private fun ColumnScope.Names(
+    state: VoiceUiState,
+    onMic: () -> Unit,
+    onRename: (String) -> Unit,
+    onTyped: (String, String) -> Unit,
+    onCancelRename: () -> Unit,
+    onSplit: (String) -> Unit,
+    onRemove: (String) -> Unit,
+    onConfirm: () -> Unit,
+) {
+    Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
+        SectionTitle(if (state.drafts.size == 1) "Entendi este remédio" else "Entendi estes ${state.drafts.size} remédios")
+        Text(
+            "Confira os nomes antes de seguir. Toque no nome para corrigir.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
+        )
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            state.drafts.forEach { draft ->
+                NameCard(
+                    draft,
+                    renaming = state.renaming == draft.localId,
+                    onRename = { onRename(draft.localId) },
+                    onTyped = { onTyped(draft.localId, it) },
+                    onCancelRename = onCancelRename,
+                    onSplit = { onSplit(draft.localId) },
+                    onRemove = { onRemove(draft.localId) },
+                )
+            }
+        }
+        state.heard?.let {
+            Text("Você disse: “$it”", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 12.dp))
+        }
+        state.message?.let {
+            Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+        }
+        Text(
+            "Por voz, diga outro remédio para incluir, ou por exemplo: “remover Metoprolol”, “trocar Simvastatina por Sinvastatina”.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 16.dp),
+        )
+    }
+    BottomActions {
+        PrimaryButton("Continuar", onClick = onConfirm)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MicButton(state.listening, size = 64, onClick = onMic)
+            Spacer(Modifier.size(16.dp))
+            Column(Modifier.weight(1f)) {
+                Listening(
+                    state,
+                    idle = if (state.renaming != null) "Toque no microfone e diga o nome certo" else "Toque no microfone para corrigir ou incluir",
+                    center = false,
+                )
+            }
+        }
+    }
+}
+
+/** Um nome da conferência: tocar troca, X tira, "Separar" divide dois remédios entendidos como um. */
+@Composable
+private fun NameCard(
+    draft: MedicationDraft,
+    renaming: Boolean,
+    onRename: () -> Unit,
+    onTyped: (String) -> Unit,
+    onCancelRename: () -> Unit,
+    onSplit: () -> Unit,
+    onRemove: () -> Unit,
+) {
+    val name = draft.name ?: "Remédio sem nome"
+    GenkiCard {
+        Column(Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 4.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextButton(
+                    onClick = onRename,
+                    modifier = Modifier.weight(1f).heightIn(min = 48.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                ) {
+                    Icon(Icons.Filled.Edit, contentDescription = null, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f).semantics { contentDescription = "Corrigir o nome $name" },
+                    )
+                }
+                IconButton(onClick = onRemove, modifier = Modifier.size(48.dp)) {
+                    Icon(Icons.Filled.Close, contentDescription = "Tirar $name", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            if (NameCommands.canSplit(draft.name) && !renaming) {
+                TextButton(onClick = onSplit, modifier = Modifier.padding(start = 4.dp).heightIn(min = 48.dp)) {
+                    Text(
+                        "São ${NameCommands.split(name).size} remédios? Separar",
+                        textDecoration = TextDecoration.Underline,
+                    )
+                }
+            }
+            if (renaming) {
+                var typed by rememberSaveable(draft.localId) { mutableStateOf(draft.name.orEmpty()) }
+                Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                    Text(
+                        "Diga o nome certo no microfone ou digite aqui. Para separar, use vírgula: Rivaroxabana, Metoprolol.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                    )
+                    OutlinedTextField(
+                        colors = genkiFieldColors(),
+                        value = typed,
+                        onValueChange = { typed = it },
+                        label = { Text("Nome do remédio") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { onTyped(typed) }),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    )
+                    Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SecondaryButton("Cancelar", onClick = onCancelRename, modifier = Modifier.weight(1f))
+                        PrimaryButton("Salvar nome", onClick = { onTyped(typed) }, modifier = Modifier.weight(1f))
+                    }
+                }
+            }
+        }
     }
 }
 

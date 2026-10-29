@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: conferência dos nomes na voz (DEC-046), versão 1.0.6 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`387c308`; pedido do autor (etapa de confirmação dos remédios antes das doses; corrigir por toque e por voz; separar dois nomes juntos).
+Realizado e arquivos alterados: `voice/NameCommands.kt` (novo), `voice/ui/VoiceViewModel.kt` (fase NAMES; gravação por função), `voice/ui/VoiceScreen.kt` (tela e cartões), `app/build.gradle.kts` (1.0.6; `isReturnDefaultValues`), `test/.../voice/NameCommandsTest.kt`, `test/.../voice/VoiceNamesFlowTest.kt`; ESPEC §7, docs.
+Decisões aceitas pelo autor nesta sessão: DEC-046.
+Sugestões pendentes: nenhuma nova.
+Verificado: `assembleDebug test assembleRelease` (158); fluxo do ViewModel em teste unitário; 1.0.6 abre no A31. | Não verificado: tela com fala real, TalkBack, fonte 2,0x, comandos com o reconhecedor do A31.
+Próxima tarefa e bloqueios: autor testar a voz no A31 (conferência e pausa de 1,5 s); revisão do Codex de `5b812b9..HEAD`.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: tutorial — Próximo corrigido e pergunta falada (DEC-045), versão 1.0.5 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`c6ba1e4`; pedido do autor (testar pelo ADB o "Próximo" que às vezes não passa; perguntar, também em voz alta, se quer o tutorial).
 Realizado e arquivos alterados: `ui/tutorial/Tutorial.kt`, `ui/navigation/GenkiApp.kt`, `ui/intro/IntroScreen.kt`, `app/build.gradle.kts` (1.0.5), `test/.../ui/TutorialStepsTest.kt`; docs.

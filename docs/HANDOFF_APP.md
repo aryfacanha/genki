@@ -35,6 +35,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** DEC-046 conferência dos nomes na voz, 1.0.6 no A31. Próximo: autor testar a voz (conferência, comandos, pausa 1,5 s); revisão do Codex de `5b812b9..HEAD`.
+
 **29/10, Claude Code (último):** 1.0.5 no A31: "Próximo" do tutorial corrigido e pergunta falada antes do tutorial (DEC-045). Próximo: autor testar voz com pausas; revisão do Codex de `5b812b9..HEAD`.
 
 **29/10, Claude Code (último):** DEC-044 tutorial guiado, versão 1.0.4 (não instalada no A31). Próximo: autor testar 1.0.4 no A31 (voz com pausas e tutorial); revisão do Codex de `5b812b9..HEAD`.
@@ -286,6 +288,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — DEC-046: voz em etapas: depois da primeira fala, a tela "Confira os remédios" lista só os nomes entendidos (falada: "Entendi 3 remédios: A, B e C. Está certo?") antes de doses e horários; tocar no nome e dizer ou digitar o certo ("A, B" ou "A e B" separa em dois, com as mesmas informações), X tira, "São 2 remédios? Separar" divide nome de várias palavras sem "de"; por voz: "remover X" (também tira só a parte dita de dois nomes juntos), "trocar/mudar/corrigir X por Y", "não é X, é Y", "separar X", nome novo inclui, "pronto"/"sim"/"está certo"/"Continuar" segue; nomes parecidos casam (ex.: simvastatina/sinvastatina). Lógica em `voice/NameCommands.kt`; configuração Gradle: `testOptions.unitTests.isReturnDefaultValues = true` (para `VoiceNamesFlowTest`, que roda o ViewModel com o texto reconhecido); versão 1.0.6 — 158 testes; A31 abre — pendente: tela com fala real.
 
 - 2026-10-29 — Claude Code — tutorial: (1) correção do "Próximo" que às vezes não passava (a camada consumia também os movimentos do dedo e o botão cancelava o clique; agora bloqueia a tela de baixo sem consumir); (2) na primeira abertura, depois da introdução, pergunta "Quer ver um tutorial rápido?" na tela e em voz alta (`Speaker`), com "Agora não"/"Ver tutorial"; em Ajustes abre direto; versão 1.0.5 (versionCode 6) — 146 testes; A31 via ADB (toque com deslize); emulador — pendente: som da pergunta, TalkBack. Dica de teste: `adb shell input swipe x y x+6 y+4 120` imita o dedo real; `input tap` não reproduz a falha.
 

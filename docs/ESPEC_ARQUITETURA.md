@@ -171,8 +171,10 @@ fonte do sistema respeitada (RNF02). Texto de interface nunca usa "Tomado"/"Tome
 ## 7. Voz (M3) — escopo mínimo
 
 Fluxo: Toque no microfone → `SpeechRecognizer` (pt-BR; `createOnDeviceSpeechRecognizer` se disponível, API 31+) →
-texto → `VoiceParser.parse(texto, rascunhos)` → rascunhos atualizados → pergunta o 1º campo `MISSING` (texto na tela +
-TTS) → repete → Revisão comum.
+texto → `VoiceParser.parse(texto, rascunhos)` → rascunhos atualizados → **conferência dos nomes** (DEC-046: lista falada e na
+tela; tocar no nome troca, X tira, "Separar" divide; por voz "remover X", "trocar X por Y", "separar X", mais nomes;
+"Continuar"/"pronto") → pergunta o 1º campo `MISSING` (texto na tela + TTS) → repete → Revisão comum. Da câmera, a
+conferência é pulada (o nome já foi conferido lá).
 
 `VoiceParser` (Kotlin puro, regras e regex, sem LLM, testado com um corpus):
 
