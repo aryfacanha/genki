@@ -173,7 +173,7 @@ fun VoiceScreen(
     val handleBack = {
         when {
             state.listening -> input.stop()
-            state.renaming != null -> viewModel.cancelRename()
+            state.renaming != null -> { speaker.stop(); input.cancel(); viewModel.cancelRename() }
             // Voltar no meio da correção por voz desfaz só a correção, não o cadastro.
             state.correctionPending -> viewModel.undoCorrection()
             state.correcting -> viewModel.cancelCorrection()
@@ -225,11 +225,11 @@ fun VoiceScreen(
             when (state.phase) {
                 VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
                 VoicePhase.NAMES -> Names(
-                    state, onMic,
+                    state, onMic, preferTyping,
                     // Toque em qualquer ação: para de falar e de ouvir, para não misturar com a fala seguinte.
                     onRename = { speaker.stop(); input.cancel(); viewModel.beginRename(it) },
                     onTyped = { id, text -> speaker.stop(); input.cancel(); viewModel.typedName(id, text) },
-                    onCancelRename = { input.cancel(); viewModel.cancelRename() },
+                    onCancelRename = { speaker.stop(); input.cancel(); viewModel.cancelRename() },
                     onSplit = { speaker.stop(); input.cancel(); viewModel.splitName(it) },
                     onRemove = { speaker.stop(); input.cancel(); viewModel.removeName(it) },
                     onConfirm = { speaker.stop(); input.cancel(); viewModel.confirmNames() },
@@ -331,6 +331,7 @@ private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: ()
 private fun ColumnScope.Names(
     state: VoiceUiState,
     onMic: () -> Unit,
+    onType: () -> Unit,
     onRename: (String) -> Unit,
     onTyped: (String, String) -> Unit,
     onCancelRename: () -> Unit,
@@ -383,6 +384,8 @@ private fun ColumnScope.Names(
                 )
             }
         }
+        // Como nas perguntas (sugestão da revisão do Codex, 29/10).
+        TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
     }
 }
 

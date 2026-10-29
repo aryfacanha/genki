@@ -37,6 +37,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**29/10, Claude Code (último):** RV-INF-01…05 reparados, 1.0.8 no A31. Próximo: conferência pontual do Codex (reprodutores do relatório, Voltar/Cancelar na troca do nome durante TTS e escuta); autor testa a voz.
+
 **Atual, 29/10, Codex:** revisão de `0930dfd..a800f5b` concluída, RV-INF-01…05 abertos (quatro S2/um S3), em `revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`. Próximo: autor avaliar/pedir os reparos e conferência pontual; não abrir revisão ampla do interpretador. A31 não operado. As revisões pendentes descritas abaixo foram executadas na cobertura desse relatório.
 
 **29/10, Claude Code (último):** roteiro de revisão do Codex para `0930dfd..c52338c` (release, DEC-042 a DEC-046): `revisoes/ROTEIRO_REVISAO_TESTE_INFORMAL_CODEX.md`. Próximo: revisão do Codex; autor testa a voz no A31.
@@ -299,6 +301,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-29 — Claude Code — reparo RV-INF-01…05 da revisão do Codex (`revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`): 01 só confirma fala feita só de confirmação; "sim, mas falta X" trata o resto e fica na conferência; 02 "não é A e B" não troca (o segundo "é" precisa de acento); 03 parte de nome em dois compostos = ambíguo, nada muda ("Há mais de um remédio com X"); 04 Voltar/Cancelar na troca do nome param fala e escuta e anulam a pergunta pendente; 05 remoção composta resolve tudo antes (inteiros e partes) e, com um nome não encontrado, nada muda; mais "Prefiro digitar" na conferência (sugestão do Codex). Versão 1.0.8 (versionCode 9) — 166 testes; A31 abre — pendente: conferência do Codex.
 
 - 2026-10-29 — Codex (GPT-6.1) — revisão `0930dfd..a800f5b`, relatório `revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`, handoff §2/3/7, estado/entregas/registro — **RV-INF-01…05 abertos (quatro S2/um S3)**; build final/159 testes, release sem assinatura, probes (nomes 4/8 passam; callbacks 8/8), emulador/voz simulada/tutorial/fontes/Hoje/M2 real conferidos nos limites do relatório — nenhum código/configuração permanente, commit/push/A31 ou chave usada; init de assinatura, injeção de fala e substitutos de API só temporários, retirados das fontes; `app` sem diff; original reinstalado, banco/preferências/permissão/fonte/rotação restaurados, dois medicamentos/horários iguais à partida. Pull bloqueado em `.git/FETCH_HEAD`; pendente: autor avaliar/pedir reparos e conferência pontual, fala real/aceite/TalkBack/migração real e monografia.
 

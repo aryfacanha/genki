@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: reparo RV-INF-01…05, versão 1.0.8 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`a1f2ebe`; pedido do autor ("corrige os cinco e commita o relatório").
+Realizado e arquivos alterados: `voice/NameCommands.kt` (Confirm só puro, ressalva tratada, `NOT_IS` com "é", `Ambiguous`, `Remove` com partes, `Other`), `voice/ui/VoiceViewModel.kt` (remoção composta, ambíguo, `cancelRename` anula a pergunta, `preferTyping` na conferência), `voice/ui/VoiceScreen.kt` (Voltar/Cancelar param fala e escuta; "Prefiro digitar"), testes, `app/build.gradle.kts` (1.0.8); docs.
+Decisões aceitas pelo autor nesta sessão: reparos pedidos; "Prefiro digitar" na conferência.
+Sugestões pendentes: nenhuma nova.
+Verificado: `assembleDebug test assembleRelease` (166); 1.0.8 abre no A31. | Não verificado: RV-INF-04 com TTS real na tela; fala real.
+Próxima tarefa e bloqueios: conferência pontual do Codex (repetir os reprodutores do relatório); autor testa a voz.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — App Android: revisão do teste informal e DEC-042–046 — 29/10/2026 — Codex (GPT-6.1)
 Partida: `main`/`a800f5bc7ab61e1973c43713f28b6eb74f59d11e`; alvo `0930dfd..a800f5b` (1.0.7, versionCode 8). Pull bloqueado por escrita em `.git/FETCH_HEAD`.
 Realizado e arquivos alterados: revisão em `docs/revisoes/REVISAO_TESTE_INFORMAL_CODEX.md`; HANDOFF_APP §2/3/7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. Quatro S2/um S3 abertos, RV-INF-01…05; nenhum reparo de código.

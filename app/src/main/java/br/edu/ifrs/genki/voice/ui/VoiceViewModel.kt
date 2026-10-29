@@ -182,7 +182,13 @@ class VoiceViewModel(
         when (command) {
             NameCommands.Command.Confirm -> confirmNames()
             is NameCommands.Command.Remove -> {
-                command.localIds.forEach(session::remove)
+                session.set(drafts.mapNotNull { d ->
+                    when (d.localId) {
+                        in command.localIds -> null
+                        in command.partial -> d.copy(name = command.partial.getValue(d.localId))
+                        else -> d
+                    }
+                })
                 showNames(heard, changed = true)
             }
             is NameCommands.Command.Rename -> applyRename(command.localId, command.names, heard)
@@ -190,9 +196,13 @@ class VoiceViewModel(
                 val say = "Não encontrei ${command.spoken} na lista. ${NameCommands.summary(drafts)}"
                 it.copy(heard = heard, partial = "", message = "Não encontrei “${command.spoken}” na lista.", prompt = prompt(say, listen = true))
             }
-            NameCommands.Command.None -> {
+            is NameCommands.Command.Ambiguous -> _state.update {
+                val text = "Há mais de um remédio com ${command.spoken}. Toque no nome ou no X do que quer corrigir."
+                it.copy(heard = heard, partial = "", message = text, prompt = prompt(text))
+            }
+            is NameCommands.Command.Other -> {
                 // Outro remédio ou mais informações: o mesmo interpretador de sempre.
-                val result = VoiceParser.parse(text, drafts, today())
+                val result = VoiceParser.parse(command.text, drafts, today())
                 if (!result.understood) return namesMiss(heard)
                 session.set(result.drafts)
                 showNames(heard, changed = result.drafts.size != drafts.size)
@@ -245,7 +255,8 @@ class VoiceViewModel(
         }
     }
 
-    fun cancelRename() = _state.update { it.copy(renaming = null) }
+    /** Sai da troca do nome: a pergunta pendente deixa de valer e não abre o microfone (RV-INF-04). */
+    fun cancelRename() = _state.update { it.copy(renaming = null, prompt = null) }
 
     /** Nome digitado na conferência; "A, B" ou "A e B" separa em dois. */
     fun typedName(localId: String, text: String) {
@@ -311,6 +322,8 @@ class VoiceViewModel(
      */
     fun preferTyping(): Boolean {
         GenkiEval.log("voz_prefiro_digitar", "rascunhos" to session.drafts.value.size)
+        // Da conferência dos nomes: a lista vale como conferida (cada um ainda tem "Corrigir" na revisão).
+        namesConfirmed = true
         if (session.drafts.value.size <= 1) return true
         _state.update { it.copy(phase = VoicePhase.REVIEW, question = null) }
         return false

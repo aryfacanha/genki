@@ -87,4 +87,29 @@ class VoiceNamesFlowTest {
         vm.removeName(vm.state.value.drafts[0].localId)
         assertEquals(VoicePhase.INTRO, vm.state.value.phase)
     }
+
+    @Test
+    fun confirmationWithMoreKeepsTheList() {
+        vm.heard("losartana e metformina", null)
+        vm.heard("sim, mas falta atenolol", null)
+        assertEquals(VoicePhase.NAMES, vm.state.value.phase)
+        assertEquals(listOf("Losartana", "Metformina", "Atenolol"), names)
+    }
+
+    @Test
+    fun compositeRemovalInTheFlow() {
+        vm.heard("rivaroxabana metoprolol e sinvastatina", null)
+        vm.heard("remover sinvastatina e metoprolol", null)
+        assertEquals(listOf("Rivaroxabana"), names)
+    }
+
+    @Test
+    fun leavingRenameDropsThePendingQuestion() {
+        // RV-INF-04: sair da troca invalida a pergunta, que não pode mais abrir o microfone.
+        vm.heard("losartana", null)
+        vm.beginRename(vm.state.value.drafts.single().localId)
+        vm.cancelRename()
+        assertNull(vm.state.value.renaming)
+        assertNull(vm.state.value.prompt)
+    }
 }

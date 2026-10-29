@@ -14,58 +14,124 @@ object NameCommands {
 
     sealed interface Command {
         data object Confirm : Command
-        data class Remove(val localIds: List<String>) : Command
+        /**
+         * Tira [localIds] e, de nomes que juntaram dois remédios, só a parte dita ([partial]: rascunho → nome que sobra).
+         * Tudo resolvido antes de aplicar: se uma parte não for encontrada, nada muda (RV-INF-05).
+         */
+        data class Remove(val localIds: List<String>, val partial: Map<String, String> = emptyMap()) : Command
         /** O primeiro nome troca o do rascunho; os outros viram rascunhos novos com as mesmas informações. */
         data class Rename(val localId: String, val names: List<String>) : Command
         data class NotFound(val spoken: String) : Command
-        data object None : Command
+        /** Mais de um remédio combina com o nome dito: nenhum é alterado (RV-INF-03). */
+        data class Ambiguous(val spoken: String) : Command
+        /** Não é comando: [text] vai para o [VoiceParser] (mais remédios ou informações). */
+        data class Other(val text: String) : Command
     }
 
-    private val CONFIRM_FIRST = setOf("sim", "isso", "certo", "correto", "pronto", "ok", "continuar", "continua", "confirmar", "confirmo", "seguir")
-    private val CONFIRM_PHRASES = setOf("esta certo", "ta certo", "esta correto", "tudo certo", "esta tudo certo", "pode seguir", "pode continuar")
+    /** Fala só de confirmação: todas as palavras daqui ("sim", "isso mesmo", "está tudo certo", "pode seguir"). */
+    private val CONFIRM_WORDS = setOf(
+        "sim", "isso", "certo", "correto", "pronto", "ok", "continuar", "continua", "confirmar", "confirmo", "seguir",
+        "esta", "ta", "tudo", "mesmo", "pode", "exato", "exatamente", "perfeito",
+    )
+    private val CONFIRM_CORE = setOf("sim", "isso", "certo", "correto", "pronto", "ok", "continuar", "continua", "confirmar", "confirmo", "seguir", "exato", "exatamente", "perfeito")
+    /** "Sim, mas falta atenolol": a confirmação do começo e estas ligações saem, e o resto é tratado (RV-INF-01). */
+    private val LEAD_WORDS = CONFIRM_WORDS + setOf("mas", "porem", "so", "que", "e", "falta", "faltou", "faltam", "tambem", "ainda", "mais", "inclui", "incluir", "adiciona", "adicionar", "acrescenta", "acrescentar", "coloca", "colocar")
     private const val ARTICLE = """(?:(?:o|a|os|as)\s+)?(?:(?:rem[eé]dio|medicamento)s?\s+)?"""
     private val REMOVE = Regex("""^(?:remover|remove|remova|tirar|tira|tire|apagar|apaga|apague|excluir|exclui|exclua|deletar|deleta)\s+$ARTICLE(.+)$""", RegexOption.IGNORE_CASE)
     private val RENAME = Regex("""^(?:trocar|troca|troque|mudar|muda|mude|corrigir|corrige|corrija|alterar|altera|altere|substituir|substitui|substitua)\s+$ARTICLE(.+?)\s+(?:por|para|pra)\s+(.+)$""", RegexOption.IGNORE_CASE)
-    private val NOT_IS = Regex("""^n[aã]o\s+[ée]\s+(.+?),?\s+[ée]\s+(.+)$""", RegexOption.IGNORE_CASE)
+    /** "Não é X, é Y": o segundo "é" tem acento; "e" sem acento é conjunção ("não é A e B") e não troca nada (RV-INF-02). */
+    private val NOT_IS = Regex("""^n[aã]o\s+[ée]\s+(.+?)(?:\s*,\s*|\s+)é\s+(.+)$""", RegexOption.IGNORE_CASE)
     private val SPLIT = Regex("""^(?:separar|separa|separe|dividir|divide|divida)\s+$ARTICLE(.+)$""", RegexOption.IGNORE_CASE)
     /** Palavras que ligam partes de um nome só ("carbonato de cálcio"): esse nome não é separado. */
     private val CONNECTORS = setOf("de", "do", "da", "dos", "das")
 
     fun parse(text: String, drafts: List<MedicationDraft>): Command {
         val clean = text.trim().trimEnd('.', '!', '?').trim()
-        val norm = VoiceParser.normalize(clean).replace(Regex("""[.,!?]"""), "").trim()
-        if (norm in CONFIRM_PHRASES || norm.split(Regex("\\s+")).firstOrNull() in CONFIRM_FIRST) return Command.Confirm
+        val tokens = VoiceParser.normalize(clean).replace(Regex("""[.,!?]"""), " ").trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        if (tokens.isNotEmpty() && tokens.all { it in CONFIRM_WORDS } && tokens.any { it in CONFIRM_CORE || it == "certo" }) {
+            return Command.Confirm
+        }
+        // Confirmação com ressalva: trata só o que vem depois, sem seguir para as perguntas.
+        if (tokens.firstOrNull() in CONFIRM_CORE) {
+            val rest = dropLead(clean)
+            if (rest.isNotEmpty() && rest != clean) return parse(rest, drafts)
+        }
 
         RENAME.find(clean)?.let { m -> return rename(m.groupValues[1], m.groupValues[2], drafts) }
         NOT_IS.find(clean)?.let { m -> return rename(m.groupValues[1], m.groupValues[2], drafts) }
         SPLIT.find(clean)?.let { m ->
-            val draft = find(drafts, m.groupValues[1]) ?: return Command.NotFound(m.groupValues[1])
+            val draft = resolve(drafts, m.groupValues[1]).let { it as? Match.One }?.draft
+                ?: return unresolved(drafts, m.groupValues[1])
             return Command.Rename(draft.localId, split(draft.name.orEmpty()))
         }
-        REMOVE.find(clean)?.let { m ->
-            val spoken = splitNames(m.groupValues[1])
-            val removed = mutableListOf<String>()
-            spoken.forEach { name ->
-                val draft = find(drafts, name)
-                if (draft != null) {
-                    removed += draft.localId
-                } else {
-                    // Parte de um nome que juntou dois remédios ("Rivaroxabana Metoprolol"): tira só a parte dita.
-                    val partOf = drafts.firstOrNull { d -> d.name != null && words(d.name).any { similar(it, name) } && words(d.name).size > 1 }
-                        ?: return Command.NotFound(name)
-                    val rest = words(partOf.name!!).filterNot { similar(it, name) }.joinToString(" ")
-                    return Command.Rename(partOf.localId, listOf(capitalize(rest)))
+        REMOVE.find(clean)?.let { m -> return remove(splitNames(m.groupValues[1]), drafts) }
+        return Command.Other(clean)
+    }
+
+    /** Tira do começo as palavras de confirmação e de ligação ("sim, mas falta"), mantendo o resto como foi dito. */
+    private fun dropLead(clean: String): String {
+        val words = clean.split(Regex("""[\s,]+""")).filter { it.isNotEmpty() }
+        val first = words.indexOfFirst { VoiceParser.normalize(it).trim('.', '!', '?') !in LEAD_WORDS }
+        return if (first < 0) "" else words.drop(first).joinToString(" ")
+    }
+
+    private sealed interface Match {
+        data class One(val draft: MedicationDraft) : Match
+        data object Many : Match
+        data object Zero : Match
+    }
+
+    private fun resolve(drafts: List<MedicationDraft>, spoken: String): Match {
+        val found = matches(drafts, spoken)
+        return when (found.size) {
+            0 -> Match.Zero
+            1 -> Match.One(found.single())
+            else -> Match.Many
+        }
+    }
+
+    private fun unresolved(drafts: List<MedicationDraft>, spoken: String): Command =
+        if (resolve(drafts, spoken) == Match.Many) Command.Ambiguous(capitalize(spoken.trim())) else Command.NotFound(capitalize(spoken.trim()))
+
+    /**
+     * "remover A e B": cada nome é um remédio inteiro ou parte de um nome que juntou dois ("Rivaroxabana metoprolol").
+     * Resolve tudo antes; com algum nome não encontrado ou ambíguo, nada muda.
+     */
+    private fun remove(spoken: List<String>, drafts: List<MedicationDraft>): Command {
+        val removed = linkedSetOf<String>()
+        val remaining = mutableMapOf<String, List<String>>()
+        for (name in spoken) {
+            when (val match = resolve(drafts, name)) {
+                is Match.One -> removed += match.draft.localId
+                Match.Many -> return Command.Ambiguous(name)
+                Match.Zero -> {
+                    val parts = drafts.filter { d ->
+                        d.name != null && words(d.name).size > 1 && words(d.name).any { similar(it, name) }
+                    }
+                    when (parts.size) {
+                        0 -> return Command.NotFound(name)
+                        1 -> {
+                            val draft = parts.single()
+                            val current = remaining[draft.localId] ?: words(draft.name!!)
+                            remaining[draft.localId] = current.filterNot { similar(it, name) }
+                        }
+                        else -> return Command.Ambiguous(name)
+                    }
                 }
             }
-            return Command.Remove(removed)
         }
-        return Command.None
+        val partial = mutableMapOf<String, String>()
+        remaining.forEach { (id, rest) ->
+            if (id in removed) return@forEach
+            if (rest.isEmpty()) removed += id else partial[id] = capitalize(rest.joinToString(" "))
+        }
+        return Command.Remove(removed.toList(), partial)
     }
 
     private fun rename(old: String, new: String, drafts: List<MedicationDraft>): Command {
-        val draft = find(drafts, old) ?: return Command.NotFound(old)
+        val draft = (resolve(drafts, old) as? Match.One)?.draft ?: return unresolved(drafts, old)
         val names = splitNames(new)
-        return if (names.isEmpty()) Command.None else Command.Rename(draft.localId, names)
+        return if (names.isEmpty()) Command.Other(new) else Command.Rename(draft.localId, names)
     }
 
     /** "Rivaroxabana, metoprolol e sinvastatina" → três nomes; "o nome é X" e pontuação saem. */
@@ -90,12 +156,15 @@ object NameCommands {
      * de diferença (erro do reconhecimento, ex.: simvastatina/sinvastatina). Remédios diferentes podem ter nomes
      * próximos (Prednisona × Prednisolona): mais de uma letra não casa e, com dois parecidos na lista, nenhum é escolhido.
      */
-    fun find(drafts: List<MedicationDraft>, spoken: String): MedicationDraft? {
+    fun find(drafts: List<MedicationDraft>, spoken: String): MedicationDraft? = matches(drafts, spoken).singleOrNull()
+
+    /** Candidatos para o nome dito: o igual, se houver; senão todos os parecidos (vários = ambíguo). */
+    private fun matches(drafts: List<MedicationDraft>, spoken: String): List<MedicationDraft> {
         val s = VoiceParser.normalize(spoken).trim()
-        if (s.isEmpty()) return null
+        if (s.isEmpty()) return emptyList()
         val named = drafts.filter { it.name != null }
-        named.firstOrNull { VoiceParser.normalize(it.name!!) == s }?.let { return it }
-        return named.filter { similar(it.name!!, spoken) }.singleOrNull()
+        named.filter { VoiceParser.normalize(it.name!!) == s }.takeIf { it.isNotEmpty() }?.let { return it }
+        return named.filter { similar(it.name!!, spoken) }
     }
 
     private fun similar(a: String, b: String): Boolean {
