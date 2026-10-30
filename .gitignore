@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Relatórios de falha da JVM (Android Studio/Gradle)
+hs_err_pid*.log
+replay_pid*.log

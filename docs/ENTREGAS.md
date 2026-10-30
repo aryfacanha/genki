@@ -3,6 +3,27 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Revisão do README e do guia de instalação do Codex; ajuste do guia — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/2716065 com as alterações do Codex ainda sem commit; pedido do autor ("lê o handoff do GPT e revisa"; "faça o ajuste no guia").
+Realizado: README e guia conferidos contra o código da 1.0.19 (SDK, ABIs, rótulos, permissões, repetições, duração do alarme, internet removida, voz no aparelho, câmera em memória, reagendamento ao abrir, regras de backup em modelo): sem erro de fato. Guia: parágrafo sobre o aviso do Play Protect ("Instalar mesmo assim" oculto em "Mais detalhes", sem desativar o Play Protect), conforme relato do autor em outros aparelhos; link relativo para o README (repositório privado) trocado por pedido de acesso ao autor.
+Achado pendente (decisão do autor): allowBackup="true" contradiz "Tudo fica só neste celular." da introdução (IntroScreen.kt); opções: desligar o backup (recomendado) ou suavizar o texto.
+Verificado: leitura de código/configuração. Não verificado: texto exato do aviso do Play Protect (relato do autor; nomes variam), frase de exemplo "Vitamina C…" no parser, guia executado em aparelho. Sem commit.
+Links: docs/GUIA_INSTALACAO_TESTE.md; README.md.
+```
+
+```text
+ENTREGA — Guia de instalação/teste e README do TCC — 30/10/2026 — Codex
+Partida: main/b93349e; git pull atualizado. Conclusão concorrente da 1.0.19 em 2716065 relida e preservada.
+Realizado: README com contexto acadêmico, funcionalidades, estado, limites, dados, tecnologias e execução; guia para acompanhar o APK com instalação, atualização, permissões, teste fictício, resultados esperados e retorno; índice e registros atualizados.
+Fontes: proposta e planilha de requisitos oficiais abertas pelo Google Drive; ESPEC, DECISOES, HANDOFF e fontes do app. Documentação oficial do Android para instalação e dependência externa do reconhecimento de fala.
+Decisões aceitas: nenhuma nova; execução do pedido documental do autor. Backup do Android habilitado descrito como limitação atual, sem mudar configuração.
+Verificado: links locais, nomes de controles e consistência com configuração/código e registros da 1.0.19. Sem alteração do app.
+Não verificado: roteiro em aparelho, instalação por destinatário, build/testes novos, avaliação acadêmica. Resultados anteriores citados como registros, não reexecutados.
+Próxima tarefa: autor revisar/compartilhar guia com o APK e concluir verificações físicas pendentes. Sem commit/push; sem integração à monografia.
+Links: README.md; docs/GUIA_INSTALACAO_TESTE.md; docs/00_INDICE.md; docs/HANDOFF_APP.md.
+```
+
+```text
 ENTREGA — App Android: APK de distribuição sem bibliotecas x86, versão 1.0.19 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/b93349e; pedido do autor ("faça a redução dos processadores e instale no A31").
 Realizado: `abiFilters` arm64-v8a e armeabi-v7a no release; APK 53,7 → 30,3 MB.

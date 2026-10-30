@@ -30,6 +30,8 @@ Cronograma institucional 2026/2: monografia em PDF até 16/11/2026; bancas de 23
 
 | Assunto | Arquivo |
 | --- | --- |
+| Apresentação pública do TCC | `README.md` |
+| Guia básico para instalar e testar o APK (orientador e demais interessados) | `docs/GUIA_INSTALACAO_TESTE.md` |
 | Estado atual, pendências, próximo passo | `docs/ESTADO.md` |
 | Decisões (aceitas, pendentes, substituídas) | `docs/DECISOES.md` |
 | Especificação técnica do app | `docs/ESPEC_ARQUITETURA.md` |

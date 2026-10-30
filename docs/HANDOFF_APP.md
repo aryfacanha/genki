@@ -159,6 +159,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**Documentação de distribuição, Codex, 30/10:** `README.md` apresenta o TCC e `GUIA_INSTALACAO_TESTE.md` orienta instalação/teste informal da 1.0.19. Sem alteração de marco ou código; tutorial externo complementa o tutorial do app. Texto preparado, ainda sem revisão do autor.
+
 **Pré-congelamento, Codex, 30/10:** 1.0.12–1.0.17 revisadas no intervalo pedido. Nenhum bloqueio S1/S2 confirmado; RV-PC-01 (retorno ao reativar tratamento terminado) e RV-PC-02 (callback ausente na recusa síncrona do TTS, preexistente) são S3. N4 tem esse residual de texto; não declarar todos os estados de término integralmente fechados. Parecer técnico favorável ao congelamento com limites registrados; decisão do autor ainda separada. Ver relatório pré-congelamento.
 
 DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no emulador, aguardando conferência do Codex. Antes: conferência no A31 com quatro achados abertos; ver relatório DEC-048. A linha DEC-047 abaixo é histórica quanto a RV-047-01…04, fechados na cobertura desta conferência.
@@ -182,6 +184,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**Documentação, Codex, 30/10:** proposta e requisitos oficiais abertos no Drive; guia/README confrontados com código, configuração e registros atuais, links locais conferidos. `allowBackup=true` e regras de backup atuais impedem prometer ausência absoluta de cópias fora do dispositivo; ressalva incluída. Sem novo build, teste em aparelho ou execução do guia. Os 180 testes e a instalação da 1.0.19 são registros do Claude Code, não verificações repetidas nesta entrega.
 
 **Pré-congelamento, Codex, 30/10:** build final com fonte original e 179 testes executados, sem falhas/erros/ignorados. Hoje com 12 passados/15 todos passados/todos desligados e nomes repetidos; datas finais inclusivas/lista/detalhes; voz silenciada/recriação/rolagem/teclado em 2,0×; duplicidade inicial manual/voz e próprio nome na edição. Dois alarmes reais do emulador às 20:03 mantiveram notificações independentes; Entendi de um manteve serviço/outro aviso; último retirou tudo. Troca de modo removeu/recriou despertador. Probes isolados do Speaker: conclusão única, substituição/stop e sem português passam; recusa síncrona expõe RV-PC-02. APK final sem simulação; oito arquivos restaurados byte a byte e medicamentos originais conferidos após abrir. Não verificados: voz/som audíveis, TalkBack, falha real de TTS, full-screen permitido, repetição da bateria física. A31 não operado. Detalhes e limites no relatório pré-congelamento.
 
@@ -308,6 +312,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Guia externo, 30/10:** ao mudar instalação, permissões, voz, câmera ou lembretes, conferir também `GUIA_INSTALACAO_TESTE.md` e README. Para exploração informal, o guia cobre cadastro manual → notificação/Entendi, voz/correção, câmera opcional e limpeza dos cadastros fictícios. Não substitui a bateria completa nem o protocolo acadêmico; roteiro não executado nesta entrega documental.
+
 **Pré-congelamento (Codex, 30/10, 1.0.17):** regressão do roteiro executada; nenhum S1/S2 confirmado. Se houver reparo dos S3, repetir somente seus reprodutores (`revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`): reativar terminado e recusa síncrona de `TextToSpeech.speak`. Preservar data final inclusiva, resposta por toque, callback único e descarte de callbacks de falas antigas/paradas. S3 são sugestões pendentes; não houve autorização ou correção de código nesta revisão.
 
 **Reparo RV-048 (1.0.12):** conferir só os quatro achados: dois lembretes no mesmo minuto em Como alarme → `dumpsys notification` com as duas notificações + a do serviço (`alarme_tocando`); Entendi em uma (notificação, Hoje ou tela de alarme) tira só ela e o som segue; Entendi na última para o som sem notificação residual; sem resposta, após 1 min fica a notificação do lembrete; trocar o modo em Ajustes recria/apaga o Next alarm clock; texto com "por até 1 minuto". Limite conhecido: REPEAT já agendado na troca mantém o tipo antigo até disparar.
@@ -374,6 +380,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Codex — README do TCC e guia de instalação/teste informal, índice e registros; partida `main`/`b93349e`, 1.0.19 concorrente (`2716065`) conciliada por releitura — fontes oficiais no Drive, código/configuração, consistência e links locais conferidos; sem código/configuração alterados ou novo build/teste — pendente: revisão do autor, compartilhamento junto do APK e verificações físicas já registradas; sem commit/push ou integração à monografia.
 
 - 2026-10-30 — Claude Code — configuração (Gradle): `ndk.abiFilters` arm64-v8a e armeabi-v7a só no release; versão 1.0.19 (versionCode 20). Release não roda mais em emulador x86_64 (usar o debug) — 180 testes; A31 (instalação e OCR pela câmera) — pendente: Codex, se o autor quiser.
 
