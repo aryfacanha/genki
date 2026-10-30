@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** reparo RV-048-01…04 (DEC-048), versão 1.0.12 (versionCode 13): 01/02 o `AlarmSoundService` usa notificação própria (id `Int.MAX_VALUE`, canal discreto `alarme_tocando`, "Alarme do Genki tocando") em vez da do lembrete, e ao parar remove só ela (`STOP_FOREGROUND_REMOVE`); as dos lembretes ficam independentes do serviço; 03 trocar o som (Ajustes ou introdução) reagenda horários e adiados (`GenkiApplication` observa `alarmSound` e chama `syncAll`); 04 texto de "Como alarme": "por até 1 minuto … Sem resposta, o aviso fica e a repetição toca de novo". Build/173 testes passam (sem teste unitário novo: só código de framework Android). Emulador API 35 (debug, dados restaurados byte a byte): dois lembretes às 12:19 e às 12:26 mantêm as duas notificações com o som tocando; Entendi do primeiro tira só a dele e o som continua; Entendi do segundo para o som e não sobra notificação; após 1 min sem resposta a notificação do lembrete fica; alarme → notificação apaga o despertador do sistema, notificação → alarme o recria; texto novo visível. **Não verificado:** A31 (desconectado; 1.0.12 não instalada), som de ouvido, tela cheia no Android 14+ (emulador sem a permissão), REPEAT já agendado mantém o tipo antigo de alarme até disparar (no disparo o modo atual é lido), TalkBack. Próximo: conferência pontual do Codex; instalar no A31 e o autor testar o alarme de ouvido.
+
 **29/10/2026, Codex (GPT-6.1 Terra):** conferência DEC-048 no A31, `953acb7`/app `48f290b`: RV-048-01/02 S2 e 03/04 S3 abertos; RV-047-01…04 fechados na cobertura executada. Build/173 testes executados; vídeo pausado e tela bloqueada conferidos por ADB; som não ouvido. Testes removidos e ajustes iniciais restaurados; detalhes e pendências em `revisoes/CONFERENCIA_DEC048_CODEX.md`. Sem alteração de código, commit ou push.
 
 **29/10/2026, Codex (GPT-6.1), partida `main`/`013c3c2`, alvo `260a535` (1.0.10): conferência pontual DEC-047, um S2 e três S3 abertos (RV-047-01…04).** Adiado recuperado após parada/reinício e vencido, mas iniciar o processo pelo alarme emite dois `FIRE_SNOOZED` com cinco segundos de intervalo (S2). Digitação: toque não conserva seleção total, rotação perde 18:21 e volta a 19:30, rótulo Minuto quebra em fonte 2,0× (S3). Duplicidade conferida no cadastro/edição/voz, com gravação única, aviso dos dois nomes e FixDraft sem gravação/aviso. Build final passa; 171 testes originais executados sem falhas e quatro probes externos passam (contagens separadas). Simulação retirada, hash original e `app` sem diff; APK original recompilado/reinstalado só no emulador; oito arquivos de banco/preferências restaurados byte a byte, mesmos dois medicamentos/horários após reabrir, fonte/rotação/hora/permissões restauradas. Pull bloqueado em `.git/FETCH_HEAD`; sem commit/push/A31. Relatório: `revisoes/CONFERENCIA_DEC047_CODEX.md`. **Próximo:** autor avaliar/pedir os reparos pontuais; TalkBack/voz e som reais/aceite físico separados. Nenhuma decisão nova; sugestões de reparo pendentes, sem integração à monografia.
@@ -42,6 +44,8 @@ neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se m
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
+
+**30/10, Claude Code (último):** RV-048-01…04 reparados (1.0.12), conferidos no emulador. Próximo: conferência pontual do Codex só desses quatro (§7, DEC-048); instalar 1.0.12 no A31; autor ouvir o alarme (tela bloqueada, silencioso, com vídeo).
 
 **29/10, Claude Code (último):** residual do RV-INF-04 corrigido (1.0.9 no A31). Próximo: conferência pontual do Codex desse percurso; autor testa a voz.
 
@@ -121,7 +125,7 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
-DEC-048: implementada, conferência no A31 com quatro achados abertos; ver relatório DEC-048. A linha DEC-047 abaixo é histórica quanto a RV-047-01…04, fechados na cobertura desta conferência.
+DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no emulador, aguardando conferência do Codex. Antes: conferência no A31 com quatro achados abertos; ver relatório DEC-048. A linha DEC-047 abaixo é histórica quanto a RV-047-01…04, fechados na cobertura desta conferência.
 
 | Marco | Situação | Commits |
 | --- | --- | --- |
@@ -142,6 +146,8 @@ DEC-048: implementada, conferência no A31 com quatro achados abertos; ver relat
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+Reparo RV-048 (30/10, Claude Code, emulador API 35): duas notificações preservadas com o som tocando; Entendi uma a uma sem notificação residual; serviço com foregroundId próprio; troca de modo recria/apaga o despertador do sistema (`dumpsys alarm`, Next alarm clock). Não verificados: A31, som de ouvido, Android 14+ com tela cheia permitida, REPEAT já agendado na troca de modo, TalkBack.
 
 DEC-048: A31 Android 12, disparo bloqueado, áudio registrado, limite 1 min, foco de vídeo, adiado com processo morto e diálogo horário; 173 testes executados. Som de ouvido, TalkBack, Android 14+ e demais cenários indicados no relatório pendentes.
 
@@ -264,6 +270,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Reparo RV-048 (1.0.12):** conferir só os quatro achados: dois lembretes no mesmo minuto em Como alarme → `dumpsys notification` com as duas notificações + a do serviço (`alarme_tocando`); Entendi em uma (notificação, Hoje ou tela de alarme) tira só ela e o som segue; Entendi na última para o som sem notificação residual; sem resposta, após 1 min fica a notificação do lembrete; trocar o modo em Ajustes recria/apaga o Next alarm clock; texto com "por até 1 minuto". Limite conhecido: REPEAT já agendado na troca mantém o tipo antigo até disparar.
+
 DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notificação; Entendi/Adiar/excluir durante serviço sem notificação residual; troca de som reagenda alarmes e adiados; texto esclarece limite de um minuto. Ver reprodutores e limites em `revisoes/CONFERENCIA_DEC048_CODEX.md`.
 
 **DEC-047, conferência Codex em 29/10 (`260a535`):** após reparo pedido pelo autor, conferir só RV-047-01…04: adiar → ir ao launcher → `am kill` (confirmar PID ausente, sem cancelar o alarme) → aguardar disparo com processo novo; deve existir uma única emissão, sem novo FIRE_SNOOZED em +5 s. Preservar parada forçada/reabrir, reinício com cartão/alarme futuro e vencido/antigo em segundos. No diálogo, tocar no centro do minuto já preenchido e digitar deve substituir; 18:21 deve sobreviver à rotação; Minuto deve ficar inteiro em 2,0×. Hora 24/minuto 60/vazio e horário repetido bloqueiam OK; relógio ↔ campos mantém o valor sem recriação. Duplicidade passou: nome próprio ignorado, nome de outro avisa, Voltar/repetir/confirmar gravam uma vez, voz lista os dois, FixDraft não grava. Não ampliar para outros achados da pré-revisão.
@@ -326,6 +334,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: canal de notificação novo `alarme_tocando` (importância baixa); versão 1.0.12 (versionCode 13); reparo RV-048-01…04 — 173 testes; emulador — pendente: Codex, A31, som de ouvido.
 
 - 2026-10-29 — Codex (GPT-6.1 Terra) — conferência DEC-048 no A31, quatro achados; build/173 testes; testes temporários excluídos e ajustes restaurados — pendente: reparos e limites do relatório; nenhuma mudança de código/configuração permanente.
 

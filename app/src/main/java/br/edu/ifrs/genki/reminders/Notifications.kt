@@ -32,6 +32,8 @@ object Notifications {
      * a notificação abre a [AlarmActivity] em tela cheia.
      */
     private const val ALARM_CHANNEL = "lembretes_despertador"
+    /** Notificação própria do [AlarmSoundService] enquanto o som toca, discreta (RV-048-01/02). */
+    private const val RINGING_CHANNEL = "alarme_tocando"
 
     fun createChannel(context: Context) {
         val channel = NotificationChannel(CHANNEL, "Lembretes de medicamentos", NotificationManager.IMPORTANCE_HIGH)
@@ -41,10 +43,40 @@ object Notifications {
             setSound(null, null)
             enableVibration(false)
         }
+        val ringing = NotificationChannel(RINGING_CHANNEL, "Alarme tocando", NotificationManager.IMPORTANCE_LOW).apply {
+            description = "Aparece enquanto o som de alarme toca; some quando o som para."
+            setSound(null, null)
+            enableVibration(false)
+        }
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.deleteNotificationChannel(OLD_ALARM_CHANNEL)
-        manager.createNotificationChannels(listOf(channel, alarm))
+        manager.createNotificationChannels(listOf(channel, alarm, ringing))
     }
+
+    /**
+     * Notificação do serviço em primeiro plano. Separada da de cada lembrete: usar a do lembrete fazia o Android
+     * cancelar a de outro horário ao trocar e prender a reconhecida até o serviço parar (RV-048-01/02).
+     */
+    fun ringing(context: Context, timeId: Long): android.app.Notification =
+        NotificationCompat.Builder(context, RINGING_CHANNEL)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle("Alarme do Genki tocando")
+            .setContentText("Responda ao lembrete para parar o som.")
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSilent(true)
+            .setOngoing(true)
+            .setContentIntent(alarmScreen(context, timeId))
+            .build()
+
+    /** Um PendingIntent por horário (requestCode = timeId): a tela mostra só os lembretes que a abriram. */
+    private fun alarmScreen(context: Context, timeId: Long): PendingIntent = PendingIntent.getActivity(
+        context, timeId.toInt(),
+        Intent(context, AlarmActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION)
+            .putExtra(AlarmActivity.EXTRA_TIME_ID, timeId),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+    )
 
     /** "Como alarme" escolhido em Ajustes. */
     fun alarmMode(context: Context): Boolean =
@@ -115,14 +147,7 @@ object Notifications {
             .addAction(0, "Entendi", ack)
             .addAction(0, "Adiar $intervalMinutes min", ReminderScheduler.pendingIntent(context, ReminderAction.SNOOZE, timeId))
         if (alarmMode(context)) {
-            // Um PendingIntent por horário (requestCode = timeId): a tela mostra só os lembretes que a abriram.
-            val alarmScreen = PendingIntent.getActivity(
-                context, timeId.toInt(),
-                Intent(context, AlarmActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION)
-                    .putExtra(AlarmActivity.EXTRA_TIME_ID, timeId),
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-            )
+            val alarmScreen = alarmScreen(context, timeId)
             builder.setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(alarmScreen, true)
                 .setContentIntent(alarmScreen)

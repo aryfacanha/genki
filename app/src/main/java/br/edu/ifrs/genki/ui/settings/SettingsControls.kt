@@ -87,7 +87,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
         Column(Modifier.selectableGroup().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(
                 false to ("Como notificação" to "Toca como as outras notificações e respeita o modo silencioso."),
-                true to ("Como alarme" to "Toca como despertador, no volume do alarme, mesmo no silencioso, até você responder, e aparece na tela bloqueada."),
+                true to ("Como alarme" to "Toca como despertador por até 1 minuto, no volume do alarme, mesmo no silencioso, e aparece na tela bloqueada. Sem resposta, o aviso fica e a repetição toca de novo."),
             ).forEach { (value, texts) ->
                 Choice(selected = alarm == value, modifier = Modifier.fillMaxWidth(), onClick = { onSelect(value) }, start = 12.dp) {
                     Column(Modifier.weight(1f).padding(horizontal = 14.dp, vertical = 10.dp)) {

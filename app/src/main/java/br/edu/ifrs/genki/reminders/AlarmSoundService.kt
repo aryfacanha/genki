@@ -1,7 +1,5 @@
 package br.edu.ifrs.genki.reminders
 
-import android.app.Notification
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -44,12 +42,12 @@ class AlarmSoundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val timeId = intent?.getLongExtra(EXTRA_TIME_ID, -1) ?: -1
-        // A notificação do lembrete (mesmo id) vira a do serviço em primeiro plano: nada a mais na barra.
-        val notification = activeNotification(timeId.toInt()) ?: run { stopSelf(); return START_NOT_STICKY }
+        // Notificação própria do serviço; as dos lembretes ficam independentes dele (RV-048-01/02).
+        val notification = Notifications.ringing(this, timeId)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(timeId.toInt(), notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
         } else {
-            startForeground(timeId.toInt(), notification)
+            startForeground(NOTIFICATION_ID, notification)
         }
         ringing += timeId
         if (player == null) startSound()
@@ -58,9 +56,6 @@ class AlarmSoundService : Service() {
         GenkiEval.log("alarme_tocando", "timeId" to timeId)
         return START_NOT_STICKY
     }
-
-    private fun activeNotification(id: Int): Notification? =
-        getSystemService(NotificationManager::class.java).activeNotifications.firstOrNull { it.id == id }?.notification
 
     private fun startSound() {
         val attributes = AudioAttributes.Builder()
@@ -101,8 +96,8 @@ class AlarmSoundService : Service() {
         focus?.let { getSystemService(AudioManager::class.java).abandonAudioFocusRequest(it) }
         focus = null
         ringing.clear()
-        // A notificação fica (sem resposta, ela e as repetições continuam avisando).
-        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)
+        // Sai só a notificação do serviço; as dos lembretes sem resposta ficam, e as repetições continuam avisando.
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
         GenkiEval.log("alarme_parado", "motivo" to reason)
     }
@@ -119,6 +114,8 @@ class AlarmSoundService : Service() {
         private const val EXTRA_TIME_ID = "timeId"
         /** Um minuto tocando, como despertador; depois ficam a notificação e as repetições. */
         const val MAX_RING_MS = 60_000L
+        /** Fora da faixa dos ids de horário, que são as ids das notificações dos lembretes. */
+        private const val NOTIFICATION_ID = Int.MAX_VALUE
 
         @Volatile private var instance: AlarmSoundService? = null
 

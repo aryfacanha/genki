@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: reparo RV-048-01…04, versão 1.0.12 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/953acb7 (conferência do Codex commitada em 8a27111); pedido do autor ("isso, corrija").
+Realizado: notificação própria do serviço de alarme (01/02); troca do som reagenda horários e adiados (03); texto "por até 1 minuto" (04); versão 1.0.12.
+Decisões aceitas: nenhuma nova (reparos sugeridos pelo Codex, pedidos pelo autor em 30/10).
+Verificado: build e 173 testes; emulador API 35 com dois lembretes no mesmo minuto, Entendi um a um, limite de 1 min, troca de modo nos dois sentidos; dados do emulador restaurados byte a byte.
+Não verificado: A31 (desconectado), som de ouvido, Android 14+ com tela cheia, REPEAT já agendado na troca de modo, TalkBack.
+Próxima tarefa: conferência pontual do Codex; instalar no A31; autor ouvir o alarme.
+Links: docs/revisoes/CONFERENCIA_DEC048_CODEX.md, docs/HANDOFF_APP.md §7.
+```
+
+```text
 ENTREGA — Conferência DEC-048 no A31 — 29/10/2026 — Codex (GPT-6.1 Terra)
 Partida: main/953acb7, alvo 48f290b; pull atualizado.
 Realizado: relatório CONFERENCIA_DEC048_CODEX.md e atualização de estado, handoff e registro de IA. Dois S2 e dois S3 abertos; RV-047-01…04 fechados na cobertura executada. Nenhum código alterado, commit ou push.
