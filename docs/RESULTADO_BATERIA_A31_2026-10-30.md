@@ -25,7 +25,7 @@ Triagem por Claude Code (Opus 5.5). Categorias: **sugestão pendente** até o au
 
 Observação do assistente (30/10, 15:29, por `dumpsys alarm`): no A31, o alarme das **20:00 de hoje da Losartana não
 estava agendado**; as 08:00 de amanhã (Losartana e Rivaroxabana) e quatro horários de teste estavam. A confirmar com o
-autor (edição da Losartana?) antes de tratar como defeito.
+autor (edição da Losartana?) antes de tratar como defeito. **Esclarecido em 30/10:** o autor excluiu de propósito a Losartana (08:00/20:00) e a Rivaroxabana originais; a Losartana atual (50 mg, 08:00) é de teste. Não é defeito.
 
 **Lote 1 aceito pelo autor em 30/10 ("Faça o lote 1") e implementado na 1.0.13:** itens 1, 3, 5, 7, 11, 12, 13, 15. **Lote 2 na fila até o autor aceitar o lote 1:** itens 2, 4, 10. Item 6 (D7) mantido como está; 8, 9 e 14 respondidos.
 
