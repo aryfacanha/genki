@@ -14,6 +14,7 @@ import br.edu.ifrs.genki.reminders.ReminderScheduler.Companion.EXTRA_TIME_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import br.edu.ifrs.genki.domain.ActiveAlert
 
 /** FIRE, REPEAT (até 3), ACK, SNOOZE e FIRE_SNOOZED (ESPEC §6, RF09, RF24, RF25). */
 class ReminderReceiver : BroadcastReceiver() {
@@ -55,8 +56,13 @@ class ReminderReceiver : BroadcastReceiver() {
         val time = minuteOfDayToTime(entity.times.first { it.id == timeId }.minuteOfDay)
         val settings = container.settings.reminders.value
         val scheduler = container.reminderScheduler
+        // Adiado que já está tocando: a recuperação na abertura do app pode ter reagendado o mesmo (RV-047-01).
+        if (action == ReminderAction.FIRE_SNOOZED &&
+            !ActiveAlert.shouldFireSnoozed(container.alertStore.alerts.value.firstOrNull { it.timeId == timeId })
+        ) return
 
-        Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed)
+        val posted = Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed)
+        if (posted && settings.alarmSound) AlarmSoundService.start(context, timeId)
         container.alertStore.ringing(timeId, medication.id, time)
         GenkiEval.log("lembrete_emitido", "timeId" to timeId, "acao" to action, "repeticao" to count)
 

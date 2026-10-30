@@ -53,6 +53,7 @@ fun SettingsScreen(onTutorial: () -> Unit) {
     // O canal verificado depende do som escolhido (RV-4041-02).
     val notificationsAllowed = remember(resumes, settings.alarmSound) { Notifications.canNotify(context) }
     val exactAllowed = remember(resumes) { container.reminderScheduler.canScheduleExact() }
+    val fullScreenAllowed = remember(resumes) { Notifications.canShowFullScreen(context) }
     // Depois de duas recusas o sistema não pergunta mais; aí, ou com a categoria desligada, abre o ajuste do sistema.
     val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         if (!Notifications.canNotify(context)) openNotificationSettings(context)
@@ -95,6 +96,16 @@ fun SettingsScreen(onTutorial: () -> Unit) {
                             Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}")),
                         )
                     },
+                )
+            }
+
+            // Android 14+: sem esta permissão, o "Como alarme" toca, mas não abre a tela de alarme (DEC-048).
+            if (settings.alarmSound && !fullScreenAllowed) {
+                PermissionRow(
+                    title = "Tela de alarme",
+                    status = "Não permitida. O alarme toca, mas não aparece na tela bloqueada.",
+                    action = "Abrir ajuste do sistema",
+                    onAction = { context.startActivity(Notifications.fullScreenSettingsIntent(context)) },
                 )
             }
 

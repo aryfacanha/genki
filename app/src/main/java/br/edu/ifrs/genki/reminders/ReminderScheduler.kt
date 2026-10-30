@@ -15,6 +15,7 @@ import br.edu.ifrs.genki.domain.ActiveAlert
 import br.edu.ifrs.genki.domain.ReminderPlan
 import java.time.Instant
 import java.time.ZonedDateTime
+import br.edu.ifrs.genki.MainActivity
 
 /** Ações do [ReminderReceiver] (ESPEC §6). Estado só nos extras do Intent, sem tabela de alertas (S2). */
 enum class ReminderAction { FIRE, REPEAT, ACK, SNOOZE, FIRE_SNOOZED }
@@ -57,6 +58,7 @@ class ReminderScheduler(
     /** Cancela alarmes, repetições, adiamentos, a notificação e o cartão da Hoje dos horários. */
     fun cancel(timeIds: List<Long>) {
         timeIds.forEach { timeId ->
+            AlarmSoundService.stop(timeId)
             ReminderAction.entries.forEach { alarms.cancel(pendingIntent(context, it, timeId)) }
             Notifications.cancel(context, timeId)
         }
@@ -72,6 +74,7 @@ class ReminderScheduler(
      * broadcast, para o cartão sumir na hora (no A31 o broadcast demorava).
      */
     fun acknowledge(timeId: Long) {
+        AlarmSoundService.stop(timeId)
         Notifications.cancel(context, timeId)
         cancelFollowUps(timeId)
         alertStore.remove(listOf(timeId))
@@ -92,6 +95,7 @@ class ReminderScheduler(
 
     /** "Adiar N min" (RF25): volta a avisar depois do intervalo. */
     fun snooze(timeId: Long) {
+        AlarmSoundService.stop(timeId)
         Notifications.cancel(context, timeId)
         cancelFollowUps(timeId)
         val at = afterInterval()
@@ -110,7 +114,13 @@ class ReminderScheduler(
 
     private fun set(action: ReminderAction, timeId: Long, atMillis: Long, count: Int = 0, snoozed: Boolean = false) {
         val intent = pendingIntent(context, action, timeId, count, snoozed)
-        if (canScheduleExact()) {
+        if (canScheduleExact() && settings.reminders.value.alarmSound) {
+            // "Como alarme" (DEC-048): o sistema trata como despertador do usuário (ícone na barra, prioridade máxima).
+            val show = PendingIntent.getActivity(
+                context, 2, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE,
+            )
+            alarms.setAlarmClock(AlarmManager.AlarmClockInfo(atMillis, show), intent)
+        } else if (canScheduleExact()) {
             alarms.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, intent)
         } else {
             alarms.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, intent)

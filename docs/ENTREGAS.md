@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: alarme de verdade (DEC-048) e RV-047-01…04, versão 1.0.11 — 29/10/2026 — Claude Code (Opus 5.5)
+Partida: `main`/`c6f58a9`; pedido do autor ("implementa o alarme de verdade"; confirmar alguns ou todos).
+Realizado e arquivos alterados: `reminders/AlarmSoundService.kt` e `reminders/AlarmActivity.kt` (novos), `reminders/Notifications.kt`, `ReminderReceiver.kt`, `ReminderScheduler.kt`, `domain/ActiveAlert.kt`, `ui/settings/SettingsScreen.kt`, `SettingsControls.kt`, `ui/components/TimeDialog.kt`, `AndroidManifest.xml` (FOREGROUND_SERVICE, FOREGROUND_SERVICE_MEDIA_PLAYBACK, USE_FULL_SCREEN_INTENT, VIBRATE, atividade e serviço), testes, `app/build.gradle.kts` (1.0.11); docs.
+Decisões aceitas pelo autor nesta sessão: DEC-048.
+Sugestões pendentes: nenhuma nova.
+Verificado: `assembleDebug test assembleRelease` (173); A31 com tela bloqueada: tela de alarme, som de alarme em loop, grupo de 2 com confirmação individual e de todos, limite de 1 min. | Não verificado: com vídeo tocando, de ouvido, Android 14+, TalkBack.
+Próxima tarefa e bloqueios: autor libera o A31 para limpar os testes e testar com vídeo; conferência do Codex.
+Links/commits: este commit.
+```
+
+```text
 ENTREGA — Conferência pontual DEC-047 — 29/10/2026 — Codex (GPT-6.1)
 Partida: main/013c3c2; alvo 260a535 (1.0.10), sobre ebb6883; HEAD só acrescenta o roteiro.
 Realizado e arquivos alterados: docs/revisoes/CONFERENCIA_DEC047_CODEX.md; HANDOFF_APP §2/§3/§7 e Diário, ESTADO, ENTREGAS, REGISTRO_IA. Nenhum reparo permanente de código/configuração; sem commit/push/A31.

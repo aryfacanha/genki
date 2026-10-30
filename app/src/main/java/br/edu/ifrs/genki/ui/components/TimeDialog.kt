@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,10 +33,29 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.foundation.layout.fillMaxWidth
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Problem
 import br.edu.ifrs.genki.ui.MedicationText
 import java.time.LocalTime
+
+/**
+ * Campo de dois dígitos: um dígito digitado com o campo cheio substitui o valor, onde quer que esteja o cursor
+ * (tocar no número não selecionava tudo e o dígito era recusado; RV-047-02).
+ */
+fun twoDigits(old: String, new: String): String? {
+    val digits = new.filter(Char::isDigit)
+    if (digits.length != new.length) return null
+    if (digits.length <= 2) return digits
+    // Um dígito a mais que o campo cheio: fica só o dígito novo.
+    if (old.length == 2 && digits.length == 3) {
+        val added = (0..2).firstOrNull { i -> digits.removeRange(i, i + 1) == old } ?: return null
+        return digits[added].toString()
+    }
+    return null
+}
 
 /** Hora e minuto digitados; `null` se faltar um dos dois ou estiver fora de 0–23 / 0–59. */
 fun typedTime(hour: String, minute: String): LocalTime? {
@@ -57,8 +75,9 @@ fun typedTime(hour: String, minute: String): LocalTime? {
 fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
     val state = rememberTimePickerState(initialHour = initial.hour, initialMinute = initial.minute, is24Hour = true)
     var typing by rememberSaveable { mutableStateOf(false) }
-    var hour by remember { mutableStateOf(TextFieldValue("%02d".format(initial.hour))) }
-    var minute by remember { mutableStateOf(TextFieldValue("%02d".format(initial.minute))) }
+    // rememberSaveable: girar a tela não perde o que foi digitado (RV-047-03).
+    var hour by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("%02d".format(initial.hour))) }
+    var minute by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("%02d".format(initial.minute))) }
     val chosen: LocalTime? = if (typing) typedTime(hour.text, minute.text) else LocalTime.of(state.hour, state.minute)
     // Horário já da lista: avisa e não deixa confirmar (o validador continua checando).
     val repeated = chosen != null && chosen in taken
@@ -70,10 +89,10 @@ fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit,
                 if (typing) {
                     val focus = remember { FocusRequester() }
                     LaunchedEffect(Unit) { focus.requestFocus() }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TimeField("Hora", hour, { hour = it }, Modifier.focusRequester(focus))
-                        Text(":", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(horizontal = 8.dp))
-                        TimeField("Minuto", minute, { minute = it })
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        TimeField("Hora", hour, { hour = it }, Modifier.weight(1f).focusRequester(focus))
+                        Text(":", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp))
+                        TimeField("Minuto", minute, { minute = it }, Modifier.weight(1f))
                     }
                     FieldError(
                         when {
@@ -110,19 +129,27 @@ fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit,
     )
 }
 
-/** Campo de dois dígitos; ao tocar, seleciona tudo para o que for digitado substituir. */
+/**
+ * Campo de dois dígitos com o rótulo acima (em fonte 2,0× o rótulo dentro do campo quebrava "Minut/o"; RV-047-04);
+ * ao receber o foco, seleciona tudo, e um dígito a mais substitui o valor ([twoDigits]).
+ */
 @Composable
 private fun TimeField(label: String, value: TextFieldValue, onChange: (TextFieldValue) -> Unit, modifier: Modifier = Modifier) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = { new -> if (new.text.length <= 2 && new.text.all(Char::isDigit)) onChange(new) },
-        label = { Text(label) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Next),
-        textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center),
-        colors = genkiFieldColors(),
-        modifier = modifier.width(112.dp).onFocusChanged { focused ->
-            if (focused.isFocused) onChange(value.copy(selection = TextRange(0, value.text.length)))
-        },
-    )
+    Column(modifier) {
+        Text(label, style = MaterialTheme.typography.labelLarge, maxLines = 1, modifier = Modifier.padding(bottom = 4.dp))
+        OutlinedTextField(
+            value = value,
+            onValueChange = { new ->
+                val text = twoDigits(value.text, new.text) ?: return@OutlinedTextField
+                onChange(if (text == new.text) new else TextFieldValue(text, TextRange(text.length)))
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Next),
+            textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center),
+            colors = genkiFieldColors(),
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = label }.onFocusChanged { focused ->
+                if (focused.isFocused) onChange(value.copy(selection = TextRange(0, value.text.length)))
+            },
+        )
+    }
 }

@@ -77,4 +77,13 @@ class ActiveAlertTest {
         assertEquals(later, ActiveAlert.snoozeAlarmAt(later, now))
         assertEquals(now.plusSeconds(5), ActiveAlert.snoozeAlarmAt(now.minusSeconds(60), now))
     }
+
+    @Test
+    fun snoozedFiresOnlyWhileStillSnoozed() {
+        // RV-047-01: a cópia reagendada não avisa de novo se o aviso já está tocando ou foi respondido.
+        val snoozed = ActiveAlert(1, 1, t0800, snoozedUntil = java.time.Instant.EPOCH)
+        assertEquals(true, ActiveAlert.shouldFireSnoozed(snoozed))
+        assertEquals(false, ActiveAlert.shouldFireSnoozed(snoozed.copy(snoozedUntil = null)))
+        assertEquals(false, ActiveAlert.shouldFireSnoozed(null))
+    }
 }

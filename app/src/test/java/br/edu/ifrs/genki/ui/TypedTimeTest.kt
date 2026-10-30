@@ -22,4 +22,15 @@ class TypedTimeTest {
         assertNull(typedTime("", "30"))
         assertNull(typedTime("7", ""))
     }
+
+    @Test
+    fun digitOnFullFieldReplaces() {
+        // RV-047-02: com "30" e o cursor em qualquer lugar, digitar 7 deixa "7".
+        assertEquals("7", br.edu.ifrs.genki.ui.components.twoDigits("30", "307"))
+        assertEquals("7", br.edu.ifrs.genki.ui.components.twoDigits("30", "370"))
+        assertEquals("7", br.edu.ifrs.genki.ui.components.twoDigits("30", "730"))
+        assertEquals("15", br.edu.ifrs.genki.ui.components.twoDigits("1", "15"))
+        assertEquals("", br.edu.ifrs.genki.ui.components.twoDigits("3", ""))
+        assertNull(br.edu.ifrs.genki.ui.components.twoDigits("3", "3a"))
+    }
 }

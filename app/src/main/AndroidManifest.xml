@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- "Como alarme" (DEC-048): som em loop num serviço em primeiro plano, vibração e tela de alarme em tela cheia. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Voz (ESPEC §7): microfone só enquanto o cadastro por voz escuta; nada é gravado (RNF07). -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Câmera (ESPEC §8): uma foto da embalagem; a imagem não é guardada. -->
@@ -47,6 +52,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".reminders.AlarmActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:taskAffinity=".alarme"
+            android:theme="@style/Theme.Genki"
+            android:turnScreenOn="true" />
+
+        <service
+            android:name=".reminders.AlarmSoundService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <receiver
             android:name=".reminders.ReminderReceiver"

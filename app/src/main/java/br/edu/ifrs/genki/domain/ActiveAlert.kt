@@ -43,6 +43,12 @@ data class ActiveAlert(
          */
         fun snoozeAlarmAt(snoozedUntil: Instant, now: Instant): Instant = maxOf(snoozedUntil, now.plusSeconds(5))
 
+        /**
+         * O alarme de um adiado só avisa se o aviso ainda está adiado: se já está tocando (ou foi respondido), é uma
+         * cópia reagendada pela abertura do app enquanto o original disparava (RV-047-01).
+         */
+        fun shouldFireSnoozed(alert: ActiveAlert?): Boolean = alert?.snoozedUntil != null
+
         /** Todos os medicamentos do próximo horário (vários no mesmo horário é o caso comum); vazio = os de hoje passaram. */
         fun nextGroup(today: List<Occurrence>, alerts: List<ActiveAlert>, minute: LocalTime): List<Occurrence> {
             val next = nextOccurrence(today, alerts, minute) ?: return emptyList()
