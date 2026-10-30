@@ -1,7 +1,7 @@
 # Bateria completa de testes manuais — Genki no A31
 
 Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
-uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.14** (lote 1 do retorno de 30/10 e DEC-049:
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.15** (lote 1 do retorno de 30/10, DEC-049 e DEC-050:
 `RESULTADO_BATERIA_A31_2026-10-30.md`), modo "Como alarme" no A31. Os resultados esperados vêm do código, das decisões (até a DEC-048) e
 das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
 anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
@@ -29,7 +29,7 @@ isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 | # | Faça | Deve acontecer |
 |---|---|---|
 | A0 | (Opcional, apaga os dados) Android → Apps → Genki → Armazenamento → Limpar dados; abrir o Genki | Introdução em 2 páginas: **Boas-vindas ao Genki** (o que faz e não faz; "Tudo fica só neste celular") e a dos avisos (som do lembrete Como notificação/Como alarme e **Permitir notificações**). **Começar** → pergunta **"Quer ver um tutorial rápido?"** na tela **e falada em voz alta**, com Agora não / Ver tutorial (DEC-045) |
-| A0b | Ajustes → Voz → **Ativar assistente de voz** [novo] | Vem **desligado**. Desligado: nada é falado no tutorial nem na voz, e não aparece o alto-falante. Ligado: aparece o alto-falante no topo da voz e no balão do tutorial (DEC-049) |
+| A0b | Ajustes → Voz → **Ativar assistente de voz** [novo] | Vem **desligado**. Desligado: nada é falado no tutorial nem na voz; o tutorial não tem alto-falante e a voz o mostra cortado. Ligado: o alto-falante aparece no balão do tutorial e, ativo, no topo da voz (DEC-049/050) |
 | A1 | Ajustes → **Ver o tutorial** | Tela escurece, recorta o alvo e mostra balão "1 de 7". Passos: Adicionar medicamento, próximo lembrete, Usar voz, Digitar, Usar câmera (indo sozinho para a tela Adicionar e voltando), aba Medicamentos, aba Ajustes |
 | A2 | No tutorial: **Próximo** em todos (inclusive arrastando um pouco o dedo ao tocar); tocar na área escura; Voltar do Android no passo 3 | Próximo sempre avança; toque na área escura não faz nada; Voltar volta um passo (3 → 2) |
 | A3 | Abrir o tutorial de novo e tocar **Pular tutorial** no meio | Sai na tela em que estava, sem nada travado |
@@ -115,9 +115,9 @@ pausas curtas no meio da frase não cortam. Pausa para entregar: **2 s** (era 1,
 
 | # | Faça / diga | Deve acontecer |
 |---|---|---|
-| E0 | Usar voz e **não tocar em nada** [novo] | A tela mostra o exemplo "losartana, 50 miligramas…". Com o assistente **ligado**, ele também é falado; com ele **desligado**, nada é falado. O microfone só abre no toque |
-| E0b | Assistente ligado: durante uma pergunta falada, tocar no **alto-falante** [novo] | A fala para na hora e o microfone abre como se a pergunta tivesse terminado (se "ouvir sozinho" estiver ligado); as próximas perguntas não são faladas; tocar de novo relê a pergunta |
-| E1b | Responder com pausas longas para pensar, sem tocar no microfone [novo] | Durante a pausa aparece "**Pode continuar falando. Para terminar, toque no microfone.**"; a fala continua sendo juntada; tocar no microfone entrega na hora |
+| E0 | Usar voz e **não tocar em nada** [novo] | A tela mostra o exemplo "losartana, 50 miligramas…". Com o assistente **ligado**, ele também é falado; com ele **desligado**, nada é falado e aparece "Para ouvir as perguntas em voz alta, toque no alto-falante no alto da tela." O microfone só abre no toque |
+| E0b | Na voz, tocar no **alto-falante** [novo] | Com a leitura ligada: a fala para na hora, o microfone **não** abre sozinho e as próximas perguntas não são lidas. Com ela desligada (assistente desligado): passa a ler a pergunta da tela e as seguintes, e o microfone abre depois de cada uma (se "ouvir sozinho" estiver ligado). Vale só para este cadastro (DEC-050) |
+| E1b | Responder com pausas curtas para pensar, sem tocar no microfone | A fala continua sendo juntada (até 2 s de pausa); tocar no microfone entrega na hora. Pausas mais longas podem cortar: limite do reconhecedor do Android 12 |
 | E1 | Usar voz → microfone → "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, uso contínuo" | Primeiro **Confira os remédios** com "Losartana"; "pronto" ou **Continuar** → direto para "Confira antes de salvar" |
 | E2 | Falar em pedaços, com pausa curta: "Losartana… (pausa) 50 miligramas… (pausa) às 8" [novo] | Um só cadastro com tudo; não corta no primeiro pedaço |
 | E3 | "Tomo losartana, metformina e sinvastatina"; depois "**Tomou** losartana" e "Eu **tomei** losartana" [novo] | **Confira os remédios** com os três nomes; com o assistente ligado, falado: "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Se estiver certo, toque em Continuar." — **sem** abrir o microfone sozinho [novo]; "tomou"/"tomei" não entram no nome |
@@ -136,10 +136,10 @@ pausas curtas no meio da frase não cortam. Pausa para entregar: **2 s** (era 1,
 | E16 | Dizer pela voz um nome já cadastrado (ex.: "Losartana") e "pronto" na conferência dos nomes [novo] | Aviso "Losartana já está cadastrado" **já na conferência**: Voltar e conferir (fica na lista) / Continuar mesmo assim (segue; ao salvar não pergunta de novo) |
 | E17 | "oi, tudo beleza, obrigado" | "Não entendi. Tente de novo." |
 | E18 | Não falar nada depois do microfone abrir | "Não ouvi nada. Toque no microfone e fale de novo."; não reabre sozinho |
-| E19 | Responder e **não tocar no microfone** | O microfone abre sozinho depois da pergunta ("Ouvindo…"): logo que ela aparece, com o assistente desligado; ao terminar de lê-la, com ele ligado |
+| E19 | Responder e **não tocar no microfone** | Com a leitura ligada, o microfone abre sozinho ao terminar de ler a pergunta ("Ouvindo…"). Com ela desligada, **não** abre: leia e toque no microfone [novo] |
 | E20 | Durante a escuta, tocar num botão de resposta | A escuta para e a resposta tocada vale |
 | E21 | X no topo ou Voltar durante a fala da pergunta e durante a escuta [novo] | Fala e escuta param; nada do que estava sendo dito entra no cadastro; com algo entendido, "Descartar cadastro?" |
-| E22 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" | O microfone só abre com toque (religue depois) |
+| E22 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" | Mesmo com a leitura ligada, o microfone só abre com toque (religue depois) |
 | E23 | Mídia em 2 ao entrar na voz | "O volume está baixo…" no meio da tela, some em ~4 s |
 | E24 | Modo avião e cadastrar por voz | Funciona se o reconhecedor do Google tiver o pacote pt-BR offline; senão, mensagem de erro e opção de digitar (anote qual) |
 

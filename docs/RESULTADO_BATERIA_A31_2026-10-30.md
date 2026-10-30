@@ -34,4 +34,8 @@ autor (edição da Losartana?) antes de tratar como defeito. **Esclarecido em 30
 - **6 (pausa):** ainda cortava no meio → espera conta desde que o reconhecedor volta a ouvir, 2,5 s, aviso "Pode continuar falando". A conferência dos nomes não pergunta mais por voz: instrui tocar em Continuar.
 - **7 (verbos):** pergunta sobre a "calibragem" respondida no chat (lista fixa `COMMON` em `voice/VoiceParser.kt`; sem aprendizado).
 
+**Retorno da 1.0.14 (30/10):** "As funcionalidades estão ok, menos a da fala". Na 1.0.15:
+- **Espera da voz:** "dá meio que umas travadas… do jeito que estava antes era melhor" → revertida à 1.0.13 (2 s, 4 trechos, sem o aviso "Pode continuar falando").
+- **Voz sem o assistente:** ler a pergunta com o microfone já aberto atrapalhava, e o autor quer a orientação falada no cadastro mesmo com o assistente desligado → DEC-050 (alto-falante sempre na voz; sem leitura, microfone só no toque). Aceite a confirmar.
+
 Fila depois das baterias (pedido do autor, 30/10): redução do tamanho do APK (`ESTADO.md`, pendências).

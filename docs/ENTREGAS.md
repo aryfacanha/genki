@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: espera da voz revertida e leitura ligável na voz (DEC-050), versão 1.0.15 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/b0b7d45; retorno do autor sobre a 1.0.14.
+Realizado: `SpeechInput` de volta ao da 1.0.13 (sem o aviso de pausa); alto-falante sempre visível na voz, ligando ou calando a leitura só naquele cadastro; sem leitura, microfone só no toque; textos de Ajustes.
+Decisões: DEC-050 (proposta do autor, forma do Claude Code, aceite a confirmar).
+Verificado: build e 176 testes; emulador API 35 (alto-falante, aviso, leitura ligando no toque).
+Não verificado: microfone sem abrir sozinho nas perguntas seguintes, fala audível, A31 com voz real.
+Próxima tarefa: autor testar no A31; lote 2 restante; revisão do Codex.
+Links: docs/DECISOES.md (DEC-050), docs/RESULTADO_BATERIA_A31_2026-10-30.md.
+```
+
+```text
 ENTREGA — App Android: assistente de voz opcional (DEC-049) e fala que cortava, versão 1.0.14 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/b1e5a40; retorno do autor sobre o lote 1 (itens 5, 6, 7).
 Realizado: "Ativar assistente de voz" (introdução e Ajustes, desligado por padrão); silenciar no topo da voz e no balão do tutorial; tutorial lido passo a passo com o assistente ligado; conferência dos nomes instrui tocar em Continuar; espera da voz desde que volta a ouvir (2,5 s, 6 trechos) com aviso na tela.

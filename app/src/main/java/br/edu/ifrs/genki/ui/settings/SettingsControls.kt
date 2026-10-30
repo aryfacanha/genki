@@ -104,7 +104,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
 @Composable
 internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Ativar assistente de voz",
-    "Lê em voz alta o tutorial e as perguntas do cadastro por voz. Para calar só naquele momento, toque no alto-falante no alto da tela.",
+    "Lê em voz alta o tutorial e as perguntas do cadastro por voz. No alto da tela, o alto-falante liga ou cala a voz só naquele momento.",
     checked,
     onChange,
 )
@@ -113,7 +113,7 @@ internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit)
 @Composable
 internal fun AutoListenSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Na voz, ouvir sozinho depois da pergunta",
-    "O microfone abre sozinho depois de cada pergunta. Se desligar, toque no microfone a cada resposta.",
+    "O microfone abre sozinho depois de cada pergunta lida em voz alta. Sem a leitura, ou com isto desligado, toque no microfone para responder.",
     checked,
     onChange,
 )

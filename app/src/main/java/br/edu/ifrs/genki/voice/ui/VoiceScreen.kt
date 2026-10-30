@@ -49,7 +49,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -126,7 +125,6 @@ fun VoiceScreen(
             override fun partial(text: String) = viewModel.partial(text)
             override fun result(text: String, latencyMs: Long?) = viewModel.heard(text, latencyMs)
             override fun error(code: Int) = viewModel.recognitionError(code)
-            override fun pausing(active: Boolean) = viewModel.pausing(active)
         })
     }
     DisposableEffect(Unit) {
@@ -150,15 +148,12 @@ fun VoiceScreen(
     // Pode ser desligado na introdução ou em Ajustes.
     val settings = remember { (context.applicationContext as GenkiApplication).container.settings }
     val autoListen = remember { settings.autoListen }
-    // Assistente de voz (DEC-049): sem ele, as perguntas ficam só na tela e o microfone abre logo depois delas.
-    val voiceOn = remember { settings.voiceAssistant }
-    // Silenciar só nesta tela, sem desligar o assistente.
-    var muted by rememberSaveable { mutableStateOf(false) }
-    // Pergunta sendo lida agora (silenciar no meio dela abre o microfone como se a leitura tivesse terminado).
-    var speakingId by remember { mutableIntStateOf(-1) }
+    // Ler as perguntas em voz alta: começa como o assistente de voz (DEC-049) e o alto-falante do topo liga ou cala só
+    // neste cadastro (DEC-050). Sem a leitura, o microfone espera o toque: abrir sozinho enquanto a pessoa ainda lê a
+    // pergunta atrapalhava (teste do autor no A31, 30/10).
+    var reading by rememberSaveable { mutableStateOf(settings.voiceAssistant) }
     val current by rememberUpdatedState(state)
     val afterPrompt = { prompt: Prompt ->
-        speakingId = -1
         val ready = prompt.listen && autoListen && current.phase in setOf(VoicePhase.ASKING, VoicePhase.NAMES) && !current.listening &&
             !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
@@ -166,22 +161,16 @@ fun VoiceScreen(
     }
     LaunchedEffect(state.prompt) {
         val prompt = state.prompt ?: return@LaunchedEffect
-        if (voiceOn && !muted) {
-            speakingId = prompt.id
-            speaker.speak(prompt.text) { afterPrompt(prompt) }
-        } else {
-            afterPrompt(prompt)
-        }
+        if (reading) speaker.speak(prompt.text) { afterPrompt(prompt) }
     }
-    val toggleMute = {
-        muted = !muted
+    val toggleReading = {
+        reading = !reading
         val prompt = state.prompt
-        if (muted) {
+        if (!reading) {
             speaker.stop()
-            if (prompt != null && speakingId == prompt.id) afterPrompt(prompt)
         } else if (prompt != null && !state.listening) {
-            // Voltou a voz: relê a pergunta da tela.
-            speaker.speak(prompt.text)
+            // Ligou a voz: lê a pergunta da tela e, depois, ouve como as outras.
+            speaker.speak(prompt.text) { afterPrompt(prompt) }
         }
     }
     val listenNow = {
@@ -251,10 +240,10 @@ fun VoiceScreen(
                 onBack = handleBack,
                 actionLabel = "Cancelar",
                 onAction = handleCancel,
-                extra = if (voiceOn) ({ VoiceMuteButton(muted, toggleMute) }) else null,
+                extra = { VoiceMuteButton(muted = !reading, onToggle = toggleReading) },
             )
             when (state.phase) {
-                VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
+                VoicePhase.INTRO -> Intro(state, reading, onMic, preferTyping)
                 VoicePhase.NAMES -> Names(
                     state, onMic, preferTyping,
                     // Toque em qualquer ação: para de falar e de ouvir, para não misturar com a fala seguinte.
@@ -335,7 +324,7 @@ fun VoiceScreen(
 }
 
 @Composable
-private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: () -> Unit) {
+private fun ColumnScope.Intro(state: VoiceUiState, reading: Boolean, onMic: () -> Unit, onType: () -> Unit) {
     Column(
         Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 28.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -367,6 +356,14 @@ private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: ()
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
+        if (!reading) {
+            Spacer(Modifier.height(16.dp))
+            Text(
+                "Para ouvir as perguntas em voz alta, toque no alto-falante no alto da tela.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
         Spacer(Modifier.height(24.dp))
         TypeLink(onType)
     }
@@ -749,11 +746,7 @@ private fun Listening(state: VoiceUiState, idle: String, center: Boolean = true)
     val align = if (center) TextAlign.Center else TextAlign.Start
     Column(Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }) {
         if (state.listening) {
-            Text(
-                // Entre trechos da mesma resposta (bateria do autor, 30/10: a fala ainda cortava).
-                if (state.pausing) "Pode continuar falando. Para terminar, toque no microfone." else "Ouvindo… toque para parar",
-                fontWeight = FontWeight.SemiBold, textAlign = align, modifier = Modifier.fillMaxWidth(),
-            )
+            Text("Ouvindo… toque para parar", fontWeight = FontWeight.SemiBold, textAlign = align, modifier = Modifier.fillMaxWidth())
             if (state.partial.isNotEmpty()) {
                 Text("“${state.partial}”", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = align, modifier = Modifier.fillMaxWidth())
             }

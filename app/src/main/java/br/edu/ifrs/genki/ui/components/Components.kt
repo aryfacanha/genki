@@ -118,15 +118,15 @@ val VolumeOffIcon: ImageVector = ImageVector.Builder(
 ).build()
 
 /**
- * Silenciar o assistente de voz só agora (DEC-049): cala a fala desta tela sem desligar o assistente em Ajustes.
- * Mostra o estado atual; tocar de novo volta a falar.
+ * Alto-falante do assistente de voz (DEC-049): cala a fala desta tela sem mudar Ajustes. Na voz, também liga a leitura
+ * só neste cadastro quando o assistente está desligado (DEC-050). Mostra o estado atual; tocar de novo inverte.
  */
 @Composable
 fun VoiceMuteButton(muted: Boolean, onToggle: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onToggle, modifier = modifier.size(48.dp)) {
         Icon(
             if (muted) VolumeOffIcon else VolumeUpIcon,
-            contentDescription = if (muted) "Voz silenciada. Tocar para ouvir de novo" else "Silenciar a voz",
+            contentDescription = if (muted) "Voz desligada. Tocar para ouvir" else "Silenciar a voz",
             tint = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
         )
     }

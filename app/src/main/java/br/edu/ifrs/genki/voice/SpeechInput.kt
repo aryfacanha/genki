@@ -19,9 +19,6 @@ import android.speech.SpeechRecognizer
  * O reconhecedor encerra numa pausa curta e a maioria ignora o pedido de esperar mais; quem pensa no meio da frase
  * era cortado (teste informal, 29/10). Por isso, ao encerrar com texto, volta a ouvir e junta os trechos; a resposta
  * sai depois de [PAUSE_MS] sem fala nova, no toque no microfone ([stop]) ou ao chegar a [MAX_PARTS] trechos.
- * A espera conta a partir de quando o reconhecedor já está ouvindo de novo (`onReadyForSpeech`): contada desde o fim
- * do trecho, o tempo de religar comia parte dela e a fala ainda era cortada (bateria do autor, 30/10). O que for dito
- * enquanto o reconhecedor religa (fração de segundo) se perde: limite do reconhecimento do Android 12.
  */
 class SpeechInput(private val context: Context, private val events: Events) {
 
@@ -31,8 +28,6 @@ class SpeechInput(private val context: Context, private val events: Events) {
         /** [latencyMs] = do fim da fala ao resultado (DEC-015); `null` se o fim não foi detectado. */
         fun result(text: String, latencyMs: Long?)
         fun error(code: Int)
-        /** Esperando a continuação depois de um trecho: a tela avisa que pode continuar falando. */
-        fun pausing(active: Boolean) = Unit
     }
 
     private var recognizer: SpeechRecognizer? = null
@@ -53,7 +48,6 @@ class SpeechInput(private val context: Context, private val events: Events) {
     /** Sem fala nova depois do último trecho: entrega o que juntou. */
     private val pauseOver = Runnable {
         waiting = false
-        events.pausing(false)
         if (!active) return@Runnable
         recognizer?.cancel()
         deliver()
@@ -80,8 +74,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
                 .putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                 .putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
                 // Pausas maiores antes de encerrar (nem todo reconhecedor respeita).
-                .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2500L)
-                .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2500L),
+                .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2500L),
         )
     }
 
@@ -105,7 +98,6 @@ class SpeechInput(private val context: Context, private val events: Events) {
     }
 
     private fun stopWaiting() {
-        if (waiting) events.pausing(false)
         waiting = false
         handler.removeCallbacks(pauseOver)
     }
@@ -136,13 +128,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
     }
 
     private val listener = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {
-            // Já ouvindo a continuação: a espera começa agora, inteira.
-            if (waiting) {
-                handler.removeCallbacks(pauseOver)
-                handler.postDelayed(pauseOver, PAUSE_MS)
-            }
-        }
+        override fun onReadyForSpeech(params: Bundle?) = Unit
         // Voltou a falar dentro da pausa: continua juntando.
         override fun onBeginningOfSpeech() = stopWaiting()
         override fun onRmsChanged(rmsdB: Float) = Unit
@@ -172,9 +158,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
             events.partial(parts.joinToString(" "))
             listen()
             waiting = true
-            events.pausing(true)
-            // Se o reconhecedor não avisar que está pronto, encerra mesmo assim.
-            handler.postDelayed(pauseOver, PAUSE_MS + READY_GRACE_MS)
+            handler.postDelayed(pauseOver, PAUSE_MS)
         }
 
         override fun onError(error: Int) {
@@ -207,10 +191,8 @@ class SpeechInput(private val context: Context, private val events: Events) {
         private const val ERROR_LANGUAGE_NOT_SUPPORTED = 12
         private const val ERROR_LANGUAGE_UNAVAILABLE = 13
         /** Pausa para pensar que ainda conta como a mesma resposta. */
-        // 3 s desde o fim do trecho pareceu longo (29/10); 1,5 s e 2 s ainda cortavam (bateria do autor, 30/10).
-        // Agora conta desde que volta a ouvir; para encerrar antes, toque no microfone.
-        private const val PAUSE_MS = 2_500L
-        private const val READY_GRACE_MS = 1_500L
-        private const val MAX_PARTS = 6
+        // 3 s pareceu longo (29/10) e 1,5 s ainda cortava quem demora a continuar (bateria do autor, 30/10).
+        private const val PAUSE_MS = 2_000L
+        private const val MAX_PARTS = 4
     }
 }

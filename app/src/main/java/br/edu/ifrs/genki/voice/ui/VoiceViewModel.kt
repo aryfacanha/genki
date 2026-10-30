@@ -57,8 +57,6 @@ data class VoiceUiState(
     val duplicates: List<String> = emptyList(),
     /** O aviso apareceu na conferência dos nomes, não ao salvar (bateria do autor, 30/10). */
     val duplicatesOnNames: Boolean = false,
-    /** Entre um trecho e outro da mesma resposta: ainda ouvindo, pode continuar falando. */
-    val pausing: Boolean = false,
 )
 
 /**
@@ -107,10 +105,8 @@ class VoiceViewModel(
 
     fun listening(active: Boolean) {
         if (active) GenkiEval.log("voz_ouvindo", "pergunta" to _state.value.question?.field)
-        _state.update { it.copy(listening = active, pausing = false, partial = "", message = if (active) null else it.message) }
+        _state.update { it.copy(listening = active, partial = "", message = if (active) null else it.message) }
     }
-
-    fun pausing(active: Boolean) = _state.update { it.copy(pausing = active) }
 
     fun partial(text: String) = _state.update { it.copy(partial = text) }
 
