@@ -38,4 +38,6 @@ autor (edição da Losartana?) antes de tratar como defeito. **Esclarecido em 30
 - **Espera da voz:** "dá meio que umas travadas… do jeito que estava antes era melhor" → revertida à 1.0.13 (2 s, 4 trechos, sem o aviso "Pode continuar falando").
 - **Voz sem o assistente:** ler a pergunta com o microfone já aberto atrapalhava, e o autor quer a orientação falada no cadastro mesmo com o assistente desligado → DEC-050 (alto-falante sempre na voz; sem leitura, microfone só no toque). Aceite a confirmar.
 
+**Retorno da 1.0.15 (30/10):** alto-falante "escondido no topo" → botão com texto abaixo do microfone, piscando enquanto fala; leitura ligada por padrão na voz (1.0.16, DEC-050 aceita). Os dois bipes depois da fala não se repetiram ("por agora eu não consigo ver nenhum desses erros"). Pré-revisão heurística geral pedida em seguida: `PRE_REVISAO_HEURISTICA_1.0.16.md`.
+
 Fila depois das baterias (pedido do autor, 30/10): redução do tamanho do APK (`ESTADO.md`, pendências).

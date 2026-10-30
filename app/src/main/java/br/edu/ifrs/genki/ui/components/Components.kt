@@ -1,5 +1,10 @@
 package br.edu.ifrs.genki.ui.components
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +41,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -118,18 +124,47 @@ val VolumeOffIcon: ImageVector = ImageVector.Builder(
 ).build()
 
 /**
- * Alto-falante do assistente de voz (DEC-049): cala a fala desta tela sem mudar Ajustes. Na voz, também liga a leitura
- * só neste cadastro quando o assistente está desligado (DEC-050). Mostra o estado atual; tocar de novo inverte.
+ * Alto-falante do assistente de voz (DEC-049): cala a fala desta tela sem mudar Ajustes; tocar de novo volta a falar.
+ * Pisca de leve enquanto a voz fala e fica parado quando calado (pedido do autor, 30/10).
  */
 @Composable
-fun VoiceMuteButton(muted: Boolean, onToggle: () -> Unit, modifier: Modifier = Modifier) {
+fun VoiceMuteButton(muted: Boolean, speaking: Boolean, onToggle: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onToggle, modifier = modifier.size(48.dp)) {
-        Icon(
-            if (muted) VolumeOffIcon else VolumeUpIcon,
-            contentDescription = if (muted) "Voz desligada. Tocar para ouvir" else "Silenciar a voz",
-            tint = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
-        )
+        SpeakerIcon(muted, speaking, if (muted) "Voz desligada. Tocar para ouvir" else "Silenciar a voz")
     }
+}
+
+/**
+ * Na voz (DEC-050), o alto-falante fica abaixo do microfone, com texto, onde a pessoa já está olhando: no topo da tela
+ * ele passava despercebido (pedido do autor, 30/10). Liga ou cala a leitura das perguntas só neste cadastro.
+ */
+@Composable
+fun ReadAloudButton(on: Boolean, speaking: Boolean, onToggle: () -> Unit, modifier: Modifier = Modifier) {
+    OutlinedButton(onClick = onToggle, modifier = modifier.heightIn(min = 48.dp)) {
+        SpeakerIcon(muted = !on, speaking = speaking, description = null)
+        Spacer(Modifier.width(8.dp))
+        Text(if (on) "Silenciar a voz" else "Ouvir as perguntas em voz alta")
+    }
+}
+
+@Composable
+private fun SpeakerIcon(muted: Boolean, speaking: Boolean, description: String?) {
+    val alpha = if (speaking && !muted) {
+        rememberInfiniteTransition(label = "falando").animateFloat(
+            initialValue = 1f,
+            targetValue = 0.3f,
+            animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
+            label = "falando",
+        ).value
+    } else {
+        1f
+    }
+    Icon(
+        if (muted) VolumeOffIcon else VolumeUpIcon,
+        contentDescription = description,
+        tint = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+        modifier = Modifier.alpha(alpha),
+    )
 }
 
 // Microfone do Material Icons (o pacote "core" não traz).
@@ -155,8 +190,6 @@ fun GenkiTopBar(
     backLabel: String = "Voltar",
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
-    /** Botão extra antes da ação (o de silenciar a voz). */
-    extra: (@Composable () -> Unit)? = null,
 ) {
     Column {
         Row(
@@ -182,7 +215,6 @@ fun GenkiTopBar(
                 ),
                 modifier = Modifier.weight(1f).semantics { heading() },
             )
-            extra?.invoke()
             if (actionLabel != null && onAction != null) {
                 TextButton(onClick = onAction, modifier = Modifier.heightIn(min = 48.dp)) { Text(actionLabel) }
             }

@@ -5,6 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import br.edu.ifrs.genki.GenkiEval
 import java.util.Locale
 
@@ -25,6 +28,9 @@ class Speaker(context: Context) {
     private var utterance = 0
     private val main = Handler(Looper.getMainLooper())
     private lateinit var tts: TextToSpeech
+    /** Falando agora: o alto-falante da tela pisca. */
+    var speaking by mutableStateOf(false)
+        private set
 
     init {
         start(engine = null)
@@ -69,7 +75,12 @@ class Speaker(context: Context) {
 
     /** Só a última fala conta; uma fala trocada por outra ou parada não chama [done]. */
     private fun ended(utteranceId: String?) {
-        main.post { if (utteranceId == "genki$utterance") finish() }
+        main.post {
+            if (utteranceId == "genki$utterance") {
+                speaking = false
+                finish()
+            }
+        }
     }
 
     private fun finish() {
@@ -85,12 +96,13 @@ class Speaker(context: Context) {
             if (settled) finish() else pending = text
             return
         }
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "genki${++utterance}")
+        speaking = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "genki${++utterance}") == TextToSpeech.SUCCESS
     }
 
     fun stop() {
         pending = null
         done = null
+        speaking = false
         if (ready) tts.stop()
     }
 

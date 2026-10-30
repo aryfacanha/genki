@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** versão 1.0.16 (versionCode 17), pedidos do autor sobre a 1.0.15 (DEC-050, aceita): alto-falante saiu do topo da voz e virou botão com texto abaixo do microfone em todas as telas da voz; pisca de leve enquanto fala (também no balão do tutorial) e fica parado quando calado; a voz lê as perguntas sempre ao abrir (o "Ativar assistente de voz" só lê o tutorial). Os dois bipes relatados não se repetiram no A31 (autor, 30/10). **Pré-revisão heurística geral** (`PRE_REVISAO_HEURISTICA_1.0.16.md`, foco do autor: requisitos ocultos, transparência, legibilidade, clareza, capacidade): 19 achados novos (2 altos: Hoje sem rolar para "Agora" com muitos remédios; voz em fonte 2,0× com a pergunta fora da tela), sugestões pendentes. Build/176 testes passam. Emulador: botão abaixo do microfone, piscar durante a fala (3 capturas), leitura ligada ao abrir; dados restaurados byte a byte. **Não verificado:** fala real e piscar no A31, piscar no tutorial.
+
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.15 (versionCode 16), retorno do autor sobre a 1.0.14 ("As funcionalidades estão ok, menos a da fala"): (1) espera da voz **revertida à 1.0.13** a pedido do autor ("dá meio que umas travadas… do jeito que estava antes era melhor"): 2 s desde o fim do trecho, até 4 trechos, sem o aviso "Pode continuar falando"; (2) DEC-050 (aceite a confirmar): alto-falante sempre visível na voz, liga ou cala a leitura das perguntas só naquele cadastro; sem leitura, o microfone só abre no toque (abrir sozinho enquanto a pessoa lia atrapalhava). Build/176 testes passam. Emulador API 35: com o assistente desligado, a voz mostra o alto-falante cortado e o aviso na abertura; tocar liga a leitura (síntese pt-BR no logcat) e troca para "Silenciar a voz"; ajustes do emulador intocados. **Não verificado:** microfone sem abrir sozinho nas perguntas seguintes (exige fala real), fala audível, A31 com voz real.
 
 **30/10/2026, Claude Code (Opus 5.5):** rodada 2 do lote 1 (retorno do autor: itens 5, 6 e 7 de `RESULTADO_BATERIA_A31_2026-10-30.md`, demais ok), versão 1.0.14 (versionCode 15): DEC-049 assistente de voz opcional, desligado por padrão (interruptor na primeira tela da introdução e em Ajustes; lê tutorial e perguntas da voz; alto-falante no topo da voz e no balão do tutorial silencia só naquele momento); conferência dos nomes sem pergunta falada nem microfone automático ("Se estiver certo, toque em Continuar"); voz: a espera entre trechos conta a partir de quando o reconhecedor volta a ouvir (`onReadyForSpeech`), 2,5 s, até 6 trechos, e a tela mostra "Pode continuar falando. Para terminar, toque no microfone.". Build/176 testes passam (+1 silenciar do tutorial; textos dos testes de nomes atualizados). Emulador API 35: interruptor desligado por padrão em Ajustes, voz sem alto-falante com o assistente desligado e com ele ligado, silenciar troca o ícone, balão do tutorial com alto-falante e silêncio mantido entre passos; ajustes do emulador restaurados byte a byte. **Não verificado:** fala audível (tutorial e perguntas), corte da fala com voz real no A31, interruptor na introdução (exige primeira abertura), fonte 2,0×, TalkBack.
@@ -55,7 +57,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**30/10, Claude Code (último):** 1.0.15: espera da voz revertida à 1.0.13; DEC-050 (leitura ligável na própria voz, aceite a confirmar). Próximo: autor testar 1.0.15 (E0, E0b, E19); depois lote 2 restante.
+**30/10, Claude Code (último):** 1.0.16 (DEC-050 aceita: botão de voz abaixo do microfone, piscar, leitura ligada ao abrir) e pré-revisão heurística geral (`PRE_REVISAO_HEURISTICA_1.0.16.md`, 19 achados, prioridade N2/N3, N1, N4/N5). Próximo: autor escolher quais achados corrigir antes do congelamento; lote 2 restante na fila.
+
+**30/10, Claude Code:** 1.0.15: espera da voz revertida à 1.0.13; DEC-050 (leitura ligável na própria voz, aceite a confirmar). Próximo: autor testar 1.0.15 (E0, E0b, E19); depois lote 2 restante.
 
 **30/10, Claude Code:** 1.0.14 (DEC-049 e fala que cortava). Lote 1 aceito pelo autor, exceto 5/6 refeitos aqui. Próximo: autor testar 1.0.14; depois lote 2 restante (horário do primeiro remédio na introdução; uma notificação por horário). Revisão do Codex pendente de RV-048, lote 1 e DEC-049. Fila: tamanho do APK.
 
@@ -350,6 +354,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: versão 1.0.16 (versionCode 17); `GenkiTopBar` sem o parâmetro `extra`; `Speaker.speaking` (estado para o piscar); `ReadAloudButton` e `VoiceMuteButton(speaking)` — 176 testes; emulador — pendente: A31 com voz real, Codex.
 
 - 2026-10-30 — Claude Code — configuração: versão 1.0.15 (versionCode 16); `SpeechInput` de volta ao da 1.0.13; DEC-050 na voz (alto-falante sempre visível, sem microfone automático sem leitura) — 176 testes; emulador — pendente: A31 com voz real, Codex.
 

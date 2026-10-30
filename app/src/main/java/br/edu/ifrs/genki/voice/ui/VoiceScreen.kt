@@ -94,7 +94,7 @@ import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.ui.components.genkiFieldColors
 import br.edu.ifrs.genki.voice.NameCommands
-import br.edu.ifrs.genki.ui.components.VoiceMuteButton
+import br.edu.ifrs.genki.ui.components.ReadAloudButton
 import br.edu.ifrs.genki.voice.Speaker
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.VoiceQuestions
@@ -148,10 +148,10 @@ fun VoiceScreen(
     // Pode ser desligado na introdução ou em Ajustes.
     val settings = remember { (context.applicationContext as GenkiApplication).container.settings }
     val autoListen = remember { settings.autoListen }
-    // Ler as perguntas em voz alta: começa como o assistente de voz (DEC-049) e o alto-falante do topo liga ou cala só
-    // neste cadastro (DEC-050). Sem a leitura, o microfone espera o toque: abrir sozinho enquanto a pessoa ainda lê a
-    // pergunta atrapalhava (teste do autor no A31, 30/10).
-    var reading by rememberSaveable { mutableStateOf(settings.voiceAssistant) }
+    // Ler as perguntas em voz alta: ligado ao abrir a voz, mesmo com o assistente de voz desligado (pedido do autor,
+    // 30/10); o botão abaixo do microfone cala ou liga só neste cadastro (DEC-050). Sem a leitura, o microfone espera o
+    // toque: abrir sozinho enquanto a pessoa ainda lê a pergunta atrapalhava (teste do autor no A31, 30/10).
+    var reading by rememberSaveable { mutableStateOf(true) }
     val current by rememberUpdatedState(state)
     val afterPrompt = { prompt: Prompt ->
         val ready = prompt.listen && autoListen && current.phase in setOf(VoicePhase.ASKING, VoicePhase.NAMES) && !current.listening &&
@@ -240,12 +240,15 @@ fun VoiceScreen(
                 onBack = handleBack,
                 actionLabel = "Cancelar",
                 onAction = handleCancel,
-                extra = { VoiceMuteButton(muted = !reading, onToggle = toggleReading) },
             )
+            // Alto-falante abaixo do microfone, em todas as fases (pedido do autor, 30/10).
+            val readAloud: @Composable (Modifier) -> Unit = { modifier ->
+                ReadAloudButton(on = reading, speaking = speaker.speaking, onToggle = toggleReading, modifier = modifier)
+            }
             when (state.phase) {
-                VoicePhase.INTRO -> Intro(state, reading, onMic, preferTyping)
+                VoicePhase.INTRO -> Intro(state, readAloud, onMic, preferTyping)
                 VoicePhase.NAMES -> Names(
-                    state, onMic, preferTyping,
+                    state, readAloud, onMic, preferTyping,
                     // Toque em qualquer ação: para de falar e de ouvir, para não misturar com a fala seguinte.
                     onRename = { speaker.stop(); input.cancel(); viewModel.beginRename(it) },
                     onTyped = { id, text -> speaker.stop(); input.cancel(); viewModel.typedName(id, text) },
@@ -255,7 +258,7 @@ fun VoiceScreen(
                     onConfirm = { speaker.stop(); input.cancel(); viewModel.confirmNames() },
                 )
                 VoicePhase.ASKING -> Asking(
-                    state, onMic, preferTyping,
+                    state, readAloud, onMic, preferTyping,
                     // Resposta por toque enquanto ouvia sozinho: a escuta para, para não responder a pergunta seguinte.
                     onAnswer = { speaker.stop(); input.cancel(); viewModel.tapped(it) },
                     onCorrect = { input.cancel(); viewModel.beginCorrection(); listenNow() },
@@ -267,7 +270,7 @@ fun VoiceScreen(
                     onQuiet = { speaker.stop(); input.cancel() },
                 )
                 VoicePhase.REVIEW -> Review(
-                    state, onMic, onFix, viewModel::remove, viewModel::save,
+                    state, readAloud, onMic, onFix, viewModel::remove, viewModel::save,
                     onKeep = viewModel::keepCorrection, onUndo = viewModel::undoCorrection,
                 )
             }
@@ -324,7 +327,12 @@ fun VoiceScreen(
 }
 
 @Composable
-private fun ColumnScope.Intro(state: VoiceUiState, reading: Boolean, onMic: () -> Unit, onType: () -> Unit) {
+private fun ColumnScope.Intro(
+    state: VoiceUiState,
+    readAloud: @Composable (Modifier) -> Unit,
+    onMic: () -> Unit,
+    onType: () -> Unit,
+) {
     Column(
         Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 28.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -356,15 +364,9 @@ private fun ColumnScope.Intro(state: VoiceUiState, reading: Boolean, onMic: () -
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
-        if (!reading) {
-            Spacer(Modifier.height(16.dp))
-            Text(
-                "Para ouvir as perguntas em voz alta, toque no alto-falante no alto da tela.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
-        }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
+        readAloud(Modifier)
+        Spacer(Modifier.height(8.dp))
         TypeLink(onType)
     }
 }
@@ -377,6 +379,7 @@ private fun ColumnScope.Intro(state: VoiceUiState, reading: Boolean, onMic: () -
 @Composable
 private fun ColumnScope.Names(
     state: VoiceUiState,
+    readAloud: @Composable (Modifier) -> Unit,
     onMic: () -> Unit,
     onType: () -> Unit,
     onRename: (String) -> Unit,
@@ -431,6 +434,7 @@ private fun ColumnScope.Names(
                 )
             }
         }
+        readAloud(Modifier.align(Alignment.CenterHorizontally))
         // Como nas perguntas (sugestão da revisão do Codex, 29/10).
         TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
     }
@@ -510,6 +514,7 @@ private fun NameCard(
 @Composable
 private fun ColumnScope.Asking(
     state: VoiceUiState,
+    readAloud: @Composable (Modifier) -> Unit,
     onMic: () -> Unit,
     onType: () -> Unit,
     onAnswer: (String) -> Unit,
@@ -658,6 +663,7 @@ private fun ColumnScope.Asking(
                 )
             }
         }
+        readAloud(Modifier.align(Alignment.CenterHorizontally))
         TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
     }
 }
@@ -665,6 +671,7 @@ private fun ColumnScope.Asking(
 @Composable
 private fun ColumnScope.Review(
     state: VoiceUiState,
+    readAloud: @Composable (Modifier) -> Unit,
     onMic: () -> Unit,
     onFix: (String) -> Unit,
     onRemove: (String) -> Unit,
@@ -718,6 +725,7 @@ private fun ColumnScope.Review(
             Spacer(Modifier.size(8.dp))
             Text(if (state.listening) "Ouvindo… toque para parar" else "Corrigir por voz")
         }
+        readAloud(Modifier.align(Alignment.CenterHorizontally))
     }
 }
 

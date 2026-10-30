@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -101,6 +102,9 @@ class TutorialController {
     /** Assistente de voz silenciado só neste tutorial (DEC-049); volta ao normal quando ele fecha. */
     var muted by mutableStateOf(false)
         private set
+
+    /** Lendo o passo agora: o alto-falante pisca. */
+    var speaking by mutableStateOf(false)
 
     val current: TutorialStep? get() = step?.let(TutorialSteps.all::getOrNull)
 
@@ -195,6 +199,8 @@ private fun TutorialVoice(controller: TutorialController) {
     LaunchedEffect(text, controller.muted) {
         if (text != null && !controller.muted) speaker.speak(text) else speaker.stop()
     }
+    val speaking = speaker.speaking
+    SideEffect { controller.speaking = speaking }
 }
 
 /** Pergunta, na tela (e em voz alta com o assistente de voz), se a pessoa quer o tutorial (pedido do autor, 29/10). */
@@ -215,7 +221,7 @@ private fun Offer(controller: TutorialController, voiceOn: Boolean) {
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.weight(1f).padding(end = 8.dp).semantics { heading() },
                     )
-                    if (voiceOn) VoiceMuteButton(controller.muted, controller::toggleMute)
+                    if (voiceOn) VoiceMuteButton(controller.muted, controller.speaking, controller::toggleMute)
                 }
                 Text(
                     OFFER_TEXT,
@@ -249,7 +255,7 @@ private fun Balloon(index: Int, step: TutorialStep, controller: TutorialControll
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
                 )
-                if (voiceOn) VoiceMuteButton(controller.muted, controller::toggleMute)
+                if (voiceOn) VoiceMuteButton(controller.muted, controller.speaking, controller::toggleMute)
             }
             Text(
                 step.title,

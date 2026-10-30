@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.16 (DEC-050: botão de voz abaixo do microfone, piscar, leitura ligada ao abrir) e pré-revisão heurística geral no emulador (`PRE_REVISAO_HEURISTICA_1.0.16.md`, 19 achados; fala simulada temporária, retirada); build/176 testes.
+
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.15, espera da voz revertida à 1.0.13 a pedido do autor e DEC-050 (leitura das perguntas ligável na própria voz; aceite a confirmar); build/176 testes; emulador; registros atualizados.
 
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): DEC-049 (assistente de voz opcional, silenciar), conferência dos nomes sem pergunta falada e espera da voz refeita, a pedido do autor (1.0.14); build/176 testes; emulador; registros atualizados. RF19 passa a opcional (registrar na monografia como mudança de projeto).

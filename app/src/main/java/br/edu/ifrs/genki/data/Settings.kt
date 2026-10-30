@@ -35,8 +35,8 @@ class Settings(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_AUTO_LISTEN, value).apply()
 
     /**
-     * Assistente de voz (DEC-049): lê em voz alta o tutorial e as perguntas do cadastro por voz (RF19). Desligado por
-     * padrão (bateria do autor, 30/10: a fala longa incomodava); liga na introdução ou em Ajustes.
+     * Assistente de voz (DEC-049): lê o tutorial em voz alta (RF19). Desligado por padrão (bateria do autor, 30/10: a
+     * fala longa incomodava); liga na introdução ou em Ajustes. O cadastro por voz lê as perguntas sempre (DEC-050).
      */
     var voiceAssistant: Boolean
         get() = prefs.getBoolean(KEY_VOICE_ASSISTANT, false)

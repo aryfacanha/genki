@@ -104,7 +104,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
 @Composable
 internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Ativar assistente de voz",
-    "Lê em voz alta o tutorial e as perguntas do cadastro por voz. No alto da tela, o alto-falante liga ou cala a voz só naquele momento.",
+    "Lê o tutorial em voz alta. No cadastro por voz, as perguntas são sempre lidas; para calar, toque em Silenciar a voz.",
     checked,
     onChange,
 )

@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: botão de voz abaixo do microfone (DEC-050) e pré-revisão heurística geral, versão 1.0.16 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/3d0198e; retorno do autor sobre a 1.0.15 e pedido de revisão heurística total.
+Realizado: alto-falante como botão com texto abaixo do microfone em todas as telas da voz, piscando enquanto fala (também no tutorial); leitura ligada ao abrir a voz; pré-revisão heurística (19 achados novos, situação dos de 29/10).
+Decisões aceitas: DEC-050 (30/10).
+Verificado: build e 176 testes; emulador API 35 (botão, piscar, leitura ligada; capacidade com 15 remédios; fonte 2,0×; primeira abertura); dados restaurados byte a byte.
+Não verificado: fala real e piscar no A31; piscar no tutorial; TalkBack.
+Próxima tarefa: autor escolher achados a corrigir; lote 2 restante; revisão do Codex.
+Links: docs/PRE_REVISAO_HEURISTICA_1.0.16.md, docs/DECISOES.md (DEC-050).
+```
+
+```text
 ENTREGA — App Android: espera da voz revertida e leitura ligável na voz (DEC-050), versão 1.0.15 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/b0b7d45; retorno do autor sobre a 1.0.14.
 Realizado: `SpeechInput` de volta ao da 1.0.13 (sem o aviso de pausa); alto-falante sempre visível na voz, ligando ou calando a leitura só naquele cadastro; sem leitura, microfone só no toque; textos de Ajustes.
