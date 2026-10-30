@@ -100,11 +100,20 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
     }
 }
 
+/** Assistente de voz (DEC-049), na introdução e em Ajustes. */
+@Composable
+internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
+    "Ativar assistente de voz",
+    "Lê em voz alta o tutorial e as perguntas do cadastro por voz. Para calar só naquele momento, toque no alto-falante no alto da tela.",
+    checked,
+    onChange,
+)
+
 /** Na voz, ouvir sozinho depois da pergunta (DEC-040). */
 @Composable
 internal fun AutoListenSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Na voz, ouvir sozinho depois da pergunta",
-    "O microfone abre quando o Genki termina de perguntar. Se desligar, toque no microfone a cada resposta.",
+    "O microfone abre sozinho depois de cada pergunta. Se desligar, toque no microfone a cada resposta.",
     checked,
     onChange,
 )

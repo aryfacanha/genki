@@ -50,6 +50,7 @@ fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false,
     val container = (context.applicationContext as GenkiApplication).container
     val settings by container.settings.reminders.collectAsStateWithLifecycle()
     var autoListen by remember { mutableStateOf(container.settings.autoListen) }
+    var voiceAssistant by remember { mutableStateOf(container.settings.voiceAssistant) }
     // Permissões mudam fora do app; relê ao voltar para a tela.
     var resumes by remember { mutableIntStateOf(0) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
@@ -83,6 +84,8 @@ fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false,
             SoundChoices(settings.alarmSound, container.settings::setAlarmSound)
 
             SectionHeader("Voz")
+            VoiceAssistantSwitch(voiceAssistant) { voiceAssistant = it; container.settings.voiceAssistant = it }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             AutoListenSwitch(autoListen) { autoListen = it; container.settings.autoListen = it }
 
             SectionHeader("Permissões", Modifier.onGloballyPositioned { permissionsY = it.positionInParent().y.toInt() })

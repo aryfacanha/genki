@@ -193,7 +193,10 @@ object NameCommands {
 
     private fun capitalize(name: String) = name.replaceFirstChar { it.uppercase() }
 
-    /** Frase falada da lista: "Entendi 3 remédios: A, B e C. Está certo?". */
+    /**
+     * Frase falada da lista: "Entendi 3 remédios: A, B e C. Se estiver certo, toque em Continuar." Instrui o toque em
+     * vez de perguntar por voz (bateria do autor, 30/10).
+     */
     fun summary(drafts: List<MedicationDraft>, changed: Boolean = false): String {
         val names = drafts.map { it.name ?: "um sem nome" }
         val list = if (names.size == 1) names.single() else names.dropLast(1).joinToString(", ") + " e " + names.last()
@@ -203,6 +206,6 @@ object NameCommands {
             drafts.size == 1 -> "Agora é"
             else -> "Agora são"
         }
-        return "$start $count: $list. Está certo?"
+        return "$start $count: $list. Se estiver certo, toque em Continuar."
     }
 }

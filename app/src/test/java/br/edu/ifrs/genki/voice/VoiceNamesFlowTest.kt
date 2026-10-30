@@ -39,7 +39,9 @@ class VoiceNamesFlowTest {
         vm.heard("losartana 50 mg 1 comprimido todos os dias às 8 uso contínuo e metformina", null)
         assertEquals(VoicePhase.NAMES, vm.state.value.phase)
         assertEquals(listOf("Losartana", "Metformina"), names)
-        assertEquals("Entendi 2 remédios: Losartana e Metformina. Está certo?", vm.state.value.prompt?.text)
+        assertEquals("Entendi 2 remédios: Losartana e Metformina. Se estiver certo, toque em Continuar.", vm.state.value.prompt?.text)
+        // A lista não pergunta por voz: o microfone não abre sozinho nela.
+        assertEquals(false, vm.state.value.prompt?.listen)
         // Confirmado, segue para o que falta (Losartana completa; Metformina sem dose).
         vm.heard("pronto", null)
         assertEquals(VoicePhase.ASKING, vm.state.value.phase)

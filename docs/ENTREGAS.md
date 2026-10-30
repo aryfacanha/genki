@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: assistente de voz opcional (DEC-049) e fala que cortava, versão 1.0.14 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/b1e5a40; retorno do autor sobre o lote 1 (itens 5, 6, 7).
+Realizado: "Ativar assistente de voz" (introdução e Ajustes, desligado por padrão); silenciar no topo da voz e no balão do tutorial; tutorial lido passo a passo com o assistente ligado; conferência dos nomes instrui tocar em Continuar; espera da voz desde que volta a ouvir (2,5 s, 6 trechos) com aviso na tela.
+Decisões aceitas: DEC-049 (30/10).
+Verificado: build e 176 testes; emulador API 35 (interruptor, alto-falante na voz e no tutorial, silenciar entre passos).
+Não verificado: fala audível, corte com voz real, interruptor na introdução, fonte 2,0×, TalkBack.
+Próxima tarefa: autor testar no A31; lote 2 restante; revisão do Codex.
+Links: docs/DECISOES.md (DEC-049), docs/RESULTADO_BATERIA_A31_2026-10-30.md.
+```
+
+```text
 ENTREGA — App Android: lote 1 do retorno da bateria de 30/10, versão 1.0.13 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/57f2f55; pedido do autor ("Faça o lote 1, e deixe na fila o lote 2").
 Realizado: textos de Ajustes; nome repetido avisado no começo (formulário e voz); faixa de lembretes nos Detalhes; Resolver em Ajustes rola até Permissões; exemplo falado na voz; pausa 2 s; verbos no passado fora do nome; câmera Experimental. Roteiro da bateria atualizado.

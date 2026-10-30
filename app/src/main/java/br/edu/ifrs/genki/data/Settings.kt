@@ -34,6 +34,14 @@ class Settings(context: Context) {
         get() = prefs.getBoolean(KEY_AUTO_LISTEN, true)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_LISTEN, value).apply()
 
+    /**
+     * Assistente de voz (DEC-049): lê em voz alta o tutorial e as perguntas do cadastro por voz (RF19). Desligado por
+     * padrão (bateria do autor, 30/10: a fala longa incomodava); liga na introdução ou em Ajustes.
+     */
+    var voiceAssistant: Boolean
+        get() = prefs.getBoolean(KEY_VOICE_ASSISTANT, false)
+        set(value) = prefs.edit().putBoolean(KEY_VOICE_ASSISTANT, value).apply()
+
     /** Introdução concluída ou pulada; não aparece de novo sozinha. */
     var introDone: Boolean
         get() = prefs.getBoolean(KEY_INTRO_DONE, false)
@@ -57,5 +65,6 @@ class Settings(context: Context) {
         private const val KEY_ALARM = "alarm_sound"
         private const val KEY_AUTO_LISTEN = "voice_auto_listen"
         private const val KEY_INTRO_DONE = "intro_done"
+        private const val KEY_VOICE_ASSISTANT = "voice_assistant"
     }
 }

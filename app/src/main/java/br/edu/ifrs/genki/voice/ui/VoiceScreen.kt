@@ -49,6 +49,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -94,6 +95,7 @@ import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
 import br.edu.ifrs.genki.ui.components.genkiFieldColors
 import br.edu.ifrs.genki.voice.NameCommands
+import br.edu.ifrs.genki.ui.components.VoiceMuteButton
 import br.edu.ifrs.genki.voice.Speaker
 import br.edu.ifrs.genki.voice.SpeechInput
 import br.edu.ifrs.genki.voice.VoiceQuestions
@@ -124,6 +126,7 @@ fun VoiceScreen(
             override fun partial(text: String) = viewModel.partial(text)
             override fun result(text: String, latencyMs: Long?) = viewModel.heard(text, latencyMs)
             override fun error(code: Int) = viewModel.recognitionError(code)
+            override fun pausing(active: Boolean) = viewModel.pausing(active)
         })
     }
     DisposableEffect(Unit) {
@@ -145,15 +148,40 @@ fun VoiceScreen(
     // dada, com a tela à vista e numa pergunta; se ninguém falar, o reconhecedor para e espera o toque.
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     // Pode ser desligado na introdução ou em Ajustes.
-    val autoListen = remember { (context.applicationContext as GenkiApplication).container.settings.autoListen }
+    val settings = remember { (context.applicationContext as GenkiApplication).container.settings }
+    val autoListen = remember { settings.autoListen }
+    // Assistente de voz (DEC-049): sem ele, as perguntas ficam só na tela e o microfone abre logo depois delas.
+    val voiceOn = remember { settings.voiceAssistant }
+    // Silenciar só nesta tela, sem desligar o assistente.
+    var muted by rememberSaveable { mutableStateOf(false) }
+    // Pergunta sendo lida agora (silenciar no meio dela abre o microfone como se a leitura tivesse terminado).
+    var speakingId by remember { mutableIntStateOf(-1) }
     val current by rememberUpdatedState(state)
+    val afterPrompt = { prompt: Prompt ->
+        speakingId = -1
+        val ready = prompt.listen && autoListen && current.phase in setOf(VoicePhase.ASKING, VoicePhase.NAMES) && !current.listening &&
+            !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (ready && current.prompt?.id == prompt.id && input.isAvailable()) input.start()
+    }
     LaunchedEffect(state.prompt) {
         val prompt = state.prompt ?: return@LaunchedEffect
-        speaker.speak(prompt.text) {
-            val ready = prompt.listen && autoListen && current.phase in setOf(VoicePhase.ASKING, VoicePhase.NAMES) && !current.listening &&
-                !current.correctionPending && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
-                ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-            if (ready && current.prompt?.id == prompt.id && input.isAvailable()) input.start()
+        if (voiceOn && !muted) {
+            speakingId = prompt.id
+            speaker.speak(prompt.text) { afterPrompt(prompt) }
+        } else {
+            afterPrompt(prompt)
+        }
+    }
+    val toggleMute = {
+        muted = !muted
+        val prompt = state.prompt
+        if (muted) {
+            speaker.stop()
+            if (prompt != null && speakingId == prompt.id) afterPrompt(prompt)
+        } else if (prompt != null && !state.listening) {
+            // Voltou a voz: relê a pergunta da tela.
+            speaker.speak(prompt.text)
         }
     }
     val listenNow = {
@@ -223,6 +251,7 @@ fun VoiceScreen(
                 onBack = handleBack,
                 actionLabel = "Cancelar",
                 onAction = handleCancel,
+                extra = if (voiceOn) ({ VoiceMuteButton(muted, toggleMute) }) else null,
             )
             when (state.phase) {
                 VoicePhase.INTRO -> Intro(state, onMic, preferTyping)
@@ -363,7 +392,7 @@ private fun ColumnScope.Names(
     Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
         SectionTitle(if (state.drafts.size == 1) "Entendi este remédio" else "Entendi estes ${state.drafts.size} remédios")
         Text(
-            "Confira os nomes antes de seguir. Toque no nome para corrigir.",
+            "Confira os nomes. Toque no nome para corrigir. Se estiver tudo certo, toque em Continuar.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
         )
@@ -720,7 +749,11 @@ private fun Listening(state: VoiceUiState, idle: String, center: Boolean = true)
     val align = if (center) TextAlign.Center else TextAlign.Start
     Column(Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }) {
         if (state.listening) {
-            Text("Ouvindo… toque para parar", fontWeight = FontWeight.SemiBold, textAlign = align, modifier = Modifier.fillMaxWidth())
+            Text(
+                // Entre trechos da mesma resposta (bateria do autor, 30/10: a fala ainda cortava).
+                if (state.pausing) "Pode continuar falando. Para terminar, toque no microfone." else "Ouvindo… toque para parar",
+                fontWeight = FontWeight.SemiBold, textAlign = align, modifier = Modifier.fillMaxWidth(),
+            )
             if (state.partial.isNotEmpty()) {
                 Text("“${state.partial}”", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = align, modifier = Modifier.fillMaxWidth())
             }

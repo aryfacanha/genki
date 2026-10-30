@@ -29,4 +29,9 @@ autor (edição da Losartana?) antes de tratar como defeito. **Esclarecido em 30
 
 **Lote 1 aceito pelo autor em 30/10 ("Faça o lote 1") e implementado na 1.0.13:** itens 1, 3, 5, 7, 11, 12, 13, 15. **Lote 2 na fila até o autor aceitar o lote 1:** itens 2, 4, 10. Item 6 (D7) mantido como está; 8, 9 e 14 respondidos.
 
+**Retorno do lote 1 (30/10, 1.0.13):** itens 1, 3, 4 (B14, C1, D8), 8 e 13 ok ("No demais, passou ok"). Refeitos na 1.0.14:
+- **5 (exemplo falado):** fala longa não deve ser padrão → DEC-049, assistente de voz opcional, desligado por padrão, com botão de silenciar.
+- **6 (pausa):** ainda cortava no meio → espera conta desde que o reconhecedor volta a ouvir, 2,5 s, aviso "Pode continuar falando". A conferência dos nomes não pergunta mais por voz: instrui tocar em Continuar.
+- **7 (verbos):** pergunta sobre a "calibragem" respondida no chat (lista fixa `COMMON` em `voice/VoiceParser.kt`; sem aprendizado).
+
 Fila depois das baterias (pedido do autor, 30/10): redução do tamanho do APK (`ESTADO.md`, pendências).

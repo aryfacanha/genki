@@ -72,8 +72,8 @@ class NameCommandsTest {
 
     @Test
     fun spokenSummary() {
-        assertEquals("Entendi 3 remédios: Rivaroxabana, Metoprolol e Sinvastatina. Está certo?", NameCommands.summary(list))
-        assertEquals("Agora é 1 remédio: Rivaroxabana. Está certo?", NameCommands.summary(listOf(riva), changed = true))
+        assertEquals("Entendi 3 remédios: Rivaroxabana, Metoprolol e Sinvastatina. Se estiver certo, toque em Continuar.", NameCommands.summary(list))
+        assertEquals("Agora é 1 remédio: Rivaroxabana. Se estiver certo, toque em Continuar.", NameCommands.summary(listOf(riva), changed = true))
     }
 
     @Test

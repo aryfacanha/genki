@@ -47,7 +47,9 @@ import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.SecondaryButton
+import br.edu.ifrs.genki.data.Settings
 import br.edu.ifrs.genki.ui.settings.SoundChoices
+import br.edu.ifrs.genki.ui.settings.VoiceAssistantSwitch
 
 /**
  * Introdução na primeira abertura (DEC-041, pedido do autor; fora da proposta): o que o Genki faz e os avisos (som e
@@ -84,7 +86,7 @@ fun IntroScreen(onDone: () -> Unit) {
         LaunchedEffect(page) { scroll.scrollTo(0) }
         Column(Modifier.weight(1f).verticalScroll(scroll).padding(vertical = 8.dp)) {
             when (page) {
-                0 -> Welcome()
+                0 -> Welcome(settings)
                 else -> Notices()
             }
         }
@@ -115,7 +117,7 @@ private fun Paragraph(text: String) {
 }
 
 @Composable
-private fun Welcome() {
+private fun Welcome(settings: Settings) {
     Box(
         Modifier.padding(start = 20.dp, top = 8.dp, bottom = 8.dp).size(64.dp)
             .background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(16.dp)),
@@ -129,6 +131,10 @@ private fun Welcome() {
     Paragraph("Tudo fica só neste celular.")
     Paragraph("Para letras maiores, aumente o tamanho da fonte nas configurações do celular.")
     Paragraph("Depois, você pode ver um tutorial rápido.")
+    // Na tela inicial, desligado por padrão (DEC-049).
+    var voiceAssistant by rememberSaveable { mutableStateOf(settings.voiceAssistant) }
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(top = 8.dp))
+    VoiceAssistantSwitch(voiceAssistant) { voiceAssistant = it; settings.voiceAssistant = it }
 }
 
 @Composable

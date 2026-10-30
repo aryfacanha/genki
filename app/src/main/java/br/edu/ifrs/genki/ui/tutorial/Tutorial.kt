@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,8 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import br.edu.ifrs.genki.GenkiApplication
+import br.edu.ifrs.genki.ui.components.VoiceMuteButton
 import br.edu.ifrs.genki.voice.Speaker
 
 /** Partes da tela que o tutorial destaca; cada uma marcada com [tutorialTarget] onde é desenhada. */
@@ -95,13 +98,18 @@ class TutorialController {
     var offering by mutableStateOf(false)
         private set
 
+    /** Assistente de voz silenciado só neste tutorial (DEC-049); volta ao normal quando ele fecha. */
+    var muted by mutableStateOf(false)
+        private set
+
     val current: TutorialStep? get() = step?.let(TutorialSteps.all::getOrNull)
 
     fun offer() { offering = true }
     fun start() { offering = false; step = 0 }
-    fun next() { step = step?.let { if (it + 1 < TutorialSteps.all.size) it + 1 else null } }
-    fun back() { step = step?.let { if (it > 0) it - 1 else null } }
-    fun close() { offering = false; step = null }
+    fun next() { step = step?.let { if (it + 1 < TutorialSteps.all.size) it + 1 else null }; if (step == null) muted = false }
+    fun back() { step = step?.let { if (it > 0) it - 1 else null }; if (step == null) muted = false }
+    fun close() { offering = false; step = null; muted = false }
+    fun toggleMute() { muted = !muted }
 }
 
 val LocalTutorial = staticCompositionLocalOf<TutorialController?> { null }
@@ -129,8 +137,11 @@ private const val OFFER_TEXT =
 /** Camada escura com o recorte no alvo e o balão; bloqueia toques na tela de baixo. */
 @Composable
 fun TutorialOverlay(controller: TutorialController) {
+    if (!controller.offering && controller.step == null) return
+    val voiceOn = (LocalContext.current.applicationContext as GenkiApplication).container.settings.voiceAssistant
+    if (voiceOn) TutorialVoice(controller)
     if (controller.offering) {
-        Offer(controller)
+        Offer(controller, voiceOn)
         return
     }
     val index = controller.step ?: return
@@ -158,7 +169,7 @@ fun TutorialOverlay(controller: TutorialController) {
                 drawRoundRect(Color.White, topLeft, size, corner, style = Stroke(3.dp.toPx()))
             }
         }
-        val balloon = @Composable { modifier: Modifier -> Balloon(index, step, controller, modifier) }
+        val balloon = @Composable { modifier: Modifier -> Balloon(index, step, controller, voiceOn, modifier) }
         when {
             target == null -> balloon(Modifier.align(Alignment.Center))
             TutorialSteps.balloonAbove(target, height) -> Box(
@@ -171,15 +182,24 @@ fun TutorialOverlay(controller: TutorialController) {
     }
 }
 
-/** Pergunta, na tela e em voz alta, se a pessoa quer o tutorial antes de começar (pedido do autor, 29/10). */
+/**
+ * Assistente de voz no tutorial (DEC-049): lê a pergunta inicial e cada passo; o botão de silenciar cala só este
+ * tutorial e, ao ligar de novo, relê o passo da tela.
+ */
 @Composable
-private fun Offer(controller: TutorialController) {
+private fun TutorialVoice(controller: TutorialController) {
     val context = LocalContext.current
     val speaker = remember { Speaker(context) }
-    DisposableEffect(speaker) {
-        speaker.speak("$OFFER_TITLE $OFFER_TEXT")
-        onDispose { speaker.stop(); speaker.shutdown() }
+    DisposableEffect(speaker) { onDispose { speaker.stop(); speaker.shutdown() } }
+    val text = if (controller.offering) "$OFFER_TITLE $OFFER_TEXT" else controller.current?.let { "${it.title}. ${it.text}" }
+    LaunchedEffect(text, controller.muted) {
+        if (text != null && !controller.muted) speaker.speak(text) else speaker.stop()
     }
+}
+
+/** Pergunta, na tela (e em voz alta com o assistente de voz), se a pessoa quer o tutorial (pedido do autor, 29/10). */
+@Composable
+private fun Offer(controller: TutorialController, voiceOn: Boolean) {
     BackHandler { controller.close() }
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.72f)).blockTouches()) {
         Surface(
@@ -189,11 +209,14 @@ private fun Offer(controller: TutorialController) {
             modifier = Modifier.align(Alignment.Center).padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
         ) {
             Column(Modifier.padding(start = 20.dp, end = 12.dp, top = 20.dp, bottom = 8.dp)) {
-                Text(
-                    OFFER_TITLE,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(end = 8.dp).semantics { heading() },
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        OFFER_TITLE,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.weight(1f).padding(end = 8.dp).semantics { heading() },
+                    )
+                    if (voiceOn) VoiceMuteButton(controller.muted, controller::toggleMute)
+                }
                 Text(
                     OFFER_TEXT,
                     style = MaterialTheme.typography.bodyLarge,
@@ -211,7 +234,7 @@ private fun Offer(controller: TutorialController) {
 }
 
 @Composable
-private fun Balloon(index: Int, step: TutorialStep, controller: TutorialController, modifier: Modifier) {
+private fun Balloon(index: Int, step: TutorialStep, controller: TutorialController, voiceOn: Boolean, modifier: Modifier) {
     val last = index == TutorialSteps.all.size - 1
     Surface(
         shape = RoundedCornerShape(20.dp),
@@ -220,7 +243,14 @@ private fun Balloon(index: Int, step: TutorialStep, controller: TutorialControll
         modifier = modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
     ) {
         Column(Modifier.padding(start = 20.dp, end = 12.dp, top = 16.dp, bottom = 8.dp)) {
-            Text("${index + 1} de ${TutorialSteps.all.size}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "${index + 1} de ${TutorialSteps.all.size}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                if (voiceOn) VoiceMuteButton(controller.muted, controller::toggleMute)
+            }
             Text(
                 step.title,
                 style = MaterialTheme.typography.titleLarge,

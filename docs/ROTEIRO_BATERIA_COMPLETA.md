@@ -1,7 +1,7 @@
 # Bateria completa de testes manuais — Genki no A31
 
 Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
-uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.13** (lote 1 do retorno de 30/10:
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.14** (lote 1 do retorno de 30/10 e DEC-049:
 `RESULTADO_BATERIA_A31_2026-10-30.md`), modo "Como alarme" no A31. Os resultados esperados vêm do código, das decisões (até a DEC-048) e
 das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
 anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
@@ -29,9 +29,11 @@ isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 | # | Faça | Deve acontecer |
 |---|---|---|
 | A0 | (Opcional, apaga os dados) Android → Apps → Genki → Armazenamento → Limpar dados; abrir o Genki | Introdução em 2 páginas: **Boas-vindas ao Genki** (o que faz e não faz; "Tudo fica só neste celular") e a dos avisos (som do lembrete Como notificação/Como alarme e **Permitir notificações**). **Começar** → pergunta **"Quer ver um tutorial rápido?"** na tela **e falada em voz alta**, com Agora não / Ver tutorial (DEC-045) |
+| A0b | Ajustes → Voz → **Ativar assistente de voz** [novo] | Vem **desligado**. Desligado: nada é falado no tutorial nem na voz, e não aparece o alto-falante. Ligado: aparece o alto-falante no topo da voz e no balão do tutorial (DEC-049) |
 | A1 | Ajustes → **Ver o tutorial** | Tela escurece, recorta o alvo e mostra balão "1 de 7". Passos: Adicionar medicamento, próximo lembrete, Usar voz, Digitar, Usar câmera (indo sozinho para a tela Adicionar e voltando), aba Medicamentos, aba Ajustes |
 | A2 | No tutorial: **Próximo** em todos (inclusive arrastando um pouco o dedo ao tocar); tocar na área escura; Voltar do Android no passo 3 | Próximo sempre avança; toque na área escura não faz nada; Voltar volta um passo (3 → 2) |
 | A3 | Abrir o tutorial de novo e tocar **Pular tutorial** no meio | Sai na tela em que estava, sem nada travado |
+| A3b | Com o assistente ligado, abrir o tutorial [novo] | Cada passo é lido em voz alta; tocar no alto-falante cala e o silêncio continua nos passos seguintes; tocar de novo relê o passo. Ao abrir o tutorial outra vez, a voz volta |
 | A4 | Abrir o Genki normalmente | Abre na **Hoje** com a data por extenso; barra inferior Hoje, Medicamentos, Ajustes; a aba ativa tem fundo verde-claro e rótulo em negrito |
 | A5 | Ir em Medicamentos → Ajustes → Voltar do Android | Volta para a Hoje (não acumula telas) |
 
@@ -113,15 +115,17 @@ pausas curtas no meio da frase não cortam. Pausa para entregar: **2 s** (era 1,
 
 | # | Faça / diga | Deve acontecer |
 |---|---|---|
-| E0 | Usar voz e **não tocar em nada** [novo] | A tela mostra e o app **fala** um exemplo: "Por exemplo: losartana, 50 miligramas, um comprimido, todos os dias, às 8 da manhã. Toque no microfone para falar." O microfone só abre no toque |
+| E0 | Usar voz e **não tocar em nada** [novo] | A tela mostra o exemplo "losartana, 50 miligramas…". Com o assistente **ligado**, ele também é falado; com ele **desligado**, nada é falado. O microfone só abre no toque |
+| E0b | Assistente ligado: durante uma pergunta falada, tocar no **alto-falante** [novo] | A fala para na hora e o microfone abre como se a pergunta tivesse terminado (se "ouvir sozinho" estiver ligado); as próximas perguntas não são faladas; tocar de novo relê a pergunta |
+| E1b | Responder com pausas longas para pensar, sem tocar no microfone [novo] | Durante a pausa aparece "**Pode continuar falando. Para terminar, toque no microfone.**"; a fala continua sendo juntada; tocar no microfone entrega na hora |
 | E1 | Usar voz → microfone → "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, uso contínuo" | Primeiro **Confira os remédios** com "Losartana"; "pronto" ou **Continuar** → direto para "Confira antes de salvar" |
 | E2 | Falar em pedaços, com pausa curta: "Losartana… (pausa) 50 miligramas… (pausa) às 8" [novo] | Um só cadastro com tudo; não corta no primeiro pedaço |
-| E3 | "Tomo losartana, metformina e sinvastatina"; depois "**Tomou** losartana" e "Eu **tomei** losartana" [novo] | **Confira os remédios** com os três nomes; falado "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Está certo?"; "tomou"/"tomei" não entram no nome |
+| E3 | "Tomo losartana, metformina e sinvastatina"; depois "**Tomou** losartana" e "Eu **tomei** losartana" [novo] | **Confira os remédios** com os três nomes; com o assistente ligado, falado: "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Se estiver certo, toque em Continuar." — **sem** abrir o microfone sozinho [novo]; "tomou"/"tomei" não entram no nome |
 | E4 | Na conferência: "trocar metformina por atenolol"; "não é sinvastatina, é simvastatina"; "remover atenolol" [novo] | Cada comando muda a lista na hora; nomes parecidos casam |
 | E5 | Na conferência: tocar no nome → dizer ou digitar "Rivaroxabana, Metoprolol" [novo] | Vira dois remédios separados |
 | E6 | Um nome de duas palavras sem "de" (ex.: "Losartana Metformina") [novo] | Aparece "São 2 remédios? Separar"; Separar divide |
 | E7 | Na conferência: X num nome; "Prefiro digitar" com um remédio e com vários [novo] | X pede confirmação e tira; Prefiro digitar com um → formulário; com vários → revisão |
-| E8 | "pronto" → responder **pelos botões** (dose, dias, horários, duração) | Uma pergunta por vez, falada em voz alta, com "Anotei …" antes da seguinte; revisão completa no fim |
+| E8 | "pronto" → responder **pelos botões** (dose, dias, horários, duração) | Uma pergunta por vez (falada em voz alta só com o assistente de voz ligado, com "Anotei …" antes da seguinte); revisão completa no fim |
 | E9 | Pergunta dos horários → **Escolher no relógio** → 07:30 → Adicionar outro → Confirmar | "07:30 e 19:30" |
 | E10 | "Metformina três vezes ao dia" → primeiro horário no relógio 07:30 | "Horários do dia: 07:30, 15:30 e 23:30"; tocar em 23:30 e escolher 22:00 troca só esse |
 | E11 | Pergunta dos dias → **Escolher os dias** → Seg e Sex | "segunda e sexta" |
@@ -132,7 +136,7 @@ pausas curtas no meio da frase não cortam. Pausa para entregar: **2 s** (era 1,
 | E16 | Dizer pela voz um nome já cadastrado (ex.: "Losartana") e "pronto" na conferência dos nomes [novo] | Aviso "Losartana já está cadastrado" **já na conferência**: Voltar e conferir (fica na lista) / Continuar mesmo assim (segue; ao salvar não pergunta de novo) |
 | E17 | "oi, tudo beleza, obrigado" | "Não entendi. Tente de novo." |
 | E18 | Não falar nada depois do microfone abrir | "Não ouvi nada. Toque no microfone e fale de novo."; não reabre sozinho |
-| E19 | Responder e **não tocar no microfone** | Depois da pergunta falada, o microfone abre sozinho ("Ouvindo…") |
+| E19 | Responder e **não tocar no microfone** | O microfone abre sozinho depois da pergunta ("Ouvindo…"): logo que ela aparece, com o assistente desligado; ao terminar de lê-la, com ele ligado |
 | E20 | Durante a escuta, tocar num botão de resposta | A escuta para e a resposta tocada vale |
 | E21 | X no topo ou Voltar durante a fala da pergunta e durante a escuta [novo] | Fala e escuta param; nada do que estava sendo dito entra no cadastro; com algo entendido, "Descartar cadastro?" |
 | E22 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" | O microfone só abre com toque (religue depois) |

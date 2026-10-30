@@ -62,4 +62,21 @@ class TutorialStepsTest {
         assertFalse(controller.offering)
         assertNull(controller.step)
     }
+
+    @Test
+    fun muteLastsOnlyForThisTutorial() {
+        // DEC-049: silenciar vale só para o tutorial aberto; o próximo começa com voz.
+        val controller = TutorialController()
+        controller.offer()
+        controller.toggleMute()
+        controller.start()
+        assertTrue(controller.muted)
+        controller.close()
+        assertFalse(controller.muted)
+        controller.start()
+        controller.toggleMute()
+        repeat(TutorialSteps.all.size) { controller.next() }
+        assertNull(controller.step)
+        assertFalse(controller.muted)
+    }
 }

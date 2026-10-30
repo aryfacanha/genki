@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** rodada 2 do lote 1 (retorno do autor: itens 5, 6 e 7 de `RESULTADO_BATERIA_A31_2026-10-30.md`, demais ok), versão 1.0.14 (versionCode 15): DEC-049 assistente de voz opcional, desligado por padrão (interruptor na primeira tela da introdução e em Ajustes; lê tutorial e perguntas da voz; alto-falante no topo da voz e no balão do tutorial silencia só naquele momento); conferência dos nomes sem pergunta falada nem microfone automático ("Se estiver certo, toque em Continuar"); voz: a espera entre trechos conta a partir de quando o reconhecedor volta a ouvir (`onReadyForSpeech`), 2,5 s, até 6 trechos, e a tela mostra "Pode continuar falando. Para terminar, toque no microfone.". Build/176 testes passam (+1 silenciar do tutorial; textos dos testes de nomes atualizados). Emulador API 35: interruptor desligado por padrão em Ajustes, voz sem alto-falante com o assistente desligado e com ele ligado, silenciar troca o ícone, balão do tutorial com alto-falante e silêncio mantido entre passos; ajustes do emulador restaurados byte a byte. **Não verificado:** fala audível (tutorial e perguntas), corte da fala com voz real no A31, interruptor na introdução (exige primeira abertura), fonte 2,0×, TalkBack.
+
 **30/10/2026, Claude Code (Opus 5.5):** lote 1 do retorno da bateria de 30/10 (`RESULTADO_BATERIA_A31_2026-10-30.md`, itens 1, 3, 5, 7, 11, 12, 13, 15), pedido do autor, versão 1.0.13 (versionCode 14): Ajustes "Repetir o lembrete" com texto sem negativa e sem nomes de botões; nome repetido avisado ao sair da etapa 1 do formulário e na conferência dos nomes da voz ("Continuar mesmo assim"; aceito não pergunta de novo ao salvar; checagem final mantida); Detalhes com faixa "Lembretes ativos/desativados" abaixo do nome; "Resolver em Ajustes" abre Ajustes rolado até Permissões; voz fala e mostra um exemplo ao abrir; pausa da voz 2 s (`SpeechInput.PAUSE_MS`); "tomou/tomei/…" fora do nome (`VoiceParser`); câmera com etiqueta "Experimental" e avisos no tutorial e na conferência. Build/175 testes passam (+2: verbo no passado; aviso na conferência dos nomes). Emulador API 35: etiqueta, aviso na etapa 1 com o nome cadastrado e os dois botões, faixa ativa/desativada, rolagem até Permissões (aba normal fica no topo), textos de Ajustes, exemplo na tela da voz. **Não verificado:** fala do exemplo audível, pausa de 2 s com fala real, aviso na conferência dos nomes na tela (coberto no ViewModel), fonte 2,0×, TalkBack. Lote 2 (itens 2, 4, 10) na fila até o autor aceitar o lote 1. Próximo: autor testar no A31.
 
 **30/10/2026, Claude Code (Opus 5.5):** `docs/ROTEIRO_BATERIA_COMPLETA.md` reescrito para a 1.0.12 a pedido do autor (teste 100% manual): introdução/tutorial, horário digitado, nome repetido, adiados após parada/reinício, grupo na Hoje, seção K do alarme (tela bloqueada, dois no mesmo horário, 1 min, vídeo, troca de modo), conferência dos nomes na voz e pausa de 1,5 s. Não executado. A31 mantido em Como alarme (autor).
@@ -50,6 +52,8 @@ neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se m
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
+
+**30/10, Claude Code (último):** 1.0.14 (DEC-049 e fala que cortava). Lote 1 aceito pelo autor, exceto 5/6 refeitos aqui. Próximo: autor testar 1.0.14; depois lote 2 restante (horário do primeiro remédio na introdução; uma notificação por horário). Revisão do Codex pendente de RV-048, lote 1 e DEC-049. Fila: tamanho do APK.
 
 **30/10, Claude Code (último):** lote 1 do retorno de 30/10 (1.0.13). Próximo: autor aceitar o lote 1 no A31; depois lote 2 (guias falados com liga/desliga e silenciar; horário do primeiro remédio na introdução; uma notificação por horário). Revisão do Codex pendente de RV-048 e do lote 1. Fila: tamanho do APK.
 
@@ -342,6 +346,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: preferência nova `voice_assistant` (padrão falso), `GenkiTopBar(extra=)`, versão 1.0.14 (versionCode 15); DEC-049 e espera da voz desde `onReadyForSpeech` (2,5 s, 6 trechos) — 176 testes; emulador — pendente: fala audível e corte com voz real no A31, Codex.
 
 - 2026-10-30 — Claude Code — versão 1.0.13 (versionCode 14); lote 1 do retorno da bateria (textos de Ajustes, nome repetido no começo, faixa de lembretes, rolagem até Permissões, exemplo falado, pausa 2 s, verbos no passado, câmera experimental) — 175 testes; emulador — pendente: A31 com o autor, Codex.
 
