@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Conferência DEC-048 no A31 — 29/10/2026 — Codex (GPT-6.1 Terra)
+Partida: main/953acb7, alvo 48f290b; pull atualizado.
+Realizado: relatório CONFERENCIA_DEC048_CODEX.md e atualização de estado, handoff e registro de IA. Dois S2 e dois S3 abertos; RV-047-01…04 fechados na cobertura executada. Nenhum código alterado, commit ou push.
+Decisões aceitas: nenhuma nova. Sugestões: reparos dos quatro achados, pendentes de avaliação do autor.
+Verificado: build e 173 testes executados; A31 Android 12, tela bloqueada, áudio por registros, limite de 1 min, vídeo pausado, adiado com processo morto e horário digitado. Testes temporários excluídos, ajustes e dois medicamentos originais conferidos pela interface.
+Não verificado: som de ouvido, TalkBack, Android 14+, demais cenários do relatório; release sem backup binário.
+Próxima tarefa: autor avaliar achados e solicitar correção e conferência.
+Links: docs/revisoes/CONFERENCIA_DEC048_CODEX.md.
+```
+
+```text
 ENTREGA — App Android: alarme de verdade (DEC-048) e RV-047-01…04, versão 1.0.11 — 29/10/2026 — Claude Code (Opus 5.5)
 Partida: `main`/`c6f58a9`; pedido do autor ("implementa o alarme de verdade"; confirmar alguns ou todos).
 Realizado e arquivos alterados: `reminders/AlarmSoundService.kt` e `reminders/AlarmActivity.kt` (novos), `reminders/Notifications.kt`, `ReminderReceiver.kt`, `ReminderScheduler.kt`, `domain/ActiveAlert.kt`, `ui/settings/SettingsScreen.kt`, `SettingsControls.kt`, `ui/components/TimeDialog.kt`, `AndroidManifest.xml` (FOREGROUND_SERVICE, FOREGROUND_SERVICE_MEDIA_PLAYBACK, USE_FULL_SCREEN_INTENT, VIBRATE, atividade e serviço), testes, `app/build.gradle.kts` (1.0.11); docs.
