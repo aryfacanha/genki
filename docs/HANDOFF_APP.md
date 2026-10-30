@@ -159,6 +159,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**1.0.20 (30/10, Claude Code):** backup do Android desligado (DEC-051); sem mudança de marco ou de código Kotlin.
+
 **Documentação de distribuição, Codex, 30/10:** `README.md` apresenta o TCC e `GUIA_INSTALACAO_TESTE.md` orienta instalação/teste informal da 1.0.19. Sem alteração de marco ou código; tutorial externo complementa o tutorial do app. Texto preparado, ainda sem revisão do autor.
 
 **Pré-congelamento, Codex, 30/10:** 1.0.12–1.0.17 revisadas no intervalo pedido. Nenhum bloqueio S1/S2 confirmado; RV-PC-01 (retorno ao reativar tratamento terminado) e RV-PC-02 (callback ausente na recusa síncrona do TTS, preexistente) são S3. N4 tem esse residual de texto; não declarar todos os estados de término integralmente fechados. Parecer técnico favorável ao congelamento com limites registrados; decisão do autor ainda separada. Ver relatório pré-congelamento.
@@ -184,6 +186,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**1.0.20 (30/10, Claude Code, A31):** atualização preservou a instalação (firstInstallTime 28/10); `dumpsys package` sem `ALLOW_BACKUP`; `bmgr backupnow br.edu.ifrs.genki` → "Backup is not allowed"; sem crash ao abrir. Não verificados: cadastros na tela (A31 apagado), transferência real entre aparelhos.
 
 **Documentação, Codex, 30/10:** proposta e requisitos oficiais abertos no Drive; guia/README confrontados com código, configuração e registros atuais, links locais conferidos. `allowBackup=true` e regras de backup atuais impedem prometer ausência absoluta de cópias fora do dispositivo; ressalva incluída. Sem novo build, teste em aparelho ou execução do guia. Os 180 testes e a instalação da 1.0.19 são registros do Claude Code, não verificações repetidas nesta entrega.
 
@@ -312,6 +316,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Backup (1.0.20):** `adb shell dumpsys package br.edu.ifrs.genki | grep pkgFlags` sem `ALLOW_BACKUP` e `adb shell bmgr backupnow br.edu.ifrs.genki` → "Backup is not allowed". Atualizar por cima de versão anterior mantém os cadastros.
+
 **Guia externo, 30/10:** ao mudar instalação, permissões, voz, câmera ou lembretes, conferir também `GUIA_INSTALACAO_TESTE.md` e README. Para exploração informal, o guia cobre cadastro manual → notificação/Entendi, voz/correção, câmera opcional e limpeza dos cadastros fictícios. Não substitui a bateria completa nem o protocolo acadêmico; roteiro não executado nesta entrega documental.
 
 **Pré-congelamento (Codex, 30/10, 1.0.17):** regressão do roteiro executada; nenhum S1/S2 confirmado. Se houver reparo dos S3, repetir somente seus reprodutores (`revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`): reativar terminado e recusa síncrona de `TextToSpeech.speak`. Preservar data final inclusiva, resposta por toque, callback único e descarte de callbacks de falas antigas/paradas. S3 são sugestões pendentes; não houve autorização ou correção de código nesta revisão.
@@ -380,6 +386,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração (manifest): `allowBackup="false"`, `data_extraction_rules.xml` excluindo tudo, `backup_rules.xml` removido; versão 1.0.20 (versionCode 21) (DEC-051) — 180 testes; A31 (flags e bmgr) — pendente: cadastros na tela do A31.
 
 - 2026-10-30 — Codex — README do TCC e guia de instalação/teste informal, índice e registros; partida `main`/`b93349e`, 1.0.19 concorrente (`2716065`) conciliada por releitura — fontes oficiais no Drive, código/configuração, consistência e links locais conferidos; sem código/configuração alterados ou novo build/teste — pendente: revisão do autor, compartilhamento junto do APK e verificações físicas já registradas; sem commit/push ou integração à monografia.
 

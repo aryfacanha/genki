@@ -30,7 +30,7 @@ O trabalho contempla um produto mínimo viável (MVP), a verificação técnica 
 
 ## Estado e verificação
 
-Em **30/10/2026**, a versão registrada é a **1.0.19**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31; a 1.0.19 reduz o tamanho do APK e mantém o código funcional da 1.0.18.
+Em **30/10/2026**, a versão registrada é a **1.0.20**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31; a 1.0.20 desliga o backup do Android e mantém o código funcional da 1.0.18.
 
 Esses registros são evidências de desenvolvimento. Permanecem verificações manuais do autor, incluindo fala e som audíveis e partes da bateria no A31. Não há comprovação de compatibilidade com todos os aparelhos nem de acessibilidade completa com TalkBack. O [estado do projeto](docs/ESTADO.md) e os [relatórios de revisão](docs/revisoes/) delimitam a cobertura executada.
 
@@ -51,7 +51,7 @@ O aplicativo auxilia a organização de informações inseridas pela pessoa. Nã
 
 Os cadastros ficam em banco Room no dispositivo. O Genki não exige conta, não possui servidor ou sincronização própria, não exibe anúncios e não armazena permanentemente áudio ou fotografias da câmera. O manifesto remove a permissão de internet do aplicativo; o serviço de reconhecimento de fala é uma dependência do sistema, com comportamento próprio.
 
-**O backup do Android está habilitado na configuração atual.** Conforme o aparelho e os ajustes do sistema, dados do aplicativo podem participar de backup ou transferência. Portanto, armazenamento local não significa garantia de que nenhuma cópia sairá do aparelho. O Genki não oferece exportação ou restauração própria dos cadastros. Para experimentar, use dados fictícios.
+**O backup do Android está desligado para o Genki** (desde a 1.0.20): os cadastros não vão para o backup na nuvem nem para a transferência entre aparelhos. Em compensação, ao desinstalar, limpar os dados ou trocar de celular, os cadastros se perdem; o Genki não oferece exportação ou restauração própria. Para experimentar, use dados fictícios.
 
 ## Tecnologias e organização
 

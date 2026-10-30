@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: backup do Android desligado, versão 1.0.20 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/e7054c1; decisão do autor ("Isso desliga o backup, pois tudo fica local.") sobre o achado da revisão do README/guia.
+Realizado: allowBackup="false"; data_extraction_rules.xml excluindo todos os domínios de cloud-backup e device-transfer; backup_rules.xml removido; versionCode 21 / 1.0.20; README e guia sem a ressalva do backup, com a perda dos cadastros ao desinstalar/limpar/trocar de celular; DEC-051.
+Verificado: assembleDebug/assembleRelease e 180 testes; APK assinado com a chave do autor (apksigner) e allowBackup=false (aapt2); A31 (Android 12): atualização por cima da 1.0.19, firstInstallTime mantido, pkgFlags sem ALLOW_BACKUP, bmgr backupnow "Backup is not allowed", sem crash no logcat ao abrir.
+Não verificado: cadastros na tela do A31 após a atualização (tela apagada, não desbloqueado), transferência real entre aparelhos.
+Links: app/src/main/AndroidManifest.xml; app/src/main/res/xml/data_extraction_rules.xml; docs/DECISOES.md (DEC-051).
+```
+
+```text
 ENTREGA — Revisão do README e do guia de instalação do Codex; ajuste do guia — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/2716065 com as alterações do Codex ainda sem commit; pedido do autor ("lê o handoff do GPT e revisa"; "faça o ajuste no guia").
 Realizado: README e guia conferidos contra o código da 1.0.19 (SDK, ABIs, rótulos, permissões, repetições, duração do alarme, internet removida, voz no aparelho, câmera em memória, reagendamento ao abrir, regras de backup em modelo): sem erro de fato. Guia: parágrafo sobre o aviso do Play Protect ("Instalar mesmo assim" oculto em "Mais detalhes", sem desativar o Play Protect), conforme relato do autor em outros aparelhos; link relativo para o README (repositório privado) trocado por pedido de acesso ao autor.

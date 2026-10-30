@@ -74,7 +74,7 @@ Em **Adicionar medicamento → Usar câmera**, permita a câmera e fotografe uma
 - **Os avisos dependem do Android.** Celular desligado, permissões bloqueadas, volume, Não perturbe e restrições de bateria podem impedir ou alterar a apresentação. Depois de usar **Forçar parada** nas configurações do Android, reabra o Genki. Tratamentos terminados ou com lembretes desativados não geram novos avisos.
 - **O som não é contínuo indefinidamente.** No modo alarme, cada disparo toca por até um minuto. Com **Repetir o lembrete** ligado, há até três repetições automáticas no intervalo escolhido; **Adiar** pede um novo aviso naquele intervalo.
 - **Nem toda programação é suportada.** Use horários e dias da semana definidos. Expressões como “dia sim, dia não” não são interpretadas automaticamente.
-- **Os dados ficam no aparelho, com ressalva do backup do sistema.** O Genki não tem conta ou sincronização própria e não guarda permanentemente áudio ou fotos. O backup do Android está habilitado na configuração atual e pode copiar dados conforme os ajustes do celular. Não há exportação ou restauração própria no Genki; não conte com recuperação após desinstalar ou limpar dados.
+- **Os dados ficam só no aparelho.** O Genki não tem conta ou sincronização própria, não guarda permanentemente áudio ou fotos e não participa do backup do Android nem da transferência para outro celular. Por isso, desinstalar, limpar os dados ou trocar de celular apaga os cadastros; não há exportação ou restauração própria.
 
 O aplicativo está em desenvolvimento acadêmico. A compatibilidade, a voz e a acessibilidade não foram verificadas em todos os celulares. Este roteiro serve à exploração e ao retorno informal; não substitui o protocolo de avaliação da pesquisa.
 
@@ -92,4 +92,4 @@ Para dar retorno ao autor, envie: **versão do APK recebido, modelo do celular, 
 
 ---
 
-Guia preparado em **30/10/2026**, com base no comportamento documentado da versão **1.0.19**. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
+Guia preparado em **30/10/2026**, com base no comportamento documentado da versão **1.0.20**. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
