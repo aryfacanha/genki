@@ -79,7 +79,7 @@ a 5 min, uso contínuo.
 | D4 | **Adiar** | Cartão "Lembrete adiado" **verde-claro com borda**, "Novo alerta às …", "Horário original: H"; o aviso volta no horário novo com "(adiado)" |
 | D5 | Adiar de novo → tirar o Genki dos recentes → **Android → Apps → Genki → Forçar parada** → abrir o Genki [novo] | O cartão "Lembrete adiado" continua e o aviso **ainda chega** no horário prometido, **uma vez só** (DEC-047) |
 | D6 | **Entendi** | Notificação e cartão somem; nada de "Tomado" nem histórico de tomada |
-| D7 | Tocar numa notificação de lembrete (no meio de um cadastro) | Abre a Hoje; o cadastro em andamento é preservado |
+| D7 | Tocar numa notificação de lembrete: (a) fora de um cadastro; (b) no meio de um cadastro | (a) Abre a Hoje; (b) continua no cadastro, sem perder nada (de propósito, DEC-032/033) |
 | D8 | Hoje depois de H | H como "Passou"; linha "Agora · HH:MM"; tocar num horário abre os Detalhes |
 | D9 | Dois ou três medicamentos de teste no **mesmo horário futuro** [novo] | Hoje: "Próximo lembrete · N medicamentos" com **Ver mais/Ver menos**; "Depois: … e mais N" |
 | D10 | Esse horário chegar | Um cartão só com os N avisos e **Ver um por um / Ver juntos**; Entendi de um tira só ele |
@@ -95,7 +95,6 @@ no **mesmo horário** H (3–5 min à frente) e "Teste E" em outro horário.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| K1 | Logo depois de salvar, olhar a barra de status | Ícone de despertador do Android; no relógio do Android, "próximo alarme" no horário do Genki |
 | K2 | Apagar a tela e **bloquear** o A31; esperar H | A tela acende sozinha com a **tela de alarme** por cima do bloqueio: horário, Teste C e Teste D, "Entendi" de cada, **Entendi todos** e **Adiar todos N min**; **som de alarme alto, em loop, com vibração, mesmo no silencioso** |
 | K3 | Na tela de alarme, **Entendi** só do Teste C | Teste C some da tela; **o som continua**; Teste D segue na tela |
 | K4 | **Entendi** do Teste D | O som para e a tela fecha; na barra de notificações não sobra nada desses dois (nem "Alarme do Genki tocando") |
