@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** 1.0.12 (release assinado, `ebad64f`) instalada no A31 por cima da 1.0.11 às 12:42: abre na Hoje sem crash, Losartana 08:00/20:00 e Rivaroxabana 08:00 preservadas, próximo despertador do sistema às 20:00 (modo Como alarme mantido). Cópia em `Desktop/Genki-teste/Genki-1.0.12-teste.apk`. Alarme de ouvido pendente com o autor.
+
 **30/10/2026, Claude Code (Opus 5.5):** reparo RV-048-01…04 (DEC-048), versão 1.0.12 (versionCode 13): 01/02 o `AlarmSoundService` usa notificação própria (id `Int.MAX_VALUE`, canal discreto `alarme_tocando`, "Alarme do Genki tocando") em vez da do lembrete, e ao parar remove só ela (`STOP_FOREGROUND_REMOVE`); as dos lembretes ficam independentes do serviço; 03 trocar o som (Ajustes ou introdução) reagenda horários e adiados (`GenkiApplication` observa `alarmSound` e chama `syncAll`); 04 texto de "Como alarme": "por até 1 minuto … Sem resposta, o aviso fica e a repetição toca de novo". Build/173 testes passam (sem teste unitário novo: só código de framework Android). Emulador API 35 (debug, dados restaurados byte a byte): dois lembretes às 12:19 e às 12:26 mantêm as duas notificações com o som tocando; Entendi do primeiro tira só a dele e o som continua; Entendi do segundo para o som e não sobra notificação; após 1 min sem resposta a notificação do lembrete fica; alarme → notificação apaga o despertador do sistema, notificação → alarme o recria; texto novo visível. **Não verificado:** A31 (desconectado; 1.0.12 não instalada), som de ouvido, tela cheia no Android 14+ (emulador sem a permissão), REPEAT já agendado mantém o tipo antigo de alarme até disparar (no disparo o modo atual é lido), TalkBack. Próximo: conferência pontual do Codex; instalar no A31 e o autor testar o alarme de ouvido.
 
 **29/10/2026, Codex (GPT-6.1 Terra):** conferência DEC-048 no A31, `953acb7`/app `48f290b`: RV-048-01/02 S2 e 03/04 S3 abertos; RV-047-01…04 fechados na cobertura executada. Build/173 testes executados; vídeo pausado e tela bloqueada conferidos por ADB; som não ouvido. Testes removidos e ajustes iniciais restaurados; detalhes e pendências em `revisoes/CONFERENCIA_DEC048_CODEX.md`. Sem alteração de código, commit ou push.
@@ -45,7 +47,7 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**30/10, Claude Code (último):** RV-048-01…04 reparados (1.0.12), conferidos no emulador. Próximo: conferência pontual do Codex só desses quatro (§7, DEC-048); instalar 1.0.12 no A31; autor ouvir o alarme (tela bloqueada, silencioso, com vídeo).
+**30/10, Claude Code (último):** RV-048-01…04 reparados (1.0.12), conferidos no emulador e 1.0.12 instalada no A31 (12:42, dados preservados). Próximo: conferência pontual do Codex só desses quatro (§7, DEC-048); autor ouvir o alarme (tela bloqueada, silencioso, com vídeo).
 
 **29/10, Claude Code (último):** residual do RV-INF-04 corrigido (1.0.9 no A31). Próximo: conferência pontual do Codex desse percurso; autor testa a voz.
 
