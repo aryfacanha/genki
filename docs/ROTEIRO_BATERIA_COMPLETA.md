@@ -1,148 +1,194 @@
 # Bateria completa de testes manuais — Genki no A31
 
-Criado em 28/10/2026 por Claude Code (Opus 5.5), a pedido do autor: os casos de uso notáveis do app, do começo ao
-fim, para um teste manual completo. Os resultados esperados vêm do código, da ESPEC e das revisões; **não foi
-executado assim, de ponta a ponta, no aparelho.** Versão de referência: `main`/`8fe9e49` (código de `61d4c22`,
-instalado no A31 em 28/10). Roteiros detalhados que esta bateria resume: `ROTEIRO_TESTE_DOSE_GRADES.md` (dose,
-grades, volume) e `ROTEIRO_TESTE_VOZ.md` (frases da voz).
+Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.12** (`main`/`ebad64f`, instalada
+no A31 em 30/10 às 12:42, modo "Como alarme"). Os resultados esperados vêm do código, das decisões (até a DEC-048) e
+das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
+anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
+detalhe: `ROTEIRO_TESTE_DOSE_GRADES.md`.
+
+Marcação: **[novo]** = mudou depois da bateria de 28/10 (vale testar primeiro se o tempo for curto). A seção K (alarme)
+vem logo depois da D, na ordem de execução; os números dos casos mudaram em relação à bateria de 28/10.
 
 ## Antes de começar
 
-- Fonte do aparelho em 1,5× (a sua), mídia em 8 ou mais, "Não perturbe" desligado, A31 desbloqueado.
-- Ajustes do Android → Apps → Genki → **Alarmes e lembretes: permitido** (sem isso o aviso pode atrasar).
-- Para os lembretes (seção D), use um horário **3 a 5 minutos à frente** do relógio: no relógio do app, toque nos
-  minutos e arraste o ponteiro até o minuto exato; confira na revisão antes de salvar.
-- Por caso, anote **ok** ou **problema** (o que apareceu + print). Exclua no fim tudo o que for de teste (seção J).
-- Os achados RV-DVC-01…05 da revisão do Codex foram corrigidos em 28/10 (casos E12, E13, G5–G7 marcados "corrigido"); se algum deles falhar, anote como achado.
+- Fonte do aparelho em 1,3× ou 1,5× (a sua), mídia em 8 ou mais, "Não perturbe" desligado, A31 desbloqueado.
+- Android → Apps → Genki → **Alarmes e lembretes: permitido** (sem isso o aviso pode atrasar).
+- Lembretes (seções D e K): use um horário **3 a 5 minutos à frente**. No relógio, toque em **Digitar o horário** e
+  digite a hora e o minuto exatos; confira na revisão antes de salvar.
+- Use nomes de teste ("Teste A", "Teste B" …) para não confundir com a Losartana e a Rivaroxabana; exclua tudo no fim
+  (seção M).
+- Por caso, anote **ok** ou **problema** (o que apareceu + print). Para mim ou para o Codex, o mais útil é: número do
+  caso, o que você fez, o que apareceu, horário.
 
-## A. Abertura e navegação (M0)
+## A. Primeira abertura, introdução e tutorial [novo]
+
+A primeira abertura só reaparece reinstalando do zero (apagar dados do app), o que **apaga seus medicamentos**. Por
+isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| A0 | Primeira abertura depois de instalar esta versão | Introdução "1 de 4": Boas-vindas → Como cadastrar → Do seu jeito (som, avisar de novo, tempo, ouvir sozinho) → Permitir avisos → **Começar** leva à Hoje. Ao reabrir, não aparece de novo; Ajustes → "Ver a introdução de novo" mostra outra vez (DEC-041) |
-| A1 | Abrir o Genki | Abre na **Hoje**, com a data por extenso; barra inferior Hoje, Medicamentos, Ajustes |
-| A2 | Tocar nas três abas | Cada uma abre sua tela; a aba ativa tem fundo verde-claro atrás do ícone e rótulo em negrito |
-| A3 | Medicamentos sem nenhum cadastro (se for o caso) | "Nenhum medicamento cadastrado."; o aviso fica na mesma altura do "Você ainda não possui lembretes." da Hoje (DEC-040) |
+| A0 | (Opcional, apaga os dados) Android → Apps → Genki → Armazenamento → Limpar dados; abrir o Genki | Introdução em 2 páginas: **Boas-vindas ao Genki** (o que faz e não faz; "Tudo fica só neste celular") e a dos avisos (som do lembrete Como notificação/Como alarme e **Permitir notificações**). **Começar** → pergunta **"Quer ver um tutorial rápido?"** na tela **e falada em voz alta**, com Agora não / Ver tutorial (DEC-045) |
+| A1 | Ajustes → **Ver o tutorial** | Tela escurece, recorta o alvo e mostra balão "1 de 7". Passos: Adicionar medicamento, próximo lembrete, Usar voz, Digitar, Usar câmera (indo sozinho para a tela Adicionar e voltando), aba Medicamentos, aba Ajustes |
+| A2 | No tutorial: **Próximo** em todos (inclusive arrastando um pouco o dedo ao tocar); tocar na área escura; Voltar do Android no passo 3 | Próximo sempre avança; toque na área escura não faz nada; Voltar volta um passo (3 → 2) |
+| A3 | Abrir o tutorial de novo e tocar **Pular tutorial** no meio | Sai na tela em que estava, sem nada travado |
+| A4 | Abrir o Genki normalmente | Abre na **Hoje** com a data por extenso; barra inferior Hoje, Medicamentos, Ajustes; a aba ativa tem fundo verde-claro e rótulo em negrito |
+| A5 | Ir em Medicamentos → Ajustes → Voltar do Android | Volta para a Hoje (não acumula telas) |
 
 ## B. Cadastro digitando (M1, RF01–RF03)
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| B1 | Adicionar medicamento | Tela "Como você quer cadastrar?" com Usar voz, Digitar, Usar câmera |
-| B2 | Digitar → Continuar sem preencher nada | Não avança; mensagem de erro do nome visível |
-| B3 | Nome "Teste A", concentração "50 mg", Unidade **Comprimido**, **+** uma vez | Quantidade "1 e meio"; campos brancos sobre o fundo; pergunta "Quanto você toma por vez" em destaque |
+| B1 | Adicionar medicamento | "Como você quer cadastrar?" com Usar voz, Digitar, Usar câmera; **Cancelar** no topo volta para a Hoje [novo] |
+| B2 | Digitar → Continuar sem preencher nada | Não avança; mensagem de erro do nome |
+| B3 | Nome "Teste A", concentração "50 mg", Unidade **Comprimido**, **+** uma vez | Quantidade "1 e meio"; campos brancos; pergunta "Quanto você toma por vez" em destaque |
 | B4 | Continuar → **Dias específicos** sem marcar → Continuar | "Selecione pelo menos um dia." |
-| B5 | Marcar Seg e Qua; Adicionar horário 08:00; Adicionar horário de novo e tentar 08:00 | O relógio avisa "Este horário já foi adicionado." e o OK fica apagado |
-| B6 | Trocar o segundo horário para 20:00 → Continuar | Etapa 3, duração |
-| B7 | "Tem data para terminar" e tentar escolher um término antes de hoje | Dias anteriores ao início desabilitados no calendário |
-| B8 | Uso contínuo → Continuar para revisão | Revisão: Teste A · 50 mg · **1 comprimido e meio** · segunda e quarta · 08:00 e 20:00 · Uso contínuo |
-| B9 | Na revisão, **Alterar** em Dias e horários → Todos os dias → Concluir alteração | Volta à revisão com "Todos os dias" |
-| B10 | **Confirmar e salvar** | No primeiro cadastro sem permissão: "Permitir notificações?" (permita). Aviso "Medicamento adicionado" e o cartão aparece na lista |
-| B11 | Cancelar no meio de um cadastro novo já preenchido | "Descartar cadastro?" — Continuar editando mantém; Descartar sai |
+| B5 | Marcar Seg e Qua; Adicionar horário → **Digitar o horário** → 08:00 → OK [novo] | Campos Hora e Minuto separados, rótulos inteiros; digitar "0","8" não pula sozinho para o minuto de forma errada; 08:00 aparece na lista |
+| B6 | Adicionar horário → Digitar → tocar no meio do minuto já preenchido e digitar "30" [novo] | O minuto é **substituído** por 30 (não vira "0030" nem "003") |
+| B7 | Ainda no diálogo, digitar 20:15 e **girar o celular** (rotação automática ligada) [novo] | 20:15 continua depois de girar |
+| B8 | Digitar hora 24 ou minuto 60, ou deixar vazio | OK fica apagado |
+| B9 | Adicionar horário igual a um já adicionado (08:00) | "Este horário já foi adicionado." e OK apagado |
+| B10 | Deixar 08:00 e 20:00 → Continuar → "Tem data para terminar" e tentar um término antes de hoje | Dias anteriores ao início desabilitados |
+| B11 | Uso contínuo → Continuar para revisão | Teste A · 50 mg · **1 comprimido e meio** · segunda e quarta · 08:00 e 20:00 · Uso contínuo |
+| B12 | **Alterar** em Dias e horários → Todos os dias → Concluir alteração | Volta à revisão com "Todos os dias" |
+| B13 | **Confirmar e salvar** | Aviso "Medicamento adicionado"; aparece na lista |
+| B14 | Cadastrar de novo com nome **"teste a"** (minúsculas) até salvar [novo] | Antes de gravar: "**Teste A já está cadastrado**" com **Voltar e conferir** (não grava) e **Cadastrar mesmo assim** (grava uma vez só). Teste os dois; exclua a cópia |
+| B15 | Cancelar no meio de um cadastro novo já preenchido | "Descartar cadastro?" — Continuar editando mantém; Descartar sai |
 
 ## C. Lista, detalhes, edição e exclusão (M1)
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| C1 | Medicamentos → Teste A | Detalhes com quanto toma, dias, horários, duração, "Lembretes: Ativos" |
-| C2 | Editar → trocar a quantidade para **2** → voltar sem salvar | "Descartar alterações?" |
+| C1 | Medicamentos → Teste A | Detalhes: quanto toma, dias, horários, duração, "Lembretes: Ativos" |
+| C2 | Editar → quantidade **2** → voltar sem salvar | "Descartar alterações?" |
 | C3 | Editar → quantidade 2 → Salvar alterações | Detalhes com "2 comprimidos" |
-| C4 | Editar de novo | Abre com Comprimido e quantidade 2, sem rolar sozinho |
-| C5 | Desativar lembretes | Lista mostra "Lembretes desligados"; **Ativar lembretes** volta ao normal (deixe ativo) |
-| C6 | Fechar o app (tirar dos recentes) e abrir de novo | Teste A continua lá, igual (dados locais, RNF06) |
+| C4 | Editar de novo sem mudar o nome → Salvar | Salva **sem** o aviso de nome repetido (o próprio não conta) |
+| C5 | Desativar lembretes → Ativar lembretes | Lista mostra "Lembretes desligados" e depois volta ao normal (deixe ativo) |
+| C6 | Tirar o app dos recentes e abrir de novo | Teste A igual (dados locais, RNF06) |
 
-## D. Lembretes (M2, RF09–RF11) — use um horário 3–5 min à frente
+## D. Lembretes como notificação (M2, RF09–RF11, RF24, RF25)
 
-Crie "Teste B", 1 comprimido, todos os dias, um horário H = agora + 3 a 5 min, uso contínuo.
+Ajustes → Som do lembrete → **Como notificação**. Crie "Teste B", 1 comprimido, todos os dias, horário H = agora + 3
+a 5 min, uso contínuo.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| D1 | Esperar até H com o app fechado | Notificação "Lembrete das H" / "Teste B · 1 comprimido" com **Entendi** e **Adiar N min**; som de notificação comum |
-| D2 | Abrir a Hoje durante o aviso | Cartão **Agora** com Entendi e Adiar; abaixo, o próximo horário |
-| D3 | Não responder por N min (Ajustes: 10 min por padrão) | O aviso repete, até 3 vezes |
-| D4 | **Adiar** (na notificação ou no cartão) | Cartão "Lembrete adiado" / "Novo alerta às …" / "Horário original: H"; o aviso volta no horário novo com "(adiado)"; o cartão adiado é **verde-claro com borda**, diferente do verde-escuro do que está tocando (DEC-040) |
-| D5 | **Entendi** | Notificação e cartão somem; nada de "Tomado" nem histórico de tomada |
-| D6 | Tocar numa notificação de lembrete | Abre a Hoje (se estiver no meio de um cadastro, ele é preservado) |
-| D7 | Hoje depois de H | H aparece como "Passou"; linha "Agora · HH:MM" separa passados e próximos; tocar num horário abre os Detalhes |
-| D8 | Ajustes: desligar a categoria "Lembretes de medicamentos" nas notificações do Android | A Hoje mostra o aviso de notificações bloqueadas com **Resolver em Ajustes**, que leva ao ajuste certo; religar faz o aviso sumir |
-| D9 | Ajustes do app | Repetição ("Avisar de novo se eu não responder"), "Tempo para avisar de novo" 10/20/30 e o estado das permissões ("Permitidas") |
-| D10 | Opcional: reiniciar o A31 com um horário futuro cadastrado | O lembrete seguinte ainda chega (alarmes reagendados ao ligar) |
-| D11 | Ajustes → Som do lembrete **Como alarme**; celular no silencioso; lembrete 3–5 min à frente | Toca com o som de alarme mesmo no silencioso (Não perturbe pode bloquear). Voltar para **Como notificação** depois (DEC-041) |
+| D1 | Esperar até H com o app fechado | Notificação "Lembrete das H" / "Teste B · 1 comprimido" com **Entendi** e **Adiar N min**; som de notificação comum; no silencioso, não toca |
+| D2 | Abrir a Hoje durante o aviso | Cartão **Agora** (verde-escuro) com Entendi e Adiar; abaixo, o próximo horário |
+| D3 | Não responder por N min (Ajustes: intervalo) | O aviso repete, até 3 vezes |
+| D4 | **Adiar** | Cartão "Lembrete adiado" **verde-claro com borda**, "Novo alerta às …", "Horário original: H"; o aviso volta no horário novo com "(adiado)" |
+| D5 | Adiar de novo → tirar o Genki dos recentes → **Android → Apps → Genki → Forçar parada** → abrir o Genki [novo] | O cartão "Lembrete adiado" continua e o aviso **ainda chega** no horário prometido, **uma vez só** (DEC-047) |
+| D6 | **Entendi** | Notificação e cartão somem; nada de "Tomado" nem histórico de tomada |
+| D7 | Tocar numa notificação de lembrete (no meio de um cadastro) | Abre a Hoje; o cadastro em andamento é preservado |
+| D8 | Hoje depois de H | H como "Passou"; linha "Agora · HH:MM"; tocar num horário abre os Detalhes |
+| D9 | Dois ou três medicamentos de teste no **mesmo horário futuro** [novo] | Hoje: "Próximo lembrete · N medicamentos" com **Ver mais/Ver menos**; "Depois: … e mais N" |
+| D10 | Esse horário chegar | Um cartão só com os N avisos e **Ver um por um / Ver juntos**; Entendi de um tira só ele |
+| D11 | Desligar a categoria "Lembretes de medicamentos" nas notificações do Android | Hoje mostra "Os lembretes não vão aparecer" com **Resolver em Ajustes**, que abre o ajuste certo; religar faz o aviso sumir |
+| D12 | Ajustes do app | "Avisar de novo se eu não responder", "Tempo para avisar de novo" 10/20/30, Permissões "Permitidas"/"Permitidos" |
+| D13 | Com um adiado pendente e um horário futuro, **reiniciar o A31** [novo] | Depois de ligar (sem abrir o app): o adiado ainda chega e o próximo horário também |
+
+## K. Lembretes como alarme (DEC-048, reparo 1.0.12) [novo]
+
+Ajustes → Som do lembrete → **Como alarme**. Texto da opção: "Toca como despertador por até 1 minuto … Sem resposta, o
+aviso fica e a repetição toca de novo." Celular **no silencioso** (Não perturbe desligado). Crie "Teste C" e "Teste D"
+no **mesmo horário** H (3–5 min à frente) e "Teste E" em outro horário.
+
+| # | Faça | Deve acontecer |
+|---|---|---|
+| K1 | Logo depois de salvar, olhar a barra de status | Ícone de despertador do Android; no relógio do Android, "próximo alarme" no horário do Genki |
+| K2 | Apagar a tela e **bloquear** o A31; esperar H | A tela acende sozinha com a **tela de alarme** por cima do bloqueio: horário, Teste C e Teste D, "Entendi" de cada, **Entendi todos** e **Adiar todos N min**; **som de alarme alto, em loop, com vibração, mesmo no silencioso** |
+| K3 | Na tela de alarme, **Entendi** só do Teste C | Teste C some da tela; **o som continua**; Teste D segue na tela |
+| K4 | **Entendi** do Teste D | O som para e a tela fecha; na barra de notificações não sobra nada desses dois (nem "Alarme do Genki tocando") |
+| K5 | Repetir com dois horários iguais; desta vez **puxar a barra de notificações** com o alarme tocando | Duas notificações de lembrete (Teste C e Teste D) **e** uma discreta "Alarme do Genki tocando". Entendi numa notificação tira só aquela; Entendi na outra para o som e não sobra nenhuma (RV-048-01/02) |
+| K6 | Deixar tocar **sem responder** | O som para em ~1 minuto; as notificações e o cartão Agora da Hoje continuam; a repetição volta a tocar depois do intervalo |
+| K7 | **Adiar todos** | Os dois viram "Lembrete adiado" na Hoje; voltam a tocar como alarme no horário novo |
+| K8 | Com um **vídeo tocando** (YouTube ou galeria) no horário do Teste E | O vídeo **pausa** (ou abaixa), o alarme é ouvido e aparece um aviso no topo, sem fechar o vídeo; tocar no aviso abre a tela de alarme |
+| K9 | Com o celular em uso (desbloqueado, em outro app) | Aviso no topo; tocar abre a tela de alarme; responder lá para o som |
+| K10 | Com um horário futuro marcado: trocar Ajustes para **Como notificação** e olhar a barra de status | O ícone de despertador **some** (RV-048-03); voltar para **Como alarme** e ele **volta** |
+| K11 | Girar a tela de alarme com fonte 2,0× | Nomes quebram em linhas, botões visíveis; em paisagem a lista rola |
 
 ## E. Cadastro por voz (M3, RF12–RF19)
 
-Frases completas e variações em `ROTEIRO_TESTE_VOZ.md`; aqui, o essencial.
+Frases e variações em `ROTEIRO_TESTE_VOZ.md`. A voz junta trechos: depois de falar, pare **1,5 s** e ela entrega;
+pausas curtas no meio da frase não cortam [novo].
 
 | # | Faça / diga | Deve acontecer |
 |---|---|---|
-| E1 | Usar voz → microfone → "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, uso contínuo" | Vai direto para "Confira antes de salvar", sem perguntas |
-| E2 | "Losartana" e responder **pelos botões** (dose, dias, horários, duração) | Uma pergunta por vez, **falada em voz alta**; botões em grade; revisão completa no fim |
-| E3 | Na pergunta dos horários, **Escolher no relógio** → 07:30 → Adicionar outro horário → OK → Confirmar horários | Relógio abre em 08:00 e depois 12 h após o último; "07:30 e 19:30" no resumo |
-| E4 | Na pergunta dos dias, **Escolher os dias** → Segunda e Sexta → Confirmar dias | "segunda e sexta" |
-| E5 | "Tomo losartana 50 mg um comprimido às 8 e metformina 850 mg um comprimido às 8 e às 20" | Dois medicamentos; perguntas dos dois; **Confirmar e salvar todos** → "2 medicamentos adicionados" |
-| E6 | Durante uma pergunta: "Algo errado? Corrigir por voz" → "na verdade às 10 da noite" | "Confira a correção" com 22:00; **Manter correção** aplica, **Desfazer** (ou voltar) desfaz |
-| E7 | Na revisão, **Corrigir** num medicamento | Abre o formulário preenchido; "Concluir correção" volta à revisão |
-| E8 | Só palavras sem dado: "oi, tudo beleza, obrigado" | "Não entendi. Tente de novo." (palavra desconhecida, como "banana azul", vira nome: limitação conhecida, a revisão mostra) |
-| E9 | **Prefiro digitar** numa pergunta | Formulário com o que já foi entendido |
-| E10 | Voltar com algo já entendido | "Descartar cadastro?" |
-| E11 | Mídia em 2 ao entrar na voz | Aviso "O volume está baixo…" no meio da tela, some em ~4 s |
-| E12 | "Metformina três vezes ao dia" → na pergunta do primeiro horário, "Escolher no relógio" → 07:30 | Aparece "Horários do dia: 07:30, 15:30 e 23:30" com os três horários em caixas; tocar num deles (23:30) e escolher 22:00 troca só esse; "Escolher outro primeiro horário" recomeça. Confirmar → a revisão mostra os três como ficaram. (RV-DVC-03; DEC-040) |
-| E13 | Abrir o relógio na pergunta dos horários e tocar "Algo errado? Corrigir por voz" | O seletor some e aparece "Diga a correção"; depois de Desfazer ou voltar, a pergunta volta sem o seletor aberto. (RV-DVC-05, corrigido) |
-| E14 | "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, **use** contínuo" | Um medicamento só, com Uso contínuo (não cria "Use"). (DEC-040) |
-| E15 | Na pergunta da dose, **Escolher a quantidade** → Unidade ml → + → Confirmar quantidade | Menu e − número + como no formulário; o cartão mostra "1,5 ml" e segue para os dias (DEC-040) |
-| E16 | Com dois medicamentos entendidos, tocar no **X** de um deles | "Tirar …?" com Tirar/Cancelar; Tirar remove só esse (DEC-040) |
-| E17 | Responder uma pergunta da voz e **não tocar no microfone** | Ao terminar de falar a pergunta seguinte, o app começa a ouvir sozinho ("Ouvindo…"). Se ninguém falar, aparece "Não ouvi nada…" e ele **não** volta a ouvir sozinho (DEC-040) |
-| E18 | Durante a escuta automática, tocar num botão de resposta ou em "Escolher…" | A escuta para; a resposta tocada vale e nada é ouvido para a pergunta seguinte (DEC-040) |
-| E19 | Ouvir as perguntas com atenção (volume alto) | Antes de cada pergunta, o app fala o que acabou de anotar: "Anotei 2 comprimidos. Em quais dias…"; na revisão, "Anotei … Confira antes de salvar." (DEC-040) |
-| E20 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" e cadastrar por voz | O microfone só abre com toque (DEC-041) |
+| E1 | Usar voz → microfone → "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, uso contínuo" | Primeiro **Confira os remédios** com "Losartana"; "pronto" ou **Continuar** → direto para "Confira antes de salvar" |
+| E2 | Falar em pedaços, com pausa curta: "Losartana… (pausa) 50 miligramas… (pausa) às 8" [novo] | Um só cadastro com tudo; não corta no primeiro pedaço |
+| E3 | "Tomo losartana, metformina e sinvastatina" [novo] | **Confira os remédios** com os três nomes; falado "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Está certo?" |
+| E4 | Na conferência: "trocar metformina por atenolol"; "não é sinvastatina, é simvastatina"; "remover atenolol" [novo] | Cada comando muda a lista na hora; nomes parecidos casam |
+| E5 | Na conferência: tocar no nome → dizer ou digitar "Rivaroxabana, Metoprolol" [novo] | Vira dois remédios separados |
+| E6 | Um nome de duas palavras sem "de" (ex.: "Losartana Metformina") [novo] | Aparece "São 2 remédios? Separar"; Separar divide |
+| E7 | Na conferência: X num nome; "Prefiro digitar" com um remédio e com vários [novo] | X pede confirmação e tira; Prefiro digitar com um → formulário; com vários → revisão |
+| E8 | "pronto" → responder **pelos botões** (dose, dias, horários, duração) | Uma pergunta por vez, falada em voz alta, com "Anotei …" antes da seguinte; revisão completa no fim |
+| E9 | Pergunta dos horários → **Escolher no relógio** → 07:30 → Adicionar outro → Confirmar | "07:30 e 19:30" |
+| E10 | "Metformina três vezes ao dia" → primeiro horário no relógio 07:30 | "Horários do dia: 07:30, 15:30 e 23:30"; tocar em 23:30 e escolher 22:00 troca só esse |
+| E11 | Pergunta dos dias → **Escolher os dias** → Seg e Sex | "segunda e sexta" |
+| E12 | Pergunta da dose → **Escolher a quantidade** → ml → + | "1,5 ml" |
+| E13 | Durante uma pergunta: "Algo errado? Corrigir por voz" → "na verdade às 10 da noite" | "Confira a correção" com 22:00; Manter correção aplica, Desfazer desfaz |
+| E14 | Na revisão, **Corrigir** num medicamento | Formulário preenchido; "Concluir correção" volta à revisão |
+| E15 | Dois remédios de uma vez até salvar | **Confirmar e salvar todos** → "2 medicamentos adicionados" |
+| E16 | Dizer pela voz um nome já cadastrado (ex.: "Losartana") até salvar [novo] | Aviso "Losartana já está cadastrado" antes de gravar, com Voltar e conferir / Cadastrar mesmo assim |
+| E17 | "oi, tudo beleza, obrigado" | "Não entendi. Tente de novo." |
+| E18 | Não falar nada depois do microfone abrir | "Não ouvi nada. Toque no microfone e fale de novo."; não reabre sozinho |
+| E19 | Responder e **não tocar no microfone** | Depois da pergunta falada, o microfone abre sozinho ("Ouvindo…") |
+| E20 | Durante a escuta, tocar num botão de resposta | A escuta para e a resposta tocada vale |
+| E21 | X no topo ou Voltar durante a fala da pergunta e durante a escuta [novo] | Fala e escuta param; nada do que estava sendo dito entra no cadastro; com algo entendido, "Descartar cadastro?" |
+| E22 | Ajustes → desligar "Na voz, ouvir sozinho depois da pergunta" | O microfone só abre com toque (religue depois) |
+| E23 | Mídia em 2 ao entrar na voz | "O volume está baixo…" no meio da tela, some em ~4 s |
+| E24 | Modo avião e cadastrar por voz | Funciona se o reconhecedor do Google tiver o pacote pt-BR offline; senão, mensagem de erro e opção de digitar (anote qual) |
 
 ## F. Cadastro pela câmera (M4, RF20–RF23)
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| F1 | Usar câmera → permitir → apontar para uma caixa de remédio → **Tirar foto** | "Lendo a embalagem…" e depois "Confira o que eu li" com nome e concentração editáveis |
-| F2 | Conferir o que foi lido | **Nunca** preenche dose, dias, horários ou duração (só nome e concentração) |
+| F1 | Usar câmera → permitir → caixa de remédio → **Tirar foto** | "Lendo a embalagem…" → "Confira o que eu li" com nome e concentração editáveis; **Cancelar** no topo [novo] |
+| F2 | Conferir | **Nunca** preenche dose, dias, horários ou duração |
 | F3 | **Continuar por voz** | A voz começa pela pergunta da dose |
-| F4 | Repetir e **Continuar digitando** | Formulário com nome e concentração preenchidos |
-| F5 | Foto de algo sem texto (parede) | "Não consegui ler a embalagem." com Tentar de novo e Digitar |
-| F6 | Anotar quantas embalagens reais leram certo o nome e a concentração (meta da ESPEC: 20 ensaios) | Registro para a monografia; não é aprovado/reprovado aqui |
+| F4 | Repetir e **Continuar digitando** | Formulário com nome e concentração |
+| F5 | Foto de uma parede | "Não consegui ler a embalagem." com Tentar de novo e Digitar |
+| F6 | Anotar quantas embalagens reais leram certo nome e concentração (meta: 20 ensaios) | Registro para a monografia, não aprovado/reprovado aqui |
 
-## G. Dose (DEC-037–039) — detalhado em `ROTEIRO_TESTE_DOSE_GRADES.md` §A/B
+## G. Dose — detalhado em `ROTEIRO_TESTE_DOSE_GRADES.md`
 
 | # | Faça | Deve acontecer |
 |---|---|---|
 | G1 | Comprimido → − | "meio"; − apagado; revisão "meio comprimido" |
-| G2 | ml → + várias vezes | 1, 1,5, 2…; revisão "2,5 ml" etc. |
+| G2 | ml → + várias vezes | 1, 1,5, 2… |
 | G3 | Comprimido 2 → Cápsula; Comprimido meio → Cápsula | 2 continua; meio fica vazio |
 | G4 | Outro → "1 colher de sopa" | Revisão "1 colher de sopa" |
-| G5 | Gota → tocar no número → 120 → **+** | Continua 120 e o + fica apagado (o limite do + é 100; nada diminui). − vai a 119. (RV-DVC-01, corrigido) |
-| G6 | ml → tocar no número → 0,25 → **+**, depois **−** | 0,75 e de volta 0,25; com 0,25 o − fica apagado. (RV-DVC-02, corrigido) |
-| G7 | Medicamento antigo com "1/2 comprimido" → editar → **+** | Vira 1 ("1 comprimido"). (RV-DVC-04, corrigido) |
+| G5 | Gota → digitar 120 → + | Continua 120, + apagado; − vai a 119 |
+| G6 | ml → 0,25 → + e − | 0,75 e de volta 0,25 |
 
 ## H. Acessibilidade e legibilidade (RNF01–RNF04)
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| H1 | Fonte do Android no máximo (2,0×): Hoje, lista, formulário (menu aberto, contador), voz, revisão | Nada cortado; título "Novo medicamento" em duas linhas sem partir palavra; rolar quando necessário |
-| H2 | Fonte em 1,0× nas mesmas telas | Tudo inteiro, sem encolher sem necessidade |
-| H3 | TalkBack ligado: barra inferior, caixas de dias, menu de unidade, − e + | Lê nomes, "marcado/não marcado", "Diminuir"/"Aumentar" e o valor; anote o que soar confuso |
-| H4 | TalkBack na voz com mídia baixa | Lê o aviso de volume |
-| H5 | Sob luz forte, olhar campos, títulos e botões | Campos (brancos com borda) distintos de títulos; textos legíveis |
+| H1 | Fonte 2,0×: Hoje, lista, formulário, diálogo **Digitar o horário**, voz, Confira os remédios, revisão, tutorial, tela de alarme | Nada cortado; "Minuto" inteiro; rola quando precisa |
+| H2 | Fonte 1,0× nas mesmas telas | Tudo inteiro |
+| H3 | TalkBack: barra inferior, caixas de dias, menu de unidade, − e +, campos Hora/Minuto | Lê nomes, "marcado/não marcado", "Diminuir"/"Aumentar" e valores; anote o que soar confuso |
+| H4 | TalkBack no tutorial e na tela de alarme | Lê só o balão do tutorial; na tela de alarme lê nomes e botões |
+| H5 | TalkBack na voz com mídia baixa | Lê o aviso de volume |
+| H6 | Sob luz forte | Campos, títulos e botões distintos e legíveis |
 
 ## I. Robustez
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| I1 | Sem internet (modo avião): cadastro digitando e lembretes | Funcionam (app não usa rede); a voz pode depender do reconhecedor do Google |
-| I2 | Girar a tela ou trocar de app no meio do formulário e voltar | O que foi preenchido continua |
-| I3 | Negar a permissão do microfone ou da câmera | "Sem acesso ao microfone. Você pode permitir nas configurações ou digitar." / "Sem acesso à câmera. …" com Digitar e Voltar; o app não fecha |
+| I1 | Modo avião: cadastro digitando e lembretes | Funcionam (o app não usa rede) |
+| I2 | Girar a tela ou trocar de app no meio do formulário | O que foi preenchido continua |
+| I3 | Negar microfone ou câmera | Mensagem "Sem acesso ao microfone/à câmera…" com Digitar e Voltar; o app não fecha |
+| I4 | Atualizar o app por cima (próxima versão de teste) [novo] | Medicamentos e ajustes continuam (DEC-042) |
 
-## J. Limpeza
+## M. Limpeza
 
-Excluir Teste A, Teste B e os cadastros da voz e da câmera: Detalhes → **Excluir medicamento** → "Excluir …?" →
-Excluir → "Medicamento excluído". Voltar fonte, volume e permissões ao normal.
+Excluir todos os "Teste …" e os cadastros da voz e da câmera: Detalhes → **Excluir medicamento** → Excluir →
+"Medicamento excluído". Conferir que Losartana (08:00/20:00) e Rivaroxabana (08:00) continuam. Voltar fonte, volume,
+TalkBack, rotação e o som do lembrete ao que você usa.
 
 ## Fora desta bateria
 
-Precisão clínica (o app não promete), reconhecimento offline universal, "dia sim, dia não" e "por um mês" na voz (a
-tela pergunta), avaliação com participantes (feita pelo protocolo do TCC, não por este roteiro).
+Precisão clínica (o app não promete), reconhecimento offline universal, alarme com o celular desligado (não é
+possível), Android 14+ (o A31 é Android 12: a permissão de tela cheia não aparece), avaliação com participantes (pelo
+protocolo do TCC). A verificação técnica da voz (24 ensaios) e da câmera (20 ensaios) e o MET-3 têm roteiros próprios.
