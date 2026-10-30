@@ -68,6 +68,7 @@ fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit,
                     icon = CameraIcon,
                     label = "Usar câmera",
                     supportingText = "Use a embalagem para ajudar a preencher os dados.",
+                    badge = "Experimental",
                     onClick = onCamera,
                     modifier = Modifier.tutorialTarget(TutorialTarget.CAMERA),
                 )
@@ -83,6 +84,7 @@ private fun OptionCard(
     supportingText: String,
     onClick: () -> Unit,
     prominent: Boolean = false,
+    badge: String? = null,
     modifier: Modifier = Modifier,
 ) {
     val colors = MaterialTheme.colorScheme
@@ -103,6 +105,17 @@ private fun OptionCard(
             Spacer(Modifier.width(16.dp))
             Column {
                 Text(label, style = MaterialTheme.typography.titleMedium)
+                // Leitura ainda erra com frequência (bateria do autor, 30/10).
+                badge?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.onTertiaryContainer,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                            .background(colors.tertiaryContainer, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 8.dp, vertical = 2.dp),
+                    )
+                }
                 Text(supportingText, color = colors.onSurfaceVariant)
             }
         }

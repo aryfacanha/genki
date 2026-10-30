@@ -116,6 +116,8 @@ data class FormUiState(
     val savedMessage: String? = null,
     /** Nome igual a um já cadastrado: pergunta antes de gravar (achado 2 da pré-revisão, 29/10). */
     val duplicate: String? = null,
+    /** O aviso apareceu ao sair do nome (etapa 1), não ao salvar (bateria do autor, 30/10). */
+    val duplicateOnContinue: Boolean = false,
 )
 
 const val REVIEW = 3
@@ -167,6 +169,8 @@ class FormViewModel(
     fun hasUnsavedData(): Boolean = _state.value.changed || (mode is FormMode.New && _state.value.fields != FormFields())
     private var beforeSectionEdit: FormFields? = null
     private var saving = false
+    /** Nome repetido que a pessoa já aceitou no começo: não pergunta de novo ao salvar. */
+    private var acceptedDuplicate: String? = null
 
     init {
         if (sessionDraft != null) {
@@ -226,6 +230,25 @@ class FormViewModel(
             _state.update { it.copy(step = stepOf(first), fromReview = false, errors = result.problems.toMap()) }
             return
         }
+        // Cadastro novo: o nome repetido é avisado logo ao sair do nome, não só ao salvar (bateria do autor, 30/10).
+        val name = s.fields.name.trim()
+        if (!isEdit && s.step == 0 && name.isNotEmpty() && DuplicateNames.normalize(name) != acceptedDuplicate) {
+            viewModelScope.launch {
+                // Mostra o nome como está cadastrado ("Losartana"), não como foi digitado.
+                val repeated = repository.observeAll().first().map { it.name }
+                    .firstOrNull { DuplicateNames.normalize(it) == DuplicateNames.normalize(name) }
+                if (repeated != null) {
+                    _state.update { it.copy(duplicate = repeated, duplicateOnContinue = true) }
+                } else {
+                    advance(result, toReview)
+                }
+            }
+            return
+        }
+        advance(result, toReview)
+    }
+
+    private fun advance(result: DraftValidator.Result, toReview: Boolean) {
         beforeSectionEdit = null
         _state.update {
             it.copy(
@@ -259,13 +282,20 @@ class FormViewModel(
         return true
     }
 
-    /** "Cadastrar mesmo assim" no aviso de nome repetido. */
+    /** "Continuar mesmo assim" (ao sair do nome) ou "Cadastrar mesmo assim" (ao salvar) no aviso de nome repetido. */
     fun confirmDuplicate() {
-        _state.update { it.copy(duplicate = null) }
-        save(allowDuplicate = true)
+        val s = _state.value
+        _state.update { it.copy(duplicate = null, duplicateOnContinue = false) }
+        if (s.duplicateOnContinue) {
+            acceptedDuplicate = DuplicateNames.normalize(s.fields.name)
+            val toReview = s.fromReview || s.step == STEP_FIELDS.lastIndex
+            advance(validate(), toReview)
+        } else {
+            save(allowDuplicate = true)
+        }
     }
 
-    fun dismissDuplicate() = _state.update { it.copy(duplicate = null) }
+    fun dismissDuplicate() = _state.update { it.copy(duplicate = null, duplicateOnContinue = false) }
 
     /** "Confirmar e salvar" (cadastro) ou "Salvar alterações" (edição). Sempre pelo validador. */
     fun save(allowDuplicate: Boolean = false) {
@@ -289,7 +319,7 @@ class FormViewModel(
         }
         saving = true
         viewModelScope.launch {
-            if (!allowDuplicate) {
+            if (!allowDuplicate && valid.draft.name?.let(DuplicateNames::normalize) != acceptedDuplicate) {
                 val others = repository.observeAll().first().filter { it.id != editId }.map { it.name }
                 val repeated = DuplicateNames.find(listOfNotNull(valid.draft.name), others).firstOrNull()
                 if (repeated != null) {

@@ -1,8 +1,8 @@
 # Bateria completa de testes manuais — Genki no A31
 
 Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
-uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.12** (`main`/`ebad64f`, instalada
-no A31 em 30/10 às 12:42, modo "Como alarme"). Os resultados esperados vêm do código, das decisões (até a DEC-048) e
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.13** (lote 1 do retorno de 30/10:
+`RESULTADO_BATERIA_A31_2026-10-30.md`), modo "Como alarme" no A31. Os resultados esperados vêm do código, das decisões (até a DEC-048) e
 das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
 anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
 detalhe: `ROTEIRO_TESTE_DOSE_GRADES.md`.
@@ -52,18 +52,18 @@ isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 | B11 | Uso contínuo → Continuar para revisão | Teste A · 50 mg · **1 comprimido e meio** · segunda e quarta · 08:00 e 20:00 · Uso contínuo |
 | B12 | **Alterar** em Dias e horários → Todos os dias → Concluir alteração | Volta à revisão com "Todos os dias" |
 | B13 | **Confirmar e salvar** | Aviso "Medicamento adicionado"; aparece na lista |
-| B14 | Cadastrar de novo com nome **"teste a"** (minúsculas) até salvar [novo] | Antes de gravar: "**Teste A já está cadastrado**" com **Voltar e conferir** (não grava) e **Cadastrar mesmo assim** (grava uma vez só). Teste os dois; exclua a cópia |
+| B14 | Novo cadastro com nome **"teste a"** (minúsculas), unidade e quantidade → **Continuar** da etapa 1 [novo] | Logo ali: "**Teste A já está cadastrado**" com **Voltar e conferir** (fica na etapa 1) e **Continuar mesmo assim** (segue; ao salvar não pergunta de novo, grava uma vez só). Exclua a cópia |
 | B15 | Cancelar no meio de um cadastro novo já preenchido | "Descartar cadastro?" — Continuar editando mantém; Descartar sai |
 
 ## C. Lista, detalhes, edição e exclusão (M1)
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| C1 | Medicamentos → Teste A | Detalhes: quanto toma, dias, horários, duração, "Lembretes: Ativos" |
+| C1 | Medicamentos → Teste A | Detalhes: logo abaixo do nome, faixa verde com sino "**Lembretes ativos**" [novo]; depois quanto toma, dias, horários, duração |
 | C2 | Editar → quantidade **2** → voltar sem salvar | "Descartar alterações?" |
 | C3 | Editar → quantidade 2 → Salvar alterações | Detalhes com "2 comprimidos" |
 | C4 | Editar de novo sem mudar o nome → Salvar | Salva **sem** o aviso de nome repetido (o próprio não conta) |
-| C5 | Desativar lembretes → Ativar lembretes | Lista mostra "Lembretes desligados" e depois volta ao normal (deixe ativo) |
+| C5 | Desativar lembretes → Ativar lembretes | Faixa cinza "Lembretes desativados"; lista mostra "Lembretes desligados"; depois volta ao normal (deixe ativo) |
 | C6 | Tirar o app dos recentes e abrir de novo | Teste A igual (dados locais, RNF06) |
 
 ## D. Lembretes como notificação (M2, RF09–RF11, RF24, RF25)
@@ -83,8 +83,8 @@ a 5 min, uso contínuo.
 | D8 | Hoje depois de H | H como "Passou"; linha "Agora · HH:MM"; tocar num horário abre os Detalhes |
 | D9 | Dois ou três medicamentos de teste no **mesmo horário futuro** [novo] | Hoje: "Próximo lembrete · N medicamentos" com **Ver mais/Ver menos**; "Depois: … e mais N" |
 | D10 | Esse horário chegar | Um cartão só com os N avisos e **Ver um por um / Ver juntos**; Entendi de um tira só ele |
-| D11 | Desligar a categoria "Lembretes de medicamentos" nas notificações do Android | Hoje mostra "Os lembretes não vão aparecer" com **Resolver em Ajustes**, que abre o ajuste certo; religar faz o aviso sumir |
-| D12 | Ajustes do app | "Avisar de novo se eu não responder", "Tempo para avisar de novo" 10/20/30, Permissões "Permitidas"/"Permitidos" |
+| D11 | Desligar a categoria "Lembretes de medicamentos" nas notificações do Android | Hoje mostra "Os lembretes não vão aparecer" com **Resolver em Ajustes**, que abre Ajustes **já rolado até Permissões** [novo]; religar faz o aviso sumir. Abrir Ajustes pela aba continua no topo |
+| D12 | Ajustes do app | "**Repetir o lembrete**" com "Se o lembrete ficar sem resposta, o Genki avisa outra vez depois do tempo escolhido abaixo, até 3 vezes." [novo]; "Tempo para avisar de novo" 10/20/30; Permissões "Permitidas"/"Permitidos" |
 | D13 | Com um adiado pendente e um horário futuro, **reiniciar o A31** [novo] | Depois de ligar (sem abrir o app): o adiado ainda chega e o próximo horário também |
 
 ## K. Lembretes como alarme (DEC-048, reparo 1.0.12) [novo]
@@ -109,13 +109,14 @@ no **mesmo horário** H (3–5 min à frente) e "Teste E" em outro horário.
 ## E. Cadastro por voz (M3, RF12–RF19)
 
 Frases e variações em `ROTEIRO_TESTE_VOZ.md`. A voz junta trechos: depois de falar, pare **1,5 s** e ela entrega;
-pausas curtas no meio da frase não cortam [novo].
+pausas curtas no meio da frase não cortam. Pausa para entregar: **2 s** (era 1,5 s) [novo].
 
 | # | Faça / diga | Deve acontecer |
 |---|---|---|
+| E0 | Usar voz e **não tocar em nada** [novo] | A tela mostra e o app **fala** um exemplo: "Por exemplo: losartana, 50 miligramas, um comprimido, todos os dias, às 8 da manhã. Toque no microfone para falar." O microfone só abre no toque |
 | E1 | Usar voz → microfone → "Losartana 50 miligramas, um comprimido, todos os dias às 8 da manhã, uso contínuo" | Primeiro **Confira os remédios** com "Losartana"; "pronto" ou **Continuar** → direto para "Confira antes de salvar" |
 | E2 | Falar em pedaços, com pausa curta: "Losartana… (pausa) 50 miligramas… (pausa) às 8" [novo] | Um só cadastro com tudo; não corta no primeiro pedaço |
-| E3 | "Tomo losartana, metformina e sinvastatina" [novo] | **Confira os remédios** com os três nomes; falado "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Está certo?" |
+| E3 | "Tomo losartana, metformina e sinvastatina"; depois "**Tomou** losartana" e "Eu **tomei** losartana" [novo] | **Confira os remédios** com os três nomes; falado "Entendi 3 remédios: Losartana, Metformina e Sinvastatina. Está certo?"; "tomou"/"tomei" não entram no nome |
 | E4 | Na conferência: "trocar metformina por atenolol"; "não é sinvastatina, é simvastatina"; "remover atenolol" [novo] | Cada comando muda a lista na hora; nomes parecidos casam |
 | E5 | Na conferência: tocar no nome → dizer ou digitar "Rivaroxabana, Metoprolol" [novo] | Vira dois remédios separados |
 | E6 | Um nome de duas palavras sem "de" (ex.: "Losartana Metformina") [novo] | Aparece "São 2 remédios? Separar"; Separar divide |
@@ -128,7 +129,7 @@ pausas curtas no meio da frase não cortam [novo].
 | E13 | Durante uma pergunta: "Algo errado? Corrigir por voz" → "na verdade às 10 da noite" | "Confira a correção" com 22:00; Manter correção aplica, Desfazer desfaz |
 | E14 | Na revisão, **Corrigir** num medicamento | Formulário preenchido; "Concluir correção" volta à revisão |
 | E15 | Dois remédios de uma vez até salvar | **Confirmar e salvar todos** → "2 medicamentos adicionados" |
-| E16 | Dizer pela voz um nome já cadastrado (ex.: "Losartana") até salvar [novo] | Aviso "Losartana já está cadastrado" antes de gravar, com Voltar e conferir / Cadastrar mesmo assim |
+| E16 | Dizer pela voz um nome já cadastrado (ex.: "Losartana") e "pronto" na conferência dos nomes [novo] | Aviso "Losartana já está cadastrado" **já na conferência**: Voltar e conferir (fica na lista) / Continuar mesmo assim (segue; ao salvar não pergunta de novo) |
 | E17 | "oi, tudo beleza, obrigado" | "Não entendi. Tente de novo." |
 | E18 | Não falar nada depois do microfone abrir | "Não ouvi nada. Toque no microfone e fale de novo."; não reabre sozinho |
 | E19 | Responder e **não tocar no microfone** | Depois da pergunta falada, o microfone abre sozinho ("Ouvindo…") |
@@ -142,6 +143,7 @@ pausas curtas no meio da frase não cortam [novo].
 
 | # | Faça | Deve acontecer |
 |---|---|---|
+| F0 | Adicionar medicamento [novo] | "Usar câmera" com a etiqueta **Experimental**; no tutorial e em "Confira o que eu li", aviso de que a leitura pode errar |
 | F1 | Usar câmera → permitir → caixa de remédio → **Tirar foto** | "Lendo a embalagem…" → "Confira o que eu li" com nome e concentração editáveis; **Cancelar** no topo [novo] |
 | F2 | Conferir | **Nunca** preenche dose, dias, horários ou duração |
 | F3 | **Continuar por voz** | A voz começa pela pergunta da dose |

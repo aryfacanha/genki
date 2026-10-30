@@ -185,7 +185,7 @@ private fun ColumnScope.Result(state: CameraUiState, viewModel: CameraViewModel,
     Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(20.dp)) {
         Text("Confira o que eu li", style = MaterialTheme.typography.headlineSmall)
         Text(
-            "Corrija se precisar. Quanto você toma, os dias, os horários e a duração você informa em seguida.",
+            "A leitura pela câmera é experimental e pode errar: confira e corrija. Quanto você toma, os dias, os horários e a duração você informa em seguida.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp, bottom = 20.dp),
         )

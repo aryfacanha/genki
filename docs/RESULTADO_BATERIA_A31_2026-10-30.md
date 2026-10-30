@@ -27,4 +27,6 @@ Observação do assistente (30/10, 15:29, por `dumpsys alarm`): no A31, o alarme
 estava agendado**; as 08:00 de amanhã (Losartana e Rivaroxabana) e quatro horários de teste estavam. A confirmar com o
 autor (edição da Losartana?) antes de tratar como defeito.
 
+**Lote 1 aceito pelo autor em 30/10 ("Faça o lote 1") e implementado na 1.0.13:** itens 1, 3, 5, 7, 11, 12, 13, 15. **Lote 2 na fila até o autor aceitar o lote 1:** itens 2, 4, 10. Item 6 (D7) mantido como está; 8, 9 e 14 respondidos.
+
 Fila depois das baterias (pedido do autor, 30/10): redução do tamanho do APK (`ESTADO.md`, pendências).

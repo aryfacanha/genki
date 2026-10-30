@@ -284,7 +284,9 @@ fun VoiceScreen(
             title = { Text(if (state.duplicates.size == 1) "$names já está cadastrado" else "$names já estão cadastrados") },
             text = { Text("Dois cadastros iguais geram lembretes repetidos. Se for outro horário do mesmo remédio, você pode adicionar o horário no cadastro que já existe.") },
             confirmButton = { TextButton(onClick = viewModel::dismissDuplicates) { Text("Voltar e conferir") } },
-            dismissButton = { TextButton(onClick = viewModel::confirmDuplicates) { Text("Cadastrar mesmo assim") } },
+            dismissButton = { TextButton(onClick = viewModel::confirmDuplicates) {
+                    Text(if (state.duplicatesOnNames) "Continuar mesmo assim" else "Cadastrar mesmo assim")
+                } },
         )
     }
 
@@ -312,6 +314,12 @@ private fun ColumnScope.Intro(state: VoiceUiState, onMic: () -> Unit, onType: ()
         Text(
             "Conte quais medicamentos você usa, quanto toma e em quais horários.",
             style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "Por exemplo: “${VoiceViewModel.EXAMPLE}”.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(6.dp))

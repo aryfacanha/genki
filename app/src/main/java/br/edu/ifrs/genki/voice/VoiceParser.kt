@@ -105,6 +105,8 @@ object VoiceParser {
         "costumo", "costuma", "acho", "acredito", "talvez", "creio",
         // "Tomo" ouvido como "como" pelo reconhecedor do Samsung A31 (27/10); "como" também é palavra comum.
         "como", "pego", "faco", "remedinho",
+        // Passado e outras formas do verbo (bateria do autor, 30/10: "Tomou losartana" virou o nome "Tomou Losartana").
+        "tomou", "tomei", "tomava", "tomamos", "tomarei", "tomaria", "usei", "usou", "usava",
         // Teste do autor no A31 (27/10): "numa segunda fala" e "oi, tudo bem" viravam remédio.
         "num", "numa", "oi", "ola", "alo", "tudo", "beleza", "obrigado", "obrigada", "tchau", "fala", "falo", "falei",
         "disse", "digo",

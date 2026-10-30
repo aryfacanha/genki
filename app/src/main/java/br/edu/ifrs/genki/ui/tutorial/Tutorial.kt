@@ -73,7 +73,7 @@ object TutorialSteps {
         TutorialStep(TutorialTarget.TYPE, TutorialScreen.ADD, "Digitar",
             "Preencha as informações em três passos."),
         TutorialStep(TutorialTarget.CAMERA, TutorialScreen.ADD, "Usar câmera",
-            "Fotografe a caixa: o Genki lê o nome e a concentração. Você sempre confere tudo antes de salvar; para desistir, toque em “Cancelar”."),
+            "Experimental. Fotografe a caixa: o Genki tenta ler o nome e a concentração. Você sempre confere tudo antes de salvar; para desistir, toque em “Cancelar”."),
         TutorialStep(TutorialTarget.TAB_MEDICATIONS, TutorialScreen.HOME, "Medicamentos",
             "Todos os remédios cadastrados. Toque em um para ver os detalhes, editar ou excluir."),
         TutorialStep(TutorialTarget.TAB_SETTINGS, TutorialScreen.HOME, "Ajustes",

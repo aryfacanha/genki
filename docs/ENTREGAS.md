@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: lote 1 do retorno da bateria de 30/10, versão 1.0.13 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/57f2f55; pedido do autor ("Faça o lote 1, e deixe na fila o lote 2").
+Realizado: textos de Ajustes; nome repetido avisado no começo (formulário e voz); faixa de lembretes nos Detalhes; Resolver em Ajustes rola até Permissões; exemplo falado na voz; pausa 2 s; verbos no passado fora do nome; câmera Experimental. Roteiro da bateria atualizado.
+Decisões aceitas: lote 1 (30/10). Sugestões pendentes: lote 2 (guias falados, horário do primeiro remédio, uma notificação por horário).
+Verificado: build e 175 testes; emulador API 35 nas telas alteradas.
+Não verificado: fala audível do exemplo, pausa de 2 s com fala real, aviso na conferência dos nomes na tela, fonte 2,0×, TalkBack.
+Próxima tarefa: autor testar no A31; revisão do Codex (RV-048 e lote 1).
+Links: docs/RESULTADO_BATERIA_A31_2026-10-30.md, docs/ROTEIRO_BATERIA_COMPLETA.md.
+```
+
+```text
 ENTREGA — App Android: reparo RV-048-01…04, versão 1.0.12 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/953acb7 (conferência do Codex commitada em 8a27111); pedido do autor ("isso, corrija").
 Realizado: notificação própria do serviço de alarme (01/02); troca do som reagenda horários e adiados (03); texto "por até 1 minuto" (04); versão 1.0.12.

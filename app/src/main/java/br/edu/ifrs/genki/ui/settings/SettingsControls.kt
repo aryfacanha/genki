@@ -50,11 +50,11 @@ internal fun SwitchRow(title: String, text: String, checked: Boolean, onChange: 
     }
 }
 
-/** "Avisar de novo se eu não responder" (RF25). */
+/** Repetição do lembrete (RF25). Sem negativa e sem os nomes dos botões (retorno informal, 30/10). */
 @Composable
 internal fun RepeatSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
-    "Avisar de novo se eu não responder",
-    "Se você não tocar em Entendi nem em Adiar, o Genki avisa outra vez, até 3 vezes.",
+    "Repetir o lembrete",
+    "Se o lembrete ficar sem resposta, o Genki avisa outra vez depois do tempo escolhido abaixo, até 3 vezes.",
     checked,
     onChange,
 )
@@ -65,7 +65,7 @@ internal fun IntervalChoices(selected: Int, onSelect: (Int) -> Unit) {
     Column(Modifier.padding(horizontal = 20.dp, vertical = 14.dp)) {
         Text("Tempo para avisar de novo", style = MaterialTheme.typography.titleSmall)
         Text(
-            "Vale para a repetição e para o botão Adiar do lembrete.",
+            "Vale para repetir o lembrete e para adiá-lo.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 10.dp),
         )

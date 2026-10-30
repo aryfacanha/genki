@@ -19,12 +19,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -42,7 +45,7 @@ import br.edu.ifrs.genki.ui.components.SecondaryButton
  * e a situação das permissões de notificação e de alarme exato (ESPEC §6).
  */
 @Composable
-fun SettingsScreen(onTutorial: () -> Unit) {
+fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false, onScrolled: () -> Unit = {}) {
     val context = LocalContext.current
     val container = (context.applicationContext as GenkiApplication).container
     val settings by container.settings.reminders.collectAsStateWithLifecycle()
@@ -60,9 +63,18 @@ fun SettingsScreen(onTutorial: () -> Unit) {
         resumes++
     }
 
+    val scroll = rememberScrollState()
+    var permissionsY by remember { mutableIntStateOf(-1) }
+    LaunchedEffect(scrollToPermissions, permissionsY) {
+        if (scrollToPermissions && permissionsY >= 0) {
+            scroll.animateScrollTo(permissionsY)
+            onScrolled()
+        }
+    }
+
     Column(Modifier.fillMaxSize()) {
         GenkiTopBar("Ajustes")
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+        Column(Modifier.weight(1f).verticalScroll(scroll)) {
             SectionHeader("Lembretes")
             RepeatSwitch(settings.repeatEnabled, container.settings::setRepeatEnabled)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -73,7 +85,7 @@ fun SettingsScreen(onTutorial: () -> Unit) {
             SectionHeader("Voz")
             AutoListenSwitch(autoListen) { autoListen = it; container.settings.autoListen = it }
 
-            SectionHeader("Permissões")
+            SectionHeader("Permissões", Modifier.onGloballyPositioned { permissionsY = it.positionInParent().y.toInt() })
             PermissionRow(
                 title = "Notificações",
                 status = if (notificationsAllowed) "Permitidas" else "Não permitidas. Sem elas, os lembretes não aparecem.",
@@ -127,12 +139,12 @@ private fun openNotificationSettings(context: Context) {
 }
 
 @Composable
-private fun SectionHeader(text: String) {
+private fun SectionHeader(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 4.dp).semantics { heading() },
+        modifier = modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 4.dp).semantics { heading() },
     )
 }
 

@@ -55,6 +55,8 @@ data class VoiceUiState(
     val renaming: String? = null,
     /** Nomes iguais a cadastros existentes: pergunta antes de gravar (achado 2 da pré-revisão, 29/10). */
     val duplicates: List<String> = emptyList(),
+    /** O aviso apareceu na conferência dos nomes, não ao salvar (bateria do autor, 30/10). */
+    val duplicatesOnNames: Boolean = false,
 )
 
 /**
@@ -82,11 +84,15 @@ class VoiceViewModel(
     private var beforeCorrection: List<MedicationDraft>? = null
     /** Lista de nomes conferida; da câmera o nome já foi conferido lá. */
     private var namesConfirmed = fromSession
+    /** Nomes repetidos que a pessoa já aceitou na conferência: não pergunta de novo ao salvar. */
+    private var acceptedDuplicates = emptySet<String>()
 
     init {
         if (!fromSession) {
             session.clear()
             GenkiEval.log("cadastro_iniciado", "fonte" to DraftSource.VOICE)
+            // Exemplo falado de como responder (bateria do autor, 30/10); o microfone continua no toque.
+            _state.update { it.copy(prompt = prompt(INTRO_PROMPT)) }
         }
         // Volta da correção por toque: a sessão muda por fora.
         viewModelScope.launch {
@@ -282,6 +288,21 @@ class VoiceViewModel(
 
     /** "Continuar" (ou "pronto"/"sim" falado): segue para doses, dias e horários de cada um. */
     fun confirmNames() {
+        // Nome repetido avisado já aqui, antes das perguntas (bateria do autor, 30/10); a checagem ao salvar continua.
+        viewModelScope.launch {
+            val repeated = repeatedNames()
+            if (repeated.isNotEmpty()) {
+                _state.update { it.copy(duplicates = repeated, duplicatesOnNames = true, renaming = null) }
+            } else {
+                namesConfirmedNow()
+            }
+        }
+    }
+
+    private suspend fun repeatedNames() = DuplicateNames.find(session.drafts.value.mapNotNull { it.name }, existingNames())
+        .filter { DuplicateNames.normalize(it) !in acceptedDuplicates }
+
+    private fun namesConfirmedNow() {
         GenkiEval.log("voz_nomes_confirmados", "rascunhos" to session.drafts.value.size)
         namesConfirmed = true
         _state.update { it.copy(renaming = null, heard = null, message = null) }
@@ -355,11 +376,18 @@ class VoiceViewModel(
     /** "Confirmar e salvar": todos pelo validador; se faltar algo, volta a perguntar. */
     /** "Cadastrar mesmo assim" no aviso de nome repetido. */
     fun confirmDuplicates() {
-        _state.update { it.copy(duplicates = emptyList()) }
-        save(allowDuplicates = true)
+        val s = _state.value
+        _state.update { it.copy(duplicates = emptyList(), duplicatesOnNames = false) }
+        if (s.duplicatesOnNames) {
+            acceptedDuplicates = acceptedDuplicates + s.duplicates.map(DuplicateNames::normalize)
+            namesConfirmedNow()
+        } else {
+            save(allowDuplicates = true)
+        }
     }
 
-    fun dismissDuplicates() = _state.update { it.copy(duplicates = emptyList()) }
+    /** "Voltar e conferir": na conferência dos nomes, fica nela para corrigir. */
+    fun dismissDuplicates() = _state.update { it.copy(duplicates = emptyList(), duplicatesOnNames = false) }
 
     fun save(allowDuplicates: Boolean = false) {
         if (saving) return
@@ -372,7 +400,7 @@ class VoiceViewModel(
         saving = true
         viewModelScope.launch {
             if (!allowDuplicates) {
-                val repeated = DuplicateNames.find(session.drafts.value.mapNotNull { it.name }, existingNames())
+                val repeated = repeatedNames()
                 if (repeated.isNotEmpty()) {
                     saving = false
                     _state.update { it.copy(duplicates = repeated) }
@@ -399,6 +427,9 @@ class VoiceViewModel(
             "cada=${d.everyHours}, trat=${d.treatment}, fim=${d.endDate}, por=${d.durationDays}}"
 
     companion object {
+        const val EXAMPLE = "losartana, 50 miligramas, um comprimido, todos os dias, às 8 da manhã"
+        private const val INTRO_PROMPT =
+            "Conte quais remédios você usa, quanto toma e em quais horários. Por exemplo: $EXAMPLE. Toque no microfone para falar."
         private const val UNAVAILABLE = "Este aparelho não tem reconhecimento de voz configurado. Você pode digitar."
         private const val MIC_DENIED ="Sem acesso ao microfone. Você pode permitir nas configurações ou digitar."
 

@@ -442,6 +442,13 @@ class VoiceParserTest {
     }
 
     @Test
+    fun pastTenseVerbIsNotName() {
+        // Bateria no A31 (30/10): "Tomou losartana" cadastrava "Tomou Losartana".
+        assertEquals("Losartana", one("tomou losartana").name)
+        assertEquals("Losartana", one("eu tomei losartana 50 mg às 8").name)
+    }
+
+    @Test
     fun correctingNameDuringQuestions() {
         // "Algo errado? Corrigir por voz" durante as perguntas: nome dito troca o do medicamento da pergunta.
         val wrong = one("como metoprolol").copy(name = "Como metoprolol")

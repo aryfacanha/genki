@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -110,6 +114,7 @@ fun DetailScreen(
                 Spacer(Modifier.width(14.dp))
                 Text(med.name, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.semantics { heading() })
             }
+            RemindersStatus(med.remindersEnabled)
 
             GenkiCard {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
@@ -123,7 +128,6 @@ fun DetailScreen(
                         secondary = if (med.treatment == TreatmentType.TEMPORARY) MedicationText.period(med.startDate, med.endDate) else null,
                         help = if (med.treatment == TreatmentType.UNDEFINED) MedicationText.UNKNOWN_DURATION_HELP else null,
                     )
-                    InfoRow("Lembretes", if (med.remindersEnabled) "Ativos" else "Desativados")
                 }
             }
 
@@ -161,5 +165,29 @@ fun DetailScreen(
                 dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text("Cancelar") } },
             )
         }
+    }
+}
+
+/** Estado dos lembretes em destaque, logo abaixo do nome (bateria do autor, 30/10: "Ativos" na lista passava despercebido). */
+@Composable
+private fun RemindersStatus(enabled: Boolean) {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        Modifier.fillMaxWidth()
+            .background(if (enabled) colors.primaryContainer else colors.surfaceContainerHigh, RoundedCornerShape(12.dp))
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            if (enabled) Icons.Filled.Notifications else Icons.Filled.Clear,
+            contentDescription = null,
+            tint = if (enabled) colors.primary else colors.onSurfaceVariant,
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            if (enabled) "Lembretes ativos" else "Lembretes desativados",
+            style = MaterialTheme.typography.titleMedium,
+            color = if (enabled) colors.onPrimaryContainer else colors.onSurface,
+        )
     }
 }

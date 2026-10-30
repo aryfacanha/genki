@@ -126,6 +126,8 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     // Ao salvar um medicamento sem a permissão de notificações, explica e pede (ESPEC §6, Android 13+).
     val context = LocalContext.current
     var explainNotifications by remember { mutableStateOf(false) }
+    // "Resolver em Ajustes" da Hoje: Ajustes abre já em Permissões.
+    var scrollToPermissions by remember { mutableStateOf(false) }
     val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     // Depois de cadastrar (formulário ou voz): aviso, volta e, sem permissão, explica as notificações.
     val onAdded: (String) -> Unit = { message ->
@@ -241,8 +243,9 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                 HomeScreen(
                     onAdd = { navController.navigate(AddChoiceRoute) },
                     onOpen = { id -> navController.navigate(DetailRoute(id, fromHome = true)) },
-                    // Como o toque na aba Ajustes.
+                    // Como o toque na aba Ajustes, já rolando até Permissões (bateria do autor, 30/10).
                     onOpenSettings = {
+                        scrollToPermissions = true
                         navController.navigate(SettingsRoute) {
                             popUpTo<HomeRoute> { saveState = true }
                             launchSingleTop = true
@@ -300,7 +303,13 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                     tutorial.offer()
                 })
             }
-            composable<SettingsRoute> { SettingsScreen(onTutorial = startTutorial) }
+            composable<SettingsRoute> {
+                SettingsScreen(
+                    onTutorial = startTutorial,
+                    scrollToPermissions = scrollToPermissions,
+                    onScrolled = { scrollToPermissions = false },
+                )
+            }
             composable<DetailRoute> { entry ->
                 val route = entry.toRoute<DetailRoute>()
                 val id = route.id

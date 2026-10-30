@@ -48,6 +48,27 @@ class VoiceNamesFlowTest {
     }
 
     @Test
+    fun repeatedNameIsWarnedAtTheNameListAndNotAgainAtSave() {
+        // Bateria no A31 (30/10): o aviso de nome já cadastrado vem logo na conferência dos nomes.
+        var saved = 0
+        vm = VoiceViewModel({ saved++; 1L }, session, existingNames = { listOf("Losartana") }, today = { LocalDate.of(2026, 10, 29) })
+        vm.heard("losartana 50 mg 1 comprimido todos os dias às 8 uso contínuo", null)
+        vm.confirmNames()
+        assertEquals(listOf("Losartana"), vm.state.value.duplicates)
+        assertEquals(VoicePhase.NAMES, vm.state.value.phase)
+        // Voltar e conferir: continua na lista.
+        vm.dismissDuplicates()
+        assertEquals(VoicePhase.NAMES, vm.state.value.phase)
+        vm.confirmNames()
+        vm.confirmDuplicates()
+        assertEquals(VoicePhase.REVIEW, vm.state.value.phase)
+        // Já aceito: salvar grava sem perguntar de novo.
+        vm.save()
+        assertEquals(emptyList<String>(), vm.state.value.duplicates)
+        assertEquals(1, saved)
+    }
+
+    @Test
     fun voiceCommandsFixTheList() {
         vm.heard("rivaroxabana metoprolol e simvastatina", null)
         assertEquals(listOf("Rivaroxabana metoprolol", "Simvastatina"), names)
