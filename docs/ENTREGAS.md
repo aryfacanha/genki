@@ -3,6 +3,16 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: APK de distribuição sem bibliotecas x86, versão 1.0.19 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/b93349e; pedido do autor ("faça a redução dos processadores e instale no A31").
+Realizado: `abiFilters` arm64-v8a e armeabi-v7a no release; APK 53,7 → 30,3 MB.
+Verificado: build e 180 testes; A31 (instalação, arm64, OCR pela câmera sem crash).
+Não verificado: celular com processador de 32 bits; leitura de embalagem real.
+Próxima tarefa: autor rodar G, H, I e M; congelar.
+Links: app/build.gradle.kts.
+```
+
+```text
 ENTREGA — App Android: RV-PC-01 corrigido, versão 1.0.18 (candidata ao congelamento) — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/3898c37; pedido do autor ("corrija o primeiro problema antes de congelar").
 Realizado: aviso ao ativar lembretes de tratamento terminado explica como voltar a recebê-los.

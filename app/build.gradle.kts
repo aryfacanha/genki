@@ -17,8 +17,8 @@ android {
         applicationId = "br.edu.ifrs.genki"
         minSdk = 26
         targetSdk = 37
-        versionCode = 19
-        versionName = "1.0.18"
+        versionCode = 20
+        versionName = "1.0.19"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -45,6 +45,9 @@ android {
     buildTypes {
         release {
             signingConfigs.findByName("release")?.let { signingConfig = it }
+            // Só processadores de celular: o OCR do ML Kit para x86/x86_64 (emulador de PC) somava ~23 MB ao APK
+            // de distribuição (pedido do autor, 30/10/2026). O debug continua com todos, para o emulador.
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
             // Otimização (R8) desligada: a parcial do template (`packageScope` androidx/kotlin) gerava
             // IllegalAccessError ao abrir o app (A31, 28/10/2026). Sem ela, o release roda o mesmo código testado no debug.
             optimization {

@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.19, release só com bibliotecas de celular (53,7 → 30,3 MB), instalada no A31 com leitura pela câmera conferida; build/180 testes.
+
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): revisão pré-congelamento rodada pelo Codex CLI a pedido do autor (sem S1/S2); RV-PC-01 corrigido (1.0.18); build/180 testes; emulador.
 
 Sessão adicional em 30/10/2026 — Codex: revisão pré-congelamento `8a27111..a184acd` (1.0.17), partida `main`/`d8be24e`; proposta e requisitos reabertos no Drive; nenhum S1/S2, dois S3 adiáveis (texto de reativação de tratamento terminado; callback TTS em erro síncrono preexistente, teste isolado). Build final/179 testes executados passam; emulador com dados fictícios, voz simulada temporária retirada, fonte 2,0×, alarmes simultâneos/Entendi/troca de modo; fonte original/APK final e oito arquivos de banco/preferências restaurados, ajustes/permissões preservados. Relatório `docs/revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md` e registros atualizados. Sem correção permanente de código, commit, push, A31, decisão nova ou integração à monografia; congelamento e aceite dos S3 cabem ao autor.

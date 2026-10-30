@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** versão 1.0.19 (versionCode 20), candidata ao congelamento: release só com bibliotecas nativas de celular (`abiFilters` arm64-v8a e armeabi-v7a no `buildTypes.release`), pedido do autor ("faça a redução dos processadores"); APK de 53,7 MB para **30,3 MB**; debug continua com todos (emulador). Código igual ao da 1.0.18. Build/180 testes. **1.0.19 release instalada no A31 em 30/10 às 20:26** (`primaryCpuAbi=arm64-v8a`); leitura pela câmera rodou o OCR ("OCR process succeeded" no logcat; sem embalagem, "Não consegui ler a embalagem"), sem crash; permissão de câmera concedida só para o teste e revogada. R8 continua desligado (quebrou o release na 1.0.1). **Antes de congelar (autor, A31):** fala audível e piscar, seções G, H, I e M da bateria.
+
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.18 (versionCode 19), candidata ao congelamento: revisão pré-congelamento do Codex (`revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`) sem S1/S2; RV-PC-01 corrigido a pedido do autor (ativar lembretes de um tratamento terminado agora explica "O tratamento terminou em …. Para receber lembretes, edite a duração."); RV-PC-02 (recusa síncrona do TTS deixa a escuta automática sem começar; toque segue funcionando) fica como limitação. Build/180 testes. Emulador: reprodutor do RV-PC-01; dados restaurados byte a byte. **1.0.18 release instalada no A31 em 30/10 às 20:22.** **Antes de congelar (autor, A31):** fala audível e piscar, seções G, H, I e M da bateria.
 
 **30/10/2026, Codex — pré-congelamento da 1.0.17:** `main`/`d8be24e`, alvo `8a27111..a184acd`. Nenhum S1/S2 confirmado; tecnicamente apta ao congelamento na cobertura executada, com RV-PC-01/02 S3 adiáveis, pendentes do autor. Build final/179 testes executados passam; emulador com Hoje/voz/teclado em 2,0×, duplicidade, dois alarmes simultâneos e troca de modo. Fonte temporária restaurada, APK original 1.0.17 reinstalado; oito arquivos de banco/preferências iguais ao backup inclusive após abrir, ajustes/permissões restaurados. `app` sem diff; pull bloqueado em `.git/FETCH_HEAD`; sem commit/push/A31. `revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`. Registros antigos abaixo mantêm seu contexto histórico.
@@ -63,7 +65,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**30/10, Claude Code (último):** 1.0.18 é a candidata ao congelamento (Codex sem S1/S2; RV-PC-01 corrigido; RV-PC-02 limitação). Próximo: autor rodar G, H, I e M no A31 e decidir o congelamento.
+**30/10, Claude Code (último):** 1.0.19 (= 1.0.18 com APK de 30 MB) é a candidata ao congelamento.
+
+**30/10, Claude Code:** 1.0.18 é a candidata ao congelamento (Codex sem S1/S2; RV-PC-01 corrigido; RV-PC-02 limitação). Próximo: autor rodar G, H, I e M no A31 e decidir o congelamento.
 
 **30/10, Claude Code (último):** 1.0.17: achados N1–N5 e N15 da pré-revisão corrigidos. Próximo: autor testar no A31; demais achados (N6–N19) e lote 2 aguardam decisão.
 
@@ -370,6 +374,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração (Gradle): `ndk.abiFilters` arm64-v8a e armeabi-v7a só no release; versão 1.0.19 (versionCode 20). Release não roda mais em emulador x86_64 (usar o debug) — 180 testes; A31 (instalação e OCR pela câmera) — pendente: Codex, se o autor quiser.
 
 - 2026-10-30 — Claude Code — configuração: versão 1.0.18 (versionCode 19); RV-PC-01 (`MedicationText.remindersToggled`); build feito com `clean` (cache incremental inconsistente depois das builds do Codex) — 180 testes; emulador — pendente: A31.
 
