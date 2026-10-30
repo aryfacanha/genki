@@ -1,7 +1,7 @@
 # Bateria completa de testes manuais — Genki no A31
 
 Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
-uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.16** (lote 1 do retorno de 30/10, DEC-049 e DEC-050:
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.17** (lote 1 do retorno de 30/10, DEC-049 e DEC-050:
 `RESULTADO_BATERIA_A31_2026-10-30.md`), modo "Como alarme" no A31. Os resultados esperados vêm do código, das decisões (até a DEC-048) e
 das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
 anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
@@ -61,6 +61,7 @@ isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
+| C0 | Medicamentos, remédio com "Tem data para terminar" [novo] | A lista mostra "Até dd/mm/aaaa"; depois da data, "Tratamento terminou em …" e, nos Detalhes, "Sem lembretes: o tratamento terminou" |
 | C1 | Medicamentos → Teste A | Detalhes: logo abaixo do nome, faixa verde com sino "**Lembretes ativos**" [novo]; depois quanto toma, dias, horários, duração |
 | C2 | Editar → quantidade **2** → voltar sem salvar | "Descartar alterações?" |
 | C3 | Editar → quantidade 2 → Salvar alterações | Detalhes com "2 comprimidos" |
@@ -82,7 +83,8 @@ a 5 min, uso contínuo.
 | D5 | Adiar de novo → tirar o Genki dos recentes → **Android → Apps → Genki → Forçar parada** → abrir o Genki [novo] | O cartão "Lembrete adiado" continua e o aviso **ainda chega** no horário prometido, **uma vez só** (DEC-047) |
 | D6 | **Entendi** | Notificação e cartão somem; nada de "Tomado" nem histórico de tomada |
 | D7 | Tocar numa notificação de lembrete: (a) fora de um cadastro; (b) no meio de um cadastro | (a) Abre a Hoje; (b) continua no cadastro, sem perder nada (de propósito, DEC-032/033) |
-| D8 | Hoje depois de H | H como "Passou"; linha "Agora · HH:MM"; tocar num horário abre os Detalhes |
+| D8 | Hoje depois de H | Os que já passaram ficam recolhidos em "**Ver os N horários que já passaram**" [novo]; tocar mostra H como "Passou" e "Esconder…" recolhe; linha "Agora · HH:MM"; tocar num horário abre os Detalhes |
+| D8b | Desativar os lembretes de um remédio e voltar à Hoje [novo] | No fim da Hoje: "Não aparece aqui: X (lembretes desligados)." Reativar tira a linha |
 | D9 | Dois ou três medicamentos de teste no **mesmo horário futuro** [novo] | Hoje: "Próximo lembrete · N medicamentos" com **Ver mais/Ver menos**; "Depois: … e mais N" |
 | D10 | Esse horário chegar | Um cartão só com os N avisos e **Ver um por um / Ver juntos**; Entendi de um tira só ele |
 | D11 | Desligar a categoria "Lembretes de medicamentos" nas notificações do Android | Hoje mostra "Os lembretes não vão aparecer" com **Resolver em Ajustes**, que abre Ajustes **já rolado até Permissões** [novo]; religar faz o aviso sumir. Abrir Ajustes pela aba continua no topo |

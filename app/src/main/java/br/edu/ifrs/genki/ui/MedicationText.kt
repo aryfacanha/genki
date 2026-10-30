@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.ui
 
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.Medication
+import br.edu.ifrs.genki.domain.OccurrenceCalculator
 import br.edu.ifrs.genki.domain.Problem
 import br.edu.ifrs.genki.domain.TreatmentType
 import java.time.DayOfWeek
@@ -57,6 +58,35 @@ object MedicationText {
         TreatmentType.CONTINUOUS -> "Uso contínuo (sem data para parar)"
         TreatmentType.TEMPORARY -> "Tem data para terminar"
         TreatmentType.UNDEFINED -> "Ainda não sei"
+    }
+
+    /**
+     * Duração na lista de Medicamentos: com data, diz qual é ("Até 05/11/2026") e se já passou ("Tratamento terminou em
+     * 05/11/2026"), em vez de só "Tem data para terminar" (pré-revisão heurística, 30/10, N4 e N15).
+     */
+    fun treatmentLine(medication: Medication, today: LocalDate): String {
+        val end = medication.endDate ?: return treatment(medication.treatment)
+        return if (OccurrenceCalculator.ended(medication, today)) "Tratamento terminou em ${date(end)}" else "Até ${date(end)}"
+    }
+
+    /**
+     * Por que remédios cadastrados não aparecem na Hoje (pré-revisão heurística, 30/10, N5); `null` = todos aparecem.
+     */
+    fun hiddenFromToday(disabled: List<String>, ended: List<String>): String? {
+        val parts = listOfNotNull(
+            disabled.takeIf { it.isNotEmpty() }?.let { "${joinWithAnd(it)} (lembretes desligados)" },
+            ended.takeIf { it.isNotEmpty() }?.let { "${joinWithAnd(it)} (tratamento terminou)" },
+        )
+        if (parts.isEmpty()) return null
+        val verb = if (disabled.size + ended.size == 1) "Não aparece aqui" else "Não aparecem aqui"
+        return "$verb: ${parts.joinToString("; ")}."
+    }
+
+    /** Botão que mostra ou esconde, na Hoje, os horários que já passaram (pré-revisão heurística, 30/10, N1). */
+    fun pastToggle(count: Int, shown: Boolean): String = when {
+        shown -> "Esconder os horários que já passaram"
+        count == 1 -> "Ver o horário que já passou"
+        else -> "Ver os $count horários que já passaram"
     }
 
     private val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")

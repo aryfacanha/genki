@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: achados N1–N5 da pré-revisão heurística, versão 1.0.17 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/cb4c7ad; pedido do autor ("Siga nessas mudanças sugeridas").
+Realizado: Hoje com horários passados recolhidos e aviso dos remédios que não aparecem; data de término e tratamento terminado em Medicamentos e Detalhes; voz com rodapé mais baixo e pergunta rolando para a vista.
+Decisões aceitas: correção dos achados N1–N5 (30/10).
+Verificado: build e 179 testes; emulador API 35 (Hoje, Medicamentos, Detalhes, voz em 1,0× e 2,0×).
+Não verificado: A31; TalkBack.
+Próxima tarefa: autor testar; decidir N6–N19 e lote 2.
+Links: docs/PRE_REVISAO_HEURISTICA_1.0.16.md.
+```
+
+```text
 ENTREGA — App Android: botão de voz abaixo do microfone (DEC-050) e pré-revisão heurística geral, versão 1.0.16 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/3d0198e; retorno do autor sobre a 1.0.15 e pedido de revisão heurística total.
 Realizado: alto-falante como botão com texto abaixo do microfone em todas as telas da voz, piscando enquanto fala (também no tutorial); leitura ligada ao abrir a voz; pré-revisão heurística (19 achados novos, situação dos de 29/10).

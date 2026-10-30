@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -434,9 +438,8 @@ private fun ColumnScope.Names(
                 )
             }
         }
-        readAloud(Modifier.align(Alignment.CenterHorizontally))
         // Como nas perguntas (sugestão da revisão do Codex, 29/10).
-        TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
+        VoiceExtras(readAloud, onType)
     }
 }
 
@@ -576,19 +579,24 @@ private fun ColumnScope.Asking(
                     Text("Algo errado? Corrigir por voz", textDecoration = TextDecoration.Underline)
                 }
                 Spacer(Modifier.height(16.dp))
-                Text(
-                    question.text,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                )
-                Text(question.example, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
-                if (question.quickAnswers.isNotEmpty()) {
-                    ChoiceGrid(
-                        question.quickAnswers,
-                        label = { it.label },
-                        onClick = { onAnswer(it.text) },
-                        modifier = Modifier.padding(top = 12.dp),
+                // Com vários remédios ou fonte grande, a pergunta nova ficava abaixo da tela (pré-revisão heurística, N2/N3).
+                val questionInView = remember { BringIntoViewRequester() }
+                LaunchedEffect(question.draftId, question.field) { questionInView.bringIntoView() }
+                Column(Modifier.bringIntoViewRequester(questionInView)) {
+                    Text(
+                        question.text,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
                     )
+                    Text(question.example, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+                    if (question.quickAnswers.isNotEmpty()) {
+                        ChoiceGrid(
+                            question.quickAnswers,
+                            label = { it.label },
+                            onClick = { onAnswer(it.text) },
+                            modifier = Modifier.padding(top = 12.dp),
+                        )
+                    }
                 }
             }
         }
@@ -663,8 +671,7 @@ private fun ColumnScope.Asking(
                 )
             }
         }
-        readAloud(Modifier.align(Alignment.CenterHorizontally))
-        TypeLink(onType, Modifier.align(Alignment.CenterHorizontally))
+        VoiceExtras(readAloud, onType)
     }
 }
 
@@ -765,6 +772,22 @@ private fun Listening(state: VoiceUiState, idle: String, center: Boolean = true)
     }
 }
 
+/**
+ * Alto-falante e "Prefiro digitar" lado a lado quando cabem: um embaixo do outro, com fonte grande, o rodapé fixo
+ * ocupava metade da tela e a pergunta ficava fora dela (pré-revisão heurística, 30/10, N2).
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun VoiceExtras(readAloud: @Composable (Modifier) -> Unit, onType: () -> Unit) {
+    FlowRow(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+    ) {
+        readAloud(Modifier.align(Alignment.CenterVertically))
+        TypeLink(onType, Modifier.align(Alignment.CenterVertically))
+    }
+}
+
 @Composable
 private fun TypeLink(onType: () -> Unit, modifier: Modifier = Modifier) {
     TextButton(onClick = onType, modifier = modifier.heightIn(min = 48.dp)) {
@@ -804,7 +827,14 @@ private fun SoFarCard(draft: MedicationDraft, current: Boolean, onAsk: () -> Uni
                 draft.treatment?.let(MedicationText::treatment),
             )
             if (lines.isNotEmpty()) {
-                Text(lines.joinToString(" · "), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(end = 12.dp))
+                // Só o da pergunta atual por inteiro; os outros numa linha, para a pergunta caber na tela (N3).
+                Text(
+                    lines.joinToString(" · "),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = if (current) Int.MAX_VALUE else 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(end = 12.dp),
+                )
             }
         }
     }

@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -98,6 +99,8 @@ data class HomeState(
     /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
     val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
     val intervalMinutes: Int = 20,
+    /** Cadastrados que não aparecem hoje por estarem desligados ou terminados (`null` = nenhum). */
+    val hidden: String? = null,
 )
 
 class HomeViewModel(
@@ -133,6 +136,10 @@ class HomeViewModel(
             upcoming = OccurrenceCalculator.firstGroupAfter(medications, now.toLocalDate(), ZoneId.systemDefault()),
             alerts = withMedication,
             intervalMinutes = reminderSettings.intervalMinutes,
+            hidden = MedicationText.hiddenFromToday(
+                disabled = medications.filter { !it.remindersEnabled }.map { it.name },
+                ended = medications.filter { it.remindersEnabled && OccurrenceCalculator.ended(it, now.toLocalDate()) }.map { it.name },
+            ),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
@@ -243,16 +250,30 @@ fun HomeScreen(
                             )
                             // Linha "Agora" entre os horários que já passaram e os que faltam; não diz se foi tomado (DEC-004).
                             val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
+                            // Os que já passaram ficam recolhidos: com muitos remédios, os próximos só apareciam depois de
+                            // várias rolagens (pré-revisão heurística, 30/10, N1).
+                            var showPast by rememberSaveable { mutableStateOf(false) }
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                if (firstAhead > 0) {
+                                    TextButton(onClick = { showPast = !showPast }, modifier = Modifier.heightIn(min = 48.dp)) {
+                                        Text(MedicationText.pastToggle(firstAhead, showPast), textDecoration = TextDecoration.Underline)
+                                    }
+                                }
                                 s.today.forEachIndexed { index, occurrence ->
                                     if (index == firstAhead) NowMarker(s.minute)
-                                    TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
+                                    if (index >= firstAhead || showPast) {
+                                        TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
+                                    }
                                 }
                                 if (firstAhead == s.today.size) NowMarker(s.minute)
                             }
                         }
                         Spacer(Modifier.height(16.dp))
                     }
+                }
+                // Desligados e terminados somem da Hoje: diz quais e por quê (pré-revisão heurística, 30/10, N5).
+                s?.hidden?.takeIf { s.hasMedications }?.let {
+                    Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp, bottom = 16.dp))
                 }
             }
             // Na frente da coluna (vazia neste caso), para o leitor de tela também encontrar o aviso.

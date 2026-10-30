@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** versão 1.0.17 (versionCode 18), achados N1–N5 e N15 da pré-revisão heurística, a pedido do autor ("Siga nessas mudanças sugeridas"): Hoje recolhe os horários que já passaram ("Ver os N horários que já passaram") e diz no fim quais remédios não aparecem e por quê (lembretes desligados, tratamento terminou); Medicamentos mostra "Até dd/mm/aaaa" ou "Tratamento terminou em …"; Detalhes, "Sem lembretes: o tratamento terminou"; voz com "Silenciar a voz" e "Prefiro digitar" lado a lado quando cabem, a pergunta nova rolando para a vista e os outros remédios numa linha. Build/179 testes (+3 de textos). Emulador com 16 remédios fictícios, fonte 1,0× e 2,0×; dados restaurados byte a byte. **Não verificado:** A31.
+
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.16 (versionCode 17), pedidos do autor sobre a 1.0.15 (DEC-050, aceita): alto-falante saiu do topo da voz e virou botão com texto abaixo do microfone em todas as telas da voz; pisca de leve enquanto fala (também no balão do tutorial) e fica parado quando calado; a voz lê as perguntas sempre ao abrir (o "Ativar assistente de voz" só lê o tutorial). Os dois bipes relatados não se repetiram no A31 (autor, 30/10). **Pré-revisão heurística geral** (`PRE_REVISAO_HEURISTICA_1.0.16.md`, foco do autor: requisitos ocultos, transparência, legibilidade, clareza, capacidade): 19 achados novos (2 altos: Hoje sem rolar para "Agora" com muitos remédios; voz em fonte 2,0× com a pergunta fora da tela), sugestões pendentes. Build/176 testes passam. Emulador: botão abaixo do microfone, piscar durante a fala (3 capturas), leitura ligada ao abrir; dados restaurados byte a byte. **Não verificado:** fala real e piscar no A31, piscar no tutorial.
 
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.15 (versionCode 16), retorno do autor sobre a 1.0.14 ("As funcionalidades estão ok, menos a da fala"): (1) espera da voz **revertida à 1.0.13** a pedido do autor ("dá meio que umas travadas… do jeito que estava antes era melhor"): 2 s desde o fim do trecho, até 4 trechos, sem o aviso "Pode continuar falando"; (2) DEC-050 (aceite a confirmar): alto-falante sempre visível na voz, liga ou cala a leitura das perguntas só naquele cadastro; sem leitura, o microfone só abre no toque (abrir sozinho enquanto a pessoa lia atrapalhava). Build/176 testes passam. Emulador API 35: com o assistente desligado, a voz mostra o alto-falante cortado e o aviso na abertura; tocar liga a leitura (síntese pt-BR no logcat) e troca para "Silenciar a voz"; ajustes do emulador intocados. **Não verificado:** microfone sem abrir sozinho nas perguntas seguintes (exige fala real), fala audível, A31 com voz real.
@@ -57,7 +59,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**30/10, Claude Code (último):** 1.0.16 (DEC-050 aceita: botão de voz abaixo do microfone, piscar, leitura ligada ao abrir) e pré-revisão heurística geral (`PRE_REVISAO_HEURISTICA_1.0.16.md`, 19 achados, prioridade N2/N3, N1, N4/N5). Próximo: autor escolher quais achados corrigir antes do congelamento; lote 2 restante na fila.
+**30/10, Claude Code (último):** 1.0.17: achados N1–N5 e N15 da pré-revisão corrigidos. Próximo: autor testar no A31; demais achados (N6–N19) e lote 2 aguardam decisão.
+
+**30/10, Claude Code:** 1.0.16 (DEC-050 aceita: botão de voz abaixo do microfone, piscar, leitura ligada ao abrir) e pré-revisão heurística geral (`PRE_REVISAO_HEURISTICA_1.0.16.md`, 19 achados, prioridade N2/N3, N1, N4/N5). Próximo: autor escolher quais achados corrigir antes do congelamento; lote 2 restante na fila.
 
 **30/10, Claude Code:** 1.0.15: espera da voz revertida à 1.0.13; DEC-050 (leitura ligável na própria voz, aceite a confirmar). Próximo: autor testar 1.0.15 (E0, E0b, E19); depois lote 2 restante.
 
@@ -354,6 +358,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: versão 1.0.17 (versionCode 18); `OccurrenceCalculator.ended`; `MedicationText.treatmentLine/hiddenFromToday/pastToggle`; `HomeState.hidden` — 179 testes; emulador — pendente: A31, Codex.
 
 - 2026-10-30 — Claude Code — configuração: versão 1.0.16 (versionCode 17); `GenkiTopBar` sem o parâmetro `extra`; `Speaker.speaking` (estado para o piscar); `ReadAloudButton` e `VoiceMuteButton(speaking)` — 176 testes; emulador — pendente: A31 com voz real, Codex.
 

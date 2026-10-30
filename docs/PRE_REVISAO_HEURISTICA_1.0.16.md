@@ -59,11 +59,11 @@ no emulador; **C** inferido do código.
 
 | # | Fluxo | Tela | Problema | Heurística | Severidade | Correção sugerida | Ev. |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| N1 | Capacidade | Hoje | A lista começa sempre em 00:00. Com 15 remédios, às 18:55 havia **19 linhas "Passou"** antes de "Agora", e os próximos horários só apareciam depois de 3 rolagens. O público-alvo tem justamente muitos remédios | H1, H8 | **alta** | Abrir a lista já rolada em "Agora", ou recolher os que passaram ("19 horários já passaram · Mostrar") | O |
+| N1 | Capacidade | Hoje | A lista começa sempre em 00:00. Com 15 remédios, às 18:55 havia **17 linhas "Passou"** antes de "Agora", e os próximos horários só apareciam depois de 3 rolagens. O público-alvo tem justamente muitos remédios | H1, H8 | **alta** | Abrir a lista já rolada em "Agora", ou recolher os que passaram ("17 horários já passaram · Mostrar") | O |
 | N2 | Capacidade, voz | Voz, fonte 2,0× | O painel fixo de baixo (microfone, instrução, "Silenciar a voz", "Prefiro digitar" e, na conferência, "Continuar") ocupa cerca de **metade da tela**. Na conferência cabem 2 nomes. Nas perguntas, com 3 remédios, a **pergunta atual ficou cortada** e as opções fora da tela, com o microfone já aberto. Na abertura, "Silenciar a voz" fica abaixo da dobra. O botão novo da 1.0.15 aumentou o painel em cerca de 70 dp | H1, H8; WCAG 1.4.4/1.4.10 | **alta** | Em fonte grande, juntar alto-falante e "Prefiro digitar" numa linha (ou só ícones com rótulo de acessibilidade); rolar até a pergunta atual; "Entendi até agora" com uma linha por remédio, expansível | O |
 | N3 | Capacidade, voz | Perguntas, fonte 1,0× | "Entendi até agora" mostra cada remédio por inteiro acima da pergunta. Com 2 remédios, as opções de horário já ficam parcialmente sob o painel; com mais, a pergunta desce para fora da tela | H1, H8 | média | Mesma do N2 | O |
 | N4 | Transparência | Medicamentos, Detalhes | Depois da data de término, o remédio continua como "Tem data para terminar" e os Detalhes dizem **"Lembretes ativos"**, mas nenhum lembrete toca mais (`OccurrenceCalculator` filtra pela data) | H1 (estado falso) | média | "Tratamento terminou em 05/11" e, nos Detalhes, "Sem lembretes: o tratamento terminou" | C |
-| N5 | Transparência | Hoje | Remédios com lembretes desligados somem da Hoje sem aviso. Se todos estiverem desligados, a Hoje diz "Você ainda não possui lembretes. Cadastre um medicamento…", mesmo com remédios cadastrados | H1, H2 | média | Linha "2 remédios com lembretes desligados" com atalho para Medicamentos; outro texto para o vazio quando há remédios | O, C |
+| N5 | Transparência | Hoje | Remédios com lembretes desligados (e tratamentos terminados) somem da Hoje sem aviso. Se todos estiverem assim, a Hoje diz só "Nenhum lembrete para hoje.", sem dizer por quê | H1, H2 | média | Linha "Metformina (lembretes desligados)" na Hoje | O, C |
 | N6 | Transparência, voz | Perguntas | Partes da fala são **descartadas sem aviso**: "de manhã" (Losartana), "850" sem unidade (Metformina) e "depois do almoço e do jantar" não aparecem em "Entendi até agora" e não mudam as perguntas. O "Você disse" mostra a frase, mas não o que ficou de fora | H1, H9 | média | Dizer o que não foi usado ("Não usei: 'de manhã'") ou perguntar com a pista ("De manhã: a que horas?") | O |
 | N7 | Prevenção de erro, voz | Conferência dos nomes | Uma lista falada sem "e" entre todos os nomes vira **um nome só** ("Metformina sinvastatina omeprazol"). "São 3 remédios? Separar" aparece, mas "Continuar" segue com o nome juntado sem perguntar | H5 | média | Ao continuar com um nome de 3 ou mais palavras não separado, perguntar "É um remédio só?" | O |
 | N8 | Prevenção de erro | Formulário, quantidade | **"999 comprimidos"** foi aceito e salvo sem aviso (digitar 10 em vez de 1 passa igual) | H5 | média | Confirmar quantidades fora do comum ("999 comprimidos por vez. Está certo?"), sem bloquear e sem prometer precisão clínica | O |
@@ -79,6 +79,8 @@ no emulador; **C** inferido do código.
 | N18 | Consistência | Vários | Dias em minúsculas ("domingo", "segunda e sexta") ao lado de "Todos os dias"; "ml" no menu de unidade e "mL" nas concentrações | H4 | baixa | Maiúscula inicial; "mL" | O |
 | N19 | Transparência | Revisão, Detalhes | Sem concentração, a linha some, em vez de dizer que não foi informada | H1 | baixa | "Concentração: não informada" | O |
 
+**Correção do relatório (30/10):** a primeira versão dizia 19 linhas "Passou" (eram 17) e que, com todos os lembretes desligados, a Hoje mostraria "Você ainda não possui lembretes"; o código mostra "Nenhum lembrete para hoje." (essa frase só aparece sem nenhum remédio cadastrado).
+
 ## Prioridade sugerida antes do congelamento (02/11)
 
 1. **N2/N3** (voz em fonte grande): a pergunta e as opções somem da tela, e o botão novo piorou o espaço.
@@ -89,3 +91,12 @@ no emulador; **C** inferido do código.
 
 Os demais podem ficar como limitações ou trabalho futuro; o N10 pode ir só para a monografia, se o autor preferir não
 mexer no app.
+
+## Corrigidos na 1.0.17 (30/10, pedido do autor: "Siga nessas mudanças sugeridas")
+
+- **N1:** na Hoje, os horários que já passaram ficam recolhidos em "Ver os 17 horários que já passaram" (tocar mostra; "Esconder os horários que já passaram" recolhe). A linha "Agora" e os próximos aparecem logo abaixo de "Horários de hoje".
+- **N2/N3:** na voz, "Silenciar a voz" e "Prefiro digitar" ficam lado a lado quando cabem (em 1,0× cabem; em 2,0× voltam a empilhar); a pergunta nova rola para a vista; em "Entendi até agora", só o remédio da pergunta atual mostra o resumo inteiro, os outros numa linha.
+- **N4/N15:** em Medicamentos, "Até 05/11/2026" ou "Tratamento terminou em 29/10/2026" no lugar de "Tem data para terminar"; nos Detalhes, "Sem lembretes: o tratamento terminou" no lugar de "Lembretes ativos".
+- **N5:** no fim da Hoje, "Não aparecem aqui: Metformina (lembretes desligados); Cefalexina (tratamento terminou)."
+
+Conferido no emulador (15 remédios fictícios mais um terminado, fonte 1,0× e 2,0×, fala simulada temporária, retirada; dados restaurados byte a byte). Não verificado no A31.

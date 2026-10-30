@@ -54,6 +54,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import br.edu.ifrs.genki.domain.OccurrenceCalculator
+import java.time.LocalDate
 
 class DetailViewModel(private val id: Long, private val repository: MedicationRepository) : ViewModel() {
     /** `null` enquanto carrega ou depois de excluído. */
@@ -114,7 +116,7 @@ fun DetailScreen(
                 Spacer(Modifier.width(14.dp))
                 Text(med.name, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.semantics { heading() })
             }
-            RemindersStatus(med.remindersEnabled)
+            RemindersStatus(med.remindersEnabled, OccurrenceCalculator.ended(med, LocalDate.now()))
 
             GenkiCard {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
@@ -168,9 +170,13 @@ fun DetailScreen(
     }
 }
 
-/** Estado dos lembretes em destaque, logo abaixo do nome (bateria do autor, 30/10: "Ativos" na lista passava despercebido). */
+/**
+ * Estado dos lembretes em destaque, logo abaixo do nome (bateria do autor, 30/10: "Ativos" na lista passava despercebido).
+ * Com o tratamento terminado não há mais lembretes, mesmo ligados (pré-revisão heurística, 30/10, N4).
+ */
 @Composable
-private fun RemindersStatus(enabled: Boolean) {
+private fun RemindersStatus(on: Boolean, ended: Boolean) {
+    val enabled = on && !ended
     val colors = MaterialTheme.colorScheme
     Row(
         Modifier.fillMaxWidth()
@@ -185,7 +191,11 @@ private fun RemindersStatus(enabled: Boolean) {
         )
         Spacer(Modifier.width(12.dp))
         Text(
-            if (enabled) "Lembretes ativos" else "Lembretes desativados",
+            when {
+                ended -> "Sem lembretes: o tratamento terminou"
+                enabled -> "Lembretes ativos"
+                else -> "Lembretes desativados"
+            },
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) colors.onPrimaryContainer else colors.onSurface,
         )

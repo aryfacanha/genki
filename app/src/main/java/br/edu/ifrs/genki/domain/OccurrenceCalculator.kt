@@ -14,6 +14,10 @@ data class Occurrence(val time: LocalTime, val medication: Medication)
  */
 object OccurrenceCalculator {
 
+    /** Data de término já passou: nenhum lembrete mais, mesmo com os lembretes ligados. */
+    fun ended(medication: Medication, date: LocalDate): Boolean =
+        medication.endDate != null && date > medication.endDate
+
     fun isScheduledOn(medication: Medication, date: LocalDate): Boolean =
         date.dayOfWeek in medication.days &&
             date >= medication.startDate &&

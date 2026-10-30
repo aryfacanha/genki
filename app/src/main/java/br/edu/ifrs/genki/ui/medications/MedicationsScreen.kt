@@ -40,6 +40,7 @@ import br.edu.ifrs.genki.ui.genkiContainer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import java.time.LocalDate
 
 class MedicationListViewModel(repository: MedicationRepository) : ViewModel() {
     /** `null` enquanto o banco não respondeu (evita piscar o estado vazio). */
@@ -106,7 +107,7 @@ private fun MedicationCard(medication: Medication, onClick: () -> Unit) {
                 Text(MedicationText.doseLine(medication.concentration, medication.dose), color = secondary)
                 Text(MedicationText.schedule(medication), color = secondary)
                 Text(
-                    MedicationText.treatment(medication.treatment),
+                    MedicationText.treatmentLine(medication, LocalDate.now()),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium,
                 )

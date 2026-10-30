@@ -1,8 +1,11 @@
 package br.edu.ifrs.genki.ui
 
 import br.edu.ifrs.genki.domain.Field
+import br.edu.ifrs.genki.domain.Medication
+import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.domain.Problem
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -66,5 +69,39 @@ class MedicationTextTest {
         val today = LocalDate.of(2026, 10, 27)
         assertEquals("Amanhã", MedicationText.upcomingDay(LocalDate.of(2026, 10, 28), today))
         assertEquals("Quinta-feira, 29 de outubro", MedicationText.upcomingDay(LocalDate.of(2026, 10, 29), today))
+    }
+
+    private fun medication(treatment: TreatmentType, end: LocalDate?) = Medication(
+        id = 1, name = "Dipirona", concentration = null, dose = "40 gotas", days = DayOfWeek.entries.toSet(),
+        times = listOf(LocalTime.of(8, 0)), treatment = treatment, startDate = LocalDate.of(2026, 10, 30), endDate = end,
+        remindersEnabled = true,
+    )
+
+    @Test
+    fun treatmentLineShowsTheEndAndWhetherItPassed() {
+        val today = LocalDate.of(2026, 11, 5)
+        assertEquals("Até 05/11/2026", MedicationText.treatmentLine(medication(TreatmentType.TEMPORARY, today), today))
+        assertEquals(
+            "Tratamento terminou em 04/11/2026",
+            MedicationText.treatmentLine(medication(TreatmentType.TEMPORARY, today.minusDays(1)), today),
+        )
+        assertEquals("Uso contínuo (sem data para parar)", MedicationText.treatmentLine(medication(TreatmentType.CONTINUOUS, null), today))
+    }
+
+    @Test
+    fun hiddenFromTodaySaysWhichAndWhy() {
+        assertNull(MedicationText.hiddenFromToday(emptyList(), emptyList()))
+        assertEquals("Não aparece aqui: Metformina (lembretes desligados).", MedicationText.hiddenFromToday(listOf("Metformina"), emptyList()))
+        assertEquals(
+            "Não aparecem aqui: Metformina e Losartana (lembretes desligados); Dipirona (tratamento terminou).",
+            MedicationText.hiddenFromToday(listOf("Metformina", "Losartana"), listOf("Dipirona")),
+        )
+    }
+
+    @Test
+    fun pastToggleCountsTheHiddenTimes() {
+        assertEquals("Ver o horário que já passou", MedicationText.pastToggle(1, shown = false))
+        assertEquals("Ver os 19 horários que já passaram", MedicationText.pastToggle(19, shown = false))
+        assertEquals("Esconder os horários que já passaram", MedicationText.pastToggle(19, shown = true))
     }
 }
