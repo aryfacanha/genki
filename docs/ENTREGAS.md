@@ -3,6 +3,16 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: RV-PC-01 corrigido, versão 1.0.18 (candidata ao congelamento) — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/3898c37; pedido do autor ("corrija o primeiro problema antes de congelar").
+Realizado: aviso ao ativar lembretes de tratamento terminado explica como voltar a recebê-los.
+Verificado: build e 180 testes; emulador (reprodutor do Codex).
+Não verificado: A31.
+Próxima tarefa: autor rodar G, H, I e M no A31; congelar.
+Links: docs/revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md.
+```
+
+```text
 ENTREGA — App Android: revisão pré-congelamento 1.0.12–1.0.17 — 30/10/2026 — Codex
 Partida: main/d8be24e; alvo 8a27111..a184acd; app idêntico ao alvo; pull bloqueado em .git/FETCH_HEAD.
 Realizado: revisão do diff e regras; bateria no emulador; relatório e parecer tecnicamente favorável ao congelamento na cobertura executada. Nenhum S1/S2; dois S3 adiáveis: texto ao reativar tratamento terminado e callback ausente em erro síncrono do TTS (preexistente, teste isolado).

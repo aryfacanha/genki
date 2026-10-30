@@ -104,4 +104,14 @@ class MedicationTextTest {
         assertEquals("Ver os 19 horários que já passaram", MedicationText.pastToggle(19, shown = false))
         assertEquals("Esconder os horários que já passaram", MedicationText.pastToggle(19, shown = true))
     }
+
+    @Test
+    fun enablingAnEndedTreatmentSaysHowToGetRemindersBack() {
+        assertEquals("Lembretes ativados", MedicationText.remindersToggled(true, null))
+        assertEquals("Lembretes desligados", MedicationText.remindersToggled(false, LocalDate.of(2026, 10, 29)))
+        assertEquals(
+            "O tratamento terminou em 29/10/2026. Para receber lembretes, edite a duração.",
+            MedicationText.remindersToggled(true, LocalDate.of(2026, 10, 29)),
+        )
+    }
 }

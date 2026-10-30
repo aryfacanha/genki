@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Claude Code (Opus 5.5):** versão 1.0.18 (versionCode 19), candidata ao congelamento: revisão pré-congelamento do Codex (`revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`) sem S1/S2; RV-PC-01 corrigido a pedido do autor (ativar lembretes de um tratamento terminado agora explica "O tratamento terminou em …. Para receber lembretes, edite a duração."); RV-PC-02 (recusa síncrona do TTS deixa a escuta automática sem começar; toque segue funcionando) fica como limitação. Build/180 testes. Emulador: reprodutor do RV-PC-01; dados restaurados byte a byte. **Antes de congelar (autor, A31):** fala audível e piscar, seções G, H, I e M da bateria.
+
 **30/10/2026, Codex — pré-congelamento da 1.0.17:** `main`/`d8be24e`, alvo `8a27111..a184acd`. Nenhum S1/S2 confirmado; tecnicamente apta ao congelamento na cobertura executada, com RV-PC-01/02 S3 adiáveis, pendentes do autor. Build final/179 testes executados passam; emulador com Hoje/voz/teclado em 2,0×, duplicidade, dois alarmes simultâneos e troca de modo. Fonte temporária restaurada, APK original 1.0.17 reinstalado; oito arquivos de banco/preferências iguais ao backup inclusive após abrir, ajustes/permissões restaurados. `app` sem diff; pull bloqueado em `.git/FETCH_HEAD`; sem commit/push/A31. `revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`. Registros antigos abaixo mantêm seu contexto histórico.
 
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.17 (versionCode 18), achados N1–N5 e N15 da pré-revisão heurística, a pedido do autor ("Siga nessas mudanças sugeridas"): Hoje recolhe os horários que já passaram ("Ver os N horários que já passaram") e diz no fim quais remédios não aparecem e por quê (lembretes desligados, tratamento terminou); Medicamentos mostra "Até dd/mm/aaaa" ou "Tratamento terminou em …"; Detalhes, "Sem lembretes: o tratamento terminou"; voz com "Silenciar a voz" e "Prefiro digitar" lado a lado quando cabem, a pergunta nova rolando para a vista e os outros remédios numa linha. Build/179 testes (+3 de textos). Emulador com 16 remédios fictícios, fonte 1,0× e 2,0×; dados restaurados byte a byte. **Não verificado:** A31.
@@ -60,6 +62,8 @@ neste texto. Ao terminar cada alteração, **atualize as seções 2, 3 e 7 (se m
 Este arquivo é o retrato técnico do código; o estado do projeto inteiro (prazos, CEP, monografia) fica no `ESTADO.md`.
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
+
+**30/10, Claude Code (último):** 1.0.18 é a candidata ao congelamento (Codex sem S1/S2; RV-PC-01 corrigido; RV-PC-02 limitação). Próximo: autor rodar G, H, I e M no A31 e decidir o congelamento.
 
 **30/10, Claude Code (último):** 1.0.17: achados N1–N5 e N15 da pré-revisão corrigidos. Próximo: autor testar no A31; demais achados (N6–N19) e lote 2 aguardam decisão.
 
@@ -366,6 +370,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: versão 1.0.18 (versionCode 19); RV-PC-01 (`MedicationText.remindersToggled`); build feito com `clean` (cache incremental inconsistente depois das builds do Codex) — 180 testes; emulador — pendente: A31.
 
 - 2026-10-30 — Codex — revisão pré-congelamento `8a27111..a184acd`, partida `main`/`d8be24e`; parecer favorável na cobertura, sem S1/S2, RV-PC-01/02 S3; relatório e registros atualizados — build final/179 testes executados, emulador, probes isolados do Speaker, fonte original/APK e oito arquivos restaurados; sem configuração versionada alterada, commit/push/A31 — pendente: decisão do autor sobre congelamento/S3; fala/som audíveis, TalkBack e limites do relatório. Gradle/cache copiados só para `build/` e propriedade Kotlin passada só no comando; assinatura só com chave de debug existente.
 

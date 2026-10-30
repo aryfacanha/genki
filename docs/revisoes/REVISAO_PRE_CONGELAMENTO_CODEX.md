@@ -67,3 +67,5 @@ Trecho do log do alarme original:
 - Logs, capturas, testes isolados e hashes locais em `build/pre_congelamento/` (artefatos ignorados pelo Git). Este relatório registra a evidência necessária para passagem de contexto; não é integração à monografia nem aceite das correções sugeridas.
 
 **Bloqueios S1/S2: nenhum confirmado. Adiáveis: RV-PC-01 e RV-PC-02, ambos S3.** A decisão de congelar e de aceitar essas limitações cabe ao autor; nenhuma decisão nova foi acrescentada a DECISOES.
+
+**Nota de Claude Code (30/10):** RV-PC-01 **corrigido na 1.0.18** a pedido do autor ("corrija o primeiro problema antes de congelar"): ao ativar os lembretes de um tratamento terminado, o aviso diz "O tratamento terminou em 29/10/2026. Para receber lembretes, edite a duração." (`MedicationText.remindersToggled`, +1 teste; 180 testes). Reprodutor do Codex repetido no emulador; dados restaurados byte a byte. RV-PC-02 fica como limitação registrada (decisão do autor).

@@ -17,8 +17,8 @@ android {
         applicationId = "br.edu.ifrs.genki"
         minSdk = 26
         targetSdk = 37
-        versionCode = 18
-        versionName = "1.0.17"
+        versionCode = 19
+        versionName = "1.0.18"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

@@ -116,7 +116,8 @@ fun DetailScreen(
                 Spacer(Modifier.width(14.dp))
                 Text(med.name, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.semantics { heading() })
             }
-            RemindersStatus(med.remindersEnabled, OccurrenceCalculator.ended(med, LocalDate.now()))
+            val ended = OccurrenceCalculator.ended(med, LocalDate.now())
+            RemindersStatus(med.remindersEnabled, ended)
 
             GenkiCard {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
@@ -139,7 +140,7 @@ fun DetailScreen(
                 onClick = {
                     val enable = !med.remindersEnabled
                     viewModel.setRemindersEnabled(enable) {
-                        showMessage(if (enable) "Lembretes ativados" else "Lembretes desligados")
+                        showMessage(MedicationText.remindersToggled(enable, med.endDate?.takeIf { ended }))
                     }
                 },
             )

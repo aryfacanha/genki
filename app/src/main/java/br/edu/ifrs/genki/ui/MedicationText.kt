@@ -82,6 +82,16 @@ object MedicationText {
         return "$verb: ${parts.joinToString("; ")}."
     }
 
+    /**
+     * Aviso de "Ativar/Desativar lembretes". Num tratamento terminado, ligar não traz lembretes de volta: diz o que fazer
+     * em vez de "Lembretes ativados" (revisão pré-congelamento do Codex, 30/10, RV-PC-01).
+     */
+    fun remindersToggled(enabled: Boolean, endedOn: LocalDate?): String = when {
+        !enabled -> "Lembretes desligados"
+        endedOn != null -> "O tratamento terminou em ${date(endedOn)}. Para receber lembretes, edite a duração."
+        else -> "Lembretes ativados"
+    }
+
     /** Botão que mostra ou esconde, na Hoje, os horários que já passaram (pré-revisão heurística, 30/10, N1). */
     fun pastToggle(count: Int, shown: Boolean): String = when {
         shown -> "Esconder os horários que já passaram"

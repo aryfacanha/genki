@@ -1,7 +1,7 @@
 # Bateria completa de testes manuais — Genki no A31
 
 Criado em 28/10/2026 e **reescrito em 30/10/2026** por Claude Code (Opus 5.5), a pedido do autor: todos os casos de
-uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.17** (lote 1 do retorno de 30/10, DEC-049 e DEC-050:
+uso do app, do começo ao fim, para um teste 100% manual. Versão de referência: **1.0.18** (lote 1 do retorno de 30/10, DEC-049 e DEC-050:
 `RESULTADO_BATERIA_A31_2026-10-30.md`), modo "Como alarme" no A31. Os resultados esperados vêm do código, das decisões (até a DEC-048) e
 das revisões; **esta bateria ainda não foi executada assim, de ponta a ponta, no aparelho.** Resultado da rodada
 anterior (28/10): `RESULTADO_BATERIA_COMPLETA_A31.md`. Frases da voz em detalhe: `ROTEIRO_TESTE_VOZ.md`; dose em
@@ -61,7 +61,7 @@ isso A1–A3 usam os atalhos de Ajustes; A0 é opcional.
 
 | # | Faça | Deve acontecer |
 |---|---|---|
-| C0 | Medicamentos, remédio com "Tem data para terminar" [novo] | A lista mostra "Até dd/mm/aaaa"; depois da data, "Tratamento terminou em …" e, nos Detalhes, "Sem lembretes: o tratamento terminou" |
+| C0 | Medicamentos, remédio com "Tem data para terminar" [novo] | A lista mostra "Até dd/mm/aaaa"; depois da data, "Tratamento terminou em …" e, nos Detalhes, "Sem lembretes: o tratamento terminou"; ali, Desativar e Ativar lembretes avisa "O tratamento terminou em …. Para receber lembretes, edite a duração." |
 | C1 | Medicamentos → Teste A | Detalhes: logo abaixo do nome, faixa verde com sino "**Lembretes ativos**" [novo]; depois quanto toma, dias, horários, duração |
 | C2 | Editar → quantidade **2** → voltar sem salvar | "Descartar alterações?" |
 | C3 | Editar → quantidade 2 → Salvar alterações | Detalhes com "2 comprimidos" |
