@@ -3,6 +3,17 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: revisão pré-congelamento 1.0.12–1.0.17 — 30/10/2026 — Codex
+Partida: main/d8be24e; alvo 8a27111..a184acd; app idêntico ao alvo; pull bloqueado em .git/FETCH_HEAD.
+Realizado: revisão do diff e regras; bateria no emulador; relatório e parecer tecnicamente favorável ao congelamento na cobertura executada. Nenhum S1/S2; dois S3 adiáveis: texto ao reativar tratamento terminado e callback ausente em erro síncrono do TTS (preexistente, teste isolado).
+Decisões aceitas: nenhuma nova. Correções/aceite das limitações pendentes do autor.
+Verificado: build final e 179 testes executados, sem falhas; Hoje/voz/teclado em fonte 2,0×; duplicidade inicial/edição do próprio nome; dois alarmes simultâneos/Entendi individual/troca de modo; probes do Speaker. Código original restaurado, app sem diff, APK final 1.0.17 sem simulação reinstalado só no emulador; oito arquivos de banco/preferências iguais ao backup inclusive após reabrir; ajustes/permissões restaurados.
+Não verificado: A31 (não operado), voz/som audíveis, TalkBack, falha real de TTS, tela cheia permitida e demais limites do relatório. Não é MET-3; não integrado à monografia.
+Próxima tarefa: autor decidir congelamento e S3. Sem código permanente alterado, commit ou push.
+Links: docs/revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md; docs/HANDOFF_APP.md (§2/§3/§7 e Diário).
+```
+
+```text
 ENTREGA — App Android: achados N1–N5 da pré-revisão heurística, versão 1.0.17 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/cb4c7ad; pedido do autor ("Siga nessas mudanças sugeridas").
 Realizado: Hoje com horários passados recolhidos e aviso dos remédios que não aparecem; data de término e tratamento terminado em Medicamentos e Detalhes; voz com rodapé mais baixo e pergunta rolando para a vista.

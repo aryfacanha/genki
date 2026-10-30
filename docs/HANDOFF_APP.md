@@ -1,5 +1,7 @@
 # HANDOFF — App Android Genki (Claude Code ↔ Codex)
 
+**30/10/2026, Codex — pré-congelamento da 1.0.17:** `main`/`d8be24e`, alvo `8a27111..a184acd`. Nenhum S1/S2 confirmado; tecnicamente apta ao congelamento na cobertura executada, com RV-PC-01/02 S3 adiáveis, pendentes do autor. Build final/179 testes executados passam; emulador com Hoje/voz/teclado em 2,0×, duplicidade, dois alarmes simultâneos e troca de modo. Fonte temporária restaurada, APK original 1.0.17 reinstalado; oito arquivos de banco/preferências iguais ao backup inclusive após abrir, ajustes/permissões restaurados. `app` sem diff; pull bloqueado em `.git/FETCH_HEAD`; sem commit/push/A31. `revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`. Registros antigos abaixo mantêm seu contexto histórico.
+
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.17 (versionCode 18), achados N1–N5 e N15 da pré-revisão heurística, a pedido do autor ("Siga nessas mudanças sugeridas"): Hoje recolhe os horários que já passaram ("Ver os N horários que já passaram") e diz no fim quais remédios não aparecem e por quê (lembretes desligados, tratamento terminou); Medicamentos mostra "Até dd/mm/aaaa" ou "Tratamento terminou em …"; Detalhes, "Sem lembretes: o tratamento terminou"; voz com "Silenciar a voz" e "Prefiro digitar" lado a lado quando cabem, a pergunta nova rolando para a vista e os outros remédios numa linha. Build/179 testes (+3 de textos). Emulador com 16 remédios fictícios, fonte 1,0× e 2,0×; dados restaurados byte a byte. **Não verificado:** A31.
 
 **30/10/2026, Claude Code (Opus 5.5):** versão 1.0.16 (versionCode 17), pedidos do autor sobre a 1.0.15 (DEC-050, aceita): alto-falante saiu do topo da voz e virou botão com texto abaixo do microfone em todas as telas da voz; pisca de leve enquanto fala (também no balão do tutorial) e fica parado quando calado; a voz lê as perguntas sempre ao abrir (o "Ativar assistente de voz" só lê o tutorial). Os dois bipes relatados não se repetiram no A31 (autor, 30/10). **Pré-revisão heurística geral** (`PRE_REVISAO_HEURISTICA_1.0.16.md`, foco do autor: requisitos ocultos, transparência, legibilidade, clareza, capacidade): 19 achados novos (2 altos: Hoje sem rolar para "Agora" com muitos remédios; voz em fonte 2,0× com a pergunta fora da tela), sugestões pendentes. Build/176 testes passam. Emulador: botão abaixo do microfone, piscar durante a fala (3 capturas), leitura ligada ao abrir; dados restaurados byte a byte. **Não verificado:** fala real e piscar no A31, piscar no tutorial.
@@ -149,6 +151,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**Pré-congelamento, Codex, 30/10:** 1.0.12–1.0.17 revisadas no intervalo pedido. Nenhum bloqueio S1/S2 confirmado; RV-PC-01 (retorno ao reativar tratamento terminado) e RV-PC-02 (callback ausente na recusa síncrona do TTS, preexistente) são S3. N4 tem esse residual de texto; não declarar todos os estados de término integralmente fechados. Parecer técnico favorável ao congelamento com limites registrados; decisão do autor ainda separada. Ver relatório pré-congelamento.
+
 DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no emulador, aguardando conferência do Codex. Antes: conferência no A31 com quatro achados abertos; ver relatório DEC-048. A linha DEC-047 abaixo é histórica quanto a RV-047-01…04, fechados na cobertura desta conferência.
 
 | Marco | Situação | Commits |
@@ -170,6 +174,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**Pré-congelamento, Codex, 30/10:** build final com fonte original e 179 testes executados, sem falhas/erros/ignorados. Hoje com 12 passados/15 todos passados/todos desligados e nomes repetidos; datas finais inclusivas/lista/detalhes; voz silenciada/recriação/rolagem/teclado em 2,0×; duplicidade inicial manual/voz e próprio nome na edição. Dois alarmes reais do emulador às 20:03 mantiveram notificações independentes; Entendi de um manteve serviço/outro aviso; último retirou tudo. Troca de modo removeu/recriou despertador. Probes isolados do Speaker: conclusão única, substituição/stop e sem português passam; recusa síncrona expõe RV-PC-02. APK final sem simulação; oito arquivos restaurados byte a byte e medicamentos originais conferidos após abrir. Não verificados: voz/som audíveis, TalkBack, falha real de TTS, full-screen permitido, repetição da bateria física. A31 não operado. Detalhes e limites no relatório pré-congelamento.
 
 Reparo RV-048 (30/10, Claude Code, emulador API 35): duas notificações preservadas com o som tocando; Entendi uma a uma sem notificação residual; serviço com foregroundId próprio; troca de modo recria/apaga o despertador do sistema (`dumpsys alarm`, Next alarm clock). Não verificados: A31, som de ouvido, Android 14+ com tela cheia permitida, REPEAT já agendado na troca de modo, TalkBack.
 
@@ -294,6 +300,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Pré-congelamento (Codex, 30/10, 1.0.17):** regressão do roteiro executada; nenhum S1/S2 confirmado. Se houver reparo dos S3, repetir somente seus reprodutores (`revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md`): reativar terminado e recusa síncrona de `TextToSpeech.speak`. Preservar data final inclusiva, resposta por toque, callback único e descarte de callbacks de falas antigas/paradas. S3 são sugestões pendentes; não houve autorização ou correção de código nesta revisão.
+
 **Reparo RV-048 (1.0.12):** conferir só os quatro achados: dois lembretes no mesmo minuto em Como alarme → `dumpsys notification` com as duas notificações + a do serviço (`alarme_tocando`); Entendi em uma (notificação, Hoje ou tela de alarme) tira só ela e o som segue; Entendi na última para o som sem notificação residual; sem resposta, após 1 min fica a notificação do lembrete; trocar o modo em Ajustes recria/apaga o Next alarm clock; texto com "por até 1 minuto". Limite conhecido: REPEAT já agendado na troca mantém o tipo antigo até disparar.
 
 DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notificação; Entendi/Adiar/excluir durante serviço sem notificação residual; troca de som reagenda alarmes e adiados; texto esclarece limite de um minuto. Ver reprodutores e limites em `revisoes/CONFERENCIA_DEC048_CODEX.md`.
@@ -358,6 +366,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Codex — revisão pré-congelamento `8a27111..a184acd`, partida `main`/`d8be24e`; parecer favorável na cobertura, sem S1/S2, RV-PC-01/02 S3; relatório e registros atualizados — build final/179 testes executados, emulador, probes isolados do Speaker, fonte original/APK e oito arquivos restaurados; sem configuração versionada alterada, commit/push/A31 — pendente: decisão do autor sobre congelamento/S3; fala/som audíveis, TalkBack e limites do relatório. Gradle/cache copiados só para `build/` e propriedade Kotlin passada só no comando; assinatura só com chave de debug existente.
 
 - 2026-10-30 — Claude Code — configuração: versão 1.0.17 (versionCode 18); `OccurrenceCalculator.ended`; `MedicationText.treatmentLine/hiddenFromToday/pastToggle`; `HomeState.hidden` — 179 testes; emulador — pendente: A31, Codex.
 

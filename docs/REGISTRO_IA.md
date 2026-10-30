@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 30/10/2026 — Codex: revisão pré-congelamento `8a27111..a184acd` (1.0.17), partida `main`/`d8be24e`; proposta e requisitos reabertos no Drive; nenhum S1/S2, dois S3 adiáveis (texto de reativação de tratamento terminado; callback TTS em erro síncrono preexistente, teste isolado). Build final/179 testes executados passam; emulador com dados fictícios, voz simulada temporária retirada, fonte 2,0×, alarmes simultâneos/Entendi/troca de modo; fonte original/APK final e oito arquivos de banco/preferências restaurados, ajustes/permissões preservados. Relatório `docs/revisoes/REVISAO_PRE_CONGELAMENTO_CODEX.md` e registros atualizados. Sem correção permanente de código, commit, push, A31, decisão nova ou integração à monografia; congelamento e aceite dos S3 cabem ao autor.
+
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.17, achados N1–N5 e N15 da pré-revisão heurística corrigidos a pedido do autor; build/179 testes; emulador.
 
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.16 (DEC-050: botão de voz abaixo do microfone, piscar, leitura ligada ao abrir) e pré-revisão heurística geral no emulador (`PRE_REVISAO_HEURISTICA_1.0.16.md`, 19 achados; fala simulada temporária, retirada); build/176 testes.
