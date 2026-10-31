@@ -22,7 +22,7 @@ O trabalho contempla um produto mínimo viável (MVP), a verificação técnica 
 | Cadastro assistido por voz | Dizer os dados, conferir os nomes reconhecidos, responder às perguntas sobre informações faltantes e corrigir antes de salvar. |
 | Gerenciamento | Consultar, editar e excluir medicamentos; ativar e desativar lembretes. |
 | Agenda do dia | Ver horários, próximo lembrete e avisos pendentes na tela Hoje. |
-| Lembretes locais | Receber notificação ou alarme, reconhecer o aviso com **Entendi** e adiá-lo. |
+| Lembretes locais | Receber notificação ou alarme, reconhecer o aviso com **Entendi** e adiá-lo. No modo alarme, opcionalmente, ouvir o horário e o nome do remédio. |
 | Câmera experimental | Fotografar uma embalagem e revisar sugestões de nome e concentração extraídas por OCR. |
 | Apoio à interação | Tutorial guiado, leitura das perguntas do cadastro por voz e alternativas por toque ou digitação. |
 
@@ -30,7 +30,7 @@ O trabalho contempla um produto mínimo viável (MVP), a verificação técnica 
 
 ## Estado e verificação
 
-Em **30/10/2026**, a versão registrada é a **1.0.20**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31; a 1.0.20 desliga o backup do Android e mantém o código funcional da 1.0.18.
+Em **30/10/2026**, a versão registrada é a **1.0.22**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31. Depois da 1.0.18: backup do Android desligado (1.0.20), escuta da voz com limite próprio de tempo (1.0.21) e alarme falado opcional (1.0.22).
 
 Esses registros são evidências de desenvolvimento. Permanecem verificações manuais do autor, incluindo fala e som audíveis e partes da bateria no A31. Não há comprovação de compatibilidade com todos os aparelhos nem de acessibilidade completa com TalkBack. O [estado do projeto](docs/ESTADO.md) e os [relatórios de revisão](docs/revisoes/) delimitam a cobertura executada.
 

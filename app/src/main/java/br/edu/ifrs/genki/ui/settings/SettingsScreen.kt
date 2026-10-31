@@ -82,6 +82,10 @@ fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false,
             IntervalChoices(settings.intervalMinutes, container.settings::setIntervalMinutes)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             SoundChoices(settings.alarmSound, container.settings::setAlarmSound)
+            if (settings.alarmSound) {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                AlarmSpeechSwitch(settings.alarmSpeech, container.settings::setAlarmSpeech)
+            }
 
             SectionHeader("Voz")
             VoiceAssistantSwitch(voiceAssistant) { voiceAssistant = it; container.settings.voiceAssistant = it }

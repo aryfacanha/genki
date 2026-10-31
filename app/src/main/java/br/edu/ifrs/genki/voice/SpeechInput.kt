@@ -264,7 +264,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
         private const val PAUSE_MS = 2_000L
         private const val MAX_PARTS = 4
         /** Palavras paradas por este tempo encerram a resposta (o reconhecedor pede 2,5 s e costuma encerrar antes). */
-        private const val SILENCE_MS = 4_000L
+        private const val SILENCE_MS = 3_000L
         /** Ouvindo sem palavra nenhuma (o Android costuma desistir em ~5 s). */
         private const val NO_WORDS_MS = 8_000L
         /** Teto de uma resposta, mesmo com ruído que o reconhecedor toma por fala. */

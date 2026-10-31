@@ -62,7 +62,7 @@ class ReminderReceiver : BroadcastReceiver() {
         ) return
 
         val posted = Notifications.show(context, timeId, medication, time, settings.intervalMinutes, snoozed)
-        if (posted && settings.alarmSound) AlarmSoundService.start(context, timeId)
+        if (posted && settings.alarmSound) AlarmSoundService.start(context, timeId, medication.name, time)
         container.alertStore.ringing(timeId, medication.id, time)
         GenkiEval.log("lembrete_emitido", "timeId" to timeId, "acao" to action, "repeticao" to count)
 

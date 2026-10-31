@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: alarme falado opcional e espera da voz em 3 s, versão 1.0.22 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/3b1155e; retorno do autor (S20 FE de terceiro: voz ~2 s mais lenta) e pedido de função (falar o nome dos remédios no alarme); escolhas do autor: a cada 20 s, desligado por padrão, espera de 3 s.
+Realizado: AlarmSpeech (frase pura, 5 testes); Settings.alarmSpeech + "Falar o nome dos remédios no alarme" em Ajustes (só com Como alarme); Speaker(alarm = true) fala com USAGE_ALARM; AlarmSoundService recebe nome e horário, fala 1,5 s depois de tocar e a cada 20 s (até 3), baixa o som para 20% durante a fala (volta em até 10 s mesmo sem aviso do leitor) e cala no Entendi/Adiar/fim; SpeechInput SILENCE_MS 3 s; DEC-052; README e guia.
+Verificado: build e 185 testes; emulador API 35 (serviço disparado com adb root): frases de um e de dois remédios, três falas em 20 s, parada no minuto, Entendi no meio da fala sem som residual, TTS do Google com USAGE_ALARM, opção em Ajustes (captura); A31: 1.0.22 instalada como atualização; cópia em Desktop/Genki-teste.
+Não verificado: fala de ouvido, abaixamento do volume, disparo real pelo agendamento, tela bloqueada, leitor da Samsung no A31, S20 FE com 3 s.
+Links: app/src/main/java/br/edu/ifrs/genki/reminders/AlarmSpeech.kt; reminders/AlarmSoundService.kt; voice/Speaker.kt; docs/DECISOES.md (DEC-052).
+```
+
+```text
 ENTREGA — App Android: voz não fica mais ouvindo sem fim, versão 1.0.21 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/548c15e; relato do autor: depois de atualizar da 1.0 para a 1.0.20 num celular, a voz "fica indefinidamente ouvindo e não cancela", só para no toque no microfone.
 Diagnóstico: o A31 não usou o microfone depois da instalação (logcat), então o caso é do outro celular. O SpeechInput não tinha limite próprio: dependia do reconhecedor encerrar no silêncio; na escuta da continuação (desde a 1.0.2), onBeginningOfSpeech cancelava a pausa de 2 s, e um aviso sem fala deixava a escuta aberta.

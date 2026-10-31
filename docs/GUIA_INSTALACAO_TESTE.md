@@ -72,6 +72,7 @@ Em **Adicionar medicamento → Usar câmera**, permita a câmera e fotografe uma
 - **A voz pode precisar de internet.** O Genki prioriza reconhecimento local quando disponível, mas o serviço de fala pode processar áudio externamente. Não há garantia de reconhecimento offline em todo aparelho. Veja a [documentação do serviço de reconhecimento do Android](https://developer.android.com/reference/android/speech/SpeechRecognizer).
 - **A câmera apenas auxilia.** Pode não ler a embalagem ou confundir seu nome com outro texto. Concentração, como “500 mg” na embalagem, é diferente da quantidade por uso, como “1 comprimido”.
 - **Os avisos dependem do Android.** Celular desligado, permissões bloqueadas, volume, Não perturbe e restrições de bateria podem impedir ou alterar a apresentação. Depois de usar **Forçar parada** nas configurações do Android, reabra o Genki. Tratamentos terminados ou com lembretes desativados não geram novos avisos.
+- **Alarme falado é opcional.** Com **Como alarme**, a opção **Falar o nome dos remédios no alarme** faz o Genki dizer o horário e o nome do remédio (ou quantos são) a cada 20 segundos enquanto toca. Vem desligada; o nome é falado em voz alta, então pense em quem está por perto.
 - **O som não é contínuo indefinidamente.** No modo alarme, cada disparo toca por até um minuto. Com **Repetir o lembrete** ligado, há até três repetições automáticas no intervalo escolhido; **Adiar** pede um novo aviso naquele intervalo.
 - **Nem toda programação é suportada.** Use horários e dias da semana definidos. Expressões como “dia sim, dia não” não são interpretadas automaticamente.
 - **Os dados ficam só no aparelho.** O Genki não tem conta ou sincronização própria, não guarda permanentemente áudio ou fotos e não participa do backup do Android nem da transferência para outro celular. Por isso, desinstalar, limpar os dados ou trocar de celular apaga os cadastros; não há exportação ou restauração própria.
@@ -92,4 +93,4 @@ Para dar retorno ao autor, envie: **versão do APK recebido, modelo do celular, 
 
 ---
 
-Guia preparado em **30/10/2026**, com base no comportamento documentado da versão **1.0.20**. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
+Guia preparado em **30/10/2026**, com base no comportamento documentado da versão **1.0.22**. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.

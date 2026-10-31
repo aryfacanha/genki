@@ -5,8 +5,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/** [alarmSound]: tocar como alarme, mesmo no silencioso (DEC-032, escolhido na introdução ou em Ajustes). */
-data class ReminderSettings(val repeatEnabled: Boolean = true, val intervalMinutes: Int = 20, val alarmSound: Boolean = false)
+/**
+ * [alarmSound]: tocar como alarme, mesmo no silencioso (DEC-032, escolhido na introdução ou em Ajustes).
+ * [alarmSpeech]: no alarme, falar o horário e o nome dos remédios (DEC-052); desligado por padrão.
+ */
+data class ReminderSettings(
+    val repeatEnabled: Boolean = true,
+    val intervalMinutes: Int = 20,
+    val alarmSound: Boolean = false,
+    val alarmSpeech: Boolean = false,
+)
 
 /**
  * Ajustes do app em SharedPreferences (S3). O intervalo vale para repetir e para adiar (DEC-028). A introdução (DEC-040)
@@ -22,10 +30,16 @@ class Settings(context: Context) {
         repeatEnabled = prefs.getBoolean(KEY_REPEAT, true),
         intervalMinutes = prefs.getInt(KEY_INTERVAL, 20),
         alarmSound = prefs.getBoolean(KEY_ALARM, false),
+        alarmSpeech = prefs.getBoolean(KEY_ALARM_SPEECH, false),
     )
 
     fun setAlarmSound(alarm: Boolean) {
         prefs.edit().putBoolean(KEY_ALARM, alarm).apply()
+        _reminders.value = read()
+    }
+
+    fun setAlarmSpeech(speak: Boolean) {
+        prefs.edit().putBoolean(KEY_ALARM_SPEECH, speak).apply()
         _reminders.value = read()
     }
 
@@ -63,6 +77,7 @@ class Settings(context: Context) {
         private const val KEY_REPEAT = "repeat_enabled"
         private const val KEY_INTERVAL = "interval_minutes"
         private const val KEY_ALARM = "alarm_sound"
+        private const val KEY_ALARM_SPEECH = "alarm_speech"
         private const val KEY_AUTO_LISTEN = "voice_auto_listen"
         private const val KEY_INTRO_DONE = "intro_done"
         private const val KEY_VOICE_ASSISTANT = "voice_assistant"

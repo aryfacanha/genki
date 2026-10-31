@@ -1,6 +1,7 @@
 package br.edu.ifrs.genki.voice
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
@@ -15,8 +16,9 @@ import java.util.Locale
  * Lê as perguntas em voz alta (RF19), só em português; sem voz pt, fica só o texto na tela (como no protótipo).
  * Usa o leitor padrão do aparelho; se ele não tiver português, tenta o do Google. No Samsung A31 (27/10) as
  * perguntas não eram faladas: a checagem antiga exigia `voice.locale`, que o leitor da Samsung pode não informar.
+ * Com [alarm], fala pelo canal de alarme (volume do alarme, mesmo no silencioso), como o som do "Como alarme" (DEC-052).
  */
-class Speaker(context: Context) {
+class Speaker(context: Context, private val alarm: Boolean = false) {
     private val appContext = context.applicationContext
     private var ready = false
     private var pending: String? = null
@@ -61,6 +63,14 @@ class Speaker(context: Context) {
         }
         settled = true
         if (ready) tts.setOnUtteranceProgressListener(progress)
+        if (ready && alarm) {
+            tts.setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build(),
+            )
+        }
         val text = pending
         pending = null
         if (text != null) speak(text, done) else if (!ready) finish()

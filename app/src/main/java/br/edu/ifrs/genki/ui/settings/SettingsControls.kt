@@ -100,6 +100,15 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
     }
 }
 
+/** Alarme falado (DEC-052): só aparece com "Como alarme". */
+@Composable
+internal fun AlarmSpeechSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
+    "Falar o nome dos remédios no alarme",
+    "Quando o alarme tocar, o Genki diz o horário e o nome do remédio; com vários, diz quantos são. Fala de novo a cada 20 segundos enquanto toca.",
+    checked,
+    onChange,
+)
+
 /** Assistente de voz (DEC-049), na introdução e em Ajustes. */
 @Composable
 internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
