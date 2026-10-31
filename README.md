@@ -30,9 +30,9 @@ O trabalho contempla um produto mínimo viável (MVP), a verificação técnica 
 
 ## Estado e verificação
 
-Em **30/10/2026**, a versão registrada é a **1.0.22**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31. Depois da 1.0.18: backup do Android desligado (1.0.20), escuta da voz com limite próprio de tempo (1.0.21) e alarme falado opcional (1.0.22).
+Em **30/10/2026**, a versão registrada é a **1.0.22**, candidata ao congelamento. Os marcos de cadastro, lembretes, voz e câmera estão implementados. O [handoff técnico](https://github.com/aryfacanha/genki-docs/blob/main/docs/HANDOFF_APP.md) registra compilação, 180 testes automatizados e instalação dessa versão no Samsung Galaxy A31. Depois da 1.0.18: backup do Android desligado (1.0.20), escuta da voz com limite próprio de tempo (1.0.21) e alarme falado opcional (1.0.22).
 
-Esses registros são evidências de desenvolvimento. Permanecem verificações manuais do autor, incluindo fala e som audíveis e partes da bateria no A31. Não há comprovação de compatibilidade com todos os aparelhos nem de acessibilidade completa com TalkBack. O [estado do projeto](docs/ESTADO.md) e os [relatórios de revisão](docs/revisoes/) delimitam a cobertura executada.
+Esses registros são evidências de desenvolvimento. Permanecem verificações manuais do autor, incluindo fala e som audíveis e partes da bateria no A31. Não há comprovação de compatibilidade com todos os aparelhos nem de acessibilidade completa com TalkBack. O [estado do projeto](https://github.com/aryfacanha/genki-docs/blob/main/docs/ESTADO.md) e os [relatórios de revisão](https://github.com/aryfacanha/genki-docs/tree/main/docs/revisoes) delimitam a cobertura executada.
 
 A proposta prevê avaliação do fluxo de voz, prova de conceito de imagem, revisão heurística e avaliação de usabilidade com tarefas e SUS. Este README não apresenta resultados dessas avaliações como concluídos. O teste de exploração descrito no guia não constitui, por si só, uma sessão de pesquisa com participantes.
 
@@ -66,10 +66,10 @@ app/src/main/java/br/edu/ifrs/genki/
 ├── camera/     Captura e reconhecimento de texto
 └── ui/         Telas e componentes de interface
 app/src/test/   Testes automatizados
-docs/          Especificação, decisões e evidências de desenvolvimento
+docs/          Guia de instalação e teste
 ```
 
-Todos os fluxos de cadastro passam por um rascunho comum e pelo `DraftValidator` antes da gravação. A [especificação técnica](docs/ESPEC_ARQUITETURA.md) descreve a arquitetura; as [decisões posteriores](docs/DECISOES.md) registram seus ajustes.
+Todos os fluxos de cadastro passam por um rascunho comum e pelo `DraftValidator` antes da gravação. A [especificação técnica](https://github.com/aryfacanha/genki-docs/blob/main/docs/ESPEC_ARQUITETURA.md) descreve a arquitetura; as [decisões posteriores](https://github.com/aryfacanha/genki-docs/blob/main/docs/DECISOES.md) registram seus ajustes.
 
 ## Executar a partir do código
 
@@ -87,20 +87,21 @@ O APK de desenvolvimento fica em `app/build/outputs/apk/debug/app-debug.apk`. Pa
 .\gradlew.bat installDebug
 ```
 
-O APK de distribuição requer assinatura com a chave do autor, mantida fora do repositório. Uma compilação debug não substitui uma instalação release assinada com outra chave. Consulte [como rodar e distribuir](docs/HANDOFF_APP.md#4-como-rodar) antes de preparar atualizações.
+O APK de distribuição requer assinatura com a chave do autor, mantida fora do repositório. Uma compilação debug não substitui uma instalação release assinada com outra chave. Consulte [como rodar e distribuir](https://github.com/aryfacanha/genki-docs/blob/main/docs/HANDOFF_APP.md#4-como-rodar) antes de preparar atualizações.
 
 ## Documentação do TCC
 
 | Documento | Conteúdo |
 | --- | --- |
+| [Repositório de documentação](https://github.com/aryfacanha/genki-docs) | Registros de processo do TCC, separados do código (privado; exige acesso). |
 | [Guia de instalação e teste](docs/GUIA_INSTALACAO_TESTE.md) | Orientação para o orientador e outras pessoas que receberem o APK. |
-| [Índice do projeto](docs/00_INDICE.md) | Localização das fontes acadêmicas e dos documentos no Drive. |
-| [Requisitos oficiais](https://docs.google.com/spreadsheets/d/18YdF337444bBPXeIh2Hd9LQZaB6gOKD6LdlAr2FKrVI/edit) | Texto dos RF01–RF25 e RNF01–RNF11; o [mapa local](docs/REQUISITOS_MAPA.md) relaciona requisitos e marcos. |
-| [Estado atual](docs/ESTADO.md) e [decisões](docs/DECISOES.md) | Implementações, verificações, escolhas aceitas e pendências. |
-| [Handoff do aplicativo](docs/HANDOFF_APP.md) | Ambiente, procedimentos de revisão e diário técnico. |
-| [Bateria manual completa](docs/ROTEIRO_BATERIA_COMPLETA.md) | Verificação detalhada do aplicativo. |
-| [Entregas](docs/ENTREGAS.md) e [registro de IA](docs/REGISTRO_IA.md) | Rastreabilidade do desenvolvimento e da assistência por IA. |
+| [Índice do projeto](https://github.com/aryfacanha/genki-docs/blob/main/docs/00_INDICE.md) | Localização das fontes acadêmicas e dos documentos no Drive. |
+| [Requisitos oficiais](https://docs.google.com/spreadsheets/d/18YdF337444bBPXeIh2Hd9LQZaB6gOKD6LdlAr2FKrVI/edit) | Texto dos RF01–RF25 e RNF01–RNF11; o [mapa local](https://github.com/aryfacanha/genki-docs/blob/main/docs/REQUISITOS_MAPA.md) relaciona requisitos e marcos. |
+| [Estado atual](https://github.com/aryfacanha/genki-docs/blob/main/docs/ESTADO.md) e [decisões](https://github.com/aryfacanha/genki-docs/blob/main/docs/DECISOES.md) | Implementações, verificações, escolhas aceitas e pendências. |
+| [Handoff do aplicativo](https://github.com/aryfacanha/genki-docs/blob/main/docs/HANDOFF_APP.md) | Ambiente, procedimentos de revisão e diário técnico. |
+| [Bateria manual completa](https://github.com/aryfacanha/genki-docs/blob/main/docs/ROTEIRO_BATERIA_COMPLETA.md) | Verificação detalhada do aplicativo. |
+| [Entregas](https://github.com/aryfacanha/genki-docs/blob/main/docs/ENTREGAS.md) e [registro de IA](https://github.com/aryfacanha/genki-docs/blob/main/docs/REGISTRO_IA.md) | Rastreabilidade do desenvolvimento e da assistência por IA. |
 
 Documentos no Drive podem exigir permissão de acesso. O [protótipo navegável](https://joyful-biscuit-677f74.netlify.app) é uma referência de interface anterior ao aplicativo Android; não instala o app nem reproduz todas as funções atuais.
 
-O desenvolvimento utiliza assistência de IA, com atribuição e registros no repositório. Implementações, testes técnicos e sugestões dos assistentes são distinguidos de decisões aceitas pelo autor e de resultados acadêmicos.
+O desenvolvimento utiliza assistência de IA, com atribuição nos commits e registros no repositório `genki-docs`. Cada versão tem uma tag `vX.Y.Z` neste repositório. Implementações, testes técnicos e sugestões dos assistentes são distinguidos de decisões aceitas pelo autor e de resultados acadêmicos.

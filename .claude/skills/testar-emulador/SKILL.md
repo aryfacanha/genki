@@ -8,5 +8,5 @@ disable-model-invocation: true
 
 Foco opcional informado pelo autor: $ARGUMENTS
 
-Siga o roteiro e o formato de relatório de `docs/HANDOFF_APP.md`, seção 5 (texto comum ao Claude Code e ao Codex).
+Siga o roteiro e o formato de relatório de `genki-docs/docs/HANDOFF_APP.md`, seção 5 (texto comum ao Claude Code e ao Codex).
 Para o esperado de cada marco, use a seção 7. Não altere código nesta skill.

@@ -8,5 +8,5 @@ disable-model-invocation: true
 
 Alvo: $ARGUMENTS (padrão: `git show HEAD`).
 
-Siga o roteiro de `docs/HANDOFF_APP.md`, seção 6 (texto comum ao Claude Code e ao Codex), inclusive gravar o relatório
-em `docs/revisoes/` e a linha no Diário. NÃO altere código.
+Siga o roteiro de `genki-docs/docs/HANDOFF_APP.md`, seção 6 (texto comum ao Claude Code e ao Codex), inclusive gravar o relatório
+em `genki-docs/docs/revisoes/` e a linha no Diário. NÃO altere código.
