@@ -3,6 +3,16 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: voz não fica mais ouvindo sem fim, versão 1.0.21 — 30/10/2026 — Claude Code (Opus 5.5)
+Partida: main/548c15e; relato do autor: depois de atualizar da 1.0 para a 1.0.20 num celular, a voz "fica indefinidamente ouvindo e não cancela", só para no toque no microfone.
+Diagnóstico: o A31 não usou o microfone depois da instalação (logcat), então o caso é do outro celular. O SpeechInput não tinha limite próprio: dependia do reconhecedor encerrar no silêncio; na escuta da continuação (desde a 1.0.2), onBeginningOfSpeech cancelava a pausa de 2 s, e um aviso sem fala deixava a escuta aberta.
+Realizado: SpeechInput com relógio próprio: SILENCE_MS 4 s sem palavra nova → pede o resultado; NO_WORDS_MS 8 s sem palavra → "Não ouvi nada"; MAX_ANSWER_MS 30 s por resposta; FORCE_MS 1,5 s após pedir para parar → último parcial (ou "Não ouvi"); onBeginningOfSpeech só recomeça a pausa; erro depois de pedir para parar aproveita o parcial. versionCode 22 / 1.0.21.
+Verificado: assembleDebug/assembleRelease e 180 testes; APK assinado com a chave do autor; instalado no A31 como atualização; cópia em Desktop/Genki-teste/Genki-1.0.21-teste.apk.
+Não verificado: voz no celular que travava (modelo e Android não informados), regressão da voz no A31 (fala, junção de trechos, toque para parar). Sem teste unitário novo: lógica presa ao SpeechRecognizer/Handler.
+Links: app/src/main/java/br/edu/ifrs/genki/voice/SpeechInput.kt.
+```
+
+```text
 ENTREGA — App Android: backup do Android desligado, versão 1.0.20 — 30/10/2026 — Claude Code (Opus 5.5)
 Partida: main/e7054c1; decisão do autor ("Isso desliga o backup, pois tudo fica local.") sobre o achado da revisão do README/guia.
 Realizado: allowBackup="false"; data_extraction_rules.xml excluindo todos os domínios de cloud-backup e device-transfer; backup_rules.xml removido; versionCode 21 / 1.0.20; README e guia sem a ressalva do backup, com a perda dos cadastros ao desinstalar/limpar/trocar de celular; DEC-051.

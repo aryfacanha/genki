@@ -159,6 +159,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**1.0.21 (30/10, Claude Code):** M3 (voz): `SpeechInput` com relógio próprio para não depender do reconhecedor encerrar (silêncio 4 s, sem palavra 8 s, teto 30 s, parar forçado 1,5 s).
+
 **1.0.20 (30/10, Claude Code):** backup do Android desligado (DEC-051); sem mudança de marco ou de código Kotlin.
 
 **Documentação de distribuição, Codex, 30/10:** `README.md` apresenta o TCC e `GUIA_INSTALACAO_TESTE.md` orienta instalação/teste informal da 1.0.19. Sem alteração de marco ou código; tutorial externo complementa o tutorial do app. Texto preparado, ainda sem revisão do autor.
@@ -186,6 +188,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**1.0.21 (30/10, Claude Code):** build/180 testes; instalada no A31. Não verificados: a voz no celular onde a escuta não terminava (modelo não informado) e a regressão da voz no A31.
 
 **1.0.20 (30/10, Claude Code, A31):** atualização preservou a instalação (firstInstallTime 28/10); `dumpsys package` sem `ALLOW_BACKUP`; `bmgr backupnow br.edu.ifrs.genki` → "Backup is not allowed"; sem crash ao abrir. Não verificados: cadastros na tela (A31 apagado), transferência real entre aparelhos.
 
@@ -316,6 +320,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Voz (1.0.21):** falar o nome e calar: a escuta encerra sozinha em até ~4 s, mesmo em celular cujo reconhecedor não encerra; pausa curta no meio da frase ainda junta os trechos; tocar no microfone encerra em até 1,5 s; abrir a escuta e não falar → "Não ouvi nada" em até 8 s; ruído contínuo para em 30 s.
+
 **Backup (1.0.20):** `adb shell dumpsys package br.edu.ifrs.genki | grep pkgFlags` sem `ALLOW_BACKUP` e `adb shell bmgr backupnow br.edu.ifrs.genki` → "Backup is not allowed". Atualizar por cima de versão anterior mantém os cadastros.
 
 **Guia externo, 30/10:** ao mudar instalação, permissões, voz, câmera ou lembretes, conferir também `GUIA_INSTALACAO_TESTE.md` e README. Para exploração informal, o guia cobre cadastro manual → notificação/Entendi, voz/correção, câmera opcional e limpeza dos cadastros fictícios. Não substitui a bateria completa nem o protocolo acadêmico; roteiro não executado nesta entrega documental.
@@ -386,6 +392,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-10-30 — Claude Code — configuração: versão 1.0.21 (versionCode 22); `SpeechInput` com relógio próprio — 180 testes; A31 (instalação) — pendente: voz no celular que travava e no A31.
 
 - 2026-10-30 — Claude Code — configuração (manifest): `allowBackup="false"`, `data_extraction_rules.xml` excluindo tudo, `backup_rules.xml` removido; versão 1.0.20 (versionCode 21) (DEC-051) — 180 testes; A31 (flags e bmgr) — pendente: cadastros na tela do A31.
 

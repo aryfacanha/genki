@@ -19,6 +19,11 @@ import android.speech.SpeechRecognizer
  * O reconhecedor encerra numa pausa curta e a maioria ignora o pedido de esperar mais; quem pensa no meio da frase
  * era cortado (teste informal, 29/10). Por isso, ao encerrar com texto, volta a ouvir e junta os trechos; a resposta
  * sai depois de [PAUSE_MS] sem fala nova, no toque no microfone ([stop]) ou ao chegar a [MAX_PARTS] trechos.
+ *
+ * Nem todo reconhecedor encerra sozinho: depois de atualizar da 1.0 para a 1.0.20, um celular do autor ficou ouvindo
+ * até o toque no microfone (30/10). Por isso o Genki tem relógio próprio: encerra quando as palavras param de mudar
+ * por [SILENCE_MS], avisa "não ouvi" depois de [NO_WORDS_MS] sem palavra nenhuma, para tudo em [MAX_ANSWER_MS] e,
+ * se o reconhecedor não responder ao pedido de parar, entrega o último texto parcial depois de [FORCE_MS].
  */
 class SpeechInput(private val context: Context, private val events: Events) {
 
@@ -45,12 +50,35 @@ class SpeechInput(private val context: Context, private val events: Events) {
     private val handler = Handler(Looper.getMainLooper())
     /** Esperando a continuação depois de um trecho (`Handler.hasCallbacks` só existe a partir da API 29). */
     private var waiting = false
+    /** Último texto parcial do trecho em andamento; vale como resposta se o reconhecedor não entregar o final. */
+    private var segmentText: String? = null
     /** Sem fala nova depois do último trecho: entrega o que juntou. */
     private val pauseOver = Runnable {
         waiting = false
         if (!active) return@Runnable
         recognizer?.cancel()
         deliver()
+    }
+    /** Palavras pararam de mudar e o reconhecedor não encerrou: pede o resultado. */
+    private val quietOver = Runnable { if (active && !waiting) stop() }
+    /** Teto da resposta inteira, mesmo com ruído que o reconhecedor toma por fala. */
+    private val answerOver = Runnable { if (active) stop() }
+    /** Ouvindo e nenhuma palavra: o reconhecedor não avisou o silêncio. */
+    private val noWordsOver = Runnable {
+        if (!active || waiting || segmentText != null) return@Runnable
+        if (parts.isNotEmpty()) {
+            recognizer?.cancel()
+            deliver()
+        } else {
+            fail(SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
+        }
+    }
+    /** Pediu para parar e o reconhecedor não respondeu: fica com o que já tinha. */
+    private val forceEnd = Runnable {
+        if (!active) return@Runnable
+        segmentText?.let { parts += it }
+        recognizer?.cancel()
+        if (parts.isNotEmpty()) deliver() else fail(SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
     }
 
     fun isAvailable(): Boolean = onDevice || SpeechRecognizer.isRecognitionAvailable(context)
@@ -61,11 +89,15 @@ class SpeechInput(private val context: Context, private val events: Events) {
         finishing = false
         active = true
         listen()
+        handler.postDelayed(answerOver, MAX_ANSWER_MS)
         events.listening(true)
     }
 
     private fun listen() {
         endOfSpeechAt = null
+        segmentText = null
+        handler.removeCallbacks(noWordsOver)
+        handler.postDelayed(noWordsOver, NO_WORDS_MS)
         val current = recognizer ?: create().also { recognizer = it }
         current.startListening(
             Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -79,7 +111,7 @@ class SpeechInput(private val context: Context, private val events: Events) {
     }
 
     fun stop() {
-        if (!active) return
+        if (!active || finishing) return
         finishing = true
         // Na espera entre trechos não há reconhecedor ouvindo: entrega já.
         if (waiting) {
@@ -87,14 +119,31 @@ class SpeechInput(private val context: Context, private val events: Events) {
             deliver()
         } else {
             recognizer?.stopListening()
+            handler.postDelayed(forceEnd, FORCE_MS)
         }
     }
 
     private fun deliver() {
-        stopWaiting()
+        stopTimers()
         active = false
         events.listening(false)
         events.result(parts.joinToString(" "), lastLatency)
+    }
+
+    private fun fail(code: Int) {
+        stopTimers()
+        active = false
+        recognizer?.cancel()
+        events.listening(false)
+        events.error(code)
+    }
+
+    private fun stopTimers() {
+        stopWaiting()
+        handler.removeCallbacks(quietOver)
+        handler.removeCallbacks(answerOver)
+        handler.removeCallbacks(noWordsOver)
+        handler.removeCallbacks(forceEnd)
     }
 
     private fun stopWaiting() {
@@ -106,13 +155,13 @@ class SpeechInput(private val context: Context, private val events: Events) {
     fun cancel() {
         if (!active) return
         active = false
-        stopWaiting()
+        stopTimers()
         recognizer?.cancel()
         events.listening(false)
     }
 
     fun destroy() {
-        stopWaiting()
+        stopTimers()
         recognizer?.destroy()
         recognizer = null
     }
@@ -129,8 +178,14 @@ class SpeechInput(private val context: Context, private val events: Events) {
 
     private val listener = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) = Unit
-        // Voltou a falar dentro da pausa: continua juntando.
-        override fun onBeginningOfSpeech() = stopWaiting()
+        // Talvez voltou a falar dentro da pausa: a espera recomeça, mas só palavra nova a cancela. Há reconhecedor que
+        // avisa o começo sem fala nenhuma (ruído), e cancelar aqui deixava a escuta aberta sem fim (30/10).
+        override fun onBeginningOfSpeech() {
+            if (waiting) {
+                handler.removeCallbacks(pauseOver)
+                handler.postDelayed(pauseOver, PAUSE_MS)
+            }
+        }
         override fun onRmsChanged(rmsdB: Float) = Unit
         override fun onBufferReceived(buffer: ByteArray?) = Unit
         override fun onEvent(eventType: Int, params: Bundle?) = Unit
@@ -140,12 +195,27 @@ class SpeechInput(private val context: Context, private val events: Events) {
         }
 
         override fun onPartialResults(partialResults: Bundle?) {
-            first(partialResults)?.let { events.partial((parts + it).joinToString(" ")) }
+            val text = first(partialResults) ?: return
+            if (active && text != segmentText) {
+                segmentText = text
+                // Palavra nova: é continuação de verdade; o relógio do silêncio recomeça.
+                stopWaiting()
+                handler.removeCallbacks(noWordsOver)
+                if (!finishing) {
+                    handler.removeCallbacks(quietOver)
+                    handler.postDelayed(quietOver, SILENCE_MS)
+                }
+            }
+            events.partial((parts + text).joinToString(" "))
         }
 
         override fun onResults(results: Bundle?) {
             if (!active) return
-            val text = first(results)
+            handler.removeCallbacks(forceEnd)
+            handler.removeCallbacks(noWordsOver)
+            handler.removeCallbacks(quietOver)
+            val text = first(results) ?: segmentText
+            segmentText = null
             if (text != null) {
                 parts += text
                 lastLatency = endOfSpeechAt?.let { SystemClock.elapsedRealtime() - it }
@@ -171,15 +241,14 @@ class SpeechInput(private val context: Context, private val events: Events) {
                 listen()
                 return
             }
+            // Pediu para parar e veio erro em vez do resultado: vale o último parcial.
+            if (finishing) segmentText?.let { parts += it }
             // Na escuta da continuação, silêncio ou nada entendido só encerra a resposta com o que já tinha.
             if (parts.isNotEmpty()) {
                 deliver()
                 return
             }
-            stopWaiting()
-            active = false
-            events.listening(false)
-            events.error(error)
+            fail(error)
         }
     }
 
@@ -194,5 +263,13 @@ class SpeechInput(private val context: Context, private val events: Events) {
         // 3 s pareceu longo (29/10) e 1,5 s ainda cortava quem demora a continuar (bateria do autor, 30/10).
         private const val PAUSE_MS = 2_000L
         private const val MAX_PARTS = 4
+        /** Palavras paradas por este tempo encerram a resposta (o reconhecedor pede 2,5 s e costuma encerrar antes). */
+        private const val SILENCE_MS = 4_000L
+        /** Ouvindo sem palavra nenhuma (o Android costuma desistir em ~5 s). */
+        private const val NO_WORDS_MS = 8_000L
+        /** Teto de uma resposta, mesmo com ruído que o reconhecedor toma por fala. */
+        private const val MAX_ANSWER_MS = 30_000L
+        /** Espera pelo resultado depois de pedir para parar. */
+        private const val FORCE_MS = 1_500L
     }
 }
