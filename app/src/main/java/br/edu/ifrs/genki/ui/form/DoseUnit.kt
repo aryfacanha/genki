@@ -107,6 +107,19 @@ enum class DoseUnit(val singular: String, val plural: String, val amounts: List<
         private val QUARTERS = setOf(QUARTER, THREE_QUARTERS)
         private val TABLET_PARTS = listOf(HALF, " e $QUARTER", " e $THREE_QUARTERS")
         private const val MAX = 100.0
+
+        /**
+         * Acima disto (em comprimidos, cápsulas, gotas ou ml, o número digitado) o formulário pergunta "Está certo?"
+         * antes de gravar (P19). **Valor proposto, a decidir pelo autor**: uma constante só, para todas as unidades.
+         */
+        const val UNUSUAL_AMOUNT = 20.0
+
+        /** Dose salva ou digitada com quantidade acima de [UNUSUAL_AMOUNT]; texto livre ("Outro") nunca. */
+        fun isUnusual(dose: String): Boolean {
+            val (amount, unit) = parse(dose) ?: return false
+            if (unit == OTHER) return false
+            return (unit.value(amount) ?: return false) > UNUSUAL_AMOUNT
+        }
         private const val EPSILON = 1e-9
         private val HALVES = setOf("meio", "meia", "1/2", "½")
 

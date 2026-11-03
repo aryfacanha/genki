@@ -154,6 +154,16 @@ fun MedicationFormScreen(
         )
     }
 
+    state.unusualDose?.let { dose ->
+        AlertDialog(
+            onDismissRequest = viewModel::dismissUnusualDose,
+            title = { Text("$dose por vez. Está certo?") },
+            text = { Text("É uma quantidade maior que o comum. O Genki não sabe qual é a quantidade certa: confira com a receita ou com o profissional de saúde.") },
+            confirmButton = { TextButton(onClick = viewModel::dismissUnusualDose) { Text("Voltar e conferir") } },
+            dismissButton = { TextButton(onClick = viewModel::confirmUnusualDose) { Text("Está certo, salvar") } },
+        )
+    }
+
     if (askDiscard) {
         AlertDialog(
             onDismissRequest = { askDiscard = false },

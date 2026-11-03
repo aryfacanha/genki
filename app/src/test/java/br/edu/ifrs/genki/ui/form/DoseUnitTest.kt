@@ -145,4 +145,21 @@ class DoseUnitTest {
         }
         assertEquals("meio comprimido", DoseUnit.TABLET.dose("meio"))
     }
+
+    @Test
+    fun warnsOnlyAboveTheUnusualAmount() {
+        assertTrue(DoseUnit.isUnusual("999 comprimidos"))
+        assertTrue(DoseUnit.isUnusual("21 gotas"))
+        assertFalse(DoseUnit.isUnusual("20 gotas"))
+        assertFalse(DoseUnit.isUnusual("2 comprimidos"))
+        assertFalse(DoseUnit.isUnusual("1/4 de comprimido"))
+        assertFalse(DoseUnit.isUnusual("1 comprimido e meio"))
+    }
+
+    @Test
+    fun freeTextEmptyOrNonNumericNeverWarns() {
+        assertFalse(DoseUnit.isUnusual(""))
+        assertFalse(DoseUnit.isUnusual("999 colheres de sopa"))
+        assertFalse(DoseUnit.isUnusual("muitos comprimidos"))
+    }
 }

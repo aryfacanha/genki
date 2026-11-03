@@ -118,6 +118,8 @@ data class FormUiState(
     val duplicate: String? = null,
     /** O aviso apareceu ao sair do nome (etapa 1), não ao salvar (bateria do autor, 30/10). */
     val duplicateOnContinue: Boolean = false,
+    /** Dose acima de [DoseUnit.UNUSUAL_AMOUNT]: pergunta antes de gravar, sem bloquear (P19, refinamento 1.0.25). */
+    val unusualDose: String? = null,
 )
 
 const val REVIEW = 3
@@ -171,6 +173,7 @@ class FormViewModel(
     private var saving = false
     /** Nome repetido que a pessoa já aceitou no começo: não pergunta de novo ao salvar. */
     private var acceptedDuplicate: String? = null
+    private var acceptedUnusualDose: String? = null
 
     init {
         if (sessionDraft != null) {
@@ -297,6 +300,15 @@ class FormViewModel(
 
     fun dismissDuplicate() = _state.update { it.copy(duplicate = null, duplicateOnContinue = false) }
 
+    /** "Está certo, cadastrar" no aviso de quantidade alta. */
+    fun confirmUnusualDose() {
+        acceptedUnusualDose = _state.value.unusualDose
+        _state.update { it.copy(unusualDose = null) }
+        save()
+    }
+
+    fun dismissUnusualDose() = _state.update { it.copy(unusualDose = null) }
+
     /** "Confirmar e salvar" (cadastro) ou "Salvar alterações" (edição). Sempre pelo validador. */
     fun save(allowDuplicate: Boolean = false) {
         if (saving) return
@@ -315,6 +327,11 @@ class FormViewModel(
             session.replace(valid.draft)
             GenkiEval.log("rascunho_corrigido", "fonte" to valid.draft.source)
             _state.update { it.copy(savedMessage = "") }
+            return
+        }
+        val dose = valid.draft.dose
+        if (dose != null && dose != acceptedUnusualDose && DoseUnit.isUnusual(dose)) {
+            _state.update { it.copy(unusualDose = dose) }
             return
         }
         saving = true
