@@ -18,12 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -82,6 +80,7 @@ import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.InfoRow
 import br.edu.ifrs.genki.ui.components.PrimaryButton
+import br.edu.ifrs.genki.ui.components.ScrollHintColumn
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
@@ -206,8 +205,8 @@ private fun ColumnScope.FormContent(
             if (isEdit) sections[STEP_FIELDS.indexOfFirst { first in it }].bringIntoView()
             else errorViews[first]?.bringIntoView()
         }
-        Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp).padding(bottom = 24.dp),
+        ScrollHintColumn(
+            Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp),
         ) {
             val show = { index: Int -> !steps || step == index }
             val stepLabel = { index: Int -> if (steps) index else null }
@@ -726,8 +725,8 @@ private fun ColumnScope.ReviewContent(
     onCancel: (() -> Unit)?,
 ) {
     GenkiTopBar("Confira antes de salvar", onBack = onBack, backLabel = "Voltar e corrigir", actionLabel = "Cancelar", onAction = onCancel)
-    Column(
-        Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp),
+    ScrollHintColumn(
+        Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
     ) {
         Text(
             "Para mudar algo, toque em Alterar.",

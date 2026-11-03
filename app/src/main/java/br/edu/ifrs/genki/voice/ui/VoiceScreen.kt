@@ -36,7 +36,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -93,6 +92,7 @@ import br.edu.ifrs.genki.ui.components.GenkiTopBar
 import br.edu.ifrs.genki.ui.components.InfoRow
 import br.edu.ifrs.genki.ui.components.MicIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
+import br.edu.ifrs.genki.ui.components.ScrollHintColumn
 import br.edu.ifrs.genki.ui.components.SecondaryButton
 import br.edu.ifrs.genki.ui.components.SectionTitle
 import br.edu.ifrs.genki.ui.components.TimeDialog
@@ -337,8 +337,9 @@ private fun ColumnScope.Intro(
     onMic: () -> Unit,
     onType: () -> Unit,
 ) {
-    Column(
-        Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 28.dp, vertical = 32.dp),
+    // "Silenciar a voz" e "Prefiro digitar" ficam logo abaixo do microfone: com fonte 2,0× ficavam abaixo da dobra (P2).
+    ScrollHintColumn(
+        Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -358,20 +359,20 @@ private fun ColumnScope.Intro(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(24.dp))
         MicButton(state.listening, size = 88, onClick = onMic)
         Spacer(Modifier.height(20.dp))
         Listening(state, idle = "Toque no microfone para falar")
+        Spacer(Modifier.height(12.dp))
+        readAloud(Modifier)
+        Spacer(Modifier.height(8.dp))
+        TypeLink(onType)
         Spacer(Modifier.height(16.dp))
         Text(
             "Você poderá revisar tudo antes de salvar.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(16.dp))
-        readAloud(Modifier)
-        Spacer(Modifier.height(8.dp))
-        TypeLink(onType)
     }
 }
 
@@ -393,7 +394,7 @@ private fun ColumnScope.Names(
     onRemove: (String) -> Unit,
     onConfirm: () -> Unit,
 ) {
-    Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
+    ScrollHintColumn(Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
         SectionTitle(if (state.drafts.size == 1) "Entendi este remédio" else "Entendi estes ${state.drafts.size} remédios")
         Text(
             "Confira os nomes. Toque no nome para corrigir. Se estiver tudo certo, toque em Continuar.",
@@ -541,7 +542,7 @@ private fun ColumnScope.Asking(
     val imeVisible = WindowInsets.isImeVisible
     // O teclado sobe animado e o fim da tela muda várias vezes; acompanha até ele parar.
     LaunchedEffect(typing) { if (typing) snapshotFlow { scroll.maxValue }.collect { scroll.scrollTo(it) } }
-    Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = 20.dp, vertical = 20.dp)) {
+    ScrollHintColumn(Modifier.padding(horizontal = 20.dp, vertical = 20.dp), scroll = scroll) {
         SectionTitle(if (state.correctionPending) "Confira a correção" else "Entendi até agora")
         Spacer(Modifier.height(8.dp))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -686,7 +687,7 @@ private fun ColumnScope.Review(
     onKeep: () -> Unit,
     onUndo: () -> Unit,
 ) {
-    Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 20.dp)) {
+    ScrollHintColumn(Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
         if (state.correctionPending) {
             Text(
                 "Confira a correção",

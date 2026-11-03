@@ -6,7 +6,9 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,8 +24,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,13 +44,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.addPathNodes
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -58,6 +71,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 // Peças repetidas nas telas, com as medidas do protótipo (barra de 56 dp, botões de 56 dp, cantos de 16 dp).
 
@@ -181,6 +195,72 @@ val MicIcon: ImageVector = ImageVector.Builder(
     ),
     fill = SolidColor(Color.Black),
 ).build()
+
+// Seta para baixo do Material Icons ("keyboard_arrow_down"; o pacote "core" não traz).
+private val ArrowDownIcon: ImageVector = ImageVector.Builder(
+    name = "ArrowDown",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f,
+).addPath(
+    pathData = addPathNodes("M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"),
+    fill = SolidColor(Color.Black),
+).build()
+
+/**
+ * Mostra o sinal de "role para ver mais" (P1–P4, refinamento 1.0.25) só quando ainda há conteúdo abaixo. O
+ * `ScrollState` começa com `maxValue` no máximo, antes da primeira medição; nesse instante não há o que dizer.
+ */
+fun showScrollHint(value: Int, maxValue: Int): Boolean = maxValue != Int.MAX_VALUE && value < maxValue
+
+/**
+ * Coluna rolável com um botão discreto "ver mais" no rodapé, sobreposto (não entra no layout, que não se mexe quando
+ * ele aparece ou some). Toque rola cerca de uma tela; some sozinho no fim. Com fonte 2,0× o conteúdo cortado sob os
+ * botões fixos não dava nenhum sinal de que havia mais embaixo.
+ */
+@Composable
+fun ColumnScope.ScrollHintColumn(
+    modifier: Modifier = Modifier,
+    scroll: ScrollState = rememberScrollState(),
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    var viewport by remember { mutableIntStateOf(0) }
+    val hint by remember(scroll) { derivedStateOf { showScrollHint(scroll.value, scroll.maxValue) } }
+    Box(Modifier.weight(1f).onSizeChanged { viewport = it.height }) {
+        Column(
+            modifier.fillMaxWidth().verticalScroll(scroll),
+            horizontalAlignment = horizontalAlignment,
+            content = content,
+        )
+        if (hint) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 4.dp)
+                    .size(48.dp)
+                    .clickable(role = Role.Button, onClickLabel = "Ver mais conteúdo") {
+                        scope.launch { scroll.animateScrollTo((scroll.value + viewport * 3 / 4).coerceAtMost(scroll.maxValue)) }
+                    }
+                    .semantics { contentDescription = "Ver mais conteúdo. Toque para rolar para baixo" },
+                contentAlignment = Alignment.Center,
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    modifier = Modifier.size(40.dp).shadow(2.dp, CircleShape),
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(ArrowDownIcon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            }
+        }
+    }
+}
 
 /** Barra do topo; [actionLabel]/[onAction]: botão de texto à direita ("Cancelar" no cadastro, pedido do autor, 27/10). */
 @Composable
