@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — README no padrão de TCC e guia com o Play Protect em destaque — 03/11/2026 — Claude Code (Opus 5.5)
+Partida: main/e8b219a; pedido do autor ("deixe o README bem feito. Um padrão de TCC… a opção de ignorar e instalar mesmo assim… para eu passar para o meu orientador").
+Realizado: README reescrito (identificação, sumário, instalação rápida com destaque do Play Protect, questão de pesquisa, objetivo geral e específicos transcritos da proposta no Drive, funcionalidades da 1.0.23, situação das etapas sem resultados de avaliação, tecnologias, limitações, privacidade, execução pelo código, documentação, uso de IA); guia com o passo do Play Protect numerado e em destaque, Releases, Desfazer e versão 1.0.23. DEC-056 (plano de 17–22/11) registrada.
+Verificado: proposta lida no Drive (título, questão, objetivos); links internos existentes; repositório privado (404 na API pública).
+Não verificado: renderização no GitHub; Release v1.0.23 ainda não criada; acesso do orientador.
+Próxima tarefa: autor criar a Release com o APK e dar acesso ao orientador.
+```
+
+```text
 ENTREGA — App Android: ajustes do teste de usabilidade (1/4 de comprimido, fala inicial curta, Desfazer na exclusão, só retrato), versão 1.0.23 — 03/11/2026 — Claude Code (Opus 5.5)
 Partida: main/554190f; resultado do autor no ROTEIRO_USABILIDADE_CONGELAMENTO.md (tarefas 2, 3 e 11 com pedido; rotação; calendário como sugestão).
 Realizado: DoseUnit com 1/4 e 3/4 de comprimido (− para em 1/4, + volta a meio); VoiceParser com "um quarto", "três quartos", "1/4 de comprimido" e "1 comprimido e um quarto"; INTRO_PROMPT da voz só com a primeira linha; MedicationRepository.restore pelo DraftValidator com o mesmo id; aviso de exclusão com botão cheio Desfazer por 10 s; screenOrientation portrait na MainActivity e na AlarmActivity; versão 1.0.23. DEC-055.

@@ -6,15 +6,22 @@ O objetivo é permitir que você instale, explore e dê retorno sobre o aplicati
 
 ## 1. Instalar no celular
 
-Você precisa de um **celular com Android 8.0 ou superior** e do **arquivo APK enviado pelo autor junto deste guia**. Não é necessário computador, conta no Genki ou Android Studio. O APK atual é destinado a celulares com processador ARM; não funciona no iPhone.
+Você precisa de um **celular com Android 8.0 ou superior** e do arquivo **`Genki-1.0.23.apk`**, enviado pelo autor ou baixado da página [Releases](https://github.com/aryfacanha/genki/releases) do repositório. Não é necessário computador, conta no Genki ou Android Studio. O APK atual é destinado a celulares com processador ARM; não funciona no iPhone.
 
-1. No celular, baixe o arquivo `.apk` enviado pelo autor. APK é o arquivo de instalação do aplicativo.
+1. No celular, baixe o arquivo `.apk`. APK é o arquivo de instalação do aplicativo.
 2. Toque no arquivo baixado. Se necessário, procure-o no aplicativo **Arquivos / Meus Arquivos → Downloads**.
 3. Se o Android pedir autorização para instalar por essa origem, toque em **Configurações** e habilite **Permitir desta fonte** para o aplicativo que abriu o arquivo, como o navegador ou o gerenciador de arquivos. Os nomes variam entre celulares; essa autorização é específica da origem, conforme a [documentação do Android](https://developer.android.com/studio/publish).
-4. Volte à instalação e toque em **Instalar**. Ao terminar, toque em **Abrir** ou procure **Genki** na lista de aplicativos.
-5. Depois, você pode desativar novamente **Permitir desta fonte**.
+4. Volte à instalação e toque em **Instalar**.
+5. **Se aparecer o aviso do Play Protect, toque em Mais detalhes e depois em Instalar mesmo assim** (veja o destaque abaixo).
+6. Ao terminar, toque em **Abrir** ou procure **Genki** na lista de aplicativos. Depois, você pode desativar novamente **Permitir desta fonte**.
 
-**Aviso do Play Protect.** Como o Genki não vem da Play Store, o Play Protect pode avisar que o aplicativo é desconhecido. Não é preciso desativar o Play Protect: a opção **Instalar mesmo assim** fica oculta no próprio aviso e aparece ao tocar em **Mais detalhes** (ou na seta ao lado). Os nomes variam entre celulares.
+> [!IMPORTANT]
+> **Aviso do Play Protect: o passo mais importante.** O APK é assinado com a chave do autor, mas **não é distribuído nem verificado pela Play Store**. Por isso o Google Play Protect mostra um aviso de aplicativo desconhecido ou bloqueado. **Não é preciso desativar o Play Protect.** No próprio aviso:
+>
+> 1. toque em **Mais detalhes** (ou na seta ao lado do texto);
+> 2. toque em **Instalar mesmo assim**.
+>
+> A opção **Instalar mesmo assim** fica escondida até tocar em **Mais detalhes**. Os nomes podem variar conforme o modelo do celular.
 
 Se aparecer **“Aplicativo não instalado”**, outro bloqueio de segurança ou incompatibilidade, envie ao autor a mensagem exibida e o modelo do celular. Se já tiver o Genki, não o desinstale para tentar resolver: isso pode apagar seus cadastros.
 
@@ -64,7 +71,7 @@ As perguntas do cadastro por voz são lidas em voz alta ao abrir esse fluxo. **S
 
 Em **Adicionar medicamento → Usar câmera**, permita a câmera e fotografe uma embalagem com texto nítido, boa luz e pouco reflexo. A função é **experimental**: confira e corrija as sugestões de nome e concentração. Ela não deve preencher dose por uso, horários, dias ou duração. Você pode cancelar depois de conferir, sem salvar nada.
 
-**Ao terminar:** em **Medicamentos**, abra e exclua os cadastros fictícios que criou, confirmando a exclusão, ou desative seus lembretes. Assim eles não voltarão a avisar nos dias seguintes. Preserve eventuais cadastros que já existiam.
+**Ao terminar:** em **Medicamentos**, abra e exclua os cadastros fictícios que criou, confirmando a exclusão, ou desative seus lembretes. Se excluir por engano, toque em **Desfazer** no aviso que aparece embaixo da tela (fica cerca de 10 segundos). Assim eles não voltarão a avisar nos dias seguintes. Preserve eventuais cadastros que já existiam.
 
 ## 4. Limitações que vale conhecer
 
@@ -93,4 +100,4 @@ Para dar retorno ao autor, envie: **versão do APK recebido, modelo do celular, 
 
 ---
 
-Guia preparado em **30/10/2026**, com base no comportamento documentado da versão **1.0.22**. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
+Guia preparado em **30/10/2026** e atualizado em **03/11/2026** para a versão **1.0.23**, congelada para as avaliações do trabalho. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
