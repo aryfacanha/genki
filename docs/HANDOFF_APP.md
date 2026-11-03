@@ -276,6 +276,7 @@ mesma primeira instalação e mesmos tamanhos/datas do banco e WAL antes/depois,
 ## 4. Como rodar
 
 - Repositório único (DEC-054, revoga a DEC-053): código e registros no `genki`. Versão nova: tag anotada `git tag -a vX.Y.Z <commit> -m "Genki X.Y.Z"` no commit do `versionName` e `git push origin vX.Y.Z`.
+- Release de versão nova: `gh release create vX.Y.Z Genki-X.Y.Z.apk --title "Genki X.Y.Z" --notes-file <notas> --latest --verify-tag` (APK release assinado, renomeado; conferir o download).
 - Build e testes (PowerShell, na raiz): `.\gradlew.bat assembleDebug test`.
 - Instalar: `.\gradlew.bat installDebug` com um aparelho em `adb devices`.
 - APK de distribuição: `.\gradlew.bat assembleRelease` gera `app/build/outputs/apk/release/app-release.apk`, assinado se `local.properties` tiver `genki.release.storeFile/storePassword/keyAlias/keyPassword` (chave fora do Git). Conferir com `apksigner verify --print-certs`. Versão nova: mesma chave e `versionCode` maior.
@@ -407,6 +408,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-03 — Claude Code — configuração: GitHub CLI 2.103.3 (`C:\Program Files\GitHub CLI\gh.exe`, autenticado pelo autor); Release `v1.0.23` com o APK; repositório público (autor) — download sem login com o mesmo SHA-256 — pendente: nada.
 
 - 2026-11-03 — Claude Code — configuração: versão 1.0.23 (versionCode 24); manifest com `screenOrientation="portrait"` na `MainActivity` e na `AlarmActivity` (DEC-055) — 187 testes; release instalada no A31 — pendente: girar o A31 com rotação automática (autor).
 

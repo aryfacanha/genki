@@ -3,6 +3,15 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — Verificação para publicar o repositório e Release v1.0.23 com o APK — 03/11/2026 — Claude Code (Opus 5.5)
+Partida: main/867e005; pedido do autor (release pelo gh, instalar se preciso, verificar dados sensíveis para deixar público).
+Realizado: varredura da árvore e do histórico (segredos, keystore, local.properties, APK/AAB, arquivos grandes, dados pessoais, links do Drive); logs da JVM fora da árvore (ecc6848); permissões dos 11 arquivos do Drive citados (todos restritos ao dono); GitHub CLI instalado; Release v1.0.23 com Genki-1.0.23.apk e notas (instalação, Play Protect, novidades).
+Verificado: nenhum segredo no histórico; repositório público (API 200); download do APK sem login com SHA-256 igual ao instalado no A31.
+Não verificado: instalação a partir da Release em outro celular.
+Decisões: repositório público e orientador como colaborador (autor, 03/11). Histórico não reescrito.
+```
+
+```text
 ENTREGA — README no padrão de TCC e guia com o Play Protect em destaque — 03/11/2026 — Claude Code (Opus 5.5)
 Partida: main/e8b219a; pedido do autor ("deixe o README bem feito. Um padrão de TCC… a opção de ignorar e instalar mesmo assim… para eu passar para o meu orientador").
 Realizado: README reescrito (identificação, sumário, instalação rápida com destaque do Play Protect, questão de pesquisa, objetivo geral e específicos transcritos da proposta no Drive, funcionalidades da 1.0.23, situação das etapas sem resultados de avaliação, tecnologias, limitações, privacidade, execução pelo código, documentação, uso de IA); guia com o passo do Play Protect numerado e em destaque, Releases, Desfazer e versão 1.0.23. DEC-056 (plano de 17–22/11) registrada.
