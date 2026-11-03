@@ -65,6 +65,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**03/11, Claude Code: 1.0.24 (`55a9c3b`) corrige só o CC-01**, a pedido do autor; tag/Release não criadas.
+
 **03/11, autor (último): app congelado na 1.0.23** (`v1.0.23`, `7bb00bc`), conferência no A31 ok. Mudança no app só com pedido do autor e versão nova.
 
 **03/11, Claude Code:** **1.0.23** (DEC-055) a partir do teste de usabilidade do autor: 1/4 de comprimido (formulário e voz), fala inicial da voz curta, "Desfazer" na exclusão (10 s, botão cheio), app só em retrato. Instalada no A31 como atualização (cadastros mantidos); − até 1/4 e + de volta a meio conferidos no A31. Próximo: autor conferir 2, 3, 11 e rotação (`ROTEIRO_USABILIDADE_CONGELAMENTO.md`, "Resultado de 03/11") e congelar a 1.0.23. Calendário: sugestão pendente.
@@ -166,6 +168,8 @@ Referência visual: protótipo web `D:\dev\genki-prototype` (github.com/aryfacan
 Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (até o autor decidir, vale a ESPEC — DEC-022).
 
 ## 2. Estado por marco
+
+**1.0.24 (03/11, Claude Code):** M2 (lembretes) e M1 (edição): CC-01 da avaliação heurística. Editar um medicamento mantém o id dos horários que não mudaram de minuto (`ScheduleTimeDiff`, `MedicationDao.update`) e só cancela os removidos; adiado e repetição pendentes sobrevivem. Conferido no A31 por ADB; falta Codex revisar e o autor repetir F3/F4.
 
 **1.0.22 (30/10, Claude Code):** M2 (lembretes): alarme falado opcional (DEC-052), `AlarmSpeech` + `AlarmSoundService` + `Speaker(alarm = true)`; M3: espera da voz em 3 s.
 
@@ -408,6 +412,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: versão 1.0.24 (versionCode 25) e correção do CC-01 (`MedicationDao.update`, `MedicationRepository.update`, `domain/ScheduleTimeDiff`; sem mudança de esquema) — `assembleDebug test assembleRelease`, 195 testes; release instalada no A31 por cima da 1.0.23 e conferida por ADB (adiado, repetição, "Entendi") — pendente: 1.0.23 original no A31, som/tela bloqueada/Doze, tag e Release v1.0.24, F3/F4 repetidos (autor).
 
 - 2026-11-03 — Claude Code — configuração: GitHub CLI 2.103.3 (`C:\Program Files\GitHub CLI\gh.exe`, autenticado pelo autor); Release `v1.0.23` com o APK; repositório público (autor) — download sem login com o mesmo SHA-256 — pendente: nada.
 

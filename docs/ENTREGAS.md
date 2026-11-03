@@ -2,6 +2,14 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Versão 1.0.24: CC-01 da avaliação heurística (editar apagava adiado e repetição) — 03/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/953712c; pedido do autor ("corrija a CC-01 … não corrija os outros"; "isso, faça"), exceção do protocolo da heurística para severidade alta (03/11). Estimativa em `genki-avaliacao/ESFORCO_correcoes.md` (fora do Git).
+Realizado: `MedicationDao.update` mantém o id dos horários que não mudaram de minuto e devolve só os removidos; `MedicationRepository.update` cancela só esses; nova `domain/ScheduleTimeDiff` (função pura) com 8 testes. Versão 1.0.24 (versionCode 25). Commits a2e318a (fix) e 55a9c3b (versão). Sem mudança de esquema nem de migração. Achados CC-02 a CC-23 não tocados.
+Verificado: `assembleDebug test assembleRelease`, 195 testes sem falha. No A31 (SM-A315G, Android 12, release assinado instalado por cima, dados preservados), por ADB e `dumpsys alarm`: editar sem mudança com 2 adiados mantém os dois; mudar a dose mantém; mudar o horário de um remédio adiado remove só o adiado dele; com aviso tocando e REPEAT agendado, salvar sem mudança mantém cartão, REPEAT e notificações; "Entendi" depois cancela o REPEAT.
+Não verificado: 1.0.23 original reproduzindo o erro no A31 (só no emulador, pelo relatório); som, tela bloqueada, "Como alarme", Doze; exclusão com Desfazer e desativar/reativar lembretes depois da correção; TalkBack. Cartão de aviso ainda tocando mostra o texto antigo até a próxima repetição (suposição, não testado).
+Decisões a confirmar pelo autor: se a edição remove ou muda o horário que está adiado, o adiado desse horário some sem aviso (comportamento atual, visto no A31). Severidade final do CC-01 continua sendo do autor.
+Próxima tarefa e bloqueios: autor decidir tag/Release v1.0.24 (não criadas, nada enviado ao GitHub) e repetir F3/F4 da avaliação na 1.0.24; README e guia ainda citam a 1.0.23 congelada.
+
 ENTREGA — Monografia: parecer sobre o e-mail ao orientador e conferência das pastas do Drive — 03/11/2026 — Claude (Opus 5.5, chat do Projeto)
 Partida: `main`/`3002e74`; handoff da monografia no Drive com a seção 13 (GPT, 03/11).
 Realizado: seção 14 no handoff com parecer e versão revisada do e-mail ao orientador; permissões conferidas ("TCC - Genki": orientador como editor; "TCC - Genki +" e Handoff só com o autor; cinco subpastas acadêmicas vazias). Nada enviado nem compartilhado; nenhuma permissão alterada.
