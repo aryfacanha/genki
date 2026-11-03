@@ -10,7 +10,7 @@
 | **Autor** | Ary Façanha de Sá Neto |
 | **Orientador** | Prof. Dr. Sandro José Ribeiro da Silva |
 | **Local e ano** | Canoas, 2026 |
-| **Versão do aplicativo** | **1.0.23**, congelada em 03/11/2026 para as avaliações do trabalho |
+| **Versão do aplicativo** | **1.0.24**. A 1.0.23, congelada em 03/11/2026, é a versão das avaliações do trabalho; a 1.0.24 corrige só um problema encontrado nelas (lembrete adiado apagado ao editar o medicamento) |
 | **Plataforma** | Android 8.0 ou superior |
 
 ## Sumário
@@ -30,7 +30,7 @@
 
 O Genki é instalado por um arquivo **APK**, sem passar pela Play Store. Não é preciso computador nem conta.
 
-1. **Baixe no celular** o arquivo `Genki-1.0.23.apk`, da página [Releases](https://github.com/aryfacanha/genki/releases)
+1. **Baixe no celular** o arquivo `Genki-1.0.24.apk`, da página [Releases](https://github.com/aryfacanha/genki/releases)
    ou enviado pelo autor.
 2. **Abra o arquivo** (aplicativo **Arquivos** ou **Meus Arquivos** → **Downloads**).
 3. Se o Android pedir, toque em **Configurações**, ative **Permitir desta fonte** e volte. Toque em **Instalar**.
@@ -101,12 +101,12 @@ Pesquisa aplicada, de caráter exploratório, com desenvolvimento tecnológico e
 | Etapa | Situação em 03/11/2026 |
 | --- | --- |
 | Requisitos e protótipo navegável | Concluídos ([protótipo](https://joyful-biscuit-677f74.netlify.app)) |
-| Produto mínimo viável | Implementado e **congelado na versão 1.0.23** |
+| Produto mínimo viável | Implementado; **congelado na 1.0.23** para as avaliações e corrigido na **1.0.24** |
 | Verificação técnica da voz e da câmera | Prevista |
 | Revisão heurística da interface | Prevista |
 | Avaliação de usabilidade com tarefas e SUS | Condicionada aos procedimentos éticos |
 
-O desenvolvimento contou com testes automatizados (187 na versão 1.0.23), revisões técnicas e testes manuais em um
+O desenvolvimento contou com testes automatizados (195 na versão 1.0.24), revisões técnicas e testes manuais em um
 Samsung Galaxy A31 (Android 12). Os resultados das avaliações serão apresentados na monografia.
 
 ## 5. Tecnologias e arquitetura
