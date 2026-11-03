@@ -28,38 +28,30 @@
 
 ## 1. Instalação rápida
 
-O Genki é instalado por um arquivo **APK** (o instalador de aplicativos do Android), sem passar pela Play Store. Não é
-preciso computador, conta ou Android Studio.
+O Genki é instalado por um arquivo **APK**, sem passar pela Play Store. Não é preciso computador nem conta.
 
-1. **Baixe o APK no celular.** Use o arquivo `Genki-1.0.23.apk` da página [Releases](https://github.com/aryfacanha/genki/releases)
-   deste repositório ou o arquivo enviado pelo autor.
-2. **Abra o arquivo baixado** (aplicativo **Arquivos** ou **Meus Arquivos** → **Downloads**).
-3. **Permita a instalação por essa origem**, se o Android pedir: toque em **Configurações** e ative **Permitir desta
-   fonte** para o navegador ou gerenciador de arquivos que abriu o APK. Depois volte e toque em **Instalar**.
-4. **Ignore o aviso do Play Protect e instale mesmo assim** (veja o destaque abaixo).
+1. **Baixe no celular** o arquivo `Genki-1.0.23.apk`, da página [Releases](https://github.com/aryfacanha/genki/releases)
+   ou enviado pelo autor.
+2. **Abra o arquivo** (aplicativo **Arquivos** ou **Meus Arquivos** → **Downloads**).
+3. Se o Android pedir, toque em **Configurações**, ative **Permitir desta fonte** e volte. Toque em **Instalar**.
+4. **No aviso do Play Protect, toque em Mais detalhes → Instalar mesmo assim** (veja abaixo).
 5. Toque em **Abrir** ou procure **Genki** na lista de aplicativos.
 
 > [!IMPORTANT]
-> **Aviso do Play Protect: o passo mais importante.** O APK é assinado com a chave do autor, mas **não é distribuído
-> nem verificado pela Play Store**. Por isso o Google Play Protect mostra um aviso de aplicativo desconhecido ou
-> bloqueado. **Não é preciso desativar o Play Protect.** No próprio aviso:
->
-> 1. toque em **Mais detalhes** (ou na seta ao lado do texto);
-> 2. toque em **Instalar mesmo assim**.
->
-> Se a opção **Instalar mesmo assim** não aparecer, ela está escondida em **Mais detalhes**. Os nomes podem variar
-> conforme o modelo do celular.
+> **Aviso do Play Protect: o passo mais importante.** O APK é assinado pelo autor, mas **não é distribuído nem
+> verificado pela Play Store**, por isso o Play Protect avisa que o aplicativo é desconhecido. Não é preciso desativar
+> o Play Protect: toque em **Mais detalhes** (ou na seta ao lado do texto) e depois em **Instalar mesmo assim**. Os
+> nomes podem variar conforme o celular.
 
-Passo a passo completo, permissões, um teste de 10 a 15 minutos e o que fazer se algo falhar: [guia de instalação e
-teste](docs/GUIA_INSTALACAO_TESTE.md). Use **dados fictícios** ao experimentar.
+Permissões, um teste de 10 a 15 minutos e soluções para problemas comuns: [guia de instalação e
+teste](docs/GUIA_INSTALACAO_TESTE.md). Ao experimentar, use **dados fictícios**.
 
 ## 2. Sobre o trabalho
 
-O gerenciamento de medicamentos pode ser complexo para pessoas idosas, sobretudo com doenças crônicas, vários
-fármacos e horários específicos. O Genki propõe um aplicativo de cadastro e organização de medicamentos e lembretes
-voltado principalmente a esse público, em que a **interação por voz** é a funcionalidade central, com alternativas por
-toque e texto e conferência de todos os dados antes de salvar. O reconhecimento de embalagens pela câmera é uma
-**prova de conceito** de apoio ao preenchimento.
+O gerenciamento de medicamentos pode ser complexo para pessoas idosas, sobretudo com doenças crônicas, vários fármacos
+e horários específicos. O Genki é um aplicativo de cadastro e organização de medicamentos e lembretes voltado
+principalmente a esse público. A **interação por voz** é a funcionalidade central, com alternativas por toque e texto e
+conferência de todos os dados antes de salvar. A leitura de embalagens pela câmera é uma prova de conceito.
 
 **Questão de pesquisa.** Como desenvolver e avaliar a usabilidade de um aplicativo móvel multimodal para o cadastro e
 o gerenciamento de medicamentos por pessoas idosas, com ênfase na interação por voz?
@@ -68,7 +60,7 @@ o gerenciamento de medicamentos por pessoas idosas, com ênfase na interação p
 cadastro e o gerenciamento de medicamentos e lembretes, destinado principalmente a pessoas idosas, com interação
 multimodal e ênfase no cadastro assistido por voz.
 
-**Objetivos específicos** (conforme a [proposta aprovada](https://drive.google.com/file/d/1aSbtKncsWQdCIbnItByySUQRuO5xzBIb/view)):
+**Objetivos específicos** (proposta aprovada):
 
 1. identificar, por meio de revisão bibliográfica, dificuldades, necessidades e requisitos relacionados ao
    gerenciamento de medicamentos por pessoas idosas;
@@ -86,114 +78,91 @@ multimodal e ênfase no cadastro assistido por voz.
 9. avaliar a usabilidade do produto mínimo viável por meio de tarefas representativas e da versão brasileira da
    System Usability Scale (SUS).
 
-**Escopo.** O Genki é uma ferramenta de apoio à organização de tratamentos. Ele não prescreve, não calcula doses, não
-avalia interações medicamentosas, não confirma a ingestão de medicamentos e não substitui profissionais de saúde. O
-trabalho não pretende comprovar melhora clínica da adesão.
+**Escopo.** O Genki apoia a organização de tratamentos. Não prescreve, não calcula doses, não avalia interações
+medicamentosas, não confirma a ingestão e não substitui profissionais de saúde.
 
 ## 3. Funcionalidades
 
 | Recurso | O que permite fazer |
 | --- | --- |
-| Cadastro por voz | Dizer nome, concentração, quantidade, dias, horários e duração, inclusive de vários remédios de uma vez; conferir os nomes entendidos; responder só ao que faltou; corrigir por voz, toque ou digitação antes de salvar. |
-| Cadastro digitando | Formulário em três etapas e revisão final, com quantidade por toque (− e +, incluindo meio e 1/4 de comprimido). |
-| Câmera (experimental) | Fotografar uma embalagem e conferir as sugestões de nome e concentração lidas por OCR. Nunca preenche dose, dias, horários ou duração. |
+| Cadastro por voz | Dizer os dados de um ou mais remédios, responder só ao que faltou e corrigir antes de salvar. |
+| Cadastro digitando | Formulário em três etapas, com quantidade por toque (incluindo meio e 1/4 de comprimido). |
+| Câmera (experimental) | Sugerir nome e concentração a partir da foto da embalagem, sempre para conferência. |
 | Gerenciamento | Consultar, editar e excluir medicamentos (com **Desfazer**); ativar e desativar lembretes. |
-| Hoje | Agenda do dia, próximo lembrete e avisos pendentes. |
-| Lembretes | Notificação ou alarme em tela cheia, com **Entendi** e **Adiar**; repetição opcional sem resposta; alarme falado opcional com o horário e o nome dos remédios. |
-| Apoio ao uso | Introdução, tutorial guiado, leitura em voz alta das perguntas do cadastro por voz e textos em linguagem simples. |
+| Lembretes | Notificação ou alarme, com **Entendi** e **Adiar**; repetição e alarme falado opcionais. |
+| Apoio ao uso | Introdução, tutorial guiado e leitura em voz alta das perguntas do cadastro por voz. |
 
-**Entendi significa apenas que o aviso foi visto.** O aplicativo não registra que o medicamento foi tomado e não
-mantém histórico de tomadas.
+**Entendi significa apenas que o aviso foi visto.** O aplicativo não registra tomadas.
 
 ## 4. Metodologia e estado do trabalho
 
-Pesquisa aplicada, de caráter exploratório, com desenvolvimento tecnológico e avaliação de usabilidade por dados
-quantitativos e qualitativos, organizada em desenvolvimento da solução, avaliação da solução e aspectos éticos.
+Pesquisa aplicada, de caráter exploratório, com desenvolvimento tecnológico e avaliação de usabilidade.
 
-| Etapa (proposta) | Situação em 03/11/2026 |
+| Etapa | Situação em 03/11/2026 |
 | --- | --- |
-| Requisitos e protótipo navegável | Concluídos; o [protótipo](https://joyful-biscuit-677f74.netlify.app) foi a referência de interface |
-| Produto mínimo viável (cadastro, lembretes, voz e câmera) | Implementado e **congelado na versão 1.0.23** |
-| Verificação técnica da voz e da câmera | Prevista após o congelamento |
-| Revisão heurística da interface | Prevista após o congelamento |
-| Avaliação de usabilidade com tarefas e SUS | Condicionada aos procedimentos éticos aplicáveis |
+| Requisitos e protótipo navegável | Concluídos ([protótipo](https://joyful-biscuit-677f74.netlify.app)) |
+| Produto mínimo viável | Implementado e **congelado na versão 1.0.23** |
+| Verificação técnica da voz e da câmera | Prevista |
+| Revisão heurística da interface | Prevista |
+| Avaliação de usabilidade com tarefas e SUS | Condicionada aos procedimentos éticos |
 
-Durante o desenvolvimento, o código passou por testes automatizados (187 testes unitários na versão 1.0.23), revisões
-técnicas independentes e testes manuais em um Samsung Galaxy A31 (Android 12). Esses registros são evidências de
-desenvolvimento, **não resultados das avaliações do trabalho**, que serão apresentados na monografia.
+O desenvolvimento contou com testes automatizados (187 na versão 1.0.23), revisões técnicas e testes manuais em um
+Samsung Galaxy A31 (Android 12). Os resultados das avaliações serão apresentados na monografia.
 
 ## 5. Tecnologias e arquitetura
 
-Android nativo com **Kotlin** e **Jetpack Compose** (Material 3), arquitetura em camadas de interface e dados com
-**ViewModel** e repositório, e armazenamento local com **Room** (SQLite). Lembretes com AlarmManager e notificações do
-Android; voz com **SpeechRecognizer** e **TextToSpeech**; câmera com **CameraX** e **ML Kit Text Recognition**
-(modelo embarcado). O interpretador da fala usa regras locais, sem LLM e sem servidor.
+Android nativo com **Kotlin**, **Jetpack Compose** (Material 3), **ViewModel** e **Room**. Lembretes com AlarmManager
+e notificações; voz com **SpeechRecognizer** e **TextToSpeech**; câmera com **CameraX** e **ML Kit Text Recognition**.
+A interpretação da fala usa regras locais, sem servidor.
 
 ```text
 app/src/main/java/br/edu/ifrs/genki/
-├── data/       Banco Room, repositório e configurações
-├── domain/     Regras de domínio e validação (DraftValidator)
+├── data/       Banco, repositório e configurações
+├── domain/     Regras e validação (DraftValidator)
 ├── reminders/  Agendamento, notificações e alarme
-├── voice/      Reconhecimento, interpretação e fluxo por voz
-├── camera/     Captura e reconhecimento de texto
-└── ui/         Telas e componentes de interface
-app/src/test/   Testes unitários
-docs/           Guia de instalação, especificação e registros do desenvolvimento
+├── voice/      Reconhecimento e fluxo por voz
+├── camera/     Captura e leitura de texto
+└── ui/         Telas e componentes
 ```
 
-Todo cadastro, por voz, câmera ou digitação, passa por um rascunho comum e pelo `DraftValidator` antes de ser gravado.
-A [especificação técnica](docs/ESPEC_ARQUITETURA.md) descreve a arquitetura; as [decisões](docs/DECISOES.md)
-registram os ajustes posteriores.
+Todo cadastro, por voz, câmera ou digitação, passa pelo `DraftValidator` antes de ser gravado.
 
 ## 6. Limitações
 
-- **Voz:** depende do serviço de reconhecimento de fala do celular e de permissão para o microfone. Pode trocar nomes
-  ou cortar falas; a conferência final é obrigatória. O serviço do Android pode usar internet; não há garantia de
-  reconhecimento offline em todos os aparelhos.
-- **Câmera:** prova de conceito. Luz, foco e texto da embalagem afetam o resultado; as sugestões sempre precisam de
-  revisão.
-- **Lembretes:** dependem das permissões, do volume, do modo Não perturbe e das restrições de bateria do Android. Não
-  tocam com o celular desligado.
-- **Programação:** horários definidos e dias da semana; esquemas como "dia sim, dia não" não são interpretados.
-- **Compatibilidade:** verificado principalmente no Samsung Galaxy A31; sem versão para iPhone; acessibilidade com
-  leitor de tela (TalkBack) não verificada por completo.
+- **Voz:** depende do reconhecimento de fala do celular; pode errar nomes, e o funcionamento offline não é garantido.
+- **Câmera:** prova de conceito; luz e foco afetam a leitura.
+- **Lembretes:** dependem das permissões e ajustes do Android; não tocam com o celular desligado.
+- **Programação:** horários e dias da semana definidos; esquemas como "dia sim, dia não" não são interpretados.
+- **Compatibilidade:** testado principalmente no Samsung Galaxy A31; sem versão para iPhone.
 
 ## 7. Dados e privacidade
 
-Os cadastros ficam **somente no celular**. O Genki não exige conta, não tem servidor nem sincronização própria, não
-exibe anúncios, não tem permissão de internet e não guarda áudio nem fotos. O backup do Android está desligado para o
-aplicativo: desinstalar, limpar os dados ou trocar de celular apaga os cadastros, e não há exportação. Para
-experimentar, use dados fictícios.
+Os cadastros ficam **somente no celular**: sem conta, servidor, sincronização, anúncios ou permissão de internet, e
+sem guardar áudio ou fotos. O backup do Android está desligado; desinstalar ou limpar os dados apaga os cadastros.
 
 ## 8. Executar a partir do código
 
-Requer Android Studio com o SDK indicado pelo Gradle (`compileSdk`/`targetSdk` 37, `minSdk` 26). Na raiz do
-repositório (PowerShell):
+Com o Android Studio e o SDK indicado pelo Gradle, na raiz do repositório (PowerShell):
 
 ```powershell
 .\gradlew.bat assembleDebug test   # compila e roda os testes
 .\gradlew.bat installDebug         # instala em emulador ou aparelho conectado
 ```
 
-O APK de desenvolvimento fica em `app/build/outputs/apk/debug/`. O APK de distribuição é assinado com a chave do
-autor, mantida fora do repositório; um APK debug não atualiza uma instalação feita com o APK de distribuição.
+O APK de distribuição é assinado com a chave do autor, mantida fora do repositório.
 
 ## 9. Documentação do projeto
 
 | Documento | Conteúdo |
 | --- | --- |
-| [Guia de instalação e teste](docs/GUIA_INSTALACAO_TESTE.md) | Instalação do APK, permissões, teste rápido, limitações e como dar retorno |
-| [Proposta aprovada](https://drive.google.com/file/d/1aSbtKncsWQdCIbnItByySUQRuO5xzBIb/view) | Marco acadêmico do trabalho |
-| [Requisitos](https://docs.google.com/spreadsheets/d/18YdF337444bBPXeIh2Hd9LQZaB6gOKD6LdlAr2FKrVI/edit) e [mapa](docs/REQUISITOS_MAPA.md) | RF01–RF25 e RNF01–RNF11 e sua relação com o código |
-| [Especificação técnica](docs/ESPEC_ARQUITETURA.md) | Arquitetura, dados e regras do aplicativo |
-| [Estado](docs/ESTADO.md), [decisões](docs/DECISOES.md) e [handoff técnico](docs/HANDOFF_APP.md) | Situação do projeto, escolhas do autor e diário técnico |
-| [Revisões](docs/revisoes/) e [entregas](docs/ENTREGAS.md) | Revisões técnicas independentes e rastreabilidade do desenvolvimento |
+| [Guia de instalação e teste](docs/GUIA_INSTALACAO_TESTE.md) | Instalação, permissões, teste rápido e como dar retorno |
+| [Especificação técnica](docs/ESPEC_ARQUITETURA.md) e [mapa de requisitos](docs/REQUISITOS_MAPA.md) | Arquitetura e relação dos requisitos com o código |
+| [Estado](docs/ESTADO.md) e [decisões](docs/DECISOES.md) | Situação do projeto e escolhas do autor |
 
-Documentos no Google Drive podem exigir permissão de acesso.
+A proposta e a planilha de requisitos oficiais estão disponíveis com o autor.
 
 ## 10. Uso de inteligência artificial
 
 O desenvolvimento contou com assistentes de IA generativa (Claude Code e Codex no código; ChatGPT e Claude no apoio ao
-texto), conforme a Instrução Normativa IFRS nº 16/2026. As sugestões dos assistentes foram revisadas e aceitas pelo
-autor antes de serem incorporadas, e cada uso está registrado em [registro de IA](docs/REGISTRO_IA.md). A declaração
-completa constará na monografia. O aplicativo em si não usa IA generativa.
+texto), conforme a Instrução Normativa IFRS nº 16/2026. As sugestões foram revisadas e aceitas pelo autor, e os usos
+estão no [registro de IA](docs/REGISTRO_IA.md). O aplicativo em si não usa IA generativa.
