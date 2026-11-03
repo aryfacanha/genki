@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.ifrs.genki.data.MedicationRepository
 import br.edu.ifrs.genki.domain.Medication
+import br.edu.ifrs.genki.domain.MedicationOrder
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.EmptyMessage
@@ -39,13 +40,14 @@ import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.genkiContainer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 
 class MedicationListViewModel(repository: MedicationRepository) : ViewModel() {
     /** `null` enquanto o banco não respondeu (evita piscar o estado vazio). */
     val medications: StateFlow<List<Medication>?> =
-        repository.observeAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+        repository.observeAll().map { MedicationOrder.byName(it) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     companion object {
         val Factory = viewModelFactory {
