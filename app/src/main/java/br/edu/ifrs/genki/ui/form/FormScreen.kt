@@ -71,6 +71,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.Problem
+import br.edu.ifrs.genki.domain.TreatmentDuration
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
 import br.edu.ifrs.genki.ui.components.BottomActions
@@ -658,6 +659,10 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
             viewModel.edit(Field.END_DATE) { it.copy(startDate = date) }
         }
         Spacer(Modifier.height(10.dp))
+        DurationDaysField(viewModel.startDateOrToday(), fields.endDate) { end ->
+            viewModel.edit(Field.END_DATE) { it.copy(endDate = end) }
+        }
+        Spacer(Modifier.height(10.dp))
         DateField(
             "Data de término",
             fields.endDate,
@@ -668,6 +673,42 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
         }
         FieldError(state.errors[Field.END_DATE]?.let { MedicationText.error(Field.END_DATE, it) }, errorView(Field.END_DATE))
     }
+}
+
+/**
+ * "Por quantos dias" (P20): a forma mais comum na receita. Só calcula a data de término (início + N − 1, igual ao
+ * `DraftValidator`); a data continua sendo o que se grava e se mostra na revisão.
+ */
+@Composable
+private fun DurationDaysField(start: LocalDate, end: LocalDate?, onEnd: (LocalDate) -> Unit) {
+    var text by rememberSaveable { mutableStateOf(TreatmentDuration.days(start, end)?.toString().orEmpty()) }
+    // Escolher a data de término no calendário atualiza o número.
+    LaunchedEffect(start, end) {
+        val days = TreatmentDuration.days(start, end)
+        if (days != text.toIntOrNull()) text = days?.toString().orEmpty()
+    }
+    val typed = text.toIntOrNull()
+    OutlinedTextField(
+        colors = genkiFieldColors(),
+        value = text,
+        onValueChange = { input ->
+            val digits = input.filter(Char::isDigit).take(TreatmentDuration.MAX_DAYS.toString().length)
+            text = digits
+            digits.toIntOrNull()?.let { TreatmentDuration.endDate(start, it) }?.let(onEnd)
+        },
+        label = { Text("Por quantos dias? (opcional)") },
+        supportingText = {
+            Text(
+                typed?.let { TreatmentDuration.endDate(start, it) }?.let { "Termina em ${MedicationText.date(it)}" }
+                    ?: "Ou escolha a data de término abaixo.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable
