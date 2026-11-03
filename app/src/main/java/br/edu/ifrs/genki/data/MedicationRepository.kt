@@ -10,7 +10,7 @@ import java.time.LocalDate
 
 /**
  * Gravação só com [DraftValidator.Result.Valid] (DEC-014).
- * Cada mutação reagenda os lembretes depois do commit (ESPEC §5); horários trocados ou apagados
+ * Cada mutação reagenda os lembretes depois do commit (ESPEC §5); horários removidos ou apagados
  * têm os alarmes cancelados pelos ids antigos.
  */
 class MedicationRepository(private val dao: MedicationDao, private val scheduler: ReminderScheduler) {
@@ -26,9 +26,9 @@ class MedicationRepository(private val dao: MedicationDao, private val scheduler
     }
 
     suspend fun update(id: Long, valid: DraftValidator.Result.Valid) {
-        val oldTimes = dao.timeIds(id)
-        dao.update(valid.draft.toEntity(id = id), valid.draft.times.map { it.toMinuteOfDay() })
-        scheduler.cancel(oldTimes)
+        // Só os horários removidos perdem alarmes, repetição e adiado; os que mantêm o minuto seguem como estavam (CC-01).
+        val removed = dao.update(valid.draft.toEntity(id = id), valid.draft.times.map { it.toMinuteOfDay() })
+        scheduler.cancel(removed)
         dao.get(id)?.let(scheduler::sync)
     }
 

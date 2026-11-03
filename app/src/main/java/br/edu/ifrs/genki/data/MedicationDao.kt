@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import br.edu.ifrs.genki.domain.ScheduleTimeDiff
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -44,8 +45,11 @@ abstract class MedicationDao {
     @Insert
     protected abstract suspend fun insertTimes(times: List<ScheduleTimeEntity>)
 
-    @Query("DELETE FROM schedule_time WHERE medicationId = :medicationId")
-    protected abstract suspend fun deleteTimes(medicationId: Long)
+    @Query("SELECT * FROM schedule_time WHERE medicationId = :medicationId")
+    protected abstract suspend fun times(medicationId: Long): List<ScheduleTimeEntity>
+
+    @Query("DELETE FROM schedule_time WHERE id IN (:ids)")
+    protected abstract suspend fun deleteTimes(ids: List<Long>)
 
     @Query("SELECT remindersEnabled FROM medication WHERE id = :id")
     protected abstract suspend fun remindersEnabled(id: Long): Boolean?
@@ -63,12 +67,18 @@ abstract class MedicationDao {
         return id
     }
 
-    /** Substitui os horários; mantém a escolha de lembretes ligados/desligados. */
+    /**
+     * Atualiza os horários sem regravar os que mantêm o minuto: o id deles continua o mesmo, e com ele o adiado e a
+     * repetição pendentes (CC-01). Mantém a escolha de lembretes ligados/desligados. Devolve os ids que deixaram de
+     * existir, para o repositório cancelar só os alarmes deles.
+     */
     @Transaction
-    open suspend fun update(medication: MedicationEntity, minutes: List<Int>) {
-        val enabled = remindersEnabled(medication.id) ?: return
+    open suspend fun update(medication: MedicationEntity, minutes: List<Int>): List<Long> {
+        val enabled = remindersEnabled(medication.id) ?: return emptyList()
         updateMedication(medication.copy(remindersEnabled = enabled))
-        deleteTimes(medication.id)
-        insertTimes(minutes.map { ScheduleTimeEntity(medicationId = medication.id, minuteOfDay = it) })
+        val diff = ScheduleTimeDiff.of(times(medication.id).map { it.id to it.minuteOfDay }, minutes)
+        deleteTimes(diff.removedIds)
+        insertTimes(diff.addedMinutes.map { ScheduleTimeEntity(medicationId = medication.id, minuteOfDay = it) })
+        return diff.removedIds
     }
 }
