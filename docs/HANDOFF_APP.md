@@ -65,7 +65,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**03/11, Claude Code (último):** **1.0.23** (DEC-055) a partir do teste de usabilidade do autor: 1/4 de comprimido (formulário e voz), fala inicial da voz curta, "Desfazer" na exclusão (10 s, botão cheio), app só em retrato. Instalada no A31 como atualização (cadastros mantidos); − até 1/4 e + de volta a meio conferidos no A31. Próximo: autor conferir 2, 3, 11 e rotação (`ROTEIRO_USABILIDADE_CONGELAMENTO.md`, "Resultado de 03/11") e congelar a 1.0.23. Calendário: sugestão pendente.
+**03/11, autor (último): app congelado na 1.0.23** (`v1.0.23`, `7bb00bc`), conferência no A31 ok. Mudança no app só com pedido do autor e versão nova.
+
+**03/11, Claude Code:** **1.0.23** (DEC-055) a partir do teste de usabilidade do autor: 1/4 de comprimido (formulário e voz), fala inicial da voz curta, "Desfazer" na exclusão (10 s, botão cheio), app só em retrato. Instalada no A31 como atualização (cadastros mantidos); − até 1/4 e + de volta a meio conferidos no A31. Próximo: autor conferir 2, 3, 11 e rotação (`ROTEIRO_USABILIDADE_CONGELAMENTO.md`, "Resultado de 03/11") e congelar a 1.0.23. Calendário: sugestão pendente.
 
 **03/11, Claude Code:** repositório único de novo (DEC-054 revoga a DEC-053): registros de volta em `docs/`, `AGENTS.md`/README/skills como antes; tags `vX.Y.Z` continuam. App na **1.0.22**, congelamento adiado pelo autor para **03/11**. Próximo: autor rodar `docs/ROTEIRO_USABILIDADE_CONGELAMENTO.md` no A31; corrigir hoje só S1/S2; registrar a versão congelada no `ESTADO.md`. Releases do GitHub deixam de ser pendência.
 
