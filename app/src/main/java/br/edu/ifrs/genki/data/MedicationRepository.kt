@@ -2,9 +2,11 @@ package br.edu.ifrs.genki.data
 
 import br.edu.ifrs.genki.domain.DraftValidator
 import br.edu.ifrs.genki.domain.Medication
+import br.edu.ifrs.genki.domain.toDraft
 import br.edu.ifrs.genki.reminders.ReminderScheduler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 
 /**
  * Gravação só com [DraftValidator.Result.Valid] (DEC-014).
@@ -34,6 +36,17 @@ class MedicationRepository(private val dao: MedicationDao, private val scheduler
         val oldTimes = dao.timeIds(id)
         dao.delete(id)
         scheduler.cancel(oldTimes)
+    }
+
+    /**
+     * "Desfazer" da exclusão (DEC-055): grava de novo o medicamento excluído, com o mesmo id (mesmo lugar na lista) e
+     * a mesma escolha de lembretes, passando pelo [DraftValidator] como qualquer gravação.
+     */
+    suspend fun restore(medication: Medication, today: LocalDate = LocalDate.now()) {
+        val valid = DraftValidator.normalizeAndValidate(medication.toDraft(), today) as? DraftValidator.Result.Valid ?: return
+        dao.insert(valid.draft.toEntity(id = medication.id, remindersEnabled = medication.remindersEnabled),
+            valid.draft.times.map { it.toMinuteOfDay() })
+        dao.get(medication.id)?.let(scheduler::sync)
     }
 
     suspend fun setRemindersEnabled(id: Long, enabled: Boolean) {

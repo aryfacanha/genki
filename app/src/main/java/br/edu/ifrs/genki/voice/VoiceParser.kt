@@ -62,6 +62,8 @@ object VoiceParser {
         "mcg" to "mcg", "micrograma" to "mcg", "microgramas" to "mcg", "ui" to "UI",
     )
 
+    private val QUARTER_AMOUNTS = setOf("1/4", "3/4")
+
     /** Unidades de dose: ficam como foram ditas ("2 gotas"), exceto mililitro → "ml". */
     private val DOSE_UNITS = setOf(
         "comprimido", "comprimidos", "capsula", "capsulas", "gota", "gotas", "ml", "mililitro", "mililitros",
@@ -87,7 +89,7 @@ object VoiceParser {
         "o", "a", "os", "as", "de", "do", "da", "dos", "das", "e", "em", "no", "na", "nos", "nas", "ao", "aos", "pela",
         "pelo", "pelas", "pelos", "por", "para", "pra", "com", "sem", "que", "tambem", "mais", "remedio", "remedios",
         "medicamento", "medicamentos", "medicacao", "preciso", "tenho", "vezes", "vez", "dia", "dias", "hora", "horas",
-        "h", "manha", "tarde", "noite", "madrugada", "cedo", "meio", "meia", "jejum", "antes", "depois", "cafe",
+        "h", "manha", "tarde", "noite", "madrugada", "cedo", "meio", "meia", "quarto", "quartos", "jejum", "antes", "depois", "cafe",
         "almoco", "jantar", "janta", "dormir", "deitar", "acordar", "refeicao", "refeicoes", "todo", "todos", "toda",
         "todas", "sim", "nao", "ok", "entao", "agora", "ainda", "sei", "so", "somente", "apenas", "cada", "comecando",
         "partir", "primeira", "primeiro", "ate", "durante", "semana", "semanas", "mes", "meses", "continuo",
@@ -382,18 +384,35 @@ object VoiceParser {
             return end
         }
 
-        /** "1 comprimido", "meio comprimido", "10 gotas", "uma cápsula", "1 comprimido e meio". */
+        /** "Um quarto", "três quartos", "1/4", "3/4" → "1/4" ou "3/4", como no formulário (DEC-055). */
+        private fun quarter(i: Int): Pair<String, Int>? {
+            val (n, k) = number(i) ?: return null
+            if (n != 1.0 && n != 3.0) return null
+            return when {
+                isAny(k, "quarto", "quartos") -> "${format(n)}/4" to k + 1
+                isAny(k, "/") && isAny(k + 1, "4") -> "${format(n)}/4" to k + 2
+                else -> null
+            }
+        }
+
+        /**
+         * "1 comprimido", "meio comprimido", "um quarto de comprimido", "10 gotas", "uma cápsula", "1 comprimido e meio",
+         * "1 comprimido e um quarto".
+         */
         private fun dose(i: Int): Int {
             val half = isAny(i, "meio", "meia")
             // "1/2 comprimido": a fração fica como foi dita (o denominador não é a dose).
-            val fraction = number(i)?.let { (n, k) ->
+            val fraction = quarter(i) ?: number(i)?.let { (n, k) ->
                 if (isAny(k, "/")) number(k + 1)?.let { (d, m) -> "${format(n)}/${format(d)}" to m } else null
             }
-            val (amount, j) = fraction
+            val (amount, afterAmount) = fraction
                 ?: if (half) t[i].text.lowercase() to i + 1 else number(i)?.let { format(it.first) to it.second } ?: return i
+            val ofUnit = amount in QUARTER_AMOUNTS && isAny(afterAmount, "de")
+            val j = if (ofUnit) afterAmount + 1 else afterAmount
             val unitNorm = norm(j) ?: return i
             if (unitNorm !in DOSE_UNITS) return i
-            var text = "$amount ${if (unitNorm.startsWith("mililitro")) "ml" else t[j].text.lowercase()}"
+            val unit = if (unitNorm.startsWith("mililitro")) "ml" else t[j].text.lowercase()
+            var text = if (amount in QUARTER_AMOUNTS) "$amount de $unit" else "$amount $unit"
             var end = j + 1
             if (isAny(end, "de") && isAny(end + 1, "sopa", "cha")) {
                 text += " de ${t[end + 1].text.lowercase()}"
@@ -402,6 +421,11 @@ object VoiceParser {
             if (isAny(end, "e") && isAny(end + 1, "meio", "meia")) {
                 text += " e ${t[end + 1].text.lowercase()}"
                 end += 2
+            } else if (isAny(end, "e")) {
+                quarter(end + 1)?.let { (q, k) ->
+                    text += " e $q"
+                    end = k
+                }
             }
             apply { it.copy(dose = text) }
             return end

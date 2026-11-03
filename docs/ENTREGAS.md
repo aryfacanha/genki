@@ -3,6 +3,16 @@
 Mais recente no topo. Um bloco por entrega relevante.
 
 ```text
+ENTREGA — App Android: ajustes do teste de usabilidade (1/4 de comprimido, fala inicial curta, Desfazer na exclusão, só retrato), versão 1.0.23 — 03/11/2026 — Claude Code (Opus 5.5)
+Partida: main/554190f; resultado do autor no ROTEIRO_USABILIDADE_CONGELAMENTO.md (tarefas 2, 3 e 11 com pedido; rotação; calendário como sugestão).
+Realizado: DoseUnit com 1/4 e 3/4 de comprimido (− para em 1/4, + volta a meio); VoiceParser com "um quarto", "três quartos", "1/4 de comprimido" e "1 comprimido e um quarto"; INTRO_PROMPT da voz só com a primeira linha; MedicationRepository.restore pelo DraftValidator com o mesmo id; aviso de exclusão com botão cheio Desfazer por 10 s; screenOrientation portrait na MainActivity e na AlarmActivity; versão 1.0.23. DEC-055.
+Verificado: assembleDebug e test (187 testes, zero falhas; 2 novos); release assinada instalada no A31 por cima da 1.0.22, cadastros mantidos, sem crash; − e + do comprimido no A31 (1 → meio → 1/4 → meio), rascunho descartado; portrait no manifest mesclado.
+Não verificado: Desfazer na tela; fala inicial de ouvido; rotação física; "um quarto" no reconhecedor real.
+Decisões aceitas: DEC-055 (03/11). Sugestão pendente: calendário de dias anteriores e próximos.
+Próxima tarefa: autor conferir 2, 3, 11 e rotação no A31 e congelar a 1.0.23.
+```
+
+```text
 ENTREGA — Repositório único de novo (DEC-054) e roteiro de usabilidade para o congelamento — 03/11/2026 — Claude Code (Opus 5.5)
 Partida: genki main/f775ad3; genki-docs main/5647b80; pedido do autor ("quero que isso seja revertido … mantenhamos como estava antes"; congelamento estendido até 03/11, só correções).
 Realizado: docs/ do genki-docs copiado de volta para genki/docs/; AGENTS.md, README.md e .claude/skills restaurados de c4c12eb; 00_INDICE.md de c4c12eb com as linhas das tags e do roteiro novo; DEC-053 marcada como revogada e DEC-054 criada; handoff (Retomar aqui, §4, Diário) e ESTADO atualizados; docs/ROTEIRO_USABILIDADE_CONGELAMENTO.md criado (11 tarefas de usuário, regra "só S1/S2 hoje"). Mantidos: tags v1.0…v1.0.22 e .idea/ fora do Git. genki-docs: aviso de repositório parado no README.

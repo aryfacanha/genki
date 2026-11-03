@@ -429,8 +429,8 @@ class VoiceViewModel(
 
     companion object {
         const val EXAMPLE = "losartana, 50 miligramas, um comprimido, todos os dias, às 8 da manhã"
-        private const val INTRO_PROMPT =
-            "Conte quais remédios você usa, quanto toma e em quais horários. Por exemplo: $EXAMPLE. Toque no microfone para falar."
+        // Só a primeira linha da tela é lida em voz alta; o exemplo fica escrito (autor, 03/11: fala inicial longa).
+        private const val INTRO_PROMPT = "Conte quais medicamentos você usa, quanto toma e em quais horários."
         private const val UNAVAILABLE = "Este aparelho não tem reconhecimento de voz configurado. Você pode digitar."
         private const val MIC_DENIED ="Sem acesso ao microfone. Você pode permitir nas configurações ou digitar."
 

@@ -85,14 +85,15 @@ class DetailViewModel(private val id: Long, private val repository: MedicationRe
     }
 }
 
-/** Detalhes (RF02, RF10), como `DetalhesMedicamento.tsx`. Exclusão só com confirmação, sem "Desfazer" (DEC-027). */
+/** Detalhes (RF02, RF10), como `DetalhesMedicamento.tsx`. Exclusão com confirmação e "Desfazer" no aviso (DEC-055). */
 @Composable
 fun DetailScreen(
     id: Long,
     backLabel: String,
     onBack: () -> Unit,
     onEdit: () -> Unit,
-    onDeleted: () -> Unit,
+    /** Recebe o medicamento excluído, para o "Desfazer" do aviso. */
+    onDeleted: (Medication) -> Unit,
     showMessage: (String) -> Unit,
     viewModel: DetailViewModel = viewModel(factory = DetailViewModel.factory(id)),
 ) {
@@ -159,10 +160,7 @@ fun DetailScreen(
                 confirmButton = {
                     TextButton(onClick = {
                         confirmDelete = false
-                        viewModel.delete {
-                            showMessage("Medicamento excluído")
-                            onDeleted()
-                        }
+                        viewModel.delete { onDeleted(med) }
                     }) { Text("Excluir", color = MaterialTheme.colorScheme.error) }
                 },
                 dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text("Cancelar") } },

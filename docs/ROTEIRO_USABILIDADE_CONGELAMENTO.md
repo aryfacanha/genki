@@ -38,6 +38,22 @@ print).
 | 10 | **Modo avião**: abrir, cadastrar digitando "Teste F" e ver na lista; sair do modo avião | Funcionar sem internet | Voz offline depende do pacote pt-BR do Google (anotar se funcionou) |
 | 11 | **Limpeza**: excluir todos os "Teste …" e os cadastros da voz e da câmera; voltar fonte, volume e som do lembrete ao seu uso | Lista só com seus remédios reais | Confirmação antes de excluir (não há Desfazer, DEC-027) |
 
+## Resultado de 03/11/2026 (autor, A31, 1.0.22)
+
+Tarefas 1, 4, 5, 6, 7, 8, 9 e 10 ok; 2, 3 e 11 ok com pedido de ajuste. Atendidos na **1.0.23** (DEC-055):
+
+| # | Retorno do autor | 1.0.23 |
+|---|---|---|
+| 2 | "meio" não basta, às vezes se toma 1/4 | Comprimido: o − desce de meio para **1/4** e para ali; o + volta a meio; "0,75" digitado vira 3/4. Texto: "1/4 de comprimido", "1 comprimido e 1/4". Voz: "um quarto de comprimido", "três quartos", "1/4" |
+| 3 | Ler em voz alta só a primeira linha da voz | Fala inicial: "Conte quais medicamentos você usa, quanto toma e em quais horários." O exemplo fica só escrito |
+| 11 | Botão Desfazer no aviso de exclusão, aparente e mais demorado | Aviso "Medicamento excluído" com botão cheio **Desfazer** por 10 s (os outros avisos, 4 s); desfazer devolve o remédio no mesmo lugar, com os mesmos horários e a mesma escolha de lembretes |
+| — | Não deixar o app girar | Tela principal e tela de alarme só em retrato |
+| — | Calendário com remédios e alarmes de dias anteriores e próximos | **Sugestão pendente** "quando houver tempo"; não implementada (fora da proposta; o app não guarda histórico de tomadas) |
+
+Para conferir a 1.0.23 no A31: tarefa 2 (− até 1/4, + de volta a meio, revisão "1/4 de comprimido"), tarefa 3 (só a
+primeira linha falada), tarefa 11 (excluir, Desfazer, remédio de volta com os lembretes; excluir de novo e deixar o
+aviso sumir) e girar o celular com a rotação automática ligada (Hoje e tela de alarme não giram).
+
 ## Depois do teste
 
 - Nenhum problema crítico: **1.0.22 congelada** (a tag `v1.0.22` já existe; registrar no `ESTADO.md` a data e que é

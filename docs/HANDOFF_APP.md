@@ -65,7 +65,9 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
-**03/11, Claude Code (último):** repositório único de novo (DEC-054 revoga a DEC-053): registros de volta em `docs/`, `AGENTS.md`/README/skills como antes; tags `vX.Y.Z` continuam. App na **1.0.22**, congelamento adiado pelo autor para **03/11**. Próximo: autor rodar `docs/ROTEIRO_USABILIDADE_CONGELAMENTO.md` no A31; corrigir hoje só S1/S2; registrar a versão congelada no `ESTADO.md`. Releases do GitHub deixam de ser pendência.
+**03/11, Claude Code (último):** **1.0.23** (DEC-055) a partir do teste de usabilidade do autor: 1/4 de comprimido (formulário e voz), fala inicial da voz curta, "Desfazer" na exclusão (10 s, botão cheio), app só em retrato. Instalada no A31 como atualização (cadastros mantidos); − até 1/4 e + de volta a meio conferidos no A31. Próximo: autor conferir 2, 3, 11 e rotação (`ROTEIRO_USABILIDADE_CONGELAMENTO.md`, "Resultado de 03/11") e congelar a 1.0.23. Calendário: sugestão pendente.
+
+**03/11, Claude Code:** repositório único de novo (DEC-054 revoga a DEC-053): registros de volta em `docs/`, `AGENTS.md`/README/skills como antes; tags `vX.Y.Z` continuam. App na **1.0.22**, congelamento adiado pelo autor para **03/11**. Próximo: autor rodar `docs/ROTEIRO_USABILIDADE_CONGELAMENTO.md` no A31; corrigir hoje só S1/S2; registrar a versão congelada no `ESTADO.md`. Releases do GitHub deixam de ser pendência.
 
 **30/10, Claude Code:** app na **1.0.22** (alarme falado conferido pelo autor no aparelho; voz com relógio próprio, 3 s). Repositórios separados (DEC-053): código em `genki` (`D:\dev\genki`), registros aqui no `genki-docs` (`D:\dev\genki-docs`); tags `v1.0`…`v1.0.22` no `genki`. **Próxima sessão:** (1) **Releases do GitHub com APK**: `gh` não está instalado; com autorização do autor, `winget install GitHub.cli`, o autor faz `! gh auth login`, e criar as Releases a partir das tags (sugestão: APK anexado só na 1.0, 1.0.19 e 1.0.22; as demais só com o resumo; APKs em `C:\Users\titus\Desktop\Genki-teste`, 1,1 GB, falta o da 1.0.11). (2) **Codex** abrir com as duas pastas; o `AGENTS.md` do `genki` traz as regras dos dois repositórios. (3) Fluxo: commit de código no `genki`, depois registro aqui citando o hash; versão nova ganha tag anotada. (4) App: autor ainda roda G, H, I e M da bateria no A31 e decide o congelamento; S20 FE com espera de 3 s não conferido.
 
@@ -403,6 +405,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-03 — Claude Code — configuração: versão 1.0.23 (versionCode 24); manifest com `screenOrientation="portrait"` na `MainActivity` e na `AlarmActivity` (DEC-055) — 187 testes; release instalada no A31 — pendente: girar o A31 com rotação automática (autor).
 
 - 2026-11-03 — Claude Code — configuração: separação revertida (DEC-054): registros de volta em `docs/`, `AGENTS.md`, README e skills como em `c4c12eb`; `.idea/` continua fora do Git; tags mantidas — `assembleDebug test`; `docs/` igual ao `genki-docs` `5647b80` mais as mudanças de 03/11 — pendente: autor decidir se arquiva o `genki-docs` no GitHub.
 

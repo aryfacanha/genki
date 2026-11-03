@@ -74,6 +74,16 @@ class VoiceParserTest {
         assertEquals("2 colheres de sopa", one("xarope 2 colheres de sopa").dose)
     }
 
+    @Test
+    fun quarterOfATablet() {
+        // DEC-055: quarto de comprimido sai como no formulário.
+        assertEquals("1/4 de comprimido", one("losartana um quarto de comprimido").dose)
+        assertEquals("3/4 de comprimido", one("losartana três quartos de comprimido").dose)
+        assertEquals("1/4 de comprimido", one("losartana 1/4 de comprimido").dose)
+        assertEquals("1 comprimido e 1/4", one("losartana um comprimido e um quarto").dose)
+        assertEquals("Losartana", one("losartana um quarto de comprimido às 8").name)
+    }
+
     // ── horários ─────────────────────────────────────────────────────
 
     @Test

@@ -23,9 +23,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,6 +58,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import br.edu.ifrs.genki.GenkiApplication
+import br.edu.ifrs.genki.GenkiEval
+import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.R
 import br.edu.ifrs.genki.camera.ui.CameraScreen
 import br.edu.ifrs.genki.reminders.Notifications
@@ -66,6 +73,8 @@ import br.edu.ifrs.genki.ui.home.HomeScreen
 import br.edu.ifrs.genki.ui.medications.MedicationsScreen
 import br.edu.ifrs.genki.ui.settings.SettingsScreen
 import br.edu.ifrs.genki.ui.theme.GenkiNavInactive
+import br.edu.ifrs.genki.ui.theme.GenkiOnPrimaryContainer
+import br.edu.ifrs.genki.ui.theme.GenkiPrimaryContainer
 import br.edu.ifrs.genki.ui.tutorial.LocalTutorial
 import br.edu.ifrs.genki.ui.tutorial.TutorialController
 import br.edu.ifrs.genki.ui.tutorial.TutorialOverlay
@@ -125,6 +134,21 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     }
     // Ao salvar um medicamento sem a permissão de notificações, explica e pede (ESPEC §6, Android 13+).
     val context = LocalContext.current
+    // Exclusão com "Desfazer" (DEC-055, autor, 03/11): o aviso fica 10 s (os outros, 4 s) para dar tempo de reverter.
+    val onDeleted: (Medication) -> Unit = { med ->
+        navController.popBackStack()
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            val result = snackbarHostState.showSnackbar(
+                "Medicamento excluído", actionLabel = "Desfazer", duration = SnackbarDuration.Long,
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                (context.applicationContext as GenkiApplication).container.medicationRepository.restore(med)
+                GenkiEval.log("exclusao_desfeita", "id" to med.id)
+                showMessage("Exclusão desfeita")
+            }
+        }
+    }
     var explainNotifications by remember { mutableStateOf(false) }
     // "Resolver em Ajustes" da Hoje: Ajustes abre já em Permissões.
     var scrollToPermissions by remember { mutableStateOf(false) }
@@ -174,7 +198,23 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             // Na Hoje e na lista, o aviso fica acima do botão "Adicionar medicamento", como no protótipo.
             val aboveAddButton = currentDestination?.hasRoute(MedicationsRoute::class) == true ||
                 currentDestination?.hasRoute(HomeRoute::class) == true
-            SnackbarHost(snackbarHostState, Modifier.padding(bottom = if (aboveAddButton) 80.dp else 0.dp))
+            SnackbarHost(snackbarHostState, Modifier.padding(bottom = if (aboveAddButton) 80.dp else 0.dp)) { data ->
+                // "Desfazer" em botão cheio, para ficar aparente (DEC-055).
+                Snackbar(
+                    modifier = Modifier.padding(12.dp),
+                    action = data.visuals.actionLabel?.let { label ->
+                        {
+                            Button(
+                                onClick = data::performAction,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = GenkiPrimaryContainer,
+                                    contentColor = GenkiOnPrimaryContainer,
+                                ),
+                            ) { Text(label, fontWeight = FontWeight.Bold) }
+                        }
+                    },
+                ) { Text(data.visuals.message) }
+            }
         },
         bottomBar = {
             if (!onTopLevel) return@Scaffold
@@ -318,7 +358,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                     backLabel = if (route.fromHome) "Voltar para Hoje" else "Voltar para Medicamentos",
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(EditMedicationRoute(id)) },
-                    onDeleted = { navController.popBackStack() },
+                    onDeleted = onDeleted,
                     showMessage = showMessage,
                 )
             }

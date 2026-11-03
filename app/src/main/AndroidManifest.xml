@@ -41,6 +41,7 @@
         android:theme="@style/Theme.Genki">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Genki"
@@ -54,6 +55,7 @@
 
         <activity
             android:name=".reminders.AlarmActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"

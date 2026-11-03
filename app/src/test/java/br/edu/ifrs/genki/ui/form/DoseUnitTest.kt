@@ -73,8 +73,7 @@ class DoseUnitTest {
         assertEquals("2", DoseUnit.TABLET.plus("1 e meio"))
         assertEquals("1", DoseUnit.TABLET.plus("meio"))
         assertEquals("meio", DoseUnit.TABLET.minus("1"))
-        assertEquals("meio", DoseUnit.TABLET.minus("meio"))
-        assertFalse(DoseUnit.TABLET.canMinus("meio"))
+        assertTrue(DoseUnit.TABLET.canMinus("meio"))
         assertTrue(DoseUnit.TABLET.canMinus("1"))
         assertEquals("4", DoseUnit.CAPSULE.plus("3"))
         assertEquals("1", DoseUnit.CAPSULE.minus("1"))
@@ -85,6 +84,28 @@ class DoseUnitTest {
         // O que não é número (digitado) recomeça em um passo.
         assertEquals("meio", DoseUnit.TABLET.plus("abc"))
         assertEquals("100", DoseUnit.DROP.plus("100"))
+    }
+
+    @Test
+    fun tabletGoesDownToAQuarter() {
+        // DEC-055 (autor, 03/11: "às vezes se toma 1/4"): de meio o − vai a 1/4 e para; o + volta a meio.
+        assertEquals("1/4", DoseUnit.TABLET.minus("meio"))
+        assertFalse(DoseUnit.TABLET.canMinus("1/4"))
+        assertEquals("1/4", DoseUnit.TABLET.minus("1/4"))
+        assertEquals("meio", DoseUnit.TABLET.plus("1/4"))
+        assertEquals("1/4", DoseUnit.TABLET.minus("3/4"))
+        assertEquals("1/4 de comprimido", DoseUnit.TABLET.dose("1/4"))
+        assertEquals("3/4 de comprimido", DoseUnit.TABLET.dose("0,75"))
+        assertEquals("1/4 de comprimido", DoseUnit.TABLET.dose("0,25"))
+        assertEquals("1 comprimido e 1/4", DoseUnit.TABLET.dose("1,25"))
+        assertEquals("2 comprimidos e 3/4", DoseUnit.TABLET.dose("2,75"))
+        assertEquals("1/4" to DoseUnit.TABLET, DoseUnit.parse("1/4 de comprimido"))
+        assertEquals("3/4" to DoseUnit.TABLET, DoseUnit.parse("3/4 de comprimido"))
+        assertEquals("1 e 1/4" to DoseUnit.TABLET, DoseUnit.parse("1 comprimido e 1/4"))
+        assertEquals(1.25, DoseUnit.TABLET.value("1 e 1/4")!!, 1e-9)
+        // As outras unidades não mudam: ml continua parando em meio.
+        assertEquals("0,5", DoseUnit.ML.minus("0,5"))
+        assertEquals("0,25 ml", DoseUnit.ML.dose("0,25"))
     }
 
     @Test
@@ -110,7 +131,7 @@ class DoseUnitTest {
     @Test
     fun everyStepperAmountComesBackTheSame() {
         DoseUnit.CHOICES.filter { it != DoseUnit.OTHER }.forEach { unit ->
-            (1..60).map { it * unit.step }.forEach { value ->
+            ((1..60).map { it * unit.step } + listOf(0.25, 0.75, 1.25)).forEach { value ->
                 val amount = unit.amountOf(value)
                 assertEquals(amount to unit, DoseUnit.parse(unit.dose(amount)))
             }
