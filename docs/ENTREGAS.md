@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Monografia: parecer sobre o e-mail ao orientador e conferência das pastas do Drive — 03/11/2026 — Claude (Opus 5.5, chat do Projeto)
+Partida: `main`/`3002e74`; handoff da monografia no Drive com a seção 13 (GPT, 03/11).
+Realizado: seção 14 no handoff com parecer e versão revisada do e-mail ao orientador; permissões conferidas ("TCC - Genki": orientador como editor; "TCC - Genki +" e Handoff só com o autor; cinco subpastas acadêmicas vazias). Nada enviado nem compartilhado; nenhuma permissão alterada.
+Decisões aceitas pelo autor nesta sessão: organização das pastas (área acadêmica só com versões aprovadas, sem marcadores de IA), informada pelo autor em 03/11.
+Sugestões pendentes: ajustes do e-mail; papel do orientador (editor ou comentador).
+Verificado: versão congelada, Release e prazo nos registros. | Não verificado: envio do e-mail à coordenação com o orientador em cópia (sem registro).
+Próxima tarefa e bloqueios: autor revisar e enviar o e-mail; seguir com a monografia (heurística, personas, desenvolvimento).
+Links: https://docs.google.com/document/d/1sL2hcIESDuo7DHfkeWqeEHHLBcA4ZES-UKENap4naDM/edit
+
 ```text
 ENTREGA — Verificação para publicar o repositório e Release v1.0.23 com o APK — 03/11/2026 — Claude Code (Opus 5.5)
 Partida: main/867e005; pedido do autor (release pelo gh, instalar se preciso, verificar dados sensíveis para deixar público).
