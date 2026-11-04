@@ -1,22 +1,22 @@
-# HANDOFF DA VERSÃO — Genki 1.0.26 (em curso)
+# HANDOFF DA VERSÃO — Genki 1.0.26 (publicada em 04/11/2026)
 
 Leia depois de `docs/HANDOFF_APP.md` (contexto geral). Este arquivo é **reescrito a cada versão**: ao publicar a Release, arquive-o (HANDOFF_APP.md §4) e recomece. Atualizado em 04/11/2026, Claude Code (Sonnet 5.5). Os blocos abaixo vieram do handoff antigo sem reescrita; só o "Estado em 04/11" e as "Pendências" são texto novo.
 
 ## Estado em 04/11/2026
 
-- **Publicada:** `v1.0.25` (tag em `8717429`, Release com `Genki-1.0.25.apk`, SHA-256 `8a159a63…`). Sem push do `main`.
-- **Em curso: 1.0.26** (versionCode 27), P30/AU-01 (pedido do autor): a página das notificações da introdução ficou enxuta e a dica do pop-up foi para Ajustes > Permissões, abaixo de "Notificações". Commits `cf3afd1` (código) e `67a5055` (documentos); **nada enviado ao GitHub**; sem tag nem Release. 228 testes, 0 falhas; release assinado de 30,4 MB instalado e conferido no A31 por ADB (`docs/REFINAMENTO_HEURISTICO_1.0.25.md`, P30).
+- **Publicada:** **`v1.0.26`** (tag anotada em `cf3afd1`, Release com `Genki-1.0.26.apk`, 30,4 MB, SHA-256 `74c33c0d…3155e`, o mesmo instalado no A31; certificado `48c13c88…e23c`; download sem login conferido): https://github.com/aryfacanha/genki/releases/tag/v1.0.26. A anterior foi a `v1.0.25` (`8717429`). O `main` foi enviado ao GitHub (push de 04/11, 32 commits).
+- **1.0.26** (versionCode 27), P30/AU-01 (pedido do autor): a página das notificações da introdução ficou enxuta e a dica do pop-up foi para Ajustes > Permissões, abaixo de "Notificações". Commits `cf3afd1` (código) e `67a5055` (documentos). 228 testes, 0 falhas; release assinado instalado e conferido no A31 por ADB (`docs/REFINAMENTO_HEURISTICO_1.0.25.md`, P30).
 - **A31** (SM-A315G, Android 12, fonte 2,0×): 1.0.26 com Losartana e Sinvastatina recriadas à mão (1 comprimido, todos os dias, 01:36, uso contínuo), Ajustes restaurados ("Como alarme", falar o nome, ler o tutorial, ouvir sozinho), notificações e alarme exato permitidos, microfone concedido, 2 alarmes às 01:36 de 05/11. Fala do alarme audível, confirmada pelo autor.
 - **Cuidado:** limpar os dados do app (`pm clear`) apaga os cadastros (backup desligado, DEC-051); peça autorização ao autor antes e recrie depois. Para negar notificações no Android 12, use o interruptor aberto por `am start -a android.settings.APP_NOTIFICATION_SETTINGS --es android.provider.extra.APP_PACKAGE br.edu.ifrs.genki`; no diálogo de horário, apague o campo de minutos com `KEYCODE_DEL` antes de digitar.
 
 ## Pendências
 
-1. ~~README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.26~~ — feito em 04/11 (versão, `Genki-1.0.26.apk`, 228 testes); **ainda sem commit**. O README e o guia apontam para o APK da Release `v1.0.26`, que ainda não existe: só publicar o README depois de criar a Release.
-2. Tag anotada `v1.0.26` no commit do `versionName` e Release com o APK (HANDOFF_APP.md §4); push só com autorização do autor.
+1. ~~README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.26~~ — feito e publicado em 04/11 (commit `4d8f575`); o link do APK agora funciona.
+2. ~~Tag `v1.0.26` e Release com o APK; push~~ — feito em 04/11, a pedido do autor ("faça a release e push").
 3. O autor aceitar o lugar da dica do pop-up (Ajustes > Permissões, escolha do Claude Code).
-4. A monografia aponta para a 1.0.26 **só depois da Release**.
+4. A monografia aponta para a **1.0.26** (a Release já existe).
 5. Não verificado: TalkBack; o que a fala do alarme diz (RV-125-10, um remédio × vários; a fala foi ouvida pelo autor, mas o conteúdo não foi registrado); P8 completo; diálogo de permissão do Android 13 ou superior; regressão visual do Codex (abaixo).
-6. Depois da Release: arquivar este arquivo no histórico e recomeçar.
+6. Arquivar este arquivo no histórico e recomeçar (HANDOFF_APP.md §4) **ao iniciar a próxima versão**; não foi feito ainda. O autor pretende uma análise geral: se achar algo, nasce a 1.0.27.
 
 ## Estado do código das versões recentes (1.0.24 e 1.0.25)
 

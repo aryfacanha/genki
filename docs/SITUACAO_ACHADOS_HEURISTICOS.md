@@ -7,12 +7,12 @@
 | Pergunta | Resposta |
 | --- | --- |
 | Versão **avaliada** (heurística, verificação técnica, personas) | **1.0.23**, congelada em 03/11/2026 (tag `v1.0.23`, commit `7bb00bc`) |
-| Última versão **publicada** | **1.0.25** (Release `v1.0.25`, 04/11/2026, tag em `8717429`). O ramo `main` ainda não foi enviado ao GitHub: o README e o guia públicos continuam mostrando a 1.0.24 até o push |
-| Versão **em curso**, ainda **não publicada** | **1.0.26** (versionCode 27), commits `cf3afd1` e `67a5055`; sem tag nem Release. O autor fará uma análise geral antes de decidir a Release. **Não citar a 1.0.26 como publicada.** |
+| Última versão **publicada** | **1.0.26** (Release `v1.0.26`, 04/11/2026, tag `v1.0.26` no commit `cf3afd1`; o APK `Genki-1.0.26.apk` é o mesmo instalado no A31, SHA-256 `74c33c0d…3155e`). O `main` foi enviado ao GitHub na mesma data |
+| Versão **em curso** | Nenhuma além da 1.0.26. A **1.0.25** foi a anterior (Release `v1.0.25`) e a **1.0.23** continua sendo a **versão avaliada** |
 | Achados da avaliação heurística | **30 registrados** pelo Claude Code (CC-01 a CC-30), todos aceitos pelo autor em 03/11/2026 |
 | Resolvidos | **26 de 30**: o CC-01 (1.0.24) e 25 dos 29 restantes (1.0.25), sendo 2 deles **em parte** |
 | Não corrigidos | **4**, todos de severidade baixa: dois por decisão do autor (P5, P17), um não reproduzido (P14) e um cuja tentativa de correção piorou a tela e foi revertida (P4) (seção 4) |
-| Achado novo depois da avaliação | **1** (AU-01, 04/11), corrigido na 1.0.26 (não publicada) |
+| Achado novo depois da avaliação | **1** (AU-01, 04/11), corrigido na 1.0.26 (publicada em 04/11) |
 | A versão corrigida foi **reavaliada** por heurística? | **Não.** As correções foram conferidas em emulador e no aparelho do autor, item a item e de forma parcial (seção 5), mas não houve nova avaliação heurística completa |
 
 ## 2. O que se pode e o que não se pode afirmar
@@ -36,7 +36,7 @@
 | 1.0.23 | 03/11/2026 | Versão **avaliada**; congelada pelo autor depois de conferir as tarefas 2, 3 e 11 e a rotação no A31. Inclui, entre outros, 1/4 de comprimido, "Desfazer" na exclusão e app só em retrato (DEC-055) | Publicada (tag e Release `v1.0.23`) |
 | 1.0.24 | 03/11/2026 | **Só o CC-01** (editar um medicamento apagava o lembrete adiado e a repetição). Commits `a2e318a` e `55a9c3b` | Publicada (tag e Release `v1.0.24`) |
 | 1.0.25 | 03/11 a 04/11/2026 | **Refinamento heurístico P1 a P29** (DEC-057), só de interface; sem mudança na lógica de lembretes nem no esquema do banco. Revisado pelo Claude Code e depois pelo Codex (seção 7) | Publicada (tag e Release `v1.0.25`) |
-| 1.0.26 | 04/11/2026 | **AU-01**: página das notificações da introdução com texto enxuto; a dica do pop-up foi para Ajustes (seção 6). Também só interface | **Em curso; não publicada** |
+| 1.0.26 | 04/11/2026 | **AU-01**: página das notificações da introdução com texto enxuto; a dica do pop-up foi para Ajustes (seção 6). Também só interface | Publicada (tag e Release `v1.0.26`, 04/11/2026) |
 
 Corte de prazo da DEC-057: o que não estivesse pronto e conferido até 05/11/2026, 12:00, ficaria como não corrigido.
 
@@ -92,7 +92,7 @@ Corte de prazo da DEC-057: o que não estivesse pronto e conferido até 05/11/20
 - **Nunca verificado:** **TalkBack** (leitor de tela), voz real no aparelho, câmera com embalagem real, som do alarme com tela bloqueada, Doze/economia de bateria, outros aparelhos além do A31, Android 13 ou superior.
 - **A avaliação original (1.0.23):** feita no emulador `Genki_V1_Teste` (Android 15, sem áudio), instalação limpa do APK da Release v1.0.23, com remédios fictícios. O A31 não foi usado nela. Fala real, câmera real, som, TalkBack e A31 ficaram como não verificados.
 
-## 6. Achado novo depois da avaliação: AU-01 (na 1.0.26, não publicada)
+## 6. Achado novo depois da avaliação: AU-01 (corrigido na 1.0.26)
 
 - **Origem:** o autor, ao ver a introdução no A31 em instalação do zero (04/11/2026). É um achado **novo** (não vem da passada do Claude Code); o identificador **AU-01** é interno. Se o autor o incluir na monografia, a numeração segue a dele (P30 é a proposta usada nos registros do repositório).
 - **Problema:** a última página da introdução, na instalação do zero, tinha texto demais (cerca de 50 palavras com tudo permitido e cerca de 75 com tudo negado, contagem do Claude Code), podendo caracterizar texto excessivo. Em fonte 2,0× a página já precisava rolar.
@@ -133,8 +133,8 @@ Antes da avaliação formal, o Claude Code fez duas pré-revisões durante o des
 
 ## 10. O que ainda pode mudar este documento
 
-- A análise geral do autor antes de decidir a Release da 1.0.26 (pode surgir achado novo ou ajuste).
-- A Release da 1.0.26 (hoje inexistente) e o apontamento da monografia para ela.
+- A análise geral que o autor pretende fazer: se aparecer achado novo ou ajuste, haverá uma versão posterior à 1.0.26.
+- O apontamento da monografia para a 1.0.26 (a Release já existe).
 - A decisão do autor sobre o P14 (retirar ou manter), a severidade final do AU-01 e o lugar da dica do pop-up em Ajustes.
 - Verificação por TalkBack, do texto falado do alarme e do P8 no A31.
 - A atualização da planilha "Consolidação CC".
