@@ -104,7 +104,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
 @Composable
 internal fun AlarmSpeechSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Falar o nome dos remédios no alarme",
-    "Diz o horário e o nome do remédio.",
+    "Com um remédio, diz o horário e o nome; com vários, diz quantos são.",
     checked,
     onChange,
 )

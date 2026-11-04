@@ -2,6 +2,12 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — 1.0.25: correções RV-125-08, 09 e 10 da revisão do Codex — 04/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/c5eb7b3; pedido do autor ("corrige essas RVs aí novas e abre o emulador pelo Claude").
+Realizado: RV-125-08 (campo "Por quantos dias?" rejeita 0 e mais de 999 sem converter, mensagem de erro, sem apagar dígitos na digitação rápida), RV-125-09 (texto da repetição como regra geral), RV-125-10 (descrição do alarme falado fiel à fala). Sem mudança em lembretes, validador ou esquema. 226 testes, 0 falhas.
+Verificado: emulador Pixel_6_2, fonte 2,0×: 7 dias → 10/11/2026; 0 e 1000 → erro. Não verificado: RV-125-09 em tela, RV-125-10 em tela, A31 além da instalação.
+Próxima tarefa e bloqueios: Codex conferir só estas três correções (roteiro curto, modelo e esforço fixos); depois, tag e Release v1.0.25; README e guia ainda citam a 1.0.24.
+
 ENTREGA — Revisão independente do refinamento 1.0.25 — 04/11/2026 — Codex
 Partida e término: main/b2b7111ac5a36feb81f225594cc8943dbc157515; intervalo d292a2a..b2b7111. Pull bloqueado por escrita em .git/FETCH_HEAD; revisão do estado local. Arquivo preexistente .claude/settings.local.json não rastreado preservado.
 Realizado: relatório docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CODEX.md; conferência do diff, regras, proposta e requisitos originais no Drive. Nenhum S1/S2 confirmado; novos RV-125-08/09 S3 (duração inválida/truncada e texto de repetição depois do limite) e RV-125-10 S4 (descrição do alarme falado em grupo), confirmados por leitura. Correções RV-125-01/02 presentes; demais S4 da revisão do Claude mantidos, com ressalvas no relatório.

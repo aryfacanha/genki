@@ -85,3 +85,11 @@ Também não verificados: A31 (proibido nesta tarefa), TalkBack, fala real/recon
 ## Próximo passo
 
 Autor/Claude avaliar RV-125-08/09 e a sugestão RV-125-10, repetir a regressão visual pendente no `Pixel_6_2` e atualizar guia/README antes da tag/Release. Respeitar o corte de 05/11/2026, 12:00 (DEC-057). **Não há S1/S2 confirmado, mas não marcar o roteiro inteiro como verificado** com base nesta revisão. A decisão de publicar ou aceitar limitações é do autor; nenhuma nova decisão foi registrada como aceita.
+
+
+## Correções do Claude depois deste relatório (04/11/2026)
+
+- **RV-125-08 corrigido:** `TreatmentDuration.parse` separa vazio, válido (1 a 999) e inválido; o campo aceita até 4 dígitos, de modo que "1000" aparece como erro e não vira "100"; "0" também é erro, com a mensagem "Digite de 1 a 999 dias. A data de término continua a de antes.". Um segundo defeito apareceu no emulador: com digitação rápida o efeito que sincroniza o número com a data apagava dígitos; corrigido com `typedPair`. **Visto no emulador (fonte 2,0×):** 7 → "Termina em 10/11/2026"; 0 e 1000 → campo em erro. Teste unitário novo.
+- **RV-125-09 corrigido:** o cartão "Agora" diz "Sem resposta, o Genki repete o aviso até 3 vezes, a cada N min." (regra geral, sem prometer novo aviso). Não visto em tela (exige lembrete disparado).
+- **RV-125-10 corrigido:** "Com um remédio, diz o horário e o nome; com vários, diz quantos são." Visto só no código.
+- 226 testes, 0 falhas. Falta a conferência do Codex sobre estas três correções.

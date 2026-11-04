@@ -425,6 +425,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: correções RV-125-08 (`TreatmentDuration.parse`, `DurationDaysField`), RV-125-09 (texto da repetição) e RV-125-10 (descrição do alarme falado), na 1.0.25 — `assembleDebug test assembleRelease`, 226 testes; emulador com fonte 2,0× (RV-125-08) — pendente: Codex conferir as três; RV-125-09/10 em tela; tag e Release.
+
 - 2026-11-04 — Codex — revisão independente da 1.0.25, `d292a2a..b2b7111`, relatório `revisoes/REVISAO_REFINAMENTO_1.0.25_CODEX.md`, sem código/configuração alterados; nenhum S1/S2 confirmado, RV-125-08/09 S3 e 10 S4, correções 01/02 conferidas no código — build e 225 testes reexecutados passam; lembretes/dados/esquema/manifest/validador sem diff — pendente: decisão do autor sobre sugestões e regressão visual/fontes; emulador fechado e inicialização bloqueada por escrita no AVD, tentativa encerrada, Android intocado; pull bloqueado em `.git/FETCH_HEAD`; sem A31/commit/push/tag/Release.
 
 - 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: handoff preparado para o Codex revisar a 1.0.25 em 04/11 (bloco no topo de "Retomar aqui"; roteiro atualizado para `HEAD`/`6c02273`, 225 testes, correções RV-125-01/02 e `AddMedicationButton`) — só documentação — pendente: revisão do Codex; depois, tag e Release `v1.0.25` (autor e Claude Code).

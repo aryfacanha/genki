@@ -39,4 +39,13 @@ class TreatmentDurationTest {
         assertNull(TreatmentDuration.days(start, null))
         assertNull(TreatmentDuration.days(start, LocalDate.of(2026, 11, 2)))
     }
+
+    @Test
+    fun parseKeepsEmptyValidAndInvalidApart() {
+        assertEquals(TreatmentDuration.DaysInput.Empty, TreatmentDuration.parse(""))
+        assertEquals(TreatmentDuration.DaysInput.Valid(7), TreatmentDuration.parse("7"))
+        assertEquals(TreatmentDuration.DaysInput.Valid(999), TreatmentDuration.parse("999"))
+        assertEquals(TreatmentDuration.DaysInput.Invalid, TreatmentDuration.parse("0"))
+        assertEquals(TreatmentDuration.DaysInput.Invalid, TreatmentDuration.parse("1000"))
+    }
 }

@@ -470,11 +470,11 @@ private fun AlertCard(
     }
 }
 
-/** Sem resposta, o Genki avisa de novo (RF09; repetição de Ajustes, até [ReminderReceiver.MAX_REPEATS] vezes). */
+/** Regra da repetição (RF09; Ajustes), não uma promessa de novo aviso: depois da última repetição a Hoje não sabe quantas já tocaram (RV-125-09). */
 @Composable
 private fun RepeatNote(intervalMinutes: Int, colors: AlertColors) {
     Text(
-        "Sem resposta, o Genki avisa de novo em $intervalMinutes min (até ${ReminderReceiver.MAX_REPEATS} vezes).",
+        "Sem resposta, o Genki repete o aviso até ${ReminderReceiver.MAX_REPEATS} vezes, a cada $intervalMinutes min.",
         color = colors.subtext,
         modifier = Modifier.padding(top = 8.dp),
     )

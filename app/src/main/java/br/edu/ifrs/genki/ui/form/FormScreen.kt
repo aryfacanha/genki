@@ -693,26 +693,39 @@ private fun TreatmentSection(state: FormUiState, viewModel: FormViewModel) {
 @Composable
 private fun DurationDaysField(start: LocalDate, end: LocalDate?, onEnd: (LocalDate) -> Unit) {
     var text by rememberSaveable { mutableStateOf(TreatmentDuration.days(start, end)?.toString().orEmpty()) }
-    // Escolher a data de término no calendário atualiza o número.
+    // Início e término que saíram da própria digitação: o efeito abaixo não os trata como mudança de fora. Sem isso, com
+    // digitação rápida ele comparava o texto novo com um término antigo e apagava dígitos ("1000" virava "100").
+    var typedPair by remember { mutableStateOf<Pair<LocalDate, LocalDate>?>(null) }
+    // Escolher a data de término (ou de início) no calendário atualiza o número.
     LaunchedEffect(start, end) {
+        if (end != null && typedPair == start to end) return@LaunchedEffect
         val days = TreatmentDuration.days(start, end)
         if (days != text.toIntOrNull()) text = days?.toString().orEmpty()
     }
-    val typed = text.toIntOrNull()
+    val input = TreatmentDuration.parse(text)
     OutlinedTextField(
         colors = genkiFieldColors(),
         value = text,
-        onValueChange = { input ->
-            val digits = input.filter(Char::isDigit).take(TreatmentDuration.MAX_DAYS.toString().length)
+        onValueChange = { typed ->
+            // Até 4 dígitos, para "1000" aparecer como inválido em vez de virar "100" (RV-125-08).
+            val digits = typed.filter(Char::isDigit).take(4)
             text = digits
-            digits.toIntOrNull()?.let { TreatmentDuration.endDate(start, it) }?.let(onEnd)
+            (TreatmentDuration.parse(digits) as? TreatmentDuration.DaysInput.Valid)
+                ?.let { TreatmentDuration.endDate(start, it.days) }
+                ?.let { typedPair = start to it; onEnd(it) }
         },
         label = { Text("Por quantos dias? (opcional)") },
+        isError = input is TreatmentDuration.DaysInput.Invalid,
         supportingText = {
+            val valid = (input as? TreatmentDuration.DaysInput.Valid)?.let { TreatmentDuration.endDate(start, it.days) }
             Text(
-                typed?.let { TreatmentDuration.endDate(start, it) }?.let { "Termina em ${MedicationText.date(it)}" }
-                    ?: "Ou escolha a data de término abaixo.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                when {
+                    valid != null -> "Termina em ${MedicationText.date(valid)}"
+                    input is TreatmentDuration.DaysInput.Invalid ->
+                        "Digite de 1 a ${TreatmentDuration.MAX_DAYS} dias. A data de término continua a de antes."
+                    else -> "Ou escolha a data de término abaixo."
+                },
+                color = if (input is TreatmentDuration.DaysInput.Invalid) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
         singleLine = true,
