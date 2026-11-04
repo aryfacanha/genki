@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.edu.ifrs.genki.BuildConfig
 import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.reminders.Notifications
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
@@ -135,11 +136,23 @@ fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false,
                     "Aplicativo para gerenciamento de medicamentos e lembretes.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Text("Versão ${BuildConfig.VERSION_NAME}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Privacidade e dados", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 16.dp))
+                PRIVACY_TEXT.forEach {
+                    Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+                }
                 SecondaryButton("Ver o tutorial", onClick = onTutorial, modifier = Modifier.padding(top = 12.dp))
             }
         }
     }
 }
+
+/** Texto de "Sobre" aprovado pelo autor em 03/11/2026 (P21). */
+private val PRIVACY_TEXT = listOf(
+    "Tudo fica só neste celular. O Genki não tem conta e não acessa a internet.",
+    "A voz é reconhecida pelo reconhecedor de voz do próprio celular. O Genki não grava nem guarda o áudio; o que o reconhecedor faz com ele depende do aparelho.",
+    "Não há cópia de segurança: se você desinstalar o Genki, apagar os dados ou trocar de celular, os cadastros se perdem.",
+)
 
 private fun openNotificationSettings(context: Context) {
     context.startActivity(Notifications.settingsIntent(context))
