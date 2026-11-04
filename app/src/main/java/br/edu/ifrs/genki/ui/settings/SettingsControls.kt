@@ -86,7 +86,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
         Text("Som do lembrete", style = MaterialTheme.typography.titleSmall)
         Column(Modifier.selectableGroup().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(
-                false to ("Como notificação" to "Toca como as outras notificações e respeita o modo silencioso."),
+                false to ("Como notificação" to "Respeita o modo silencioso."),
                 true to ("Como alarme" to "Toca como despertador, mesmo no silencioso."),
             ).forEach { (value, texts) ->
                 Choice(selected = alarm == value, modifier = Modifier.fillMaxWidth(), onClick = { onSelect(value) }, start = 12.dp) {
@@ -104,7 +104,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
 @Composable
 internal fun AlarmSpeechSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Falar o nome dos remédios no alarme",
-    "O Genki diz o horário e o nome do remédio enquanto o alarme toca.",
+    "Diz o horário e o nome do remédio.",
     checked,
     onChange,
 )

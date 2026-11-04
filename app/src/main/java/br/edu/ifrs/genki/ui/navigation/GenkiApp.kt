@@ -49,6 +49,9 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -227,6 +230,17 @@ fun GenkiApp(openHomeRequests: Int = 0) {
             if (!onTopLevel) return@Scaffold
             // Como no protótipo (`BottomNav`): fundo da superfície com linha fina acima, sem elevação;
             // indicador verde-claro atrás do ícone ativo e rótulo de 16 sp sempre visível.
+            // Os três rótulos têm o mesmo tamanho, o maior em que "Medicamentos" cabe na sua parte da barra: antes só ele
+            // encolhia e ficava menor que "Hoje" e "Ajustes" (autor, 03/11).
+            val measurer = rememberTextMeasurer()
+            val labelStyle = MaterialTheme.typography.labelMedium
+            val widestLabel = TopLevelTab.entries.map { stringResource(it.label) }.maxBy { it.length }
+            val cell = with(LocalDensity.current) { (LocalConfiguration.current.screenWidthDp.dp / TopLevelTab.entries.size - 24.dp).toPx() }
+            val labelSize = NavLabelSize.fit(
+                maxSp = labelStyle.fontSize.value,
+                widthAtMax = measurer.measure(widestLabel, labelStyle.copy(fontWeight = FontWeight.SemiBold), maxLines = 1).size.width.toFloat(),
+                available = cell,
+            ).sp
             Column {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 NavigationBar(containerColor = MaterialTheme.colorScheme.surface, tonalElevation = 0.dp) {
@@ -254,12 +268,9 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                                 Text(
                                     stringResource(tab.label),
                                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                                    fontSize = labelSize,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    autoSize = TextAutoSize.StepBased(
-                                        minFontSize = 8.sp,
-                                        maxFontSize = MaterialTheme.typography.labelMedium.fontSize,
-                                    ),
+                                    softWrap = false,
                                 )
                             },
                             colors = NavigationBarItemDefaults.colors(

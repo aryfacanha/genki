@@ -102,10 +102,7 @@ fun IntroScreen(onDone: () -> Unit) {
     val blocks = listOf<@Composable () -> Unit>(
         { WelcomeTop() },
         { WelcomeRest(voiceAssistant) { voiceAssistant = it; settings.voiceAssistant = it } },
-        { SoundBlock(reminders.alarmSound, settings::setAlarmSound) },
-        // Como em Ajustes, o alarme falado só aparece com "Como alarme"; é um bloco à parte para poder ir para a
-        // página seguinte quando não cabe embaixo do som.
-        { if (reminders.alarmSound) AlarmSpeechBlock(reminders.alarmSpeech, settings::setAlarmSpeech) },
+        { SoundBlock(reminders.alarmSound, settings::setAlarmSound, reminders.alarmSpeech, settings::setAlarmSpeech) },
         { PermissionBlock(allowed, exactAllowed, permit) },
     )
     val last = page >= pageCount - 1
@@ -205,16 +202,15 @@ private fun WelcomeRest(voiceAssistant: Boolean, onVoiceAssistant: (Boolean) -> 
 }
 
 @Composable
-private fun SoundBlock(alarm: Boolean, onSelect: (Boolean) -> Unit) {
+private fun SoundBlock(alarm: Boolean, onSelect: (Boolean) -> Unit, speech: Boolean, onSpeech: (Boolean) -> Unit) {
     Title("Avisos")
     SoundChoices(alarm, onSelect)
     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-}
-
-@Composable
-private fun AlarmSpeechBlock(speech: Boolean, onSpeech: (Boolean) -> Unit) {
-    AlarmSpeechSwitch(speech, onSpeech)
-    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+    // Como em Ajustes: com "Como alarme" a opção de falar o nome aparece logo abaixo, na mesma página (autor, 03/11).
+    if (alarm) {
+        AlarmSpeechSwitch(speech, onSpeech)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+    }
 }
 
 @Composable

@@ -320,6 +320,7 @@ fun HomeScreen(
                 "Adicionar medicamento",
                 onClick = onAdd,
                 icon = Icons.Filled.Add,
+                singleLine = true,
                 modifier = Modifier.tutorialTarget(TutorialTarget.ADD_BUTTON),
             )
         }
