@@ -228,12 +228,13 @@ fun ColumnScope.ScrollHintColumn(
     modifier: Modifier = Modifier,
     scroll: ScrollState = rememberScrollState(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    fill: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     var viewport by remember { mutableIntStateOf(0) }
     val hint by remember(scroll) { derivedStateOf { showScrollHint(scroll.value, scroll.maxValue) } }
-    Box(Modifier.weight(1f).onSizeChanged { viewport = it.height }) {
+    Box(Modifier.weight(1f, fill).onSizeChanged { viewport = it.height }) {
         Column(
             modifier.fillMaxWidth().verticalScroll(scroll),
             horizontalAlignment = horizontalAlignment,

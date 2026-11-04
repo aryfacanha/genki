@@ -3,15 +3,20 @@ package br.edu.ifrs.genki.ui.tutorial
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -51,6 +56,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import br.edu.ifrs.genki.GenkiApplication
+import br.edu.ifrs.genki.ui.components.ScrollHintColumn
 import br.edu.ifrs.genki.ui.components.VoiceMuteButton
 import br.edu.ifrs.genki.voice.Speaker
 
@@ -178,12 +184,12 @@ fun TutorialOverlay(controller: TutorialController) {
         }
         val balloon = @Composable { modifier: Modifier -> Balloon(index, step, controller, voiceOn, modifier) }
         when {
-            target == null -> balloon(Modifier.align(Alignment.Center))
+            target == null -> Box(Modifier.fillMaxSize().safeDrawingPadding()) { balloon(Modifier.align(Alignment.Center)) }
             TutorialSteps.balloonAbove(target, height) -> Box(
                 Modifier.fillMaxWidth().height(with(density) { (target.top - margin).coerceAtLeast(0f).toDp() }),
             ) { balloon(Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp)) }
             else -> Box(
-                Modifier.fillMaxSize().padding(top = with(density) { (target.bottom + margin).toDp() }),
+                Modifier.fillMaxSize().navigationBarsPadding().padding(top = with(density) { (target.bottom + margin).toDp() }),
             ) { balloon(Modifier.align(Alignment.TopCenter).padding(top = 12.dp)) }
         }
     }
@@ -207,10 +213,11 @@ private fun TutorialVoice(controller: TutorialController) {
 }
 
 /** Pergunta, na tela (e em voz alta com o assistente de voz), se a pessoa quer o tutorial (pedido do autor, 29/10). */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Offer(controller: TutorialController, voiceOn: Boolean) {
     BackHandler { controller.close() }
-    Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.72f)).blockTouches()) {
+    Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.72f)).blockTouches().safeDrawingPadding()) {
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = MaterialTheme.colorScheme.surface,
@@ -226,15 +233,20 @@ private fun Offer(controller: TutorialController, voiceOn: Boolean) {
                     )
                     if (voiceOn) VoiceMuteButton(controller.muted, controller.speaking, controller::toggleMute)
                 }
-                Text(
-                    OFFER_TEXT,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 8.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
-                )
+                ScrollHintColumn(fill = false) {
+                    Text(
+                        OFFER_TEXT,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 8.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
+                    )
+                }
                 Spacer(Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    itemVerticalAlignment = Alignment.CenterVertically,
+                ) {
                     TextButton(onClick = controller::close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Agora não") }
-                    Spacer(Modifier.weight(1f))
                     Button(onClick = controller::start, modifier = Modifier.heightIn(min = 48.dp)) { Text("Ver tutorial") }
                 }
             }
@@ -242,6 +254,7 @@ private fun Offer(controller: TutorialController, voiceOn: Boolean) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Balloon(index: Int, step: TutorialStep, controller: TutorialController, voiceOn: Boolean, modifier: Modifier) {
     val last = index == TutorialSteps.all.size - 1
@@ -260,22 +273,29 @@ private fun Balloon(index: Int, step: TutorialStep, controller: TutorialControll
                 )
                 if (voiceOn) VoiceMuteButton(controller.muted, controller.speaking, controller::toggleMute)
             }
-            Text(
-                step.title,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 4.dp, end = 8.dp).semantics { heading() },
-            )
-            Text(
-                step.text,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 6.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
-            )
+            // Com fonte grande o texto passava da tela e escondia os botões: só o texto rola, o resto fica à vista.
+            ScrollHintColumn(fill = false) {
+                Text(
+                    step.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(top = 4.dp, end = 8.dp).semantics { heading() },
+                )
+                Text(
+                    step.text,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 6.dp, end = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
+                )
+            }
             Spacer(Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            // Os botões quebram de linha quando não cabem lado a lado.
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                itemVerticalAlignment = Alignment.CenterVertically,
+            ) {
                 if (!last) {
                     TextButton(onClick = controller::close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Pular tutorial") }
                 }
-                Spacer(Modifier.weight(1f))
                 if (controller.index > 0) {
                     TextButton(onClick = controller::back, modifier = Modifier.heightIn(min = 48.dp)) { Text("Voltar") }
                 }

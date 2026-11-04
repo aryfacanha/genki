@@ -34,6 +34,10 @@ Claude Code (Sonnet 5.5), 03/11/2026. Pedido do autor (03/11, 20:45); reabertura
 | P25 | CC-26 | No cartão "Próximo lembrete" (e no do próximo dia), tocar no remédio abre os Detalhes; o cartão inteiro não é tocável | `HomeScreen.kt` | `60400a9` | Hoje com remédio cadastrado, tocar no nome dentro do cartão verde | Compila/testes. **Não visto** |
 | P26 | CC-27 | Dias com inicial maiúscula ("Segunda e sexta") em lista, Detalhes e revisão; separador "·" também na lista de Medicamentos. **Não mexido:** chips abreviados (Seg, Sex) e "ml" no menu de unidade (são o formato do app) | `ui/MedicationText.kt`, `DetailScreen.kt`, `FormScreen.kt` | `60400a9` | Aba Medicamentos e Detalhes | Compila/testes (1 teste novo). **Não visto** |
 
+## Correção depois da instalação no A31 (autor, 03/11)
+
+Com fonte 2,0×, o balão do tutorial passava da tela e os botões ficavam inacessíveis (visto no A31 por captura de tela; piorou com o "Voltar" do P28 e o texto maior do P12). Corrigido em `ui/tutorial/Tutorial.kt`: o texto do balão e da pergunta inicial rola dentro de uma área limitada, com o indicador "ver mais" (`ScrollHintColumn(fill = false)`); os botões ficam sempre visíveis e quebram de linha (`FlowRow`); o balão respeita a barra de navegação e a barra de status. **Verificado no A31 (SM-A315G, fonte 2,0×, instalação limpa):** pergunta inicial e os 7 passos do tutorial com todos os botões à vista. Mesmo APK 1.0.25 (versionCode 26), reconstruído.
+
 ## Não corrigidos
 
 | P | CC | Motivo |
