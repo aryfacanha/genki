@@ -87,7 +87,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
         Column(Modifier.selectableGroup().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(
                 false to ("Como notificação" to "Toca como as outras notificações e respeita o modo silencioso."),
-                true to ("Como alarme" to "Toca como despertador por até 1 minuto, no volume do alarme, mesmo no silencioso, e aparece na tela bloqueada. Sem resposta, o aviso fica e a repetição toca de novo."),
+                true to ("Como alarme" to "Toca como despertador, mesmo no silencioso."),
             ).forEach { (value, texts) ->
                 Choice(selected = alarm == value, modifier = Modifier.fillMaxWidth(), onClick = { onSelect(value) }, start = 12.dp) {
                     Column(Modifier.weight(1f).padding(horizontal = 14.dp, vertical = 10.dp)) {
@@ -104,7 +104,7 @@ internal fun SoundChoices(alarm: Boolean, onSelect: (Boolean) -> Unit) {
 @Composable
 internal fun AlarmSpeechSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
     "Falar o nome dos remédios no alarme",
-    "Quando o alarme tocar, o Genki diz o horário e o nome do remédio; com vários, diz quantos são. Fala de novo a cada 20 segundos enquanto toca.",
+    "O Genki diz o horário e o nome do remédio enquanto o alarme toca.",
     checked,
     onChange,
 )

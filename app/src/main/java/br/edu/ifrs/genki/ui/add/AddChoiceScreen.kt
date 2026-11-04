@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import br.edu.ifrs.genki.ui.components.CameraIcon
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
+import br.edu.ifrs.genki.ui.components.ScrollHintColumn
 import br.edu.ifrs.genki.ui.tutorial.TutorialTarget
 import br.edu.ifrs.genki.ui.tutorial.tutorialTarget
 import br.edu.ifrs.genki.ui.components.MicIcon
@@ -42,12 +43,9 @@ import br.edu.ifrs.genki.ui.components.MicIcon
 fun AddChoiceScreen(onBack: () -> Unit, onVoice: () -> Unit, onType: () -> Unit, onCamera: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
         GenkiTopBar("Adicionar medicamento", onBack = onBack, actionLabel = "Cancelar", onAction = onBack)
-        Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp)) {
-            Text(
-                "Como você quer cadastrar?",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 24.dp).semantics { heading() },
-            )
+        // Sem o título "Como você quer cadastrar?" (pedido do autor, 03/11): com fonte grande ele empurrava a câmera para
+        // fora da tela. A rolagem fica só como reserva, com o indicador, se mesmo assim não couber.
+        ScrollHintColumn(Modifier.padding(20.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OptionCard(
                     icon = MicIcon,

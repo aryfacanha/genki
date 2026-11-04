@@ -42,6 +42,12 @@ Com fonte 2,0×, o balão do tutorial passava da tela e os botões ficavam inace
 
 Com fonte 200% a introdução (2 páginas) exigia rolar muito. Agora o conteúdo são 4 blocos (boas-vindas, "Tudo fica só neste celular" + voz, som do lembrete, permissão) e o app **mede** cada bloco com a fonte atual (`SubcomposeLayout`, `ui/intro/IntroScreen.kt`) e junta em cada página os que cabem sem rolar (`ui/intro/IntroPagination.kt`, função pura com 5 testes). "N de M", "Pular", "Continuar" e "Começar" seguem o número de páginas. **Visto no emulador (API 35):** fonte 1,0× = 2 páginas; 1,3× = 3; 2,0× = 4. No 2,0× o bloco do som do lembrete ainda passa um pouco da tela e rola, com o indicador "ver mais". **Não visto no A31** (a introdução só aparece na primeira abertura).
 
+## Ajustes pedidos pelo autor depois (03/11)
+
+- **Som do lembrete mais curto:** "Como alarme" agora diz só "Toca como despertador, mesmo no silencioso." (saíram "até 1 minuto", "tela bloqueada" e "sem resposta, a repetição toca de novo"); o alarme falado diz "O Genki diz o horário e o nome do remédio enquanto o alarme toca." Vale para a introdução e para Ajustes (`ui/settings/SettingsControls.kt`).
+- **Alarme falado na introdução:** ao escolher "Como alarme", aparece abaixo a opção "Falar o nome dos remédios no alarme" (como em Ajustes). É um bloco à parte: no 2,0× vai para a página seguinte (5 páginas com o alarme escolhido).
+- **Adicionar medicamento:** removido o título "Como você quer cadastrar?"; com fonte 2,0× os três cartões cabem sem rolar (emulador). A rolagem fica só como reserva, com o indicador.
+
 ## Não corrigidos
 
 | P | CC | Motivo |

@@ -50,6 +50,7 @@ import br.edu.ifrs.genki.ui.components.PillsIcon
 import br.edu.ifrs.genki.ui.components.PrimaryButton
 import br.edu.ifrs.genki.ui.components.ScrollHintColumn
 import br.edu.ifrs.genki.ui.components.SecondaryButton
+import br.edu.ifrs.genki.ui.settings.AlarmSpeechSwitch
 import br.edu.ifrs.genki.ui.settings.SoundChoices
 import br.edu.ifrs.genki.ui.settings.VoiceAssistantSwitch
 
@@ -102,6 +103,9 @@ fun IntroScreen(onDone: () -> Unit) {
         { WelcomeTop() },
         { WelcomeRest(voiceAssistant) { voiceAssistant = it; settings.voiceAssistant = it } },
         { SoundBlock(reminders.alarmSound, settings::setAlarmSound) },
+        // Como em Ajustes, o alarme falado só aparece com "Como alarme"; é um bloco à parte para poder ir para a
+        // página seguinte quando não cabe embaixo do som.
+        { if (reminders.alarmSound) AlarmSpeechBlock(reminders.alarmSpeech, settings::setAlarmSpeech) },
         { PermissionBlock(allowed, exactAllowed, permit) },
     )
     val last = page >= pageCount - 1
@@ -204,6 +208,12 @@ private fun WelcomeRest(voiceAssistant: Boolean, onVoiceAssistant: (Boolean) -> 
 private fun SoundBlock(alarm: Boolean, onSelect: (Boolean) -> Unit) {
     Title("Avisos")
     SoundChoices(alarm, onSelect)
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+}
+
+@Composable
+private fun AlarmSpeechBlock(speech: Boolean, onSpeech: (Boolean) -> Unit) {
+    AlarmSpeechSwitch(speech, onSpeech)
     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 }
 
