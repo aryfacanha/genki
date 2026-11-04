@@ -51,6 +51,24 @@ Com fonte 200% a introdução (2 páginas) exigia rolar muito. Agora o conteúdo
 - **Barra de baixo e botão da Hoje (fonte grande):** os três rótulos da barra têm o mesmo tamanho, o maior em que "Medicamentos" cabe (antes só ele encolhia); "Adicionar medicamento" fica numa linha só (parâmetro `singleLine` do `PrimaryButton`; o texto encolhe só o necessário). Substitui a tentativa revertida do P4.
 - **Alarme falado na mesma página do som:** com "Como alarme", a opção aparece logo abaixo, na mesma página, em todos os tamanhos de fonte; para caber, "Como notificação" diz só "Respeita o modo silencioso." e o alarme falado, "Diz o horário e o nome do remédio." (vale também em Ajustes). Visto no emulador com fonte 2,0×.
 
+## Achado novo do autor (04/11) — P30
+
+Origem diferente dos demais: **não é da passada do Claude Code**, então a correspondência Pn = CC-(n+1) não vale. O achado é o **AU-01**, registrado em `genki-avaliacao/achados_autor/achados_autor.csv` (fora do Git, mesmo cabeçalho de `formato_achados.csv`, três capturas do A31).
+
+| P | Achado | Heurística / diretriz | Onde | Situação |
+| --- | --- | --- | --- | --- |
+| P30 | AU-01 | H7 (design estético e minimalista); H10 (ajuda sem explicação extra); G17 (mensagens curtas) | `ui/intro/IntroScreen.kt` (`PermissionBlock`), `ui/settings/SettingsScreen.kt` | **Aceito pelo autor em 04/11/2026; implementado na versão 1.0.26** (não na 1.0.25, que já tinha tag e Release) |
+
+**Implementação (1.0.26, versionCode 27, 04/11/2026):** a página das notificações da introdução ficou com "Para avisar na hora, o Genki precisa mostrar notificações.", o botão (ou "Notificações permitidas.") e, só com o alarme exato negado, "Sem alarme no horário exato, o lembrete pode atrasar alguns minutos." Saíram "Se preferir, você pode permitir depois em Ajustes.", a dica do pop-up e "Repetir o aviso e outros ajustes ficam em Ajustes."; a dica do pop-up foi **para Ajustes > Permissões, logo abaixo de "Notificações"** (lugar escolhido pelo Claude Code; **o autor ainda não aceitou esse lugar**). Cerca de 11 palavras com tudo permitido (antes ~50) e ~22 com o alarme exato negado (antes ~75).
+
+**Verificado no A31 (SM-A315G, Android 12, release 1.0.26, fonte 2,0×, por ADB, instalação do zero):** tudo permitido; só o alarme exato negado; notificações e alarme exato negados (frase + botão cheio + "Começar sem permitir") — **nos três a página cabe sem rolar**, sem a seta de "ver mais" que aparecia antes. Ajustes > Permissões mostra a dica logo abaixo de "Notificações" (rolando; a seção ficou mais longa em 2,0×). Efeito colateral visto: com "Como notificação" a introdução passou a ter **3 páginas** em 2,0× (som e notificações juntos); com "Como alarme" continuam 4. **Não verificado:** TalkBack; outras fontes e aparelhos; Android 13 ou superior (o diálogo da permissão).
+
+- **Problema:** a última página da introdução, na instalação do zero, tem até cinco blocos de texto, cerca de 50 palavras com tudo permitido e cerca de 75 com tudo negado (contagem do Claude Code a partir das cadeias do código). No A31 (Android 12, fonte 2,0×) ela cabe com tudo permitido e precisa rolar com o alarme exato negado. O autor pediu um texto "muito mais enxuto".
+- **Correção aceita (sugestão do Claude Code, aceita pelo autor em 04/11/2026):** manter só "Para avisar na hora, o Genki precisa mostrar notificações.", o botão ou o estado da permissão e uma frase curta do alarme exato quando negado; levar a dica do pop-up e o "Repetir o aviso e outros ajustes ficam em Ajustes." para Ajustes.
+- **Tensão com o refinamento:** o P11 reescreveu a dica do pop-up (CC-12) e o P10 acrescentou a frase do alarme exato (CC-11); as duas aumentaram o texto desta página. Mover a dica para Ajustes mantém a orientação, mas some da primeira abertura.
+- **Em aberto:** onde exatamente a dica do pop-up fica em Ajustes; o texto final das frases curtas (a definir na implementação, com o autor).
+- **Verificação:** o problema foi visto no A31 (capturas `cap-AU-01-a` a `c`). A correção não existe ainda, então nada dela foi verificado.
+
 ## Não corrigidos
 
 | P | CC | Motivo |
