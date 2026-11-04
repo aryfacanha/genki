@@ -62,6 +62,13 @@ dose e de nome repetido no `FormViewModel.save`; `DurationDaysField` com zero, v
 - Regressão completa da seção 7 do handoff e voz até a conferência dos nomes: **não repeti** nesta revisão.
 - Independência: ver "Limite desta revisão".
 
+## Correções feitas depois (autor aceitou RV-125-01 e RV-125-02, 03/11)
+
+- **RV-125-01 corrigido:** `pageCount` da introdução com `rememberSaveable` (`IntroScreen.kt`). Visto no emulador: na página 3, mudar a fonte do sistema (recria a tela) mantém "3 de 4".
+- **RV-125-02 corrigido:** `DoseUnit.needsWarning(dose, saved, accepted)`; na edição, a dose gravada (`savedDose`) não dispara o aviso de novo. 2 testes novos (225 testes, 0 falhas). Não visto em tela.
+- RV-125-03 a 07 continuam abertos (S4), por decisão de não ampliar o escopo.
+- As correções ficam na 1.0.25 (versionCode 26): tag e Release ainda não foram criadas.
+
 ## Próximo passo
 
 Autor decide se RV-125-01 e RV-125-02 entram numa 1.0.26 ou ficam como limitação (corte da DEC-057: 05/11, 12:00);

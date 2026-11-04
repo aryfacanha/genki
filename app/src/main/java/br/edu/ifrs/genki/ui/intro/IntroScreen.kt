@@ -66,8 +66,10 @@ fun IntroScreen(onDone: () -> Unit) {
     val context = LocalContext.current
     val settings = (context.applicationContext as GenkiApplication).container.settings
     var page by rememberSaveable { mutableIntStateOf(0) }
-    // Quantas páginas o conteúdo ocupa com a fonte atual; sai da medição em [PagedBlocks].
-    var pageCount by remember { mutableIntStateOf(2) }
+    // Quantas páginas o conteúdo ocupa com a fonte atual; sai da medição em [PagedBlocks]. Salvo junto com a página: se a
+    // tela é recriada (fonte do sistema mudou, processo morto), a página não volta para a 2 antes da primeira medição
+    // (RV-125-01).
+    var pageCount by rememberSaveable { mutableIntStateOf(2) }
     LaunchedEffect(pageCount) { if (page > pageCount - 1) page = pageCount - 1 }
     val finish = {
         settings.introDone = true

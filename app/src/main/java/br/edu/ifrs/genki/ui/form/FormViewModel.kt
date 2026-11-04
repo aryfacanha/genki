@@ -174,6 +174,8 @@ class FormViewModel(
     /** Nome repetido que a pessoa já aceitou no começo: não pergunta de novo ao salvar. */
     private var acceptedDuplicate: String? = null
     private var acceptedUnusualDose: String? = null
+    /** Dose gravada do remédio em edição: não pergunta de novo se continua a mesma. */
+    private var savedDose: String? = null
 
     init {
         if (sessionDraft != null) {
@@ -185,6 +187,7 @@ class FormViewModel(
             viewModelScope.launch {
                 val medication = repository.observe(editId).first() ?: return@launch
                 baseline = FormFields.from(medication)
+                savedDose = medication.dose
                 _state.update { it.copy(fields = baseline, loaded = true) }
             }
         }
@@ -330,7 +333,7 @@ class FormViewModel(
             return
         }
         val dose = valid.draft.dose
-        if (dose != null && dose != acceptedUnusualDose && DoseUnit.isUnusual(dose)) {
+        if (dose != null && DoseUnit.needsWarning(dose, savedDose, acceptedUnusualDose)) {
             _state.update { it.copy(unusualDose = dose) }
             return
         }

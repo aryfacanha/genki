@@ -114,6 +114,14 @@ enum class DoseUnit(val singular: String, val plural: String, val amounts: List<
          */
         const val UNUSUAL_AMOUNT = 20.0
 
+        /**
+         * Pergunta "Está certo?" antes de gravar [dose]? Só se for alta, se a pessoa ainda não confirmou essa mesma dose
+         * ([accepted]) e se não é a que já estava gravada ([saved], na edição): editar outro campo de um remédio de dose
+         * alta não repete o aviso (RV-125-02).
+         */
+        fun needsWarning(dose: String, saved: String?, accepted: String?): Boolean =
+            dose != accepted && dose != saved && isUnusual(dose)
+
         /** Dose salva ou digitada com quantidade acima de [UNUSUAL_AMOUNT]; texto livre ("Outro") nunca. */
         fun isUnusual(dose: String): Boolean {
             val (amount, unit) = parse(dose) ?: return false

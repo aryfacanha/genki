@@ -162,4 +162,17 @@ class DoseUnitTest {
         assertFalse(DoseUnit.isUnusual("999 colheres de sopa"))
         assertFalse(DoseUnit.isUnusual("muitos comprimidos"))
     }
+
+    @Test
+    fun editingAnotherFieldOfAHighDoseDoesNotWarnAgain() {
+        assertFalse(DoseUnit.needsWarning("30 comprimidos", saved = "30 comprimidos", accepted = null))
+        assertTrue(DoseUnit.needsWarning("40 comprimidos", saved = "30 comprimidos", accepted = null))
+    }
+
+    @Test
+    fun warnsOnceForTheSameNewDose() {
+        assertTrue(DoseUnit.needsWarning("999 comprimidos", saved = null, accepted = null))
+        assertFalse(DoseUnit.needsWarning("999 comprimidos", saved = null, accepted = "999 comprimidos"))
+        assertFalse(DoseUnit.needsWarning("2 comprimidos", saved = null, accepted = null))
+    }
 }
