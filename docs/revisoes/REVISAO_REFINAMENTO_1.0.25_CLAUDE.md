@@ -77,3 +77,7 @@ reenviar o roteiro ao Codex depois de 04/11, 00:59.
 ## Decisões do autor sobre os S4 (04/11/2026, "pode seguir com as suas sugestões")
 
 RV-125-03 corrigido; RV-125-04 corrigido; RV-125-06 corrigido (README e guia); RV-125-05 mantido (texto curto escolhido pelo autor); RV-125-07 ignorado. 228 testes, 0 falhas. RV-125-03 e 04 não vistos em tela.
+
+## Conferência no emulador (04/11/2026)
+
+RV-125-03 (aviso reinicia os 6 s: visível aos 6,9 s do primeiro "Entendi"), RV-125-04 (Enter no nome vira espaço), RV-125-09 e P6/P7/P8 vistos no emulador Pixel_6_2 com o código do `8717429`. Autor: as RVs anteriores já testadas manualmente, ok. Faltam RV-125-10 em tela e P9–P11.
