@@ -114,4 +114,10 @@ class MedicationTextTest {
             MedicationText.remindersToggled(true, LocalDate.of(2026, 10, 29)),
         )
     }
+
+    @Test
+    fun capitalizedDaysForASingleLineValue() {
+        assertEquals("Todos os dias", MedicationText.daysCapitalized(DayOfWeek.entries.toSet()))
+        assertEquals("Segunda e sexta", MedicationText.daysCapitalized(setOf(DayOfWeek.FRIDAY, DayOfWeek.MONDAY)))
+    }
 }

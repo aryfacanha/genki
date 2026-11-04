@@ -47,7 +47,10 @@ object MedicationText {
     fun days(days: Set<DayOfWeek>): String =
         if (days.size == 7) "Todos os dias" else joinWithAnd(WEEK.filter { it in days }.map(::dayName))
 
-    fun schedule(medication: Medication): String = "${days(medication.days)} • ${times(medication.times)}"
+    /** Igual a [days], com a primeira letra maiúscula, para valor sozinho numa linha ("Segunda e sexta"; P26). */
+    fun daysCapitalized(days: Set<DayOfWeek>): String = days(days).replaceFirstChar { it.uppercase() }
+
+    fun schedule(medication: Medication): String = "${daysCapitalized(medication.days)} · ${times(medication.times)}"
 
     /** "50 mg · 1 comprimido"; sem concentração, só a dose. */
     fun doseLine(concentration: String?, dose: String): String =

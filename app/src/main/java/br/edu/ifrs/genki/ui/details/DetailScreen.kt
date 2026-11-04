@@ -124,7 +124,7 @@ fun DetailScreen(
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
                     InfoRow("Concentração", med.concentration ?: "Não informada")
                     InfoRow("Quanto toma", med.dose)
-                    InfoRow("Dias", MedicationText.days(med.days))
+                    InfoRow("Dias", MedicationText.daysCapitalized(med.days))
                     InfoRow("Horários", MedicationText.times(med.times))
                     InfoRow(
                         "Duração",

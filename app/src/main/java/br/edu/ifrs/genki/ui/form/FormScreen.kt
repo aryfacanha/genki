@@ -72,6 +72,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.Problem
+import br.edu.ifrs.genki.domain.NewTimeSuggestion
 import br.edu.ifrs.genki.domain.TreatmentDuration
 import br.edu.ifrs.genki.domain.TreatmentType
 import br.edu.ifrs.genki.ui.MedicationText
@@ -300,6 +301,8 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
         value = fields.name,
         error = state.errors[Field.NAME]?.let { MedicationText.error(Field.NAME, it) },
         errorField = Field.NAME,
+        // Nome longo quebra em até 3 linhas: com uma linha só, aparecia apenas o fim do texto (P24).
+        singleLine = false,
         onChange = { value -> viewModel.edit(Field.NAME) { it.copy(name = value) } },
     )
     Spacer(Modifier.height(16.dp))
@@ -467,6 +470,7 @@ private fun TextInput(
     error: String?,
     onChange: (String) -> Unit,
     errorField: Field? = null,
+    singleLine: Boolean = true,
 ) {
     Column {
         OutlinedTextField(
@@ -477,7 +481,8 @@ private fun TextInput(
             // O exemplo fica neutro mesmo com erro; a mensagem de erro vem logo abaixo.
             supportingText = { Text(example, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             isError = error != null,
-            singleLine = true,
+            singleLine = singleLine,
+            maxLines = if (singleLine) 1 else 3,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next,
@@ -596,7 +601,7 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
 
     editing?.let { index ->
         TimeDialog(
-            initial = fields.times.getOrNull(index) ?: LocalTime.of(8, 0),
+            initial = fields.times.getOrNull(index) ?: NewTimeSuggestion.firstFree(fields.times),
             taken = fields.times.filterIndexed { i, _ -> i != index }.toSet(),
             onDismiss = { editing = null },
             onConfirm = { time ->
@@ -799,7 +804,7 @@ private fun ColumnScope.ReviewContent(
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 ReviewSection("Dias e horários", onEdit = { onEditSection(1) }) {
-                    InfoRow("Dias", MedicationText.days(draft.days.orEmpty()))
+                    InfoRow("Dias", MedicationText.daysCapitalized(draft.days.orEmpty()))
                     InfoRow("Horários", MedicationText.times(draft.times))
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

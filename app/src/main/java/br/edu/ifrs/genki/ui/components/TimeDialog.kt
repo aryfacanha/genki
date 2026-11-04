@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,11 +71,18 @@ fun typedTime(hour: String, minute: String): LocalTime? {
  * múltiplos de 5 e o minuto exato exige arrastar (WCAG 2.5.7; achados 3–4 da pré-revisão de 29/10). Campos próprios,
  * sem pular de um para o outro sozinhos: a entrada digitada do Material 3 pulava e apagava o campo anterior.
  */
+/** A partir desta escala de fonte o relógio de 24 horas fica ilegível; o diálogo abre digitado (P3). */
+const val TYPED_TIME_FONT_SCALE = 1.5f
+
+fun opensTyped(fontScale: Float): Boolean = fontScale >= TYPED_TIME_FONT_SCALE
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeDialog(initial: LocalTime, taken: Set<LocalTime>, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
     val state = rememberTimePickerState(initialHour = initial.hour, initialMinute = initial.minute, is24Hour = true)
-    var typing by rememberSaveable { mutableStateOf(false) }
+    // Com fonte muito grande os números do relógio se sobrepõem: abre já em "Digitar o horário" (P3).
+    val fontScale = LocalDensity.current.fontScale
+    var typing by rememberSaveable { mutableStateOf(opensTyped(fontScale)) }
     // rememberSaveable: girar a tela não perde o que foi digitado (RV-047-03).
     var hour by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("%02d".format(initial.hour))) }
     var minute by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("%02d".format(initial.minute))) }

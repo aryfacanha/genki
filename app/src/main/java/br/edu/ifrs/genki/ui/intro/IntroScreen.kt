@@ -90,11 +90,15 @@ fun IntroScreen(onDone: () -> Unit) {
                 else -> Notices()
             }
         }
+        // Sem a permissão, "Permitir notificações" é o botão principal da página e "Começar" fica em segundo plano (P9).
+        var resumes by remember { mutableIntStateOf(0) }
+        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
+        val allowed = remember(resumes) { Notifications.canNotify(context) }
         BottomActions {
-            if (page < PAGES - 1) {
-                PrimaryButton("Continuar", onClick = { page++ })
-            } else {
-                PrimaryButton("Começar", onClick = finish)
+            when {
+                page < PAGES - 1 -> PrimaryButton("Continuar", onClick = { page++ })
+                allowed -> PrimaryButton("Começar", onClick = finish)
+                else -> SecondaryButton("Começar sem permitir", onClick = finish)
             }
         }
     }
@@ -161,7 +165,7 @@ private fun Notices() {
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
         )
     } else {
-        SecondaryButton(
+        PrimaryButton(
             "Permitir notificações",
             onClick = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Notifications.hasPermission(context) && !asked) {
@@ -174,6 +178,13 @@ private fun Notices() {
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
         )
         Paragraph("Se preferir, você pode permitir depois em Ajustes.")
+    }
+    // Sem alarmes exatos o lembrete pode atrasar; só Ajustes dizia (P10).
+    val exactAllowed = remember(resumes) {
+        (context.applicationContext as GenkiApplication).container.reminderScheduler.canScheduleExact()
+    }
+    if (!exactAllowed) {
+        Paragraph("Este celular não permite alarmes no horário exato: o lembrete pode atrasar alguns minutos. Dá para mudar em Ajustes.")
     }
     Spacer(Modifier.height(8.dp))
     Paragraph("Se o aviso aparecer pequeno, abra as configurações do celular, procure as notificações do Genki e escolha mostrá-las como pop-up ou banner. O nome da opção muda conforme o celular.")

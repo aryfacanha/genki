@@ -83,6 +83,7 @@ import br.edu.ifrs.genki.ui.tutorial.TutorialTarget
 import br.edu.ifrs.genki.ui.tutorial.tutorialTarget
 import br.edu.ifrs.genki.voice.ui.VoiceScreen
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.Serializable
 
 @Serializable object IntroRoute
@@ -105,6 +106,9 @@ private enum class TopLevelTab(val route: Any, @param:StringRes val label: Int, 
     Medications(MedicationsRoute, R.string.tab_medications, PillsIcon),
     Settings(SettingsRoute, R.string.tab_settings, Icons.Filled.Settings),
 }
+
+/** Quanto tempo o "Desfazer" da exclusão fica na tela (P13); proposta 15 s, o autor ajusta aqui. */
+private const val UNDO_MILLIS = 15_000L
 
 @Composable
 fun GenkiApp(openHomeRequests: Int = 0) {
@@ -134,14 +138,17 @@ fun GenkiApp(openHomeRequests: Int = 0) {
     }
     // Ao salvar um medicamento sem a permissão de notificações, explica e pede (ESPEC §6, Android 13+).
     val context = LocalContext.current
-    // Exclusão com "Desfazer" (DEC-055, autor, 03/11): o aviso fica 10 s (os outros, 4 s) para dar tempo de reverter.
+    // Exclusão com "Desfazer" (DEC-055, autor, 03/11): o aviso fica 15 s (os outros, 4 s) para dar tempo de reverter.
     val onDeleted: (Medication) -> Unit = { med ->
         navController.popBackStack()
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
-            val result = snackbarHostState.showSnackbar(
-                "Medicamento excluído", actionLabel = "Desfazer", duration = SnackbarDuration.Long,
-            )
+            // Fica [UNDO_MILLIS] (era 10 s e sumia antes do toque, P13); `null` = o tempo acabou.
+            val result = withTimeoutOrNull(UNDO_MILLIS) {
+                snackbarHostState.showSnackbar(
+                    "Medicamento excluído", actionLabel = "Desfazer", duration = SnackbarDuration.Indefinite,
+                )
+            }
             if (result == SnackbarResult.ActionPerformed) {
                 (context.applicationContext as GenkiApplication).container.medicationRepository.restore(med)
                 GenkiEval.log("exclusao_desfeita", "id" to med.id)
@@ -250,7 +257,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     autoSize = TextAutoSize.StepBased(
-                                        minFontSize = 8.sp,
+                                        minFontSize = 11.sp,
                                         maxFontSize = MaterialTheme.typography.labelMedium.fontSize,
                                     ),
                                 )

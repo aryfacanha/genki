@@ -2,6 +2,7 @@ package br.edu.ifrs.genki.ui.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -235,7 +236,7 @@ fun HomeScreen(
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
                         )
-                        s.upcoming?.let { UpcomingCard(it, s.date) }
+                        s.upcoming?.let { UpcomingCard(it, s.date, onOpen) }
                     }
                     else -> {
                         // Vários avisos ao mesmo tempo: um cartão só, com "Ver um por um" (pedido do autor, 27/10).
@@ -252,7 +253,7 @@ fun HomeScreen(
                             )
                         }
                         if (s.alerts.isEmpty()) {
-                            NextCard(s.next, s.upcoming, s.date)
+                            NextCard(s.next, s.upcoming, s.date, onOpen)
                         } else {
                             val after = s.next.takeIf { it.isNotEmpty() }?.let(::groupLine)
                                 ?: s.upcoming?.let { (date, group) ->
@@ -327,14 +328,14 @@ fun HomeScreen(
 
 /** Cartão verde do próximo lembrete; só informa. Sem mais horários hoje, mostra o do próximo dia. */
 @Composable
-private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occurrence>>?, today: LocalDate) {
+private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occurrence>>?, today: LocalDate, onOpen: (Long) -> Unit) {
     if (next.isEmpty() && upcoming != null) {
         Text(
             "Os lembretes de hoje já passaram.",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(top = 6.dp, bottom = 12.dp),
         )
-        UpcomingCard(upcoming, today)
+        UpcomingCard(upcoming, today, onOpen)
         return
     }
     Surface(
@@ -351,7 +352,7 @@ private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occu
             Text(nextTitle(next), color = GenkiCardSubtext)
             Text(MedicationText.time(next.first().time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
-            MedicationGroup(next)
+            MedicationGroup(next, onOpen)
         }
     }
 }
@@ -526,8 +527,10 @@ private fun AcknowledgeButton(colors: AlertColors, onClick: () -> Unit) {
 }
 
 @Composable
-private fun MedicationLine(medication: Medication, colors: AlertColors = alertColors(snoozed = false)) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+private fun MedicationLine(medication: Medication, colors: AlertColors = alertColors(snoozed = false), onClick: (() -> Unit)? = null) {
+    // No cartão "Próximo lembrete", tocar no remédio abre os Detalhes, como as linhas da lista (P25).
+    val open = if (onClick != null) Modifier.clickable(onClickLabel = "Abrir detalhes de ${medication.name}", onClick = onClick) else Modifier
+    Row(open.heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier.size(40.dp).background(colors.content.copy(alpha = 0.18f), RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center,
@@ -544,7 +547,7 @@ private fun MedicationLine(medication: Medication, colors: AlertColors = alertCo
 
 /** Próximo lembrete em outro dia ("Amanhã" ou a data), no mesmo cartão verde. */
 @Composable
-private fun UpcomingCard(upcoming: Pair<LocalDate, List<Occurrence>>, today: LocalDate) {
+private fun UpcomingCard(upcoming: Pair<LocalDate, List<Occurrence>>, today: LocalDate, onOpen: (Long) -> Unit) {
     val (date, group) = upcoming
     Surface(
         color = MaterialTheme.colorScheme.primary,
@@ -557,7 +560,7 @@ private fun UpcomingCard(upcoming: Pair<LocalDate, List<Occurrence>>, today: Loc
             Text(MedicationText.upcomingDay(date, today), style = MaterialTheme.typography.titleLarge)
             Text(MedicationText.time(group.first().time), style = MaterialTheme.typography.displayLarge)
             Spacer(Modifier.height(8.dp))
-            MedicationGroup(group)
+            MedicationGroup(group, onOpen)
         }
     }
 }
@@ -578,14 +581,14 @@ private fun groupLine(group: List<Occurrence>): String {
  * (teste informal, 29/10: com vários remédios, parecia haver um só).
  */
 @Composable
-private fun MedicationGroup(group: List<Occurrence>) {
+private fun MedicationGroup(group: List<Occurrence>, onOpen: (Long) -> Unit) {
     var expanded by rememberSaveable { mutableStateOf(false) }
-    MedicationLine(group.first().medication)
+    MedicationLine(group.first().medication, onClick = { onOpen(group.first().medication.id) })
     if (group.size == 1) return
     if (expanded) {
         group.drop(1).forEach {
             Spacer(Modifier.height(12.dp))
-            MedicationLine(it.medication)
+            MedicationLine(it.medication, onClick = { onOpen(it.medication.id) })
         }
     }
     val others = group.size - 1
