@@ -2,6 +2,13 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisão do refinamento 1.0.25 no lugar do Codex — 03/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/14b2a4e; pedido do autor ("faça a revisão no lugar do Codex"). O Codex (CLI) foi chamado com `docs/revisoes/ROTEIRO_REVISAO_REFINAMENTO_1.0.25_CODEX.md`, rodou o build e começou o emulador, mas parou por limite de uso da conta (liberação anunciada para 04/11, 00:59), sem relatório.
+Realizado: revisão de `d292a2a..14b2a4e` em `docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CLAUDE.md`: 7 achados, nenhum S1/S2; dois S3 (RV-125-01 `pageCount` da introdução não salvo; RV-125-02 aviso de quantidade alta reaparece ao editar sem mudar a dose) e cinco S4. Lembretes, `DraftValidator`, manifest e esquema sem diferença no diff. Nada alterado no código.
+Verificado: build e 223 testes sem falha (rodados por mim). Não verificado: independência (revisor = autor do código), A31 além do balão do tutorial, alarme real, TalkBack, regressão completa do §7.
+Decisões a confirmar pelo autor: RV-125-01 e RV-125-02 numa 1.0.26 ou como limitação; texto curto de "Como alarme" sem a informação de 1 minuto e tela bloqueada (RV-125-05).
+Próxima tarefa e bloqueios: reenviar o roteiro ao Codex depois de 04/11, 00:59; corte da DEC-057 em 05/11, 12:00.
+
 ENTREGA — Versão 1.0.25: refinamento heurístico P1–P29 (UX) — 03/11/2026 — Claude Code (Sonnet 5.5)
 Partida: main/d292a2a; pedido do autor (03/11, 20:45), DEC-057 reabre o congelamento só para experiência do usuário. Tabela completa em `docs/REFINAMENTO_HEURISTICO_1.0.25.md`.
 Realizado: 25 dos 29 itens (P1, P2, P3, P6–P13, P15, P16, P18–P29): indicador de rolagem, botões da voz acima da dobra, aviso de quantidade alta (limite proposto 20), "por quantos dias", versão e privacidade em Sobre (texto aprovado), ordem alfabética, textos e indicações visuais, relógio digitado com fonte grande, hierarquia dos botões da introdução, Desfazer de 15 s (proposta), horário sugerido livre, nome longo em várias linhas, remédio tocável no cartão "Próximo lembrete". Versão 1.0.25 (versionCode 26). Commits 5470da3, 64e3037, 53178fb, 6ad2897, d7aa8a0, 7353be1, 60400a9, bd78b36 e o da versão. Sem mudança na lógica de lembretes nem no esquema.
