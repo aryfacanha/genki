@@ -36,7 +36,7 @@ import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.EmptyMessage
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.GenkiTopBar
-import br.edu.ifrs.genki.ui.components.PrimaryButton
+import br.edu.ifrs.genki.ui.components.AddMedicationButton
 import br.edu.ifrs.genki.ui.genkiContainer
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -91,7 +91,7 @@ fun MedicationsScreen(
             }
         }
         BottomActions {
-            PrimaryButton("Adicionar medicamento", onClick = onAdd, icon = Icons.Filled.Add)
+            AddMedicationButton(onClick = onAdd)
         }
     }
 }

@@ -71,7 +71,7 @@ import br.edu.ifrs.genki.ui.components.BottomActions
 import br.edu.ifrs.genki.ui.components.EmptyMessage
 import br.edu.ifrs.genki.ui.components.GenkiCard
 import br.edu.ifrs.genki.ui.components.PillsIcon
-import br.edu.ifrs.genki.ui.components.PrimaryButton
+import br.edu.ifrs.genki.ui.components.AddMedicationButton
 import br.edu.ifrs.genki.ui.genkiContainer
 import br.edu.ifrs.genki.ui.theme.GenkiCardSubtext
 import br.edu.ifrs.genki.ui.theme.GenkiOnIconBackground
@@ -316,13 +316,7 @@ fun HomeScreen(
             }
         }
         BottomActions {
-            PrimaryButton(
-                "Adicionar medicamento",
-                onClick = onAdd,
-                icon = Icons.Filled.Add,
-                singleLine = true,
-                modifier = Modifier.tutorialTarget(TutorialTarget.ADD_BUTTON),
-            )
+            AddMedicationButton(onClick = onAdd, modifier = Modifier.tutorialTarget(TutorialTarget.ADD_BUTTON))
         }
     }
 }
