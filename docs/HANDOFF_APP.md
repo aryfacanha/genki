@@ -169,6 +169,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**1.0.25 (03/11, Claude Code):** refinamento heurístico P1–P29, só UX (DEC-057; tabela em `docs/REFINAMENTO_HEURISTICO_1.0.25.md`): `ScrollHintColumn` (indicador "ver mais" na revisão, na etapa 3 e nas telas da voz), botões da voz acima da dobra, aviso de quantidade alta (`DoseUnit.UNUSUAL_AMOUNT = 20`), "por quantos dias" (`TreatmentDuration`), versão e privacidade em Sobre, lista de Medicamentos em ordem alfabética (`MedicationOrder`), relógio digitado com fonte ≥ 1,5×, horário sugerido livre (`NewTimeSuggestion`), Desfazer de 15 s, textos e indicações visuais. Sem mudança de lembretes nem de esquema. Não corrigidos: P4, P5, P14, P17.
+
 **1.0.24 (03/11, Claude Code):** M2 (lembretes) e M1 (edição): CC-01 da avaliação heurística. Editar um medicamento mantém o id dos horários que não mudaram de minuto (`ScheduleTimeDiff`, `MedicationDao.update`) e só cancela os removidos; adiado e repetição pendentes sobrevivem. Conferido no A31 por ADB; falta Codex revisar e o autor repetir F3/F4.
 
 **1.0.22 (30/10, Claude Code):** M2 (lembretes): alarme falado opcional (DEC-052), `AlarmSpeech` + `AlarmSoundService` + `Speaker(alarm = true)`; M3: espera da voz em 3 s.
@@ -202,6 +204,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**1.0.25:** 214 testes e release assinado; emulador API 35 com fonte 2,0× viu P1, P2, P3, P19, P20, P21 e P27. **Não verificado:** A31, alarme real (P6–P8), instalação limpa (P9–P11), TalkBack, som, o restante dos itens em tela (ver a tabela).
 
 **1.0.22 (30/10, Claude Code, emulador API 35):** com `adb root`, `am start-foreground-service -n br.edu.ifrs.genki/.reminders.AlarmSoundService --el timeId N --es name 'Nome' --ei minute M` (aspas simples dentro de `adb shell "..."` para nome com espaço) e `am broadcast -n br.edu.ifrs.genki/.reminders.ReminderReceiver -a ACK --el timeId N`: frases, 3 falas em 20 s, parada no minuto, Entendi cala fala e som, TTS com `USAGE_ALARM`. Não verificados: ouvido, volume baixando, disparo real, tela bloqueada, A31/Samsung TTS, S20 FE.
 
@@ -412,6 +416,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: versão 1.0.25 (versionCode 26), refinamento heurístico P1–P29 só de UX (DEC-057): componente `ScrollHintColumn` (`ui/components`), `domain/MedicationOrder`, `TreatmentDuration`, `NewTimeSuggestion`, `DoseUnit.UNUSUAL_AMOUNT` (20) e `UNDO_MILLIS` (15 s) como valores propostos; sem mudança de esquema, Gradle ou manifest — `assembleDebug test assembleRelease`, 214 testes; emulador API 35 com fonte 2,0× (P1, P2, P3, P19, P20, P21, P27); tabela em `docs/REFINAMENTO_HEURISTICO_1.0.25.md` — pendente: A31 (nada operado), alarme real (P6–P8), instalação limpa (P9–P11), TalkBack, revisão do Codex, README/guia, tag e Release v1.0.25. Dica de ambiente: com o A31 e o emulador conectados, não usar `installDebug` (instala nos dois); usar `adb -s emulator-5554 install -r`.
 
 - 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: versão 1.0.24 (versionCode 25) e correção do CC-01 (`MedicationDao.update`, `MedicationRepository.update`, `domain/ScheduleTimeDiff`; sem mudança de esquema) — `assembleDebug test assembleRelease`, 195 testes; release instalada no A31 por cima da 1.0.23 e conferida por ADB (adiado, repetição, "Entendi") — pendente: 1.0.23 original no A31, som/tela bloqueada/Doze, tag e Release v1.0.24, F3/F4 repetidos (autor).
 

@@ -2,6 +2,15 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Versão 1.0.25: refinamento heurístico P1–P29 (UX) — 03/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/d292a2a; pedido do autor (03/11, 20:45), DEC-057 reabre o congelamento só para experiência do usuário. Tabela completa em `docs/REFINAMENTO_HEURISTICO_1.0.25.md`.
+Realizado: 25 dos 29 itens (P1, P2, P3, P6–P13, P15, P16, P18–P29): indicador de rolagem, botões da voz acima da dobra, aviso de quantidade alta (limite proposto 20), "por quantos dias", versão e privacidade em Sobre (texto aprovado), ordem alfabética, textos e indicações visuais, relógio digitado com fonte grande, hierarquia dos botões da introdução, Desfazer de 15 s (proposta), horário sugerido livre, nome longo em várias linhas, remédio tocável no cartão "Próximo lembrete". Versão 1.0.25 (versionCode 26). Commits 5470da3, 64e3037, 53178fb, 6ad2897, d7aa8a0, 7353be1, 60400a9, bd78b36 e o da versão. Sem mudança na lógica de lembretes nem no esquema.
+Não corrigidos: P4 (piso de 11 sp cortava "Medicamentos"; revertido), P5 e P17 (autor decidiu não corrigir), P14 (não reproduzido no código).
+Verificado: `assembleDebug test assembleRelease`, 214 testes sem falha, release assinado. No emulador Pixel_6_2 (API 35, fonte 2,0×): P1, P2, P3, P19, P20, P21 e P27 (revisão).
+Não verificado: tudo o mais da tabela só compila e passa nos testes; **A31 não operado** (fonte 2,0× real, alarme para P6–P8, instalação limpa para P9–P11, TalkBack, som). Aviso de quantidade alta não existe no cadastro por voz.
+Decisões a confirmar pelo autor: limite 20 (P19), 15 s do Desfazer (P13), P8 (horário em curso fora de "já passaram"), P9 (botão principal da introdução), P26 (chips abreviados mantidos).
+Próxima tarefa e bloqueios: Codex revisa (papel de revisor); autor confere no A31 até 05/11, 12:00 (corte da DEC-057); README e guia ainda citam a 1.0.24; tag e Release v1.0.25 não criadas.
+
 ENTREGA — Versão 1.0.24: CC-01 da avaliação heurística (editar apagava adiado e repetição) — 03/11/2026 — Claude Code (Sonnet 5.5)
 Partida: main/953712c; pedido do autor ("corrija a CC-01 … não corrija os outros"; "isso, faça"), exceção do protocolo da heurística para severidade alta (03/11). Estimativa em `genki-avaliacao/ESFORCO_correcoes.md` (fora do Git).
 Realizado: `MedicationDao.update` mantém o id dos horários que não mudaram de minuto e devolve só os removidos; `MedicationRepository.update` cancela só esses; nova `domain/ScheduleTimeDiff` (função pura) com 8 testes. Versão 1.0.24 (versionCode 25). Commits a2e318a (fix) e 55a9c3b (versão). Sem mudança de esquema nem de migração. Achados CC-02 a CC-23 não tocados.
