@@ -427,6 +427,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: RV-125-03 (`noticeCount` em `HomeScreen`), RV-125-04 (`domain/NameInput`) e RV-125-06 (README, guia) na 1.0.25 — `assembleDebug test assembleRelease`, 228 testes — pendente: ver RV-125-03/04 em tela; A31 P6–P11 e RV-125-09/10; tag e Release.
+
 - 2026-11-04 — Claude Code (Sonnet 5.5) — revisão: conferência do Codex das RV-125-08/09/10 recebida (`CONFERENCIA_RV125_08_09_10_CODEX.md`, os três confirmados por leitura); estado e "Retomar aqui" atualizados para a retomada — sem mudança de código — pendente: README/guia, decisão sobre RV-125-03/04, tag e Release v1.0.25.
 
 - 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: correções RV-125-08 (`TreatmentDuration.parse`, `DurationDaysField`), RV-125-09 (texto da repetição) e RV-125-10 (descrição do alarme falado), na 1.0.25 — `assembleDebug test assembleRelease`, 226 testes; emulador com fonte 2,0× (RV-125-08) — pendente: Codex conferir as três; RV-125-09/10 em tela; tag e Release.

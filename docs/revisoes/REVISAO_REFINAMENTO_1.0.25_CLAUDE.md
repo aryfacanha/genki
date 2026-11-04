@@ -73,3 +73,7 @@ dose e de nome repetido no `FormViewModel.save`; `DurationDaysField` com zero, v
 
 Autor decide se RV-125-01 e RV-125-02 entram numa 1.0.26 ou ficam como limitação (corte da DEC-057: 05/11, 12:00);
 reenviar o roteiro ao Codex depois de 04/11, 00:59.
+
+## Decisões do autor sobre os S4 (04/11/2026, "pode seguir com as suas sugestões")
+
+RV-125-03 corrigido; RV-125-04 corrigido; RV-125-06 corrigido (README e guia); RV-125-05 mantido (texto curto escolhido pelo autor); RV-125-07 ignorado. 228 testes, 0 falhas. RV-125-03 e 04 não vistos em tela.

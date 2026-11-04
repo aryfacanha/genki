@@ -2,6 +2,12 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — 1.0.25: RV-125-03, 04 e 06 — 04/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/3a95c50; pedido do autor ("pode seguir com as suas sugestões").
+Realizado: RV-125-03 (contador reinicia o aviso após "Entendi"), RV-125-04 (`NameInput.singleLine`, 2 testes), RV-125-06 (README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.25). RV-125-05 mantido, RV-125-07 ignorado. Sem mudança em lembretes, `DraftValidator` ou esquema. 228 testes, 0 falhas.
+Verificado: build, testes e release assinado. Não verificado: RV-125-03 e 04 em tela; A31 além da instalação.
+Próxima tarefa e bloqueios: conferir no A31 P6–P11 e RV-125-09/10; tag e Release v1.0.25 (push só com autorização); corte da DEC-057 em 05/11, 12:00.
+
 ENTREGA — 1.0.25: correções RV-125-08, 09 e 10 da revisão do Codex — 04/11/2026 — Claude Code (Sonnet 5.5)
 Partida: main/c5eb7b3; pedido do autor ("corrige essas RVs aí novas e abre o emulador pelo Claude").
 Realizado: RV-125-08 (campo "Por quantos dias?" rejeita 0 e mais de 999 sem converter, mensagem de erro, sem apagar dígitos na digitação rápida), RV-125-09 (texto da repetição como regra geral), RV-125-10 (descrição do alarme falado fiel à fala). Sem mudança em lembretes, validador ou esquema. 226 testes, 0 falhas.

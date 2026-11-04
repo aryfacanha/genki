@@ -72,6 +72,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifrs.genki.domain.Field
 import br.edu.ifrs.genki.domain.MedicationDraft
 import br.edu.ifrs.genki.domain.Problem
+import br.edu.ifrs.genki.domain.NameInput
 import br.edu.ifrs.genki.domain.NewTimeSuggestion
 import br.edu.ifrs.genki.domain.TreatmentDuration
 import br.edu.ifrs.genki.domain.TreatmentType
@@ -303,7 +304,7 @@ private fun MedicationSection(state: FormUiState, viewModel: FormViewModel) {
         errorField = Field.NAME,
         // Nome longo quebra em até 3 linhas: com uma linha só, aparecia apenas o fim do texto (P24).
         singleLine = false,
-        onChange = { value -> viewModel.edit(Field.NAME) { it.copy(name = value) } },
+        onChange = { value -> viewModel.edit(Field.NAME) { it.copy(name = NameInput.singleLine(value)) } },
     )
     Spacer(Modifier.height(16.dp))
     TextInput(

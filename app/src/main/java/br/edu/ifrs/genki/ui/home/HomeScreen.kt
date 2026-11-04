@@ -193,14 +193,17 @@ fun HomeScreen(
     }
     // "Entendi" não registra nada (DEC-004); o cartão some, então a Hoje diz o que aconteceu (P6).
     var notice by rememberSaveable { mutableStateOf<String?>(null) }
-    LaunchedEffect(notice) {
-        if (notice != null) {
+    // Contador: um segundo "Entendi" com o aviso ainda na tela reinicia os 6 s (RV-125-03); só o texto não mudaria a chave.
+    var noticeCount by rememberSaveable { mutableIntStateOf(0) }
+    LaunchedEffect(noticeCount) {
+        if (noticeCount > 0) {
             delay(NOTICE_MILLIS)
             notice = null
         }
     }
-    val acknowledge: (Long) -> Unit = { viewModel.acknowledge(it); notice = ACK_NOTICE }
-    val acknowledgeAll: (List<Long>) -> Unit = { viewModel.acknowledgeAll(it); notice = ACK_NOTICE }
+    val showNotice = { notice = ACK_NOTICE; noticeCount++ }
+    val acknowledge: (Long) -> Unit = { viewModel.acknowledge(it); showNotice() }
+    val acknowledgeAll: (List<Long>) -> Unit = { viewModel.acknowledgeAll(it); showNotice() }
     Column(Modifier.fillMaxSize()) {
         val s = state
         // O aviso sem medicamentos fica no centro da área toda acima do botão, como em Medicamentos (mesma altura).
