@@ -11,7 +11,7 @@ Leia depois de `docs/HANDOFF_APP.md` (contexto geral). Este arquivo é **reescri
 
 ## Pendências
 
-1. README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.26 (o autor está atualizando o README; o guia ainda cita a 1.0.25).
+1. ~~README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.26~~ — feito em 04/11 (versão, `Genki-1.0.26.apk`, 228 testes); **ainda sem commit**. O README e o guia apontam para o APK da Release `v1.0.26`, que ainda não existe: só publicar o README depois de criar a Release.
 2. Tag anotada `v1.0.26` no commit do `versionName` e Release com o APK (HANDOFF_APP.md §4); push só com autorização do autor.
 3. O autor aceitar o lugar da dica do pop-up (Ajustes > Permissões, escolha do Claude Code).
 4. A monografia aponta para a 1.0.26 **só depois da Release**.
@@ -44,7 +44,7 @@ Leia depois de `docs/HANDOFF_APP.md` (contexto geral). Este arquivo é **reescri
 
 - 2026-11-04 — Claude Code (Sonnet 5.5) — verificação no A31 e **achado novo do autor, sem mudança de código**: alarme real de 1 remédio, P9, P10 e P11 conferidos por ADB (§3). **AU-01/P30 (achado do autor, heurística nova: texto excessivo / design minimalista, H7; H10; G17): a página das notificações da introdução tem texto demais** — `ui/intro/IntroScreen.kt`, `PermissionBlock` (linhas 219–239): até cinco blocos, cerca de 50 palavras com tudo permitido e cerca de 75 com tudo negado (contagem do Claude Code); com o alarme exato negado a página rola em 2,0× no A31; o autor quer um texto "muito mais enxuto" na instalação do zero. **Não implementado.** Sugestão do Claude Code, **aceita pelo autor em 04/11/2026** (registrada em `REFINAMENTO_HEURISTICO_1.0.25.md` e em `genki-avaliacao/achados_autor/achados_autor.csv`, fora do Git): manter só "Para avisar na hora, o Genki precisa mostrar notificações." com o botão/estado e uma frase curta do alarme exato, e levar a dica do pop-up (CC-12/P11) e "Repetir o aviso…" para Ajustes; o P11 acabou de reescrever essa dica, então a decisão pesa — pendente: o autor pedir a implementação (1.0.26, versão nova, regra do handoff); definir onde a dica do pop-up fica em Ajustes. Fala audível do alarme confirmada pelo autor. A31 com Losartana e Sinvastatina recriadas à mão (§3) — pendente: TalkBack; RV-125-10 (texto falado); P8 completo.
 
-- 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: tag `v1.0.25` (`8717429`) e Release com `Genki-1.0.25.apk` (SHA-256 `8a159a63…`) via `gh`, pedido do autor; só a tag foi enviada, `main` não — download sem login com o mesmo hash — pendente: push do `main` (autor); TalkBack; tag v1.0.24 não existe.
+- 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: tag `v1.0.25` (`8717429`) e Release com `Genki-1.0.25.apk` (SHA-256 `8a159a63…`) via `gh`, pedido do autor; só a tag foi enviada, `main` não — download sem login com o mesmo hash — pendente: push do `main` (autor); TalkBack. **Correção de registro (04/11, tarde):** a tag `v1.0.24` (`55a9c3b`) e a Release "Genki 1.0.24" existem desde 03/11, 19:34, no GitHub; "tag v1.0.24 não existe" estava errado.
 
 - 2026-11-04 — Claude Code (Sonnet 5.5) — verificação: RV-125-03, 04, 09 e P6/P7/P8 no emulador Pixel_6_2 (debug, fonte 1,0×; relógio real, lembrete disparado às 01:44 e 01:49) — sem mudança de código; emulador fechado; dados do teste só no emulador — pendente: RV-125-10 em tela; P9–P11; tag e Release.
 
