@@ -6,7 +6,7 @@ O objetivo é permitir que você instale, explore e dê retorno sobre o aplicati
 
 ## 1. Instalar no celular
 
-Você precisa de um **celular com Android 8.0 ou superior** e do arquivo **`Genki-1.0.25.apk`**, enviado pelo autor ou baixado da página [Releases](https://github.com/aryfacanha/genki/releases) do repositório. Não é necessário computador, conta no Genki ou Android Studio. O APK atual é destinado a celulares com processador ARM; não funciona no iPhone.
+Você precisa de um **celular com Android 8.0 ou superior** e do arquivo **`Genki-1.0.26.apk`**, enviado pelo autor ou baixado da página [Releases](https://github.com/aryfacanha/genki/releases) do repositório. Não é necessário computador, conta no Genki ou Android Studio. O APK atual é destinado a celulares com processador ARM; não funciona no iPhone.
 
 1. No celular, baixe o arquivo `.apk`. APK é o arquivo de instalação do aplicativo.
 2. Toque no arquivo baixado. Se necessário, procure-o no aplicativo **Arquivos / Meus Arquivos → Downloads**.
@@ -100,4 +100,4 @@ Para dar retorno ao autor, envie: **versão do APK recebido, modelo do celular, 
 
 ---
 
-Guia preparado em **30/10/2026** e atualizado em **04/11/2026** para a versão **1.0.25**, que refina a interface a partir da revisão heurística da 1.0.23 (versão congelada para as avaliações) e inclui a correção da 1.0.24. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.
+Guia preparado em **30/10/2026** e atualizado em **04/11/2026** para a versão **1.0.26**, que refina a interface a partir da revisão heurística da 1.0.23 (versão congelada para as avaliações), inclui a correção da 1.0.24 e deixa mais curto o texto da introdução sobre as notificações. O número da versão pode ser consultado nas informações do aplicativo nas configurações do Android. Para conhecer o contexto acadêmico e a documentação técnica, peça ao autor o acesso ao repositório do projeto.

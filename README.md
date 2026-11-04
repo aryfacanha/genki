@@ -10,7 +10,7 @@
 | **Autor** | Ary Façanha de Sá Neto |
 | **Orientador** | Prof. Dr. Sandro José Ribeiro da Silva |
 | **Local e ano** | Canoas, 2026 |
-| **Versão do aplicativo** | **1.0.25**. A 1.0.23, congelada em 03/11/2026, é a versão das avaliações do trabalho; a 1.0.24 corrigiu um problema encontrado nelas (lembrete adiado apagado ao editar o medicamento) e a 1.0.25 refina a interface a partir da revisão heurística (textos, fonte ampliada, avisos e ordem alfabética), sem mudar os lembretes |
+| **Versão do aplicativo** | **1.0.26**. A 1.0.23, congelada em 03/11/2026, é a versão das avaliações do trabalho; a 1.0.24 corrigiu um problema encontrado nelas (lembrete adiado apagado ao editar o medicamento); a 1.0.25 refina a interface a partir da revisão heurística (textos, fonte ampliada, avisos e ordem alfabética); e a 1.0.26 deixa mais curto o texto da introdução sobre as notificações, sem mudar os lembretes |
 | **Plataforma** | Android 8.0 ou superior |
 
 ## Sumário
@@ -30,7 +30,7 @@
 
 O Genki é instalado por um arquivo **APK**, sem passar pela Play Store. Não é preciso computador nem conta.
 
-1. **Baixe no celular** o arquivo `Genki-1.0.25.apk`, da página [Releases](https://github.com/aryfacanha/genki/releases)
+1. **Baixe no celular** o arquivo `Genki-1.0.26.apk`, da página [Releases](https://github.com/aryfacanha/genki/releases)
    ou enviado pelo autor.
 2. **Abra o arquivo** (aplicativo **Arquivos** ou **Meus Arquivos** → **Downloads**).
 3. Se o Android pedir, toque em **Configurações**, ative **Permitir desta fonte** e volte. Toque em **Instalar**.
@@ -101,12 +101,12 @@ Pesquisa aplicada, de caráter exploratório, com desenvolvimento tecnológico e
 | Etapa | Situação em 03/11/2026 |
 | --- | --- |
 | Requisitos e protótipo navegável | Concluídos ([protótipo](https://joyful-biscuit-677f74.netlify.app)) |
-| Produto mínimo viável | Implementado; **congelado na 1.0.23** para as avaliações; corrigido na **1.0.24** e refinado na **1.0.25** |
+| Produto mínimo viável | Implementado; **congelado na 1.0.23** para as avaliações; corrigido na **1.0.24**, refinado na **1.0.25** e com a introdução mais curta na **1.0.26** |
 | Verificação técnica da voz e da câmera | Prevista |
 | Revisão heurística da interface | Prevista |
 | Avaliação de usabilidade com tarefas e SUS | Condicionada aos procedimentos éticos |
 
-O desenvolvimento contou com testes automatizados (226 na versão 1.0.25), revisões técnicas e testes manuais em um
+O desenvolvimento contou com testes automatizados (228 na versão 1.0.26), revisões técnicas e testes manuais em um
 Samsung Galaxy A31 (Android 12). Os resultados das avaliações serão apresentados na monografia.
 
 ## 5. Tecnologias e arquitetura
