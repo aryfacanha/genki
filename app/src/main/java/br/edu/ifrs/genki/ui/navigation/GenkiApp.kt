@@ -257,7 +257,7 @@ fun GenkiApp(openHomeRequests: Int = 0) {
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     autoSize = TextAutoSize.StepBased(
-                                        minFontSize = 11.sp,
+                                        minFontSize = 8.sp,
                                         maxFontSize = MaterialTheme.typography.labelMedium.fontSize,
                                     ),
                                 )
