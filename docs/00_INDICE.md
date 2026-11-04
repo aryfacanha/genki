@@ -39,7 +39,10 @@ Cronograma institucional 2026/2: monografia em PDF até 16/11/2026; bancas de 23
 | Especificação técnica do app | `docs/ESPEC_ARQUITETURA.md` |
 | Mapa RF/RNF → marcos e alterações pendentes na planilha | `docs/REQUISITOS_MAPA.md` |
 | Divergências de dados/regras entre o protótipo e a ESPEC (aguardam decisão) | `docs/DIVERGENCIAS_PROTOTIPO.md` |
-| **Handoff técnico do app** (estado do código, como rodar, revisão, Diário) | `docs/HANDOFF_APP.md` |
+| **Handoff técnico do app, contexto geral** (o que é, como rodar, roteiros de emulador e de revisão) | `docs/HANDOFF_APP.md` |
+| **Handoff da versão em curso** (estado, pendências, verificado, Diário do ciclo; reescrito a cada versão) | `docs/HANDOFF_VERSAO.md` |
+| Histórico do handoff (consulta; não ler por padrão) | `docs/historico/HANDOFF_HISTORICO_ate_1.0.25.md` |
+| Histórico do estado, 27 a 30/10 e linhas substituídas (consulta; não ler por padrão) | `docs/historico/ESTADO_HISTORICO_ate_2026-11-04.md` |
 | Roteiro de teste manual do cadastro por voz (A31) | `docs/ROTEIRO_TESTE_VOZ.md` |
 | Relatórios de revisão do app | `docs/revisoes/` |
 | Log de entregas (quem fez o quê) | `docs/ENTREGAS.md` |

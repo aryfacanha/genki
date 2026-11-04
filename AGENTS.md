@@ -23,6 +23,7 @@ Desenvolvimento orientado a IA (Codex / Claude Code). Na dúvida, escolha a solu
 
 - Acrescentar um bloco em `docs/ENTREGAS.md` (modelo no próprio arquivo), identificando o assistente.
 - Atualizar `docs/ESTADO.md` (o que mudou, pendências, próximo passo) e, se for o caso, `docs/DECISOES.md`.
+  Mantenha no `ESTADO.md` só os registros dos últimos dias; mova os antigos, sem reescrever, para `docs/historico/`.
 - Acrescentar uma linha em `docs/REGISTRO_IA.md`.
 - Sem acesso de escrita: entregar ao autor o bloco de entrega pronto para colar.
 - Se um arquivo mudou desde a sua leitura, releia e mescle. Nunca sobrescreva nem duplique registros de outro assistente.
@@ -55,8 +56,12 @@ Código gerado ≠ compilado ≠ testado no aparelho. Texto proposto ≠ revisad
 
 ## Implementação e revisão (app Android, DEC-026)
 
-- Retrato técnico do código, como rodar, checagem no emulador, roteiro de revisão e Diário: `docs/HANDOFF_APP.md`.
-  Leia antes de mexer no app e atualize-o ao terminar (seções 2, 3, 7 e Diário).
+- Handoff em dois arquivos de leitura obrigatória: `docs/HANDOFF_APP.md` (contexto geral: o que é o app, estado por marco,
+  como rodar, checagem no emulador, roteiro de revisão, regressão rápida, divisão de trabalho) e `docs/HANDOFF_VERSAO.md`
+  (a versão em curso: estado, pendências, verificado e não verificado, regressão pendente, Diário do ciclo).
+  Leia os dois antes de mexer no app. Ao terminar, atualize o `HANDOFF_VERSAO.md` (e uma linha no Diário dele); mexa no
+  `HANDOFF_APP.md` só se o contexto global mudar. Ao publicar uma versão (tag e Release), arquive o `HANDOFF_VERSAO.md`
+  em `docs/historico/` (HANDOFF_APP.md §4). O histórico (`docs/historico/`) não se lê por padrão.
 - Papéis: **Claude Code implementa; Codex revisa.** Sem limite do Claude Code, o Codex implementa em "modo só Codex"
   e o Claude Code revisa esse trabalho antes de começar algo novo.
 - Revisões ficam em `docs/revisoes/REVISAO_<marco>_<ASSISTENTE>.md`, com achados S1–S4. Quem revisa não altera código
