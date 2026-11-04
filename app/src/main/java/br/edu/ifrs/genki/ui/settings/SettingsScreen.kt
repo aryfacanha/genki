@@ -106,6 +106,12 @@ fun SettingsScreen(onTutorial: () -> Unit, scrollToPermissions: Boolean = false,
                     }
                 },
             )
+            // Veio da introdução (P30): lá o texto ficou enxuto.
+            Text(
+                "Se o aviso aparecer pequeno, abra as configurações do celular, procure as notificações do Genki e escolha mostrá-las como pop-up ou banner. O nome da opção muda conforme o celular.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
+            )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PermissionRow(
                     title = "Alarmes no horário exato",

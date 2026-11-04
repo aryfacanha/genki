@@ -227,13 +227,10 @@ private fun PermissionBlock(allowed: Boolean, exactAllowed: Boolean, onPermit: (
         )
     } else {
         PrimaryButton("Permitir notificações", onClick = onPermit, modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
-        Paragraph("Se preferir, você pode permitir depois em Ajustes.")
     }
     // Sem alarmes exatos o lembrete pode atrasar; só Ajustes dizia (P10).
     if (!exactAllowed) {
-        Paragraph("Este celular não permite alarmes no horário exato: o lembrete pode atrasar alguns minutos. Dá para mudar em Ajustes.")
+        Paragraph("Sem alarme no horário exato, o lembrete pode atrasar alguns minutos.")
     }
-    Spacer(Modifier.height(8.dp))
-    Paragraph("Se o aviso aparecer pequeno, abra as configurações do celular, procure as notificações do Genki e escolha mostrá-las como pop-up ou banner. O nome da opção muda conforme o celular.")
-    Paragraph("Repetir o aviso e outros ajustes ficam em Ajustes.")
+    // Texto enxuto (P30, autor, 04/11): a dica do pop-up foi para Ajustes > Permissões.
 }
