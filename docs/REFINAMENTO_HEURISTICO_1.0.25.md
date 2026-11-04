@@ -48,7 +48,7 @@ Com fonte 200% a introdução (2 páginas) exigia rolar muito. Agora o conteúdo
 - **Alarme falado na introdução:** ao escolher "Como alarme", aparece abaixo a opção "Falar o nome dos remédios no alarme" (como em Ajustes). É um bloco à parte: no 2,0× vai para a página seguinte (5 páginas com o alarme escolhido).
 - **Adicionar medicamento:** removido o título "Como você quer cadastrar?"; com fonte 2,0× os três cartões cabem sem rolar (emulador). A rolagem fica só como reserva, com o indicador.
 
-- **Barra de baixo e botão da Hoje (fonte grande):** os três rótulos da barra têm o mesmo tamanho, o maior em que "Medicamentos" cabe (antes só ele encolhia); "Adicionar medicamento" fica numa linha só (, texto encolhe só o necessário). Substitui a tentativa revertida do P4.
+- **Barra de baixo e botão da Hoje (fonte grande):** os três rótulos da barra têm o mesmo tamanho, o maior em que "Medicamentos" cabe (antes só ele encolhia); "Adicionar medicamento" fica numa linha só (parâmetro `singleLine` do `PrimaryButton`; o texto encolhe só o necessário). Substitui a tentativa revertida do P4.
 - **Alarme falado na mesma página do som:** com "Como alarme", a opção aparece logo abaixo, na mesma página, em todos os tamanhos de fonte; para caber, "Como notificação" diz só "Respeita o modo silencioso." e o alarme falado, "Diz o horário e o nome do remédio." (vale também em Ajustes). Visto no emulador com fonte 2,0×.
 
 ## Não corrigidos
