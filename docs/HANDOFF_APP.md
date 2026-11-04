@@ -65,6 +65,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**04/11, Claude Code — onde paramos:** revisão do Codex (`REVISAO_REFINAMENTO_1.0.25_CODEX.md`) e conferência curta (`CONFERENCIA_RV125_08_09_10_CODEX.md`) feitas; nenhum S1/S2; RV-125-01/02/08/09/10 corrigidos. 226 testes, 0 falhas, HEAD com a árvore limpa. **Falta:** decidir RV-125-03/04; atualizar README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.25; tag e Release `v1.0.25` (§4); conferir no A31 P6–P11 e RV-125-09/10; push só com autorização do autor. O Codex tem saldo limitado: usar roteiros curtos, `-m gpt-6.1-sol` e esforço baixo.
+
 **04/11 em diante, Codex: revisar a 1.0.25 antes da tag.** Roteiro pronto em `docs/revisoes/ROTEIRO_REVISAO_REFINAMENTO_1.0.25_CODEX.md` (alvo `d292a2a..HEAD`, hoje `6c02273`). Resumo: refinamento heurístico P1–P29 só de UX (DEC-057), mais ajustes do autor (balão do tutorial e introdução com fonte 2,0×, "Como alarme" curto, alarme falado na introdução, barra e botão "Adicionar medicamento" iguais) e as correções RV-125-01/02. Uma revisão feita pelo Claude no lugar do Codex já existe (`docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CLAUDE.md`, 7 achados, sem S1/S2) e **não substitui** a sua: a primeira tentativa do Codex parou por limite de uso (liberado em 04/11, 00:59) sem relatório. Depois da sua revisão, o autor e o Claude Code criam a **tag e a Release `v1.0.25`** (HANDOFF §4); não criar antes. Corte da DEC-057: o que não estiver conferido até **05/11, 12:00** fica como não corrigido.
 
 **03/11, Claude Code: 1.0.24 (`55a9c3b`) corrige só o CC-01**, a pedido do autor; tag/Release não criadas.
@@ -424,6 +426,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-04 — Claude Code (Sonnet 5.5) — revisão: conferência do Codex das RV-125-08/09/10 recebida (`CONFERENCIA_RV125_08_09_10_CODEX.md`, os três confirmados por leitura); estado e "Retomar aqui" atualizados para a retomada — sem mudança de código — pendente: README/guia, decisão sobre RV-125-03/04, tag e Release v1.0.25.
 
 - 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: correções RV-125-08 (`TreatmentDuration.parse`, `DurationDaysField`), RV-125-09 (texto da repetição) e RV-125-10 (descrição do alarme falado), na 1.0.25 — `assembleDebug test assembleRelease`, 226 testes; emulador com fonte 2,0× (RV-125-08) — pendente: Codex conferir as três; RV-125-09/10 em tela; tag e Release.
 
