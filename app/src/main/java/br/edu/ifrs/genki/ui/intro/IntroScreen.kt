@@ -176,6 +176,6 @@ private fun Notices() {
         Paragraph("Se preferir, você pode permitir depois em Ajustes.")
     }
     Spacer(Modifier.height(8.dp))
-    Paragraph("Se o aviso aparecer pequeno, nas configurações de notificação do Genki escolha mostrar como pop-up.")
+    Paragraph("Se o aviso aparecer pequeno, abra as configurações do celular, procure as notificações do Genki e escolha mostrá-las como pop-up ou banner. O nome da opção muda conforme o celular.")
     Paragraph("Repetir o aviso e outros ajustes ficam em Ajustes.")
 }

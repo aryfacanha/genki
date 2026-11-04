@@ -122,7 +122,7 @@ fun DetailScreen(
 
             GenkiCard {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
-                    med.concentration?.let { InfoRow("Concentração", it) }
+                    InfoRow("Concentração", med.concentration ?: "Não informada")
                     InfoRow("Quanto toma", med.dose)
                     InfoRow("Dias", MedicationText.days(med.days))
                     InfoRow("Horários", MedicationText.times(med.times))

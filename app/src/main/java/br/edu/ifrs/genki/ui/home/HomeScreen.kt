@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -57,6 +60,7 @@ import br.edu.ifrs.genki.domain.ActiveAlert
 import br.edu.ifrs.genki.domain.Medication
 import br.edu.ifrs.genki.domain.Occurrence
 import br.edu.ifrs.genki.domain.OccurrenceCalculator
+import br.edu.ifrs.genki.reminders.ReminderReceiver
 import br.edu.ifrs.genki.GenkiApplication
 import br.edu.ifrs.genki.reminders.AlertStore
 import br.edu.ifrs.genki.reminders.Notifications
@@ -99,6 +103,8 @@ data class HomeState(
     /** Avisos tocando ou adiados, com o medicamento (DEC-029). */
     val alerts: List<Pair<ActiveAlert, Medication>> = emptyList(),
     val intervalMinutes: Int = 20,
+    /** Repetição sem resposta ligada em Ajustes: o cartão "Agora" avisa que o Genki vai avisar de novo (P7). */
+    val repeatEnabled: Boolean = true,
     /** Cadastrados que não aparecem hoje por estarem desligados ou terminados (`null` = nenhum). */
     val hidden: String? = null,
 )
@@ -136,6 +142,7 @@ class HomeViewModel(
             upcoming = OccurrenceCalculator.firstGroupAfter(medications, now.toLocalDate(), ZoneId.systemDefault()),
             alerts = withMedication,
             intervalMinutes = reminderSettings.intervalMinutes,
+            repeatEnabled = reminderSettings.repeatEnabled,
             hidden = MedicationText.hiddenFromToday(
                 disabled = medications.filter { !it.remindersEnabled }.map { it.name },
                 ended = medications.filter { it.remindersEnabled && OccurrenceCalculator.ended(it, now.toLocalDate()) }.map { it.name },
@@ -183,6 +190,16 @@ fun HomeScreen(
     val exactAllowed = remember(resumes) {
         (context.applicationContext as GenkiApplication).container.reminderScheduler.canScheduleExact()
     }
+    // "Entendi" não registra nada (DEC-004); o cartão some, então a Hoje diz o que aconteceu (P6).
+    var notice by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(notice) {
+        if (notice != null) {
+            delay(NOTICE_MILLIS)
+            notice = null
+        }
+    }
+    val acknowledge: (Long) -> Unit = { viewModel.acknowledge(it); notice = ACK_NOTICE }
+    val acknowledgeAll: (List<Long>) -> Unit = { viewModel.acknowledgeAll(it); notice = ACK_NOTICE }
     Column(Modifier.fillMaxSize()) {
         val s = state
         // O aviso sem medicamentos fica no centro da área toda acima do botão, como em Medicamentos (mesma altura).
@@ -196,6 +213,14 @@ fun HomeScreen(
                         MedicationText.longDate(s?.date ?: LocalDate.now()),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                }
+                notice?.let {
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp).semantics { liveRegion = LiveRegionMode.Polite },
+                    ) { Text(it, modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) }
                 }
                 if (s?.hasMedications == true && (!notificationsAllowed || !exactAllowed)) {
                     PermissionWarning(notificationsAllowed, onOpenSettings)
@@ -219,9 +244,10 @@ fun HomeScreen(
                             AlertGroup(
                                 group = group,
                                 intervalMinutes = s.intervalMinutes,
-                                onAcknowledge = viewModel::acknowledge,
+                                repeatEnabled = s.repeatEnabled,
+                                onAcknowledge = acknowledge,
                                 onSnooze = viewModel::snooze,
-                                onAcknowledgeAll = viewModel::acknowledgeAll,
+                                onAcknowledgeAll = acknowledgeAll,
                                 onSnoozeAll = viewModel::snoozeAll,
                             )
                         }
@@ -250,18 +276,21 @@ fun HomeScreen(
                             )
                             // Linha "Agora" entre os horários que já passaram e os que faltam; não diz se foi tomado (DEC-004).
                             val firstAhead = s.today.indexOfFirst { it.time > s.minute }.let { if (it == -1) s.today.size else it }
+                            // O horário que está no cartão "Agora" ou adiado não é "já passou": o cartão já o mostra (P8).
+                            val inCard = { o: Occurrence -> s.alerts.any { (alert, _) -> alert.matches(o) } }
+                            val pastCount = s.today.take(firstAhead).count { !inCard(it) }
                             // Os que já passaram ficam recolhidos: com muitos remédios, os próximos só apareciam depois de
                             // várias rolagens (pré-revisão heurística, 30/10, N1).
                             var showPast by rememberSaveable { mutableStateOf(false) }
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                if (firstAhead > 0) {
+                                if (pastCount > 0) {
                                     TextButton(onClick = { showPast = !showPast }, modifier = Modifier.heightIn(min = 48.dp)) {
-                                        Text(MedicationText.pastToggle(firstAhead, showPast), textDecoration = TextDecoration.Underline)
+                                        Text(MedicationText.pastToggle(pastCount, showPast), textDecoration = TextDecoration.Underline)
                                     }
                                 }
                                 s.today.forEachIndexed { index, occurrence ->
                                     if (index == firstAhead) NowMarker(s.minute)
-                                    if (index >= firstAhead || showPast) {
+                                    if (index >= firstAhead || (showPast && !inCard(occurrence))) {
                                         TodayRow(occurrence, past = index < firstAhead) { onOpen(occurrence.medication.id) }
                                     }
                                 }
@@ -335,6 +364,7 @@ private fun NextCard(next: List<Occurrence>, upcoming: Pair<LocalDate, List<Occu
 private fun AlertGroup(
     group: List<Pair<ActiveAlert, Medication>>,
     intervalMinutes: Int,
+    repeatEnabled: Boolean,
     onAcknowledge: (Long) -> Unit,
     onSnooze: (Long) -> Unit,
     onAcknowledgeAll: (List<Long>) -> Unit,
@@ -347,6 +377,7 @@ private fun AlertGroup(
                 alert = alert,
                 medication = medication,
                 intervalMinutes = intervalMinutes,
+                repeatEnabled = repeatEnabled,
                 onAcknowledge = { onAcknowledge(alert.timeId) },
                 onSnooze = { onSnooze(alert.timeId) },
             )
@@ -378,6 +409,7 @@ private fun AlertGroup(
                     color = colors.subtext,
                 )
             }
+            if (!snoozed && repeatEnabled) RepeatNote(intervalMinutes, colors)
             Spacer(Modifier.height(16.dp))
             AcknowledgeButton(colors, onClick = { onAcknowledgeAll(ids) })
             if (!snoozed) {
@@ -408,6 +440,7 @@ private fun AlertCard(
     alert: ActiveAlert,
     medication: Medication,
     intervalMinutes: Int,
+    repeatEnabled: Boolean,
     onAcknowledge: () -> Unit,
     onSnooze: () -> Unit,
 ) {
@@ -425,6 +458,7 @@ private fun AlertCard(
             }
             Spacer(Modifier.height(8.dp))
             MedicationLine(medication, colors)
+            if (snoozedUntil == null && repeatEnabled) RepeatNote(intervalMinutes, colors)
             Spacer(Modifier.height(16.dp))
             AcknowledgeButton(colors, onClick = onAcknowledge)
             if (snoozedUntil == null) {
@@ -439,6 +473,19 @@ private fun AlertCard(
         }
     }
 }
+
+/** Sem resposta, o Genki avisa de novo (RF09; repetição de Ajustes, até [ReminderReceiver.MAX_REPEATS] vezes). */
+@Composable
+private fun RepeatNote(intervalMinutes: Int, colors: AlertColors) {
+    Text(
+        "Sem resposta, o Genki avisa de novo em $intervalMinutes min (até ${ReminderReceiver.MAX_REPEATS} vezes).",
+        color = colors.subtext,
+        modifier = Modifier.padding(top = 8.dp),
+    )
+}
+
+private const val NOTICE_MILLIS = 6_000L
+private const val ACK_NOTICE = "Lembrete encerrado. O Genki não registra se o remédio foi tomado."
 
 /** Cores do cartão de aviso: verde-escuro tocando; verde-claro com borda verde adiado (contraste 9,5:1 e 13,4:1). */
 private data class AlertColors(val container: Color, val content: Color, val subtext: Color, val border: Color?)

@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -544,13 +545,18 @@ private fun ScheduleSection(state: FormUiState, viewModel: FormViewModel) {
         fields.times.forEachIndexed { index, time ->
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 GenkiCard(Modifier.weight(1f), onClick = { editing = index }) {
-                    Column(
+                    Row(
                         Modifier.padding(horizontal = 16.dp, vertical = 8.dp).semantics(mergeDescendants = true) {
                             contentDescription = "Horário ${index + 1}: ${MedicationText.time(time)}. Toque para alterar."
                         },
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("Horário ${index + 1}", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(MedicationText.time(time), style = MaterialTheme.typography.titleLarge)
+                        Column(Modifier.weight(1f)) {
+                            Text("Horário ${index + 1}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(MedicationText.time(time), style = MaterialTheme.typography.titleLarge)
+                        }
+                        // O cartão é tocável: o lápis mostra que dá para alterar (P29).
+                        Icon(Icons.Filled.Edit, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
                 if (fields.times.size > 1) {
@@ -788,7 +794,7 @@ private fun ColumnScope.ReviewContent(
             Column {
                 ReviewSection("Medicamento", onEdit = { onEditSection(0) }) {
                     InfoRow("Nome", draft.name.orEmpty())
-                    draft.concentration?.let { InfoRow("Concentração", it) }
+                    InfoRow("Concentração", draft.concentration ?: "Não informada")
                     InfoRow("Quanto toma", draft.dose.orEmpty())
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

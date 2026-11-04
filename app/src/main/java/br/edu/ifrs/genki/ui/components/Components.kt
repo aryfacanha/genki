@@ -154,7 +154,11 @@ fun VoiceMuteButton(muted: Boolean, speaking: Boolean, onToggle: () -> Unit, mod
  */
 @Composable
 fun ReadAloudButton(on: Boolean, speaking: Boolean, onToggle: () -> Unit, modifier: Modifier = Modifier) {
-    OutlinedButton(onClick = onToggle, modifier = modifier.heightIn(min = 48.dp)) {
+    OutlinedButton(
+        onClick = onToggle,
+        modifier = modifier.heightIn(min = 48.dp),
+        border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.outline),
+    ) {
         SpeakerIcon(muted = !on, speaking = speaking, description = null)
         Spacer(Modifier.width(8.dp))
         Text(if (on) "Silenciar a voz" else "Ouvir as perguntas em voz alta")
@@ -166,7 +170,7 @@ private fun SpeakerIcon(muted: Boolean, speaking: Boolean, description: String?)
     val alpha = if (speaking && !muted) {
         rememberInfiniteTransition(label = "falando").animateFloat(
             initialValue = 1f,
-            targetValue = 0.3f,
+            targetValue = 0.5f,
             animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
             label = "falando",
         ).value
@@ -503,7 +507,8 @@ private fun ChoiceCell(text: String, checked: Boolean?, description: String?, on
         }
     }
     val shape = RoundedCornerShape(8.dp)
-    val border = if (on) null else BorderStroke(1.dp, colors.outline)
+    // Marcada: ✓ e borda verde mais grossa, não só o fundo (P16).
+    val border = if (on) BorderStroke(2.dp, colors.primary) else BorderStroke(1.dp, colors.outline)
     if (checked != null) {
         Surface(
             selected = on,

@@ -71,7 +71,7 @@ object TutorialSteps {
         TutorialStep(TutorialTarget.ADD_BUTTON, TutorialScreen.HOME, "Cadastrar um remédio",
             "Toque aqui para cadastrar um remédio novo."),
         TutorialStep(TutorialTarget.NEXT, TutorialScreen.HOME, "Próximo lembrete",
-            "Aqui aparecem o próximo horário e os remédios dele. Na hora, o aviso aparece nesta tela, com “Entendi” e “Adiar”."),
+            "Quando houver remédios cadastrados, aqui aparecem o próximo horário e os remédios dele. Na hora, o aviso aparece nesta tela, com “Entendi” e “Adiar”."),
         TutorialStep(TutorialTarget.VOICE, TutorialScreen.ADD, "Usar voz",
             "Diga o nome, quanto toma e os horários. O Genki pergunta o que faltar."),
         TutorialStep(TutorialTarget.TYPE, TutorialScreen.ADD, "Digitar",
@@ -107,6 +107,9 @@ class TutorialController {
     var speaking by mutableStateOf(false)
 
     val current: TutorialStep? get() = step?.let(TutorialSteps.all::getOrNull)
+
+    /** Passo atual (0 = o primeiro); `-1` com o tutorial fechado. */
+    val index: Int get() = step ?: -1
 
     fun offer() { offering = true }
     fun start() { offering = false; step = 0 }
@@ -273,6 +276,9 @@ private fun Balloon(index: Int, step: TutorialStep, controller: TutorialControll
                     TextButton(onClick = controller::close, modifier = Modifier.heightIn(min = 48.dp)) { Text("Pular tutorial") }
                 }
                 Spacer(Modifier.weight(1f))
+                if (controller.index > 0) {
+                    TextButton(onClick = controller::back, modifier = Modifier.heightIn(min = 48.dp)) { Text("Voltar") }
+                }
                 Button(onClick = controller::next, modifier = Modifier.heightIn(min = 48.dp)) {
                     Text(if (last) "Concluir" else "Próximo")
                 }

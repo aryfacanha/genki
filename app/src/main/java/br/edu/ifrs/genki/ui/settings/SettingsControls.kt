@@ -112,8 +112,8 @@ internal fun AlarmSpeechSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = 
 /** Assistente de voz (DEC-049), na introdução e em Ajustes. */
 @Composable
 internal fun VoiceAssistantSwitch(checked: Boolean, onChange: (Boolean) -> Unit) = SwitchRow(
-    "Ativar assistente de voz",
-    "Lê o tutorial em voz alta. No cadastro por voz, as perguntas são sempre lidas; para calar, toque em Silenciar a voz.",
+    "Ler o tutorial em voz alta",
+    "No cadastro por voz, as perguntas são sempre lidas; para calar, toque em Silenciar a voz.",
     checked,
     onChange,
 )
