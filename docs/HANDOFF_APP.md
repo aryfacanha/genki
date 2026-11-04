@@ -65,6 +65,8 @@ Este arquivo é o retrato técnico do código; o estado do projeto inteiro (praz
 
 ## Retomar aqui (próxima sessão, a partir de 28/10/2026)
 
+**04/11 em diante, Codex: revisar a 1.0.25 antes da tag.** Roteiro pronto em `docs/revisoes/ROTEIRO_REVISAO_REFINAMENTO_1.0.25_CODEX.md` (alvo `d292a2a..HEAD`, hoje `6c02273`). Resumo: refinamento heurístico P1–P29 só de UX (DEC-057), mais ajustes do autor (balão do tutorial e introdução com fonte 2,0×, "Como alarme" curto, alarme falado na introdução, barra e botão "Adicionar medicamento" iguais) e as correções RV-125-01/02. Uma revisão feita pelo Claude no lugar do Codex já existe (`docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CLAUDE.md`, 7 achados, sem S1/S2) e **não substitui** a sua: a primeira tentativa do Codex parou por limite de uso (liberado em 04/11, 00:59) sem relatório. Depois da sua revisão, o autor e o Claude Code criam a **tag e a Release `v1.0.25`** (HANDOFF §4); não criar antes. Corte da DEC-057: o que não estiver conferido até **05/11, 12:00** fica como não corrigido.
+
 **03/11, Claude Code: 1.0.24 (`55a9c3b`) corrige só o CC-01**, a pedido do autor; tag/Release não criadas.
 
 **03/11, autor (último): app congelado na 1.0.23** (`v1.0.23`, `7bb00bc`), conferência no A31 ok. Mudança no app só com pedido do autor e versão nova.
@@ -416,6 +418,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: handoff preparado para o Codex revisar a 1.0.25 em 04/11 (bloco no topo de "Retomar aqui"; roteiro atualizado para `HEAD`/`6c02273`, 225 testes, correções RV-125-01/02 e `AddMedicationButton`) — só documentação — pendente: revisão do Codex; depois, tag e Release `v1.0.25` (autor e Claude Code).
 
 - 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: correções RV-125-01 (`pageCount` da introdução salvo) e RV-125-02 (`DoseUnit.needsWarning`, sem aviso repetido ao editar dose já gravada), na própria 1.0.25 — `assembleDebug test assembleRelease`, 225 testes; emulador: fonte mudada na página 3 da introdução mantém a página — pendente: ver o RV-125-02 em tela; A31 atualizado por cima.
 

@@ -8,18 +8,36 @@ Leia antes: `AGENTS.md`, `docs/ESTADO.md` (topo), `docs/HANDOFF_APP.md` (§2, §
 
 ## Alvo
 
-`main`, intervalo **`d292a2a..HEAD`** (1.0.24 → 1.0.25, versionCode 26). Só experiência do usuário: a lógica de lembretes
+`main`, intervalo **`d292a2a..HEAD`** (1.0.24 → 1.0.25, versionCode 26). Na preparação (03/11, noite) o `HEAD` era **`6c02273`**; use o que estiver no `git log` e diga qual foi. Só experiência do usuário: a lógica de lembretes
 e o esquema do banco **não** deveriam ter mudado (confirme: `git diff d292a2a HEAD --stat -- app/src/main/java/br/edu/ifrs/genki/reminders app/src/main/java/br/edu/ifrs/genki/data`).
 
 Commits: `5470da3` (indicador de rolagem; botões da voz), `64e3037` (ordem alfabética), `53178fb` (aviso de quantidade alta),
 `6ad2897` ("por quantos dias"), `d7aa8a0` (Sobre), `7353be1` (textos e indicações visuais), `60400a9` e `bd78b36`
 (comportamentos; P4 revertido), `080a48c` (versão), `f97d969` (balão do tutorial com fonte grande), `2c10faf`
 (introdução em páginas dinâmicas), `16db180` (som do lembrete mais curto, alarme falado na introdução, Adicionar sem título),
-`7415ff1` (rótulos da barra iguais, botão Adicionar numa linha, alarme falado na mesma página), mais commits só de `docs/`.
+`7415ff1` (rótulos da barra iguais, botão Adicionar numa linha, alarme falado na mesma página), `8f4a340` (correções
+RV-125-01 e RV-125-02 da revisão do Claude), `04d1c15` (botão "Adicionar medicamento" único, `AddMedicationButton`), mais
+commits só de `docs/`.
+
+## O que já foi feito e o que falta (03/11, noite)
+
+- **Revisão do Claude** em `docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CLAUDE.md` (leitura de diff; revisor = autor do código,
+  portanto **não independente**). Achados: RV-125-01 e RV-125-02 (S3) **já corrigidos em `8f4a340`**: confirme as duas
+  correções (`IntroScreen.kt` com `pageCount` em `rememberSaveable`; `DoseUnit.needsWarning` e `savedDose` no
+  `FormViewModel`); RV-125-03 a 07 (S4) abertos: diga se discorda da gravidade ou se há algo pior.
+- **A tentativa anterior do Codex** (03/11) parou por limite de uso sem relatório; não há achados dela.
+- **Número esperado de testes:** 225, 0 falhas (`.\gradlew.bat assembleDebug test`).
+- **Estado do A31:** a 1.0.25 está instalada por cima; a introdução só aparece com dados limpos. **Não opere o A31.**
+- **Depois da sua revisão:** o autor e o Claude Code criam a tag e a Release `v1.0.25` (HANDOFF §4). Se houver S1/S2, não
+  há tag; o autor decide entre corrigir ou deixar como limitação (corte da DEC-057: 05/11, 12:00).
+- **Pontos extras de atenção** além dos da lista abaixo: `AddMedicationButton` (Hoje e Medicamentos; o alvo do tutorial
+  `ADD_BUTTON` ainda funciona na Hoje); o texto curto de "Como alarme" omite "até 1 minuto", tela bloqueada e repetição
+  (decisão do autor; diga se algum texto de outra tela ficou contraditório); introdução com 4 blocos medidos
+  (`SubcomposeLayout`) em 1,0×, 1,3× e 2,0×, com "Como alarme" e "Como notificação".
 
 ## Execução
 
-1. `git pull`; registre o commit de partida; `.\gradlew.bat assembleDebug test`: esperado **223 testes, 0 falhas**.
+1. `git pull`; registre o commit de partida; `.\gradlew.bat assembleDebug test`: esperado **225 testes, 0 falhas**.
 2. Regras do produto a conferir em todo o diff (`git diff d292a2a HEAD -- app`): toda gravação pelo `DraftValidator`
    (o aviso de quantidade e o "por quantos dias" não criam outro caminho até o banco); "Entendi" não registra ingestão,
    nada de "Tomado" (o aviso novo "Lembrete encerrado…" não pode sugerir que foi tomado); datas civis no fuso do
