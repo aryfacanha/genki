@@ -2,6 +2,14 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Revisão independente do refinamento 1.0.25 — 04/11/2026 — Codex
+Partida e término: main/b2b7111ac5a36feb81f225594cc8943dbc157515; intervalo d292a2a..b2b7111. Pull bloqueado por escrita em .git/FETCH_HEAD; revisão do estado local. Arquivo preexistente .claude/settings.local.json não rastreado preservado.
+Realizado: relatório docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CODEX.md; conferência do diff, regras, proposta e requisitos originais no Drive. Nenhum S1/S2 confirmado; novos RV-125-08/09 S3 (duração inválida/truncada e texto de repetição depois do limite) e RV-125-10 S4 (descrição do alarme falado em grupo), confirmados por leitura. Correções RV-125-01/02 presentes; demais S4 da revisão do Claude mantidos, com ressalvas no relatório.
+Verificado: .\gradlew.bat assembleDebug test passa (cache); .\gradlew.bat testDebugUnitTest --rerun-tasks passa, 225 testes, 0 falhas/erros/ignorados. Diff vazio em reminders, data, DraftValidator, manifest e schemas. Nenhum código alterado; sem commit/push/tag/Release.
+Não verificado: regressão visual no Pixel_6_2, fontes 1,0×/1,3×/2,0×, instalação limpa, TalkBack, fala real, alarme real, A31. Emulador fechado; tentativa de abertura sem persistência bloqueada por escrita em D:\Android\avd\Pixel_6_2.avd\snapshot.lock.lock; processo criado encerrado. Nenhum banco, preferência, fonte ou permissão Android alterado; A31 não operado.
+Decisões a confirmar pelo autor: reparos sugeridos/aceite dos S3 e da observação S4; nenhuma sugestão convertida em decisão aceita.
+Próxima tarefa e bloqueios: autor/Claude avaliar achados e completar a regressão no emulador antes de tag/Release; atualizar guia/README; corte da DEC-057 em 05/11, 12:00. Não declarar o roteiro visual concluído.
+
 ENTREGA — Revisão do refinamento 1.0.25 no lugar do Codex — 03/11/2026 — Claude Code (Sonnet 5.5)
 Partida: main/14b2a4e; pedido do autor ("faça a revisão no lugar do Codex"). O Codex (CLI) foi chamado com `docs/revisoes/ROTEIRO_REVISAO_REFINAMENTO_1.0.25_CODEX.md`, rodou o build e começou o emulador, mas parou por limite de uso da conta (liberação anunciada para 04/11, 00:59), sem relatório.
 Realizado: revisão de `d292a2a..14b2a4e` em `docs/revisoes/REVISAO_REFINAMENTO_1.0.25_CLAUDE.md`: 7 achados, nenhum S1/S2; dois S3 (RV-125-01 `pageCount` da introdução não salvo; RV-125-02 aviso de quantidade alta reaparece ao editar sem mudar a dose) e cinco S4. Lembretes, `DraftValidator`, manifest e esquema sem diferença no diff. Nada alterado no código.

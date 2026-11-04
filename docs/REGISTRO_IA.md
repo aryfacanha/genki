@@ -6,6 +6,8 @@ Este registro não substitui o formulário institucional nem demonstra aprovaç�
 
 Uma linha por sessão relevante.
 
+Sessão adicional em 04/11/2026 — Codex: revisão independente da 1.0.25, main/b2b7111, intervalo d292a2a..b2b7111; proposta/requisitos abertos no Drive; nenhum S1/S2 confirmado, novos RV-125-08/09 S3 e RV-125-10 S4 por leitura, RV-125-01/02 corrigidos no código. Build passa e 225 testes reexecutados sem falhas/erros/ignorados. Regressão visual não executada: Pixel_6_2 fechado e abertura bloqueada por permissão de escrita no AVD; tentativa encerrada, Android não alterado. A31 não operado; pull bloqueado em .git/FETCH_HEAD; sem código alterado, commit/push/tag/Release. Relatório e registros atualizados; sugestões pendentes de decisão do autor, sem integração à monografia.
+
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): 1.0.19, release só com bibliotecas de celular (53,7 → 30,3 MB), instalada no A31 com leitura pela câmera conferida; build/180 testes.
 
 Sessão adicional em 30/10/2026 — Claude Code (Opus 5.5): revisão pré-congelamento rodada pelo Codex CLI a pedido do autor (sem S1/S2); RV-PC-01 corrigido (1.0.18); build/180 testes; emulador.

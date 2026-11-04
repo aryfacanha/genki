@@ -171,6 +171,8 @@ Divergências de dados/regras entre os dois: `docs/DIVERGENCIAS_PROTOTIPO.md` (a
 
 ## 2. Estado por marco
 
+**Revisão independente 1.0.25 (04/11, Codex):** `d292a2a..b2b7111`, nenhum S1/S2 confirmado; RV-125-01/02 corrigidos no código. RV-125-08/09 S3 (duração e texto de repetição) e RV-125-10 S4 (descrição da fala em grupo), sugestões pendentes. Código intocado; relatório `revisoes/REVISAO_REFINAMENTO_1.0.25_CODEX.md`. Revisão de código concluída; regressão visual ainda pendente.
+
 **1.0.25 (03/11, Claude Code):** refinamento heurístico P1–P29, só UX (DEC-057; tabela em `docs/REFINAMENTO_HEURISTICO_1.0.25.md`): `ScrollHintColumn` (indicador "ver mais" na revisão, na etapa 3 e nas telas da voz), botões da voz acima da dobra, aviso de quantidade alta (`DoseUnit.UNUSUAL_AMOUNT = 20`), "por quantos dias" (`TreatmentDuration`), versão e privacidade em Sobre, lista de Medicamentos em ordem alfabética (`MedicationOrder`), relógio digitado com fonte ≥ 1,5×, horário sugerido livre (`NewTimeSuggestion`), Desfazer de 15 s, textos e indicações visuais. Sem mudança de lembretes nem de esquema. Não corrigidos: P4, P5, P14, P17.
 
 **1.0.24 (03/11, Claude Code):** M2 (lembretes) e M1 (edição): CC-01 da avaliação heurística. Editar um medicamento mantém o id dos horários que não mudaram de minuto (`ScheduleTimeDiff`, `MedicationDao.update`) e só cancela os removidos; adiado e repetição pendentes sobrevivem. Conferido no A31 por ADB; falta Codex revisar e o autor repetir F3/F4.
@@ -206,6 +208,8 @@ DEC-048: implementada; RV-048-01…04 reparados em 30/10 (1.0.12), conferidos no
 | M4 Câmera | **Implementado e compilado; conferido no emulador (Pixel_6_2, API 35) em 27/10.** "Usar câmera" na escolha; CameraX (pré-visualização + uma foto, sem gravar) → ML Kit com modelo latino embutido (sem internet e sem Google Play Services) → `OcrParser` (nome = linha mais longa sem algarismos entre as 3 maiores; concentração = 1º número + mg/mcg/g/ml/UI) → "Confira o que eu li" com nome e concentração editáveis (RF22) → "Continuar por voz" (perguntas a partir da dose) ou "Continuar digitando" (formulário preenchido); falha → "Tentar de novo" ou "Digitar". Dose, horários, dias e tratamento nunca vêm da foto (RF23, teste). Revisão do Codex concluída em 27/10: fluxo de OCR passa na cobertura com imagens injetadas; RV-M4-01 (S3, origem no log ao salvar pela voz) corrigido em `7726739` e fechado pelo Codex com `fonte=CAMERA` no emulador em 27/10. Leitura real no aparelho (20 ensaios) pendente | `0c06d49` |
 
 ## 3. Verificado e não verificado
+
+**04/11, Codex, 1.0.25:** build passa; testes forçados com `testDebugUnitTest --rerun-tasks`, **225 testes, 0 falhas/erros/ignorados**. Sem diff em lembretes, dados, esquema, manifest e validador. **Não verificado:** regressão visual/fontes, instalação limpa, TalkBack, voz/som/alarme reais, A31. Pixel_6_2 estava fechado; inicialização sem persistência bloqueada por permissão de escrita no AVD, processo encerrado; nenhum dado/configuração Android alterado. Resultados anteriores em tela abaixo não foram repetidos. Pull bloqueado em `.git/FETCH_HEAD`; HEAD local `b2b7111`.
 
 **1.0.25:** 214 testes e release assinado; emulador API 35 com fonte 2,0× viu P1, P2, P3, P19, P20, P21 e P27. **Não verificado:** A31, alarme real (P6–P8), instalação limpa (P9–P11), TalkBack, som, o restante dos itens em tela (ver a tabela).
 
@@ -344,6 +348,8 @@ Alvo: o commit ou intervalo indicado (padrão: `git show HEAD`). Quem revisa **n
 
 ## 7. Regressão rápida (por marco entregue)
 
+**Pendente após a revisão independente 1.0.25 (04/11, Codex):** abrir Pixel_6_2/API 35 e executar cadastro, edição, exclusão/Desfazer, voz até nomes, Hoje com vários remédios e Ajustes em 1,0×/2,0×; introdução nos dois modos em 1,0×/1,3×/2,0× e tutorial com fonte grande. Acrescentar reprodutores RV-125-08/09 do relatório: 7 dias → 0, entrada 1000, texto do cartão após terceira repetição. Preservar/restaurar dados e ajustes; não usar A31 nem `installDebug` com múltiplos aparelhos. Esta regressão **não foi executada** pelo Codex: abertura do AVD bloqueada por permissão. Não atribuir a esta sessão os resultados visuais históricos abaixo.
+
 **Alarme falado (1.0.22):** com "Como alarme" e a opção ligada, o alarme fala em ~1,5 s e a cada 20 s, com o som mais baixo durante a fala; um remédio → horário e nome; vários no mesmo minuto → quantos; Entendi/Adiar calam; opção desligada ou "Como notificação" → sem fala; opção some de Ajustes no modo notificação.
 
 **Voz (1.0.21):** falar o nome e calar: a escuta encerra sozinha em até ~4 s, mesmo em celular cujo reconhecedor não encerra; pausa curta no meio da frase ainda junta os trechos; tocar no microfone encerra em até 1,5 s; abrir a escuta e não falar → "Não ouvi nada" em até 8 s; ruído contínuo para em 30 s.
@@ -418,6 +424,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 - Push só com autorização do autor.
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
+
+- 2026-11-04 — Codex — revisão independente da 1.0.25, `d292a2a..b2b7111`, relatório `revisoes/REVISAO_REFINAMENTO_1.0.25_CODEX.md`, sem código/configuração alterados; nenhum S1/S2 confirmado, RV-125-08/09 S3 e 10 S4, correções 01/02 conferidas no código — build e 225 testes reexecutados passam; lembretes/dados/esquema/manifest/validador sem diff — pendente: decisão do autor sobre sugestões e regressão visual/fontes; emulador fechado e inicialização bloqueada por escrita no AVD, tentativa encerrada, Android intocado; pull bloqueado em `.git/FETCH_HEAD`; sem A31/commit/push/tag/Release.
 
 - 2026-11-03 — Claude Code (Sonnet 5.5) — configuração: handoff preparado para o Codex revisar a 1.0.25 em 04/11 (bloco no topo de "Retomar aqui"; roteiro atualizado para `HEAD`/`6c02273`, 225 testes, correções RV-125-01/02 e `AddMedicationButton`) — só documentação — pendente: revisão do Codex; depois, tag e Release `v1.0.25` (autor e Claude Code).
 
