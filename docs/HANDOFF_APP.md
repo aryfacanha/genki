@@ -427,6 +427,8 @@ DEC-048: após reparos, repetir dois alarmes simultâneos sem perda de notifica�
 
 ## Diário (acrescente no topo; uma linha por alteração: data — agente — o que mudou — verificado — pendente)
 
+- 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: tag `v1.0.25` (`8717429`) e Release com `Genki-1.0.25.apk` (SHA-256 `8a159a63…`) via `gh`, pedido do autor; só a tag foi enviada, `main` não — download sem login com o mesmo hash — pendente: push do `main` (autor); TalkBack; tag v1.0.24 não existe.
+
 - 2026-11-04 — Claude Code (Sonnet 5.5) — verificação: RV-125-03, 04, 09 e P6/P7/P8 no emulador Pixel_6_2 (debug, fonte 1,0×; relógio real, lembrete disparado às 01:44 e 01:49) — sem mudança de código; emulador fechado; dados do teste só no emulador — pendente: RV-125-10 em tela; P9–P11; tag e Release.
 
 - 2026-11-04 — Claude Code (Sonnet 5.5) — configuração: RV-125-03 (`noticeCount` em `HomeScreen`), RV-125-04 (`domain/NameInput`) e RV-125-06 (README, guia) na 1.0.25 — `assembleDebug test assembleRelease`, 228 testes — pendente: ver RV-125-03/04 em tela; A31 P6–P11 e RV-125-09/10; tag e Release.

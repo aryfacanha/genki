@@ -2,6 +2,13 @@
 
 Mais recente no topo. Um bloco por entrega relevante.
 
+ENTREGA — Release v1.0.25 publicada — 04/11/2026 — Claude Code (Sonnet 5.5)
+Partida: main/5b42cfe; pedido do autor ("pode fazer o release").
+Realizado: tag anotada `v1.0.25` em `8717429` e Release com `Genki-1.0.25.apk` (30,4 MB, SHA-256 `8a159a63…ff81`, assinado, o mesmo instalado no A31); notas com instalação (Play Protect), novidades e limitações.
+Verificado: download sem login com o mesmo hash. Não verificado: TalkBack, som de alarme de ouvido, instalação limpa em fonte normal no A31.
+Decisões a confirmar pelo autor: push do `main` (26 commits locais; README e guia públicos ainda citam a 1.0.24 até lá).
+Próxima tarefa e bloqueios: push do `main` com autorização; TalkBack.
+
 ENTREGA — 1.0.25: RV-125-03, 04 e 06 — 04/11/2026 — Claude Code (Sonnet 5.5)
 Partida: main/3a95c50; pedido do autor ("pode seguir com as suas sugestões").
 Realizado: RV-125-03 (contador reinicia o aviso após "Entendi"), RV-125-04 (`NameInput.singleLine`, 2 testes), RV-125-06 (README e `GUIA_INSTALACAO_TESTE.md` para a 1.0.25). RV-125-05 mantido, RV-125-07 ignorado. Sem mudança em lembretes, `DraftValidator` ou esquema. 228 testes, 0 falhas.
